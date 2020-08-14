@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>in.hocg.boot</groupId>
+  <name>Spring Boot :: Starters :: Project</name>
+  <artifactId>spring-boot-starters-project</artifactId>
+  <packaging>pom</packaging>
+  <version>${revision}</version>
+
+  <properties>
+    <revision>1.0.0-SNAPSHOT</revision>
+  </properties>
+
+  <modules>
+    <module>spring-boot-starters-parent</module>
+    <module>spring-boot-starters</module>
+    <module>spring-boot-samples</module>
+    <!-- 组件 -->
+    <module>spring-boot-named</module>
+  </modules>
+
+</project>

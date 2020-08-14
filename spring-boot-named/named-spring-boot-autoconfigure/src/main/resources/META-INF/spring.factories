@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+in.hocg.boot.named.spring.boot.autoconfiguration.NamedAutoConfiguration
