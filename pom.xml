@@ -21,6 +21,7 @@
     <!-- 组件 -->
     <module>spring-boot-named</module>
     <module>spring-boot-oss</module>
+    <module>spring-boot-mybatis-plus</module>
   </modules>
 
   <repositories>
