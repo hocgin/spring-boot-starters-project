@@ -1,0 +1,8 @@
+debug: true
+
+oss:
+  enabled: false
+  domain: http://endpoint.com
+  secretKey: <secret-access/>
+  accessKey: <access-key/>
+  space: <default-space/>

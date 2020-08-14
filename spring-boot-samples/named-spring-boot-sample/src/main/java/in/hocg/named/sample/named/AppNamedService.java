@@ -1,9 +1,9 @@
 package in.hocg.named.sample.named;
 
 import com.google.common.collect.Maps;
-import in.hocg.boot.named.spring.boot.autoconfiguration.ifc.NamedArgs;
-import in.hocg.boot.named.spring.boot.autoconfiguration.ifc.NamedHandler;
-import in.hocg.boot.named.spring.boot.autoconfiguration.ifc.NamedService;
+import in.hocg.boot.named.autoconfiguration.ifc.NamedArgs;
+import in.hocg.boot.named.autoconfiguration.ifc.NamedHandler;
+import in.hocg.boot.named.autoconfiguration.ifc.NamedService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

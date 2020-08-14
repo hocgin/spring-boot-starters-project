@@ -11,12 +11,11 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
 
-  <name>Spring Boot :: Starters</name>
-  <artifactId>spring-boot-starters</artifactId>
+  <name>Spring Boot :: OSS</name>
+  <artifactId>spring-boot-oss</artifactId>
 
   <modules>
-    <module>named-spring-boot-starter</module>
-    <module>oss-spring-boot-starter</module>
+    <module>oss-spring-boot-autoconfigure</module>
   </modules>
 
 </project>

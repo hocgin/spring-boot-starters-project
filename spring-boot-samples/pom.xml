@@ -16,6 +16,7 @@
 
   <modules>
     <module>named-spring-boot-sample</module>
+    <module>oss-spring-boot-sample</module>
   </modules>
 
 </project>

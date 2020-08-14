@@ -20,6 +20,14 @@
     <module>spring-boot-samples</module>
     <!-- 组件 -->
     <module>spring-boot-named</module>
+    <module>spring-boot-oss</module>
   </modules>
 
+  <repositories>
+    <repository>
+      <id>alibaba-maven</id>
+      <name>alibaba</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+    </repository>
+  </repositories>
 </project>

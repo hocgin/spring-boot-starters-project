@@ -1,7 +1,7 @@
 package in.hocg.named.sample.test;
 
-import in.hocg.boot.named.spring.boot.autoconfiguration.annotation.InjectNamed;
-import in.hocg.boot.named.spring.boot.autoconfiguration.annotation.Named;
+import in.hocg.boot.named.autoconfiguration.annotation.InjectNamed;
+import in.hocg.boot.named.autoconfiguration.annotation.Named;
 import in.hocg.named.sample.named.NamedConstants;
 import lombok.Data;
 import lombok.experimental.Accessors;
