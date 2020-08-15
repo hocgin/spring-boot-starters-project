@@ -5,3 +5,4 @@
      - spring-boot-mybatis-plus
      - spring-boot-named
      - spring-boot-oss
+     - spring-boot-cache

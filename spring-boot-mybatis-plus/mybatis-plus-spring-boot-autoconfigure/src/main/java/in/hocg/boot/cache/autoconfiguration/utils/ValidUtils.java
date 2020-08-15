@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.utils;
+package in.hocg.boot.cache.autoconfiguration.utils;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.util.Assert;

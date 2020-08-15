@@ -1,7 +1,7 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.tree;
+package in.hocg.boot.cache.autoconfiguration.tree;
 
 
-import in.hocg.boot.mybatis.plus.autoconfiguration.AbstractService;
+import in.hocg.boot.cache.autoconfiguration.AbstractService;
 
 import java.io.Serializable;
 import java.util.List;

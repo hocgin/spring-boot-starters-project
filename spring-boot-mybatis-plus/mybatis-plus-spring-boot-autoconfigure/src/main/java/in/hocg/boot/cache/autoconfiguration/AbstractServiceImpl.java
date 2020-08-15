@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration;
+package in.hocg.boot.cache.autoconfiguration;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

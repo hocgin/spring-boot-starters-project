@@ -1,12 +1,12 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.tree;
+package in.hocg.boot.cache.autoconfiguration.tree;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import in.hocg.boot.mybatis.plus.autoconfiguration.AbstractServiceImpl;
-import in.hocg.boot.mybatis.plus.autoconfiguration.utils.Enabled;
-import in.hocg.boot.mybatis.plus.autoconfiguration.utils.LangUtils;
-import in.hocg.boot.mybatis.plus.autoconfiguration.utils.ValidUtils;
+import in.hocg.boot.cache.autoconfiguration.AbstractServiceImpl;
+import in.hocg.boot.cache.autoconfiguration.utils.Enabled;
+import in.hocg.boot.cache.autoconfiguration.utils.LangUtils;
+import in.hocg.boot.cache.autoconfiguration.utils.ValidUtils;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 

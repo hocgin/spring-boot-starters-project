@@ -11,14 +11,11 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
 
-  <name>Spring Boot :: Starters</name>
-  <artifactId>spring-boot-starters</artifactId>
+  <name>Spring Boot :: Cache</name>
+  <artifactId>spring-boot-cache</artifactId>
 
   <modules>
-    <module>named-spring-boot-starter</module>
-    <module>oss-spring-boot-starter</module>
-    <module>mybatis-plus-spring-boot-starter</module>
-    <module>cache-spring-boot-starter</module>
+    <module>cache-spring-boot-autoconfigure</module>
   </modules>
 
 </project>

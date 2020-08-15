@@ -37,7 +37,22 @@
     <dependencies>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>cache-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cache-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>mybatis-plus-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.qo;
+package in.hocg.boot.cache.autoconfiguration.qo;
 
 import java.io.Serializable;
 
