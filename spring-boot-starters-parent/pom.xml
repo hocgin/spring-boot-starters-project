@@ -22,7 +22,9 @@
     <java.source.version>1.8</java.source.version>
     <java.target.version>1.8</java.target.version>
 
+    <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
     <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+    <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
     <lombok.version>1.18.12</lombok.version>
     <mybatis-plus.version>3.3.0</mybatis-plus.version>
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
@@ -31,10 +33,31 @@
     <qiniu-java-sdk.version>[7.2.0, 7.2.99]</qiniu-java-sdk.version>
     <aliyun-oss.version>2.8.3</aliyun-oss.version>
     <swagger2.version>1.5.22</swagger2.version>
+    <knife4j.version>2.0.4</knife4j.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>knife-service-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>knife-service-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>knife-gateway-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>knife-gateway-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>web-core</artifactId>
@@ -102,13 +125,37 @@
       </dependency>
       <!-- Spring Boot -->
       <dependency>
+        <groupId>com.alibaba.cloud</groupId>
+        <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+        <version>${spring-cloud-alibaba.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
         <version>${spring-boot.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <!--Jar-->
+      <dependency>
+        <groupId>com.github.xiaoymin</groupId>
+        <artifactId>knife4j-spring-boot-starter</artifactId>
+        <version>${knife4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.xiaoymin</groupId>
+        <artifactId>knife4j-micro-spring-boot-starter</artifactId>
+        <version>${knife4j.version}</version>
+      </dependency>
       <dependency>
         <groupId>com.aliyun.oss</groupId>
         <artifactId>aliyun-sdk-oss</artifactId>

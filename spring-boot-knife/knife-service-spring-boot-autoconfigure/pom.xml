@@ -3,30 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>spring-boot-mybatis-plus</artifactId>
+    <artifactId>spring-boot-knife</artifactId>
     <groupId>in.hocg.boot</groupId>
     <version>${revision}</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
 
-  <name>Mybatis Plus :: Spring Boot :: AutoConfigure</name>
-  <artifactId>mybatis-plus-spring-boot-autoconfigure</artifactId>
+  <name>Knife Service :: Spring Boot :: AutoConfigure</name>
+  <artifactId>knife-service-spring-boot-autoconfigure</artifactId>
 
   <dependencies>
     <dependency>
-      <groupId>com.baomidou</groupId>
-      <artifactId>mybatis-plus-boot-starter</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-jdbc</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>com.github.xiaoymin</groupId>
+      <artifactId>knife4j-micro-spring-boot-starter</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -44,5 +34,4 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-
 </project>
