@@ -23,6 +23,7 @@
     <module>spring-boot-oss</module>
     <module>spring-boot-mybatis-plus</module>
     <module>spring-boot-cache</module>
+    <module>spring-boot-web</module>
   </modules>
 
   <repositories>

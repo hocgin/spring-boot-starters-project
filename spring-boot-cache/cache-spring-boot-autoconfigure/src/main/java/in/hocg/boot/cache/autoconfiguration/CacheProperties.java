@@ -14,8 +14,10 @@ import java.util.List;
  * @author hocgin
  */
 @Data
-@ConfigurationProperties("cache")
+@ConfigurationProperties(CacheProperties.PREFIX)
 public class CacheProperties {
+    public static final String PREFIX = "boot.cache";
+
     private List<CacheName> names = Collections.emptyList();
 
     @Data
