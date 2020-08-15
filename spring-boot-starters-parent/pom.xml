@@ -35,6 +35,8 @@
     <swagger2.version>1.5.22</swagger2.version>
     <knife4j.version>2.0.4</knife4j.version>
     <redisson.version>3.13.3</redisson.version>
+    <druid.version>1.1.21</druid.version>
+    <p6spy.version>3.8.7</p6spy.version>
   </properties>
 
   <dependencyManagement>
@@ -158,6 +160,16 @@
       </dependency>
       <!--Jar-->
       <dependency>
+        <groupId>p6spy</groupId>
+        <artifactId>p6spy</artifactId>
+        <version>${p6spy.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>druid-spring-boot-starter</artifactId>
+        <version>${druid.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.redisson</groupId>
         <artifactId>redisson-spring-boot-starter</artifactId>
         <version>${redisson.version}</version>
@@ -219,6 +231,31 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/application*.yml</include>
+          <include>**/application*.yaml</include>
+          <include>**/application*.properties</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>**/application*.yml</exclude>
+          <exclude>**/application*.yaml</exclude>
+          <exclude>**/application*.properties</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

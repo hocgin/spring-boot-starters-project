@@ -2,13 +2,12 @@ package in.hocg.boot.mybatis.plus.autoconfiguration;
 
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import org.apache.ibatis.annotations.Mapper;
-import org.mybatis.spring.annotation.MapperScan;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * Created by hocgin on 2020/1/5.
@@ -17,10 +16,9 @@ import org.springframework.context.annotation.Import;
  * @author hocgin
  */
 @Configuration
-@MapperScan(annotationClass = Mapper.class)
-@Import({MyBatisPlusProperties.class})
 @AutoConfigureAfter(MybatisPlusAutoConfiguration.class)
 @EnableConfigurationProperties(MyBatisPlusProperties.class)
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class MyBatisPlusAutoConfiguration {
 
     @Bean
