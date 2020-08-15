@@ -1,10 +1,9 @@
 package in.hocg.boot.oss.autoconfigure;
 
-import in.hocg.boot.oss.autoconfigure.properties.OssProperties;
-import in.hocg.boot.oss.autoconfigure.properties.OssType;
 import in.hocg.boot.oss.autoconfigure.core.OssFileService;
 import in.hocg.boot.oss.autoconfigure.impl.AliOssFileServiceImpl;
 import in.hocg.boot.oss.autoconfigure.impl.QiNiuOssFileServiceImpl;
+import in.hocg.boot.oss.autoconfigure.properties.OssProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -34,14 +33,14 @@ public class OssAutoConfiguration {
         String secretKey = properties.getSecretKey();
         String space = properties.getSpace();
         String domain = properties.getDomain();
-        OssType ossType = properties.getType();
-        switch (ossType) {
+        OssProperties.OssType type = properties.getType();
+        switch (type) {
             case QiNiu:
                 return new QiNiuOssFileServiceImpl(accessKey, secretKey, space, domain);
             case AliYun:
                 return new AliOssFileServiceImpl(accessKey, secretKey, space, domain);
             default:
-                throw new IllegalArgumentException("OSS类型[" + ossType + "]不支持");
+                throw new IllegalArgumentException("OSS 类型[" + type + "]不支持");
         }
     }
 

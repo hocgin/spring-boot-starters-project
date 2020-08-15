@@ -24,5 +24,9 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>mybatis-plus-spring-boot-autoconfigure</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-boot-starter</artifactId>
+    </dependency>
   </dependencies>
 </project>

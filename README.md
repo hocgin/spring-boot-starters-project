@@ -2,7 +2,10 @@
 - spring-boot-starters-parent
   - spring-boot-samples
   - spring-boot-starters
+     - spring-boot-distributed-lock
      - spring-boot-mybatis-plus
      - spring-boot-named
      - spring-boot-oss
      - spring-boot-cache
+     - spring-boot-knife
+     - spring-boot-web
