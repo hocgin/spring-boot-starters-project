@@ -18,6 +18,7 @@
     <module>named-spring-boot-sample</module>
     <module>oss-spring-boot-sample</module>
     <module>web-spring-boot-sample</module>
+    <module>knife-gateway-sample</module>
   </modules>
 
 </project>
