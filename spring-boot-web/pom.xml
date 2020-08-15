@@ -15,6 +15,7 @@
   <artifactId>spring-boot-web</artifactId>
 
   <modules>
+    <module>web-core</module>
     <module>web-spring-boot-autoconfigure</module>
   </modules>
 
