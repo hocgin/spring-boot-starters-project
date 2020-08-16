@@ -22,7 +22,9 @@ public class TransactionalMessageListener {
      */
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void beforeCommit(TransactionalEvent event) {
-        log.info("==> 事务提交前 {}", event);
+        if (log.isDebugEnabled()) {
+            log.debug("==> 事务提交前 {}", event);
+        }
         MessageFactory.transactional().publish();
     }
 
@@ -33,7 +35,9 @@ public class TransactionalMessageListener {
      */
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void afterCommit(TransactionalEvent event) {
-        log.info("==> 事务提交后 {}", event);
+        if (log.isDebugEnabled()) {
+            log.debug("==> 事务提交后 {}", event);
+        }
     }
 
     /**
@@ -43,7 +47,9 @@ public class TransactionalMessageListener {
      */
     @TransactionalEventListener(phase = TransactionPhase.AFTER_ROLLBACK)
     public void rollback(TransactionalEvent event) {
-        log.info("==> 事务回滚后 {}", event);
+        if (log.isDebugEnabled()) {
+            log.debug("==> 事务回滚后 {}", event);
+        }
         MessageFactory.transactional().clear();
     }
 
@@ -54,7 +60,9 @@ public class TransactionalMessageListener {
      */
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMPLETION)
     public void afterCompletion(TransactionalEvent event) {
-        log.info("==> 事务完成后 {}", event);
+        if (log.isDebugEnabled()) {
+            log.debug("==> 事务完成后 {}", event);
+        }
     }
 
 }
