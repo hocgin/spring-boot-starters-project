@@ -1,10 +1,10 @@
 package in.hocg.boot.message.core.normal;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.message.core.MessageFactory;
 import in.hocg.boot.message.data.PersistenceMessage;
 import in.hocg.boot.web.SpringContext;
-import org.apache.logging.log4j.util.Strings;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.messaging.Message;
@@ -29,7 +29,7 @@ public class NormalMessageFactory implements MessageFactory {
         final String destination = message.getDestination();
         final String headersStr = message.getHeaders();
         final MessageBuilder<String> messageBuilder = MessageBuilder.withPayload(message.getPayload());
-        if (Strings.isNotBlank(headersStr)) {
+        if (StrUtil.isNotBlank(headersStr)) {
             messageBuilder.copyHeaders(JSONUtil.parseObj(headersStr));
         }
         return syncSend(destination, messageBuilder.build());

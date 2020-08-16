@@ -1,8 +1,8 @@
 package in.hocg.boot.message.core;
 
 import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.message.annotation.MessageDestination;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.Collections;
 import java.util.Map;
@@ -22,7 +22,7 @@ public interface MessageFactory {
         MessageDestination destinationAnnotation = aClass.getAnnotation(MessageDestination.class);
         if (Objects.nonNull(destinationAnnotation)) {
             String destinationVal = destinationAnnotation.value();
-            if (Strings.isNotBlank(destinationVal)) {
+            if (StrUtil.isNotBlank(destinationVal)) {
                 destination = destinationVal;
             }
         }
