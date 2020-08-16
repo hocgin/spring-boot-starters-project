@@ -9,3 +9,4 @@
      - spring-boot-cache
      - spring-boot-knife
      - spring-boot-web
+     - spring-boot-message
