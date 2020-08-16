@@ -27,7 +27,7 @@ jobs:
           mkdir -p ~/.m2
           echo "<settings><servers><server><id>\${env.ID}</id><username>\${env.USERNAME}</username><password>\${env.PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
           REPO="\${env.ID}::default::\${env.URL}"
-          mvn deploy -DaltReleaseDeploymentRepository="${REPO}" -DaltSnapshotDeploymentRepository="${REPO}" -DskipTests
+          mvn deploy -DaltDeploymentRepository="${REPO}" -DskipTests
         env:
           ID: sonatype-snapshots
           URL: https://oss.sonatype.org/content/repositories/snapshots
