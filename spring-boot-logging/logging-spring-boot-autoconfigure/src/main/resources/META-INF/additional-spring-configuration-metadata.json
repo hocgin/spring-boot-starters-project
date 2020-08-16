@@ -1,0 +1,14 @@
+{
+    "properties": [
+        {
+            "name": "boot.logging.topic",
+            "type": "java.lang.String",
+            "description": "Description for boot.logging.topic."
+        },
+        {
+            "name": "boot.logging.source",
+            "type": "java.lang.String",
+            "description": "Description for boot.logging.source."
+        }
+    ]
+}

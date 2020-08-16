@@ -27,6 +27,7 @@
     <module>spring-boot-knife</module>
     <module>spring-boot-distributed-lock</module>
     <module>spring-boot-message</module>
+    <module>spring-boot-logging</module>
   </modules>
 
   <repositories>

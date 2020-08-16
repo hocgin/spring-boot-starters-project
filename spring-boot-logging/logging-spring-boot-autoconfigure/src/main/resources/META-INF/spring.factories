@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+in.hocg.boot.logging.autoconfiguration.LoggingAutoConfiguration
+org.springframework.context.ApplicationListener=\
+in.hocg.boot.logging.autoconfiguration.LoggingApplicationListener

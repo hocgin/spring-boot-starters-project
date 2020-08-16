@@ -1,0 +1,11 @@
+boot:
+  logging:
+    topic: ${spring.application.name}
+    source: ${spring.cloud.client.ip-address}
+logging:
+  config: classpath:log4j2-boot.xml
+  file:
+    path: /data/logs/app/${spring.application.name:unknown}
+    name: ${logging.file.path}/${spring.application.name:unknown}.log
+  pattern:
+    level: '%5p [%X{X-B3-TraceId},%X{X-B3-SpanId},%X{X-Span-Export}]'

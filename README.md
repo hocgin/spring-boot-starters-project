@@ -10,3 +10,4 @@
      - spring-boot-knife
      - spring-boot-web
      - spring-boot-message
+     - spring-boot-logging

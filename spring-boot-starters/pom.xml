@@ -24,6 +24,7 @@
     <module>knife-service-spring-boot-starter</module>
     <module>distributed-lock-spring-boot-starter</module>
     <module>message-spring-boot-starter</module>
+    <module>logging-spring-boot-starter</module>
   </modules>
 
 </project>
