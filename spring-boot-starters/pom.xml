@@ -23,6 +23,7 @@
     <module>knife-gateway-spring-boot-starter</module>
     <module>knife-service-spring-boot-starter</module>
     <module>distributed-lock-spring-boot-starter</module>
+    <module>message-spring-boot-starter</module>
   </modules>
 
 </project>
