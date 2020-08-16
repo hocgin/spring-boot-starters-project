@@ -23,6 +23,7 @@ public class TransactionalMessageListener {
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void beforeCommit(TransactionalEvent event) {
         log.info("==> 事务提交前 {}", event);
+        MessageFactory.transactional().publish();
     }
 
     /**
@@ -54,7 +55,6 @@ public class TransactionalMessageListener {
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMPLETION)
     public void afterCompletion(TransactionalEvent event) {
         log.info("==> 事务完成后 {}", event);
-        MessageFactory.transactional().publish();
     }
 
 }
