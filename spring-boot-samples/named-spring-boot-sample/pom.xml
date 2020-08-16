@@ -13,6 +13,10 @@
   <name>Named :: Spring Boot :: Sample</name>
   <artifactId>named-spring-boot-sample</artifactId>
 
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>

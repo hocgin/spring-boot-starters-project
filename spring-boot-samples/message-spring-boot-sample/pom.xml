@@ -12,6 +12,10 @@
   <name>Message :: Spring Boot :: Sample</name>
   <artifactId>message-spring-boot-sample</artifactId>
 
+  <properties>
+    <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>

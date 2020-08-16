@@ -16,7 +16,6 @@
 
   <properties>
     <!-- Maven plugins -->
-    <maven.deploy.skip>true</maven.deploy.skip>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>1.8</java.version>
     <java.source.version>1.8</java.source.version>
