@@ -1,8 +1,8 @@
 package in.hocg.boot.web.utils.web;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -22,10 +22,10 @@ public class RequestUtils {
      * @param request
      * @return
      */
-    public String getClientIP(HttpServletRequest request) {
+    public String getClientIp(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
-        if (Strings.isNotBlank(ip)
-                && !"unknown".equalsIgnoreCase(ip)) {
+        if (StrUtil.isNotBlank(ip)
+            && !"unknown".equalsIgnoreCase(ip)) {
             int index = ip.indexOf(",");
             if (index != -1) {
                 return ip.substring(0, index);
@@ -34,15 +34,15 @@ public class RequestUtils {
             }
         }
         ip = request.getHeader("X-Real-IP");
-        if (Strings.isNotBlank(ip)
-                && !"unKnown".equalsIgnoreCase(ip)) {
+        if (StrUtil.isNotBlank(ip)
+            && !"unKnown".equalsIgnoreCase(ip)) {
             return ip;
         }
 
         // 本地名单
         if (Arrays.asList(new String[]{
-                "0:0:0:0:0:0:0:1",
-                "127.0.0.1"
+            "0:0:0:0:0:0:0:1",
+            "127.0.0.1"
         }).contains(request.getRemoteAddr())) {
             return "110.80.68.212";
         }

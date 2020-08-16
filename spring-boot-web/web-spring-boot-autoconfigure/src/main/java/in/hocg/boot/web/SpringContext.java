@@ -84,6 +84,6 @@ public class SpringContext implements ApplicationContextAware {
      * @return
      */
     public static Optional<String> getClientIp() {
-        return SpringContext.getRequest().map(RequestUtils::getClientIP);
+        return SpringContext.getRequest().map(RequestUtils::getClientIp);
     }
 }
