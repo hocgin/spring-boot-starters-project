@@ -2,6 +2,7 @@ package in.hocg.sso.server.sample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 /**
  * Created by hocgin on 2020/8/15.
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author hocgin
  */
+@EnableResourceServer
 @SpringBootApplication
 public class SsoServerApplication {
 
