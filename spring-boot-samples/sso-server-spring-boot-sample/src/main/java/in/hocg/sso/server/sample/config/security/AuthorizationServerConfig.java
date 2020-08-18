@@ -1,5 +1,6 @@
 package in.hocg.sso.server.sample.config.security;
 
+import in.hocg.sso.server.sample.config.security.autoconfiguration.SsoProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -23,17 +24,19 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final SsoProperties properties;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        final String secret = passwordEncoder.encode("hocgin");
-        clients.inMemory()
-            .withClient("client_example")
-            .secret(secret)
-            .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token", "password")
-            .scopes("user_info")
-            .redirectUris("http://example.hocgin.local:20001/login/oauth2/code/")
-            .autoApprove(true);
+        for (SsoProperties.Client client : properties.getClients()) {
+            clients.inMemory()
+                .withClient(client.getClientId())
+                .secret(passwordEncoder.encode(client.getClientSecret()))
+                .authorizedGrantTypes("client_credentials", "authorization_code", "refresh_token", "password")
+                .scopes("user_info")
+                .redirectUris(client.getRedirectUris())
+                .autoApprove(true);
+        }
     }
 
     @Override
