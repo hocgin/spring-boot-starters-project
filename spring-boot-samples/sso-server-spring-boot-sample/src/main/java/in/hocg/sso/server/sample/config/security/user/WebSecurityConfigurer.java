@@ -26,8 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class LoginConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     private final AuthenticationConfigs authenticationConfigs;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -62,8 +63,6 @@ public class LoginConfig extends WebSecurityConfigurerAdapter {
 
         authenticationConfigs.configure(http, authenticationManagerBean());
     }
-
-    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
