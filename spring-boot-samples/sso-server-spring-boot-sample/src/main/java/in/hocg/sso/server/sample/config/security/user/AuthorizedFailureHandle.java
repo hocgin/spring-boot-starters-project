@@ -3,7 +3,6 @@ package in.hocg.sso.server.sample.config.security.user;
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.web.result.ExceptionResult;
 import in.hocg.boot.web.result.ResultCode;
-import in.hocg.boot.web.utils.web.RequestUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -30,7 +29,7 @@ public class AuthorizedFailureHandle implements AuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        if (RequestUtils.isAJAX(request)) {
+        if (IsAjaxRequestMatcher.THIS.matches(request)) {
             handleAjaxRequest(response);
         } else {
             response.sendRedirect(loginPage + "?error");

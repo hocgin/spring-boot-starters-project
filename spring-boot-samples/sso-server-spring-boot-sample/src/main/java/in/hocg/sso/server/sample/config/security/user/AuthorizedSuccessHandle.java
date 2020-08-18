@@ -31,7 +31,7 @@ public class AuthorizedSuccessHandle extends SavedRequestAwareAuthenticationSucc
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        if (RequestUtils.isAJAX(request)) {
+        if (IsAjaxRequestMatcher.THIS.matches(request)) {
             handleAjaxRequest(response);
         } else {
             super.onAuthenticationSuccess(request, response, authentication);

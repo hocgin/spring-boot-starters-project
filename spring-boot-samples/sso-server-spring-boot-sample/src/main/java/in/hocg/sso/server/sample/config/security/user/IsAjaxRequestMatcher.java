@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author hocgin
  */
 public class IsAjaxRequestMatcher implements RequestMatcher {
+    public static final IsAjaxRequestMatcher THIS = new IsAjaxRequestMatcher();
+
     @Override
     public boolean matches(HttpServletRequest request) {
         return RequestUtils.isAJAX(request);
