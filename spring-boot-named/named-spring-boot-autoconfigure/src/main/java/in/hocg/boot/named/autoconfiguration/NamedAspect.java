@@ -9,7 +9,7 @@ import in.hocg.boot.named.autoconfiguration.annotation.Named;
 import in.hocg.boot.named.autoconfiguration.core.NamedRow;
 import in.hocg.boot.named.autoconfiguration.ifc.NamedArgs;
 import in.hocg.boot.named.autoconfiguration.ifc.NamedHandler;
-import in.hocg.boot.named.autoconfiguration.ifc.NamedService;
+import in.hocg.boot.named.autoconfiguration.annotation.NamedService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -118,10 +118,12 @@ public class NamedAspect {
         }
         final String namedType = named.type();
         final Object idValue = LangUtils.getObjectValue(target, idField, null);
+        Class<?> serviceClass = named.serviceClass();
         NamedRow namedRow = new NamedRow()
             .setTarget(target)
             .setIdValue(idValue)
             .setArgs(argsValue)
+            .setServiceClass(serviceClass)
             .setTargetField(targetField)
             .setNamedType(namedType);
         return Optional.of(namedRow);
@@ -161,12 +163,13 @@ public class NamedAspect {
         }
         NamedRow namedRow = newNamedRows.get(0);
         String namedType = namedRow.getNamedType();
+        Class<?> serviceClass = namedRow.getServiceClass();
         String[] args = namedRow.getArgs();
         Object[] ids = newNamedRows.parallelStream().map(NamedRow::getIdValue).distinct().toArray();
         if (ids.length == 0) {
             return;
         }
-        Map<String, Object> values = callNamedHandleMethod(namedType, ids, args);
+        Map<String, Object> values = callNamedHandleMethod(serviceClass, namedType, ids, args);
         log.info("===> {}-{}-{}::{}", namedType, ids, args, values);
         newNamedRows.parallelStream().forEach(row -> {
             Object value = values.get(LangUtils.toString(row.getIdValue()));
@@ -192,10 +195,10 @@ public class NamedAspect {
         return String.format("%s-%s-%s", namedType, id, Arrays.toString(args));
     }
 
-    private Map<String, Object> callNamedHandleMethod(String namedType, Object[] ids, String[] args) {
-        final NamedService namedService = context.getBean(NamedService.class);
+    private Map<String, Object> callNamedHandleMethod(Class<?> serviceClass, String namedType, Object[] ids, String[] args) {
+        final Object namedService = context.getBean(serviceClass);
 
-        for (Method method : namedService.getClass().getMethods()) {
+        for (Method method : serviceClass.getMethods()) {
             final NamedHandler annotation = method.getAnnotation(NamedHandler.class);
             if (Objects.isNull(annotation)) {
                 continue;
