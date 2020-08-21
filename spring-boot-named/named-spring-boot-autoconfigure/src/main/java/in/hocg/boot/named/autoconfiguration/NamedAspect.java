@@ -2,14 +2,13 @@ package in.hocg.boot.named.autoconfiguration;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
-import in.hocg.boot.named.autoconfiguration.core.ClassName;
-import in.hocg.boot.named.autoconfiguration.core.LangUtils;
 import in.hocg.boot.named.autoconfiguration.annotation.InjectNamed;
 import in.hocg.boot.named.autoconfiguration.annotation.Named;
+import in.hocg.boot.named.autoconfiguration.core.ClassName;
+import in.hocg.boot.named.autoconfiguration.core.LangUtils;
 import in.hocg.boot.named.autoconfiguration.core.NamedRow;
 import in.hocg.boot.named.autoconfiguration.ifc.NamedArgs;
 import in.hocg.boot.named.autoconfiguration.ifc.NamedHandler;
-import in.hocg.boot.named.autoconfiguration.annotation.NamedService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -165,7 +164,8 @@ public class NamedAspect {
         String namedType = namedRow.getNamedType();
         Class<?> serviceClass = namedRow.getServiceClass();
         String[] args = namedRow.getArgs();
-        Object[] ids = newNamedRows.parallelStream().map(NamedRow::getIdValue).distinct().toArray();
+        Object[] ids = newNamedRows.parallelStream().map(NamedRow::getIdValue)
+            .filter(Objects::nonNull).distinct().toArray();
         if (ids.length == 0) {
             return;
         }
