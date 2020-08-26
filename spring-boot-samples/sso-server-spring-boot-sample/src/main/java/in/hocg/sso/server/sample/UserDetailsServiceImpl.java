@@ -1,4 +1,4 @@
-package in.hocg.sso.server.sample.config.security;
+package in.hocg.sso.server.sample;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -30,7 +30,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @EnableKnife4j
-@Import({BeanValidatorPluginsConfiguration.class, KnifeServiceProperties.class})
+@Import({BeanValidatorPluginsConfiguration.class})
 @ConditionalOnClass({Swagger.class, EnableKnife4j.class})
 @EnableConfigurationProperties(KnifeServiceProperties.class)
 @ConditionalOnProperty(prefix = KnifeServiceProperties.PREFIX, name = "enabled", matchIfMissing = true)

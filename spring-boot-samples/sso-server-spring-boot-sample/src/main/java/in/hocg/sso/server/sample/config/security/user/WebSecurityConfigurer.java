@@ -1,6 +1,6 @@
 package in.hocg.sso.server.sample.config.security.user;
 
-import in.hocg.sso.server.sample.config.security.UserDetailsServiceImpl;
+import in.hocg.sso.server.sample.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
