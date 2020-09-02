@@ -9,7 +9,7 @@ spring:
           custom2:
             client-id: client_example2
             client-secret: hocgin
-            redirect-uri: '{baseUrl}/{action}/oauth2/code/custom2'
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             authorization-grant-type: authorization_code
         provider:
           custom2:

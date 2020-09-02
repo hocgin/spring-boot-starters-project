@@ -7,7 +7,7 @@ spring:
           custom:
             client-id: client_example
             client-secret: hocgin
-            redirect-uri: '{baseUrl}/{action}/oauth2/code/custom'
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             authorization-grant-type: authorization_code
         #            github:
         #              client-id: 7c8f6909e7226d490bdb

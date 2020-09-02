@@ -3,7 +3,6 @@ package in.hocg.sso.client.sample.config.security;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 /**
@@ -13,33 +12,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * @author hocgin
  */
 @Slf4j
-//@EnableOAuth2Sso
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/**")
-            .authorizeRequests()
-            .antMatchers("/")
-            .permitAll()
+        http.authorizeRequests()
             .anyRequest()
             .authenticated()
             .and()
             .oauth2Login();
     }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.debug(true);
-    }
-
-//    @Bean
-//    WebClient webClient(ClientRegistrationRepository clientRegistrationRepository,
-//                        OAuth2AuthorizedClientRepository authorizedClientRepository) {
-//        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 =
-//            new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrationRepository,
-//                authorizedClientRepository);
-//        oauth2.setDefaultOAuth2AuthorizedClient(true);
-//        return WebClient.builder().apply(oauth2.oauth2Configuration()).build();
-//    }
 }
