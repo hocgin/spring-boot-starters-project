@@ -23,7 +23,6 @@
     <module>message-spring-boot-sample</module>
     <module>logging-spring-boot-sample</module>
     <module>sso-client-spring-boot-sample</module>
-    <module>sso-server-spring-boot-sample</module>
     <module>sso2-client-gateway-sample</module>
     <module>sso2-server-spring-boot-sample</module>
   </modules>
