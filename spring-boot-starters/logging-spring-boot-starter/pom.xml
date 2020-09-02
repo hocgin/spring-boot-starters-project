@@ -22,6 +22,18 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-log4j2</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-sleuth</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.aliyun.openservices</groupId>
+      <artifactId>aliyun-log-log4j2-appender</artifactId>
+    </dependency>
     <!-- Spring Boot dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
