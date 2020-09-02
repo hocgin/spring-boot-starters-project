@@ -1,8 +1,6 @@
 package in.hocg.sso2.client.sample.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
@@ -12,8 +10,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
  *
  * @author hocgin
  */
-@Configuration
-@EnableWebFluxSecurity
+//@Configuration
+//@EnableWebFluxSecurity
 public class SecurityWebConfigurer {
 
     @Bean

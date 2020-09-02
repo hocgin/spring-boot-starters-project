@@ -1,26 +1,21 @@
 server:
-  port: 20001
-  servlet:
-    session:
-      cookie:
-        name: UISESSION
+  port: 20002
 spring:
   security:
     oauth2:
       shostname: http://sso.hocgin.local:20000
-      chostname: http://example.hocgin.local:20001
       client:
         registration:
-          custom-client:
-            client-id: client_example
+          custom2:
+            client-id: client_example2
             client-secret: hocgin
-            provider: custom-provider
-            redirect-uri: ${spring.security.oauth2.chostname}/login/oauth2/code/
-            client-authentication-method: basic
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/custom2'
             authorization-grant-type: authorization_code
         provider:
-          custom-provider:
-            user-info-uri: ${spring.security.oauth2.shostname}/user/me
+          custom2:
+            user-info-uri: ${spring.security.oauth2.shostname}/oauth/user
             authorization-uri: ${spring.security.oauth2.shostname}/oauth/authorize
             token-uri: ${spring.security.oauth2.shostname}/oauth/token
             user-name-attribute: name
+            jwt:
+              key-uri: ${spring.security.oauth2.shostname}/oauth/token_key

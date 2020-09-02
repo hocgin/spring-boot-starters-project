@@ -2,6 +2,10 @@ package in.hocg.sso.client.sample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 /**
  * Created by hocgin on 2020/8/15.
@@ -9,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author hocgin
  */
+@RestController
 @SpringBootApplication
 public class SsoClientApplication {
 
@@ -16,4 +21,8 @@ public class SsoClientApplication {
         SpringApplication.run(SsoClientApplication.class, args);
     }
 
+    @RequestMapping("/user")
+    public Principal s(Principal principal) {
+        return principal;
+    }
 }
