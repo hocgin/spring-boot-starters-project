@@ -34,6 +34,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
             .cors().disable()
             .authorizeRequests()
+            .antMatchers("/login/oauth2/code/github").permitAll()
             .anyRequest().authenticated().and()
         ;
         http.exceptionHandling()

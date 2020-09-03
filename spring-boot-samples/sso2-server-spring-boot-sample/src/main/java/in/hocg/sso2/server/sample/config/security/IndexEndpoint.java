@@ -44,10 +44,4 @@ public class IndexEndpoint {
         return principal;
     }
 
-    @RequestMapping("/user/me")
-    @ResponseBody
-    public Principal me(Principal principal) {
-        return principal;
-    }
-
 }

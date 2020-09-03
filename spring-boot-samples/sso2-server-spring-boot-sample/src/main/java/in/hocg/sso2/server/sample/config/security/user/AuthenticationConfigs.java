@@ -22,14 +22,18 @@ public class AuthenticationConfigs {
         final AuthorizedSuccessHandle successHandler = new AuthorizedSuccessHandle(LOGIN_SUCCESS_PAGE);
         final AuthorizedFailureHandle failureHandle = new AuthorizedFailureHandle(LOGIN_PAGE);
 
+        // ==== OAuth2.0 ====
+        http.oauth2Client();
+        http.oauth2Login().loginPage(LOGIN_PAGE);
+
         // ==== Form 表单 ====
         {
-            http.formLogin()
-                    .loginPage(LOGIN_PAGE)
-                    .successHandler(successHandler)
-                    .failureHandler(failureHandle)
+            http.formLogin().loginPage(LOGIN_PAGE)
+                .successHandler(successHandler)
+                .failureHandler(failureHandle)
                 .permitAll();
         }
+
     }
 
     public void providers(AuthenticationManagerBuilder auth) {

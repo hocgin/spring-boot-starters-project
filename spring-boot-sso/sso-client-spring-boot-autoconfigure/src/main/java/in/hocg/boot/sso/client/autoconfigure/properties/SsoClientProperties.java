@@ -18,4 +18,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = SsoClientProperties.PREFIX)
 public class SsoClientProperties {
     public static final String PREFIX = "boot.sso.client";
+    private String loginProcessingUrl = "http://sso.hocgin.local:20000/login";
 }
