@@ -19,8 +19,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-oauth2-client</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>sso-client-spring-boot-starter</artifactId>
     </dependency>
     <!--  Basic  -->
     <dependency>
