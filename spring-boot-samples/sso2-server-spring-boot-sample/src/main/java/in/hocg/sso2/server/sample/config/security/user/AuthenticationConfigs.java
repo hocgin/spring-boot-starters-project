@@ -26,8 +26,8 @@ public class AuthenticationConfigs {
         {
             http.formLogin()
                     .loginPage(LOGIN_PAGE)
-                    .successHandler(successHandler)
-                    .failureHandler(failureHandle)
+//                    .successHandler(successHandler)
+//                    .failureHandler(failureHandle)
                 .permitAll();
         }
         // ==== Token 登录方式 ====
