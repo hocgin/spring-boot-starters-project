@@ -36,13 +36,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .anyRequest().authenticated().and()
         ;
-//        http.logout().permitAll();
-
-
-//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//        http.exceptionHandling()
-//            .defaultAuthenticationEntryPointFor(new AjaxAuthenticationEntryPoint(), new IsAjaxRequestMatcher())
-//            .defaultAccessDeniedHandlerFor(new AjaxAccessDeniedHandler(), new IsAjaxRequestMatcher());
+        http.exceptionHandling()
+            .defaultAuthenticationEntryPointFor(new AjaxAuthenticationEntryPoint(), new IsAjaxRequestMatcher())
+            .defaultAccessDeniedHandlerFor(new AjaxAccessDeniedHandler(), new IsAjaxRequestMatcher());
 
         authenticationConfigs.configure(http, authenticationManagerBean());
     }
