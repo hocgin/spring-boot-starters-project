@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.Objects;
 
 /**
  * Created by hocgin on 2020/8/27
@@ -24,5 +25,10 @@ public class Sso2ClientApplication {
     @RequestMapping("/user")
     public Principal s(Principal principal) {
         return principal;
+    }
+
+    @RequestMapping("/ignore")
+    public String ignore(Principal principal) {
+        return "是登陆: " + Objects.nonNull(principal);
     }
 }

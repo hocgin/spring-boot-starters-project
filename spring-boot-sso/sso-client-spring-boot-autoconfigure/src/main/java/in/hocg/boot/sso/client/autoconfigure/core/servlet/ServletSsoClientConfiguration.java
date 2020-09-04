@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -24,11 +25,18 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            .anyRequest()
-            .authenticated()
-            .and()
-            .oauth2Login();
+        String[] ignoreUrls = properties.getIgnoreUrls().toArray(new String[]{});
+        {
+            ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry =
+                http.authorizeRequests();
+            if (ignoreUrls.length > 0) {
+                expressionInterceptUrlRegistry.antMatchers(ignoreUrls).permitAll();
+            }
+            expressionInterceptUrlRegistry
+                .anyRequest()
+                .authenticated().and();
+        }
+        http.oauth2Login();
     }
 
 }
