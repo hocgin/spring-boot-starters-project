@@ -2,7 +2,6 @@ package in.hocg.sso2.server.sample.config.security.user;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
@@ -36,8 +35,5 @@ public class AuthenticationConfigs {
 
     }
 
-    public void providers(AuthenticationManagerBuilder auth) {
-
-    }
 
 }
