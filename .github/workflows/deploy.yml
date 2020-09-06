@@ -33,3 +33,15 @@ jobs:
           URL: https://oss.sonatype.org/content/repositories/snapshots
           USERNAME: hocgin
           PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+
+      - name: Deploy to Alibaba Package Registry
+        run: |
+          mkdir -p ~/.m2
+          echo "<settings><servers><server><id>\${env.ID}</id><username>\${env.USERNAME}</username><password>\${env.PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
+          REPO="\${env.ID}::default::\${env.URL}"
+          mvn deploy -DaltDeploymentRepository="${REPO}" -DskipTests
+        env:
+          ID: rdc-releases
+          URL: https://packages.aliyun.com/maven/repository/2026582-release-AuUWIo
+          USERNAME: 5f3fc340209ad8bf48f5dd13
+          PASSWORD: ${{ secrets.ALIYUN_PASSWORD }}

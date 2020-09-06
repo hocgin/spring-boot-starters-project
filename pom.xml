@@ -3,6 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>19</version>
+  </parent>
 
   <groupId>in.hocg.boot</groupId>
   <name>Spring Boot :: Starters :: Project</name>
@@ -12,6 +17,7 @@
 
   <properties>
     <revision>1.0.0-SNAPSHOT</revision>
+    <flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
   </properties>
 
   <modules>
@@ -21,6 +27,7 @@
     <!-- 组件 -->
     <module>spring-boot-named</module>
     <module>spring-boot-oss</module>
+    <module>spring-boot-sso</module>
     <module>spring-boot-mybatis-plus</module>
     <module>spring-boot-cache</module>
     <module>spring-boot-web</module>
@@ -37,4 +44,34 @@
       <url>http://maven.aliyun.com/nexus/content/groups/public</url>
     </repository>
   </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>${flatten-maven-plugin.version}</version>
+        <configuration>
+          <updatePomFile>true</updatePomFile>
+          <flattenMode>resolveCiFriendliesOnly</flattenMode>
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

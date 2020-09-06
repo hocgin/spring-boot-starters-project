@@ -1,0 +1,14 @@
+server:
+  port: 20001
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: test
+          uri: https://hocg.in
+          predicates:
+            - Path=/test
+          filters:
+            - TokenRelay=
+            - RemoveRequestHeader=Cookie
+debug: true

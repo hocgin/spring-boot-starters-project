@@ -20,4 +20,5 @@ public class NamedRow {
     private Object idValue;
     private Field targetField;
     private Object targetValue;
+    private Class<?> serviceClass;
 }

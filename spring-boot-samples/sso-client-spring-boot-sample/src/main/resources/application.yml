@@ -1,0 +1,21 @@
+server:
+  port: 20002
+spring:
+  security:
+    oauth2:
+      shostname: http://sso.hocgin.local:20000
+      client:
+        registration:
+          custom2:
+            client-id: client_example2
+            client-secret: hocgin
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
+            authorization-grant-type: authorization_code
+        provider:
+          custom2:
+            user-info-uri: ${spring.security.oauth2.shostname}/oauth/user
+            authorization-uri: ${spring.security.oauth2.shostname}/oauth/authorize
+            token-uri: ${spring.security.oauth2.shostname}/oauth/token
+            user-name-attribute: name
+            jwt:
+              key-uri: ${spring.security.oauth2.shostname}/oauth/token_key
