@@ -8,7 +8,4 @@ spring:
           uri: https://hocg.in
           predicates:
             - Path=/test
-          filters:
-            - TokenRelay=
-            - RemoveRequestHeader=Cookie
 debug: true
