@@ -15,8 +15,6 @@ spring:
             authorization-uri: ${spring.security.oauth2.shostname}/oauth/authorize
             token-uri: ${spring.security.oauth2.shostname}/oauth/token
             user-name-attribute: name
-            jwt:
-              key-uri: ${spring.security.oauth2.shostname}/oauth/token_key
 
 boot:
   sso:
