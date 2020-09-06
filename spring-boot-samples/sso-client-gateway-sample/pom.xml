@@ -9,8 +9,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <name>SSO2 :: Client :: Gateway :: Sample</name>
-  <artifactId>sso2-client-gateway-sample</artifactId>
+  <name>SSO :: Client :: Gateway :: Sample</name>
+  <artifactId>sso-client-gateway-sample</artifactId>
 
   <dependencies>
     <dependency>

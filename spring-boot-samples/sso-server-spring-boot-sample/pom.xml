@@ -9,8 +9,8 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <name>SSO2 :: Server :: Spring Boot :: Sample</name>
-  <artifactId>sso2-server-spring-boot-sample</artifactId>
+  <name>SSO :: Server :: Spring Boot :: Sample</name>
+  <artifactId>sso-server-spring-boot-sample</artifactId>
 
   <dependencies>
     <dependency>

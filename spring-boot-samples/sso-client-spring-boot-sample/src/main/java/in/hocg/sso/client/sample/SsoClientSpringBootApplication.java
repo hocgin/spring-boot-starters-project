@@ -1,4 +1,4 @@
-package in.hocg.sso2.client.sample;
+package in.hocg.sso.client.sample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,17 +9,17 @@ import java.security.Principal;
 import java.util.Objects;
 
 /**
- * Created by hocgin on 2020/8/27
+ * Created by hocgin on 2020/8/15.
  * email: hocgin@gmail.com
  *
  * @author hocgin
  */
 @RestController
 @SpringBootApplication
-public class Sso2ClientApplication {
+public class SsoClientSpringBootApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Sso2ClientApplication.class, args);
+        SpringApplication.run(SsoClientSpringBootApplication.class, args);
     }
 
     @RequestMapping("/user")
