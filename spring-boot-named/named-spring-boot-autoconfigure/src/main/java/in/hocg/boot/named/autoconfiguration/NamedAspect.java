@@ -205,22 +205,23 @@ public class NamedAspect {
                 continue;
             }
             final String value = annotation.value();
-            if (value.equals(namedType)) {
-                NamedArgs namedArgs = new NamedArgs().setArgs(args)
-                    .setValues(Lists.newArrayList(ids));
-                try {
-                    Object invokeResult = method.invoke(namedService, namedArgs);
-                    if (Objects.isNull(invokeResult)) {
-                        return Collections.emptyMap();
-                    } else if (invokeResult instanceof Map) {
-                        return (Map<String, Object>) invokeResult;
-                    } else {
-                        return Collections.emptyMap();
-                    }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    log.warn("服务调用失败, 请检查参数 @Named 提供者[{}], 函数[{}], 参数[{}]", namedService, method, JSONUtil.toJsonStr(namedArgs), e);
+            if (!value.equals(namedType)) {
+                return Collections.emptyMap();
+            }
+            NamedArgs namedArgs = new NamedArgs().setArgs(args)
+                .setValues(Lists.newArrayList(ids));
+            try {
+                Object invokeResult = method.invoke(namedService, namedArgs);
+                if (Objects.isNull(invokeResult)) {
+                    return Collections.emptyMap();
+                } else if (invokeResult instanceof Map) {
+                    return (Map<String, Object>) invokeResult;
+                } else {
                     return Collections.emptyMap();
                 }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                log.warn("服务调用失败, 请检查参数 @Named 提供者[{}], 函数[{}], 参数[{}]", namedService, method, JSONUtil.toJsonStr(namedArgs), e);
+                return Collections.emptyMap();
             }
         }
         return Collections.emptyMap();
