@@ -1,5 +1,6 @@
 package in.hocg.boot.named.autoconfiguration;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import in.hocg.boot.named.autoconfiguration.annotation.InjectNamed;
@@ -205,7 +206,8 @@ public class NamedAspect {
             }
             final String value = annotation.value();
             if (value.equals(namedType)) {
-                NamedArgs namedArgs = new NamedArgs().setArgs(args).setValues(Lists.newArrayList(ids));
+                NamedArgs namedArgs = new NamedArgs().setArgs(args)
+                    .setValues(Lists.newArrayList(ids));
                 try {
                     Object invokeResult = method.invoke(namedService, namedArgs);
                     if (Objects.isNull(invokeResult)) {
@@ -216,8 +218,8 @@ public class NamedAspect {
                         return Collections.emptyMap();
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    log.error("Method Invoke Error: ", e);
-                    throw new NamedInvokeMethodException("服务调用失败", e);
+                    log.warn("服务调用失败, 请检查参数 @Named 提供者[{}], 函数[{}], 参数[{}]", namedService, method, JSONUtil.toJsonStr(namedArgs), e);
+                    return Collections.emptyMap();
                 }
             }
         }
