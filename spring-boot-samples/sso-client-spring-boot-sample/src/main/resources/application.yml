@@ -19,3 +19,8 @@ spring:
             user-name-attribute: name
             jwt:
               key-uri: ${spring.security.oauth2.shostname}/oauth/token_key
+boot:
+  sso:
+    client:
+      ignore-urls:
+        - '/ignore'

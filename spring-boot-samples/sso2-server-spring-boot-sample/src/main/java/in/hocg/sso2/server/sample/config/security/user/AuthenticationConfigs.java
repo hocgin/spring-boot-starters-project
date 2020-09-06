@@ -2,7 +2,6 @@ package in.hocg.sso2.server.sample.config.security.user;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 
 /**
@@ -22,18 +21,19 @@ public class AuthenticationConfigs {
         final AuthorizedSuccessHandle successHandler = new AuthorizedSuccessHandle(LOGIN_SUCCESS_PAGE);
         final AuthorizedFailureHandle failureHandle = new AuthorizedFailureHandle(LOGIN_PAGE);
 
+        // ==== OAuth2.0 ====
+        http.oauth2Client();
+        http.oauth2Login().loginPage(LOGIN_PAGE);
+
         // ==== Form 表单 ====
         {
-            http.formLogin()
-                    .loginPage(LOGIN_PAGE)
-                    .successHandler(successHandler)
-                    .failureHandler(failureHandle)
+            http.formLogin().loginPage(LOGIN_PAGE)
+                .successHandler(successHandler)
+                .failureHandler(failureHandle)
                 .permitAll();
         }
-    }
-
-    public void providers(AuthenticationManagerBuilder auth) {
 
     }
+
 
 }

@@ -34,6 +34,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
             .cors().disable()
             .authorizeRequests()
+            .antMatchers("/login/oauth2/code/github").permitAll()
             .anyRequest().authenticated().and()
         ;
         http.exceptionHandling()
@@ -45,7 +46,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        authenticationConfigs.providers(auth);
         auth.userDetailsService(userDetailsService);
     }
 

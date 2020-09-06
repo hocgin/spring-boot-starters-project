@@ -16,23 +16,11 @@
     <button type="submit">登录</button>
 </form>
 
-
-<form th:action="@{/signin/facebook}" method="POST">
-    <!--    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
-    <input type="hidden" name="scope" value="read_stream,user_posts,user_photos"/>
-    <button type="submit">facebook</button>
-</form>
-
-<form th:action="@{/signin/qq}" method="POST">
-    <!--    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
-    <input type="hidden" name="scope" value="read_stream,user_posts,user_photos"/>
-    <button type="submit">qq</button>
-</form>
-
-<form th:action="@{/signin/github}" method="POST">
+<form th:action="@{/oauth2/authorization/github}" method="GET">
     <!--    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
     <input type="hidden" name="scope" value="read_stream,user_posts,user_photos"/>
     <button type="submit">github</button>
 </form>
+
 </body>
 </html>
