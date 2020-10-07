@@ -37,6 +37,7 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
                 .authenticated().and();
         }
         http.oauth2Login();
+        http.csrf().disable();
     }
 
 }

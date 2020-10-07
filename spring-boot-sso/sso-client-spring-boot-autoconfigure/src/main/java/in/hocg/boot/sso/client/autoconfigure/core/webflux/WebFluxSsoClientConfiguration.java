@@ -37,6 +37,7 @@ public class WebFluxSsoClientConfiguration {
                 .authenticated().and();
         }
         http.oauth2Login();
+        http.csrf().disable();
 
         return http.build();
     }
