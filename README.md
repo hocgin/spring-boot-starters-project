@@ -2,12 +2,15 @@
 - spring-boot-starters-parent
   - spring-boot-samples
   - spring-boot-starters
-     - spring-boot-distributed-lock
-     - spring-boot-mybatis-plus
-     - spring-boot-named
-     - spring-boot-oss
-     - spring-boot-cache
-     - spring-boot-knife
-     - spring-boot-web
-     - spring-boot-message
-     - spring-boot-logging
+     - cache-spring-boot-starter `缓存基于 Redis`
+     - distributed-lock-spring-boot-starter `分布式锁`
+     - knife-gateway-spring-boot-starter `Knife 网关端`
+     - knife-service-spring-boot-starter `Knife 微服务端`
+     - logging-spring-boot-starter `日志 基于阿里云日志`
+     - message-spring-boot-starter `事务消息`
+     - mybatis-plus-spring-boot-starter `mybatis-plus 薄封装`
+     - named-spring-boot-starter `named 解决微服务跨库/表查询问题`
+     - openfeign-spring-boot-starter `openfeign`
+     - oss-spring-boot-starter `对象存储 七牛/阿里云`
+     - sso-client-spring-boot-starter `单点登陆 客户端(网关/web)`
+     - web-spring-boot-starter `web常用配置 (自定义异常/工具)`
