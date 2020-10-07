@@ -18,10 +18,25 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = OssProperties.PREFIX)
 public class OssProperties {
     public static final String PREFIX = "boot.oss";
+    /**
+     * Access Key
+     */
     private String accessKey;
+    /**
+     * Secret Key
+     */
     private String secretKey;
+    /**
+     * Space
+     */
     private String space;
+    /**
+     * Domain
+     */
     private String domain;
+    /**
+     * OSS Type
+     */
     private OssType type = OssType.AliYun;
 
     public enum OssType {

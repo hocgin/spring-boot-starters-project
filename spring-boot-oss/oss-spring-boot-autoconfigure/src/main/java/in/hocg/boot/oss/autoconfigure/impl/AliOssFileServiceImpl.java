@@ -38,7 +38,10 @@ public class AliOssFileServiceImpl implements OssFileService, InitializingBean {
     }
 
     private String getFileUrl(String key) {
-        return URLUtil.completeUrl(domain, key);
+        String[] subStr = domain.split("://", 2);
+        String prefix = subStr[0];
+        String suffix = subStr[1];
+        return URLUtil.completeUrl(String.format("%s://%s.%s", prefix, space, suffix), key);
     }
 
     @Override
