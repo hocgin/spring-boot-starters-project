@@ -4,6 +4,7 @@ import feign.codec.ErrorDecoder;
 import in.hocg.boot.openfeign.autoconfiguration.decoder.ExceptionErrorDecoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.openfeign.ribbon.FeignRibbonClientAutoConfiguration;
@@ -25,6 +26,7 @@ import org.springframework.context.annotation.Lazy;
 public class OpenfeignAutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean
     public ErrorDecoder errorDecoder() {
         return new ExceptionErrorDecoder();
     }
