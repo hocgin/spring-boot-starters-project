@@ -35,6 +35,7 @@
     <module>spring-boot-distributed-lock</module>
     <module>spring-boot-message</module>
     <module>spring-boot-logging</module>
+    <module>spring-boot-openfeign</module>
   </modules>
 
   <repositories>
