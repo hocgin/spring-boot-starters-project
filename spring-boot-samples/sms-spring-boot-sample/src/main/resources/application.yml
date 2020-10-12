@@ -1,9 +1,10 @@
 debug: true
-
+spring:
+  profiles:
+    active: local
 boot:
   sms:
     enabled: true
-    domain: cn-hangzhou
+    regionId: cn-hangzhou
     secretKey: <secret-access/>
     accessKey: <access-key/>
-    space: <default-space/>

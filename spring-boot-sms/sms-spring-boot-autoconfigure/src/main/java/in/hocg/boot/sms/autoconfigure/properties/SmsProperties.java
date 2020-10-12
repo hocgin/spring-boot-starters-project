@@ -19,6 +19,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class SmsProperties {
     public static final String PREFIX = "boot.sms";
     /**
+     * 开启状态
+     */
+    private Boolean enabled;
+    /**
      * Region Id
      */
     private String regionId;
