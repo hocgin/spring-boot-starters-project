@@ -14,10 +14,25 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class LoggingProperties {
     public static final String PREFIX = "boot.logging";
 
+    /**
+     * 项目名称
+     */
     private String projectName;
+    /**
+     * logstore
+     */
     private String logStore;
+    /**
+     * endpoint
+     */
     private String endpoint;
+    /**
+     * accessKeyId
+     */
     private String accessKeyId;
+    /**
+     * access-key
+     */
     private String accessKey;
     /**
      * Topic

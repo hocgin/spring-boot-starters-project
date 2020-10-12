@@ -20,10 +20,10 @@ import org.springframework.context.annotation.Lazy;
  */
 @Configuration
 @EnableCaching
-@EnableConfigurationProperties({OpenfeignProperties.class})
+@EnableConfigurationProperties({OpenFeignProperties.class})
 @ConditionalOnClass(FeignRibbonClientAutoConfiguration.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class OpenfeignAutoConfiguration {
+public class OpenFeignAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean

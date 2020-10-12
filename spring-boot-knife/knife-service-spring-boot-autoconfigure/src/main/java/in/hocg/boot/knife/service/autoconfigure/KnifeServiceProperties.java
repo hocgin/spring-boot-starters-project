@@ -14,11 +14,28 @@ import springfox.documentation.service.Contact;
 @ConfigurationProperties(prefix = KnifeServiceProperties.PREFIX)
 public class KnifeServiceProperties {
     public static final String PREFIX = "boot.knife.service";
-
+    /**
+     * 开启状态
+     */
     private Boolean enabled = true;
+    /**
+     * 版本号
+     */
     private String version = "1.0";
+    /**
+     * 描述
+     */
     private String description = "这个人很懒没有填写";
+    /**
+     * 联系方式
+     */
     private Contact contact;
+    /**
+     * 协议
+     */
     private String license;
+    /**
+     * 协议URL
+     */
     private String licenseUrl;
 }

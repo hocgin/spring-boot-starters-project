@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author hocgin
  */
 @Data
-@ConfigurationProperties(OpenfeignProperties.PREFIX)
-public class OpenfeignProperties {
+@ConfigurationProperties(OpenFeignProperties.PREFIX)
+public class OpenFeignProperties {
     public static final String PREFIX = "boot.openfeign";
 }
