@@ -11,11 +11,11 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
 
-  <name>Spring Boot :: OpenFeign</name>
-  <artifactId>spring-boot-openfeign</artifactId>
+  <name>Spring Boot :: SMS</name>
+  <artifactId>spring-boot-sms</artifactId>
 
   <modules>
-    <module>openfeign-spring-boot-autoconfigure</module>
+    <module>sms-spring-boot-autoconfigure</module>
   </modules>
 
 </project>

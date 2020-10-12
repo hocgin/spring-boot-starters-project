@@ -36,6 +36,7 @@
     <module>spring-boot-message</module>
     <module>spring-boot-logging</module>
     <module>spring-boot-openfeign</module>
+    <module>spring-boot-sms</module>
   </modules>
 
   <repositories>

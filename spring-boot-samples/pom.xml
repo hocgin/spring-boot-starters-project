@@ -17,6 +17,7 @@
   <modules>
     <module>named-spring-boot-sample</module>
     <module>oss-spring-boot-sample</module>
+    <module>sms-spring-boot-sample</module>
     <module>web-spring-boot-sample</module>
     <module>knife-gateway-sample</module>
     <module>mybatis-plus-spring-boot-sample</module>

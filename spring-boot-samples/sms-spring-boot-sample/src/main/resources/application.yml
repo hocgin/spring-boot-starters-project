@@ -1,0 +1,9 @@
+debug: true
+
+boot:
+  sms:
+    enabled: true
+    domain: cn-hangzhou
+    secretKey: <secret-access/>
+    accessKey: <access-key/>
+    space: <default-space/>

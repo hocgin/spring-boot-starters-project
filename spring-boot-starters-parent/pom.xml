@@ -39,6 +39,7 @@
     <rocketmq-spring-boot-starter.version>2.1.0</rocketmq-spring-boot-starter.version>
     <jjwt.version>0.9.1</jjwt.version>
     <aliyun-log-log4j2-appender.version>0.1.10</aliyun-log-log4j2-appender.version>
+    <aliyun-java-sdk-core.version>4.4.6</aliyun-java-sdk-core.version>
   </properties>
 
   <dependencyManagement>
@@ -160,6 +161,16 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>sms-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>sms-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>named-interface</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -248,6 +259,11 @@
         <version>${aliyun-oss.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.aliyun</groupId>
+        <artifactId>aliyun-java-sdk-core</artifactId>
+        <version>${aliyun-java-sdk-core.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.qiniu</groupId>
         <artifactId>qiniu-java-sdk</artifactId>
         <version>${qiniu-java-sdk.version}</version>
@@ -307,42 +323,27 @@
         </includes>
       </resource>
       <resource>
-        <filtering>true</filtering>
         <directory>src/main/resources</directory>
-        <includes>
-          <include>**/application*.yml</include>
-          <include>**/application*.yaml</include>
-          <include>**/application*.properties</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <excludes>
-          <exclude>**/application*.yml</exclude>
-          <exclude>**/application*.yaml</exclude>
-          <exclude>**/application*.properties</exclude>
-        </excludes>
       </resource>
     </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-        <configuration>
-          <fork>true</fork>
-          <source>${java.source.version}</source>
-          <target>${java.target.version}</target>
-          <encoding>${project.build.sourceEncoding}</encoding>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.projectlombok</groupId>
-              <artifactId>lombok</artifactId>
-              <version>${lombok.version}</version>
-            </path>
-          </annotationProcessorPaths>
-        </configuration>
-      </plugin>
-    </plugins>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven-compiler-plugin.version}</version>
+          <configuration>
+            <fork>true</fork>
+            <source>${java.source.version}</source>
+            <target>${java.target.version}</target>
+            <encoding>${project.build.sourceEncoding}</encoding>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 </project>

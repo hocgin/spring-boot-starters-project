@@ -17,6 +17,7 @@
   <modules>
     <module>named-spring-boot-starter</module>
     <module>oss-spring-boot-starter</module>
+    <module>sms-spring-boot-starter</module>
     <module>sso-client-spring-boot-starter</module>
     <module>mybatis-plus-spring-boot-starter</module>
     <module>cache-spring-boot-starter</module>
