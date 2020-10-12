@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.openfeign.autoconfiguration.OpenfeignAutoConfiguration
+in.hocg.boot.openfeign.autoconfiguration.OpenFeignAutoConfiguration

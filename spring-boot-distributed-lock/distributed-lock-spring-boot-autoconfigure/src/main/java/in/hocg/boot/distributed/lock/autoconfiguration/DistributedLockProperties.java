@@ -13,6 +13,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(DistributedLockProperties.PREFIX)
 public class DistributedLockProperties {
     public static final String PREFIX = "boot.distributed-lock";
+    /**
+     * 锁类型
+     */
     private LockType type = LockType.Redisson;
 
     public enum LockType {

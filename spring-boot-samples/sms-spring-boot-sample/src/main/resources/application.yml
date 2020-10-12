@@ -1,0 +1,10 @@
+debug: true
+spring:
+  profiles:
+    active: local
+boot:
+  sms:
+    enabled: true
+    regionId: cn-hangzhou
+    secretKey: <secret-access/>
+    accessKey: <access-key/>

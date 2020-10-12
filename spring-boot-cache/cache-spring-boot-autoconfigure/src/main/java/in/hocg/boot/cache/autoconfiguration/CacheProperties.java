@@ -18,6 +18,9 @@ import java.util.List;
 public class CacheProperties {
     public static final String PREFIX = "boot.cache";
 
+    /**
+     * 缓存配置
+     */
     private List<CacheName> names = Collections.emptyList();
 
     @Data
