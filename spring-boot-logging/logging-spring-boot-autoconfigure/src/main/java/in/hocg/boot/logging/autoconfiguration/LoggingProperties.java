@@ -27,9 +27,9 @@ public class LoggingProperties {
      */
     private String endpoint;
     /**
-     * accessKeyId
+     * secretKey
      */
-    private String accessKeyId;
+    private String secretKey;
     /**
      * access-key
      */
