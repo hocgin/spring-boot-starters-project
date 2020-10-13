@@ -38,7 +38,7 @@
     <p6spy.version>3.8.7</p6spy.version>
     <rocketmq-spring-boot-starter.version>2.1.0</rocketmq-spring-boot-starter.version>
     <jjwt.version>0.9.1</jjwt.version>
-    <aliyun-log-log4j2-appender.version>0.1.10</aliyun-log-log4j2-appender.version>
+    <aliyun-log-log4j2-appender.version>0.1.11</aliyun-log-log4j2-appender.version>
     <aliyun-java-sdk-core.version>4.4.6</aliyun-java-sdk-core.version>
   </properties>
 

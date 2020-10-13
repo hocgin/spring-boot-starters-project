@@ -1,6 +1,6 @@
 boot:
   logging:
-    topic: ${spring.application.name}
+    topic: ${spring.application.name:unknow}
     source: ${spring.cloud.client.ip-address}
 logging:
   config: classpath:log4j2-boot.xml
