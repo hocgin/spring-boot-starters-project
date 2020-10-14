@@ -27,11 +27,11 @@
       </DefaultRolloverStrategy>
     </RollingFile>
     <Loghub name="Loghub"
-            projectName="${logging:boot.logging.project-name}"
+            project="${logging:boot.logging.project-name}"
             logstore="${logging:boot.logging.log-store}"
             endpoint="${logging:boot.logging.endpoint}"
-            accessKeyId="${logging:boot.logging.access-key-id}"
-            accessKey="${logging:boot.logging.access-key}"
+            accessKeyId="${logging:boot.logging.access-key}"
+            accessKeySecret="${logging:boot.logging.secret-key}"
             packageTimeoutInMS="3000"
             logsCountPerPackage="4096"
             logsBytesPerPackage="3145728"
