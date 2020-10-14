@@ -29,6 +29,7 @@
     <module>logging-spring-boot-starter</module>
     <module>openfeign-spring-boot-starter</module>
     <module>mail-spring-boot-starter</module>
+    <module>validation-spring-boot-starter</module>
   </modules>
 
 </project>
