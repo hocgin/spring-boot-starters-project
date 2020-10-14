@@ -40,6 +40,7 @@
     <jjwt.version>0.9.1</jjwt.version>
     <aliyun-log-log4j2-appender.version>0.1.11</aliyun-log-log4j2-appender.version>
     <aliyun-java-sdk-core.version>4.4.6</aliyun-java-sdk-core.version>
+    <mail.version>1.4.7</mail.version>
   </properties>
 
   <dependencyManagement>
@@ -161,6 +162,16 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>mail-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mail-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>sms-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -272,6 +283,11 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>${lombok.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.mail</groupId>
+        <artifactId>mail</artifactId>
+        <version>${mail.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>

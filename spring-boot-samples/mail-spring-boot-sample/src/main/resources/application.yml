@@ -1,0 +1,10 @@
+debug: true
+spring:
+  profiles:
+    active: local
+boot:
+  mail:
+    host: unknown
+    from: unknown
+    user: unknown
+    pass: unknown

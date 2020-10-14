@@ -37,6 +37,7 @@
     <module>spring-boot-logging</module>
     <module>spring-boot-openfeign</module>
     <module>spring-boot-sms</module>
+    <module>spring-boot-mail</module>
   </modules>
 
   <repositories>
