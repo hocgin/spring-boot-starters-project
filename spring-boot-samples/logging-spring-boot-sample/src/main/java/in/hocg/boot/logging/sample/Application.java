@@ -26,8 +26,7 @@ public class Application {
 
     @GetMapping("/log")
     @UseLogger("测试一下日志功能")
-    public String log() {
+    public void log() {
         log.info("测试一下日志哈");
-        return "ok";
     }
 }

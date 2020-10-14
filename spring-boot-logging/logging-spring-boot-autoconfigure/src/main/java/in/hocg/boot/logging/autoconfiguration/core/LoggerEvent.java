@@ -117,11 +117,11 @@ public class LoggerEvent {
 
     private String toJsonPrettyStr(Object object) {
         if (Objects.isNull(object)) {
-            return null;
+            return "null";
         }
 
         try {
-            return JSONUtil.toJsonPrettyStr(ret);
+            return JSONUtil.toJsonPrettyStr(object);
         } catch (Exception ignored) {
             return String.valueOf(object);
         }
