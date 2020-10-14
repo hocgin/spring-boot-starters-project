@@ -63,7 +63,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
         // 如果关闭了状态
         final Integer enabled = entity.getEnabled();
         if (Objects.nonNull(enabled)
-            && LangUtils.equals(Enabled.Off.getCode(), enabled)) {
+            && Enabled.Off.eq(enabled)) {
             updateOffStatusByRightLikeTreePath(fullEntity.getTreePath());
         }
 
@@ -87,7 +87,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
 
         // 检查开启状态
         if (Objects.nonNull(enabled)
-            && LangUtils.equals(Enabled.On.getCode(), enabled)) {
+            && Enabled.On.eq(enabled)) {
             Optional<T> parentOpt = Optional.empty();
             if (Objects.nonNull(parentId)) {
                 parentOpt = Optional.ofNullable(getById(parentId));
@@ -96,8 +96,8 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
             }
 
             if (parentOpt.isPresent()) {
-                boolean parentIsOff = LangUtils.equals(Enabled.Off.getCode(), parentOpt.get().getEnabled());
-                boolean nowIsOn = LangUtils.equals(Enabled.On.getCode(), enabled);
+                boolean parentIsOff = Enabled.Off.eq(parentOpt.get().getEnabled());
+                boolean nowIsOn = Enabled.On.eq(enabled);
                 ValidUtils.isFalse(parentIsOff && nowIsOn, "父级为禁用状态，子级不能为开启状态");
             }
         }
