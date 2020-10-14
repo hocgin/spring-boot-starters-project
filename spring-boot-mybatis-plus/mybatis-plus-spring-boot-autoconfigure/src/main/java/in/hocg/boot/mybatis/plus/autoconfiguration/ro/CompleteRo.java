@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.qo;
+package in.hocg.boot.mybatis.plus.autoconfiguration.ro;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
