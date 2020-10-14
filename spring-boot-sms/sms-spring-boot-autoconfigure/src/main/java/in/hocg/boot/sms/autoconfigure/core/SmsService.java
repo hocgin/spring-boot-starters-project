@@ -1,8 +1,10 @@
 package in.hocg.boot.sms.autoconfigure.core;
 
-import in.hocg.boot.sms.autoconfigure.impl.aliyun.SmsTemplate;
+import in.hocg.boot.sms.autoconfigure.impl.aliyun.request.BatchSmsRequest;
 import lombok.NonNull;
 
+import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Map;
  */
 public interface SmsService {
 
-    void sendBatchSms(String text);
+    String sendBatchSms(@NotNull List<BatchSmsRequest.Item> items, @NonNull String templateCode);
 
-    String sendSms(@NonNull String phone, @NonNull SmsTemplate template, Map<String, String> vars);
+    String sendSms(@NonNull String phone, @NonNull String signName, @NonNull String templateCode, Map<String, String> vars);
 }

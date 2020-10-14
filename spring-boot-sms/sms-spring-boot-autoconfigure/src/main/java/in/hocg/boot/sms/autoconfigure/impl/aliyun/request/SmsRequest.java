@@ -17,27 +17,24 @@ import java.util.Map;
  */
 @Data
 @Accessors(chain = true)
-public class SmsRequest {
+public class SmsRequest implements AbsRequest {
     private final String phoneNumbers;
     private final String signName;
     private final String templateCode;
-    private String regionId;
-    private Map<String, String> vars = Collections.emptyMap();
+    private Map<String, String> templateParam = Collections.emptyMap();
 
+    @Override
     public CommonRequest build() {
         CommonRequest request = new CommonRequest();
         request.setSysDomain("dysmsapi.aliyuncs.com");
         request.setSysVersion("2017-05-25");
         request.setSysAction("SendSms");
-        request.putQueryParameter("RegionId", regionId);
         request.putQueryParameter("PhoneNumbers", phoneNumbers);
         request.putQueryParameter("SignName", signName);
         request.putQueryParameter("TemplateCode", templateCode);
-//        request.putQueryParameter("SmsUpExtendCode", "1");
-//        request.putQueryParameter("OutId", "11");
 
-        if (CollectionUtil.isNotEmpty(vars)) {
-            request.putQueryParameter("TemplateParam", JSONUtil.toJsonStr(vars));
+        if (CollectionUtil.isNotEmpty(templateParam)) {
+            request.putQueryParameter("TemplateParam", JSONUtil.toJsonStr(templateParam));
         }
         return request;
     }

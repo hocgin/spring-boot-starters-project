@@ -1,5 +1,7 @@
 package in.hocg.boot.sms.autoconfigure.impl.aliyun;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -8,13 +10,17 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import in.hocg.boot.sms.autoconfigure.core.SmsService;
 import in.hocg.boot.sms.autoconfigure.exception.SmsException;
+import in.hocg.boot.sms.autoconfigure.impl.aliyun.request.BatchSmsRequest;
 import in.hocg.boot.sms.autoconfigure.impl.aliyun.request.SmsRequest;
+import in.hocg.boot.sms.autoconfigure.impl.aliyun.response.SmsResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Lazy;
 
+import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,21 +44,32 @@ public class AliSmsServiceImpl implements SmsService, InitializingBean {
     }
 
     @Override
-    public void sendBatchSms(String text) {
-
+    public String sendBatchSms(@NotNull List<BatchSmsRequest.Item> items, @NonNull String templateCode) {
+        CommonRequest request = new BatchSmsRequest(templateCode)
+            .setItems(items).build();
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            SmsResponse responseData = JSONUtil.toBean(response.getData(), SmsResponse.class);
+            if (!responseData.isSuccess()) {
+                throw new SmsException(StrUtil.format("发送失败: 失败原因=[{}], Code=[{}]", responseData.getMessage(), responseData.getCode()));
+            }
+            return responseData.getBizId();
+        } catch (ClientException e) {
+            throw new SmsException(e);
+        }
     }
 
     @Override
-    public String sendSms(@NonNull String phone, @NonNull SmsTemplate template, Map<String, String> vars) {
-        String signName = template.getSignName();
-        String templateCode = template.getTemplateCode();
+    public String sendSms(@NonNull String phone, @NonNull String signName, @NonNull String templateCode, Map<String, String> vars) {
         CommonRequest request = new SmsRequest(phone, signName, templateCode)
-            .setVars(vars).build();
+            .setTemplateParam(vars).build();
         try {
             CommonResponse response = client.getCommonResponse(request);
-            String data = response.getData();
-            log.debug("响应内容: {}", data);
-            return data;
+            SmsResponse responseData = JSONUtil.toBean(response.getData(), SmsResponse.class);
+            if (!responseData.isSuccess()) {
+                throw new SmsException(StrUtil.format("发送失败: 失败原因=[{}], Code=[{}]", responseData.getMessage(), responseData.getCode()));
+            }
+            return responseData.getBizId();
         } catch (ClientException e) {
             throw new SmsException(e);
         }

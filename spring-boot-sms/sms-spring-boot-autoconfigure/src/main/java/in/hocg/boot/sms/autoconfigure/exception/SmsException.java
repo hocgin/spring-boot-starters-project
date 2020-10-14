@@ -10,4 +10,7 @@ public class SmsException extends RuntimeException {
     public SmsException(Throwable cause) {
         super(cause);
     }
+    public SmsException(String message) {
+        super(message);
+    }
 }
