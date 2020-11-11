@@ -1,14 +1,22 @@
 package in.hocg.boot.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
+import com.google.common.collect.Lists;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -182,6 +190,149 @@ public class LangUtils {
         List<String> result = new ArrayList<>();
         for (Object i : arr) {
             result.add(toString(i));
+        }
+        return result;
+    }
+
+    /**
+     * 提取 List 项的值
+     *
+     * @param values
+     * @param keyFunction
+     * @param <V>
+     * @param <R>
+     * @return
+     */
+    public <V, R> List<R> toList(Iterable<V> values, Function<? super V, R> keyFunction) {
+        List<R> result = Lists.newArrayList();
+        for (V val : values) {
+            result.add(keyFunction.apply(val));
+        }
+        return result;
+    }
+
+    /**
+     * 移除 all 中的 sub
+     * all - sub
+     *
+     * @param all
+     * @param sub
+     * @param biFunction
+     * @param <R>
+     * @param <T>
+     * @return
+     */
+    public <R, T> List<R> removeIfExits(Collection<R> all, Collection<T> sub, BiFunction<R, T, Boolean> biFunction) {
+        List<R> result = Lists.newArrayList(all);
+        if (result.isEmpty()) {
+            return result;
+        }
+        final Iterator<R> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            final R r = iterator.next();
+            for (T t : sub) {
+                if (biFunction.apply(r, t)) {
+                    iterator.remove();
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 获取两个 List 的交集
+     *
+     * @param l1
+     * @param l2
+     * @param biFunction
+     * @param <R>
+     * @param <T>
+     * @return
+     */
+    public <R, T> List<R> getMixed(Collection<R> l1, Collection<T> l2, BiFunction<R, T, Boolean> biFunction) {
+        List<R> result = Lists.newArrayList();
+        for (R r : l1) {
+            for (T t : l2) {
+                if (biFunction.apply(r, t)) {
+                    result.add(r);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 获取如果为 NULL，则返回默认值
+     *
+     * @param v
+     * @param def
+     * @param <T>
+     * @return
+     */
+    public <T> T getOrDefault(T v, T def) {
+        if (Objects.isNull(v)) {
+            return def;
+        }
+        return v;
+    }
+
+    /**
+     * 如果传入的值不为 NULL，则当作入参执行后续函数
+     *
+     * @param v
+     * @param func
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    public <K, V> Optional<V> callIfNotNull(K v, Function<K, V> func) {
+        if (Objects.nonNull(v)) {
+            return Optional.ofNullable(func.apply(v));
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * 如果传入的值不为 NULL，则当作入参执行后续函数
+     *
+     * @param v
+     * @param consumer
+     * @param>
+     */
+    public <T> void setIfNotNull(T v, Consumer<T> consumer) {
+        if (Objects.nonNull(v)) {
+            consumer.accept(v);
+        }
+    }
+
+    /**
+     * 分组调用
+     * - 将大批量数据，分组后，在整合
+     *
+     * @param allIds
+     * @param queryFunction
+     * @param len
+     * @param <R>
+     * @param <P>
+     * @return
+     */
+    public <R, P> List<R> groupCallback(Collection<P> allIds,
+                                        Function<Collection<P>, Collection<R>> queryFunction, int len) {
+        if (CollectionUtil.isEmpty(allIds)) {
+            return Collections.emptyList();
+        }
+        List<P> all = Lists.newArrayList(allIds);
+        List<R> result = Lists.newArrayList();
+
+        int startIndex = 0;
+        final int maxLength = all.size();
+
+        while (startIndex < maxLength) {
+            int toIndex = Math.min((startIndex + len), maxLength);
+
+            final List<P> ids = all.subList(startIndex, toIndex);
+            result.addAll(queryFunction.apply(ids));
+            startIndex = toIndex;
         }
         return result;
     }
