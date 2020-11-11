@@ -61,7 +61,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
         }
 
         // 如果关闭了状态
-        final Integer enabled = entity.getEnabled();
+        final String enabled = entity.getEnabled();
         if (Objects.nonNull(enabled)
             && Enabled.Off.eq(enabled)) {
             updateOffStatusByRightLikeTreePath(fullEntity.getTreePath());
@@ -75,7 +75,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
     public void validEntity(T entity) {
         final Long id = entity.getId();
         final Long parentId = entity.getParentId();
-        final Integer enabled = entity.getEnabled();
+        final String enabled = entity.getEnabled();
 
         // 检查父级
         if (Objects.nonNull(parentId)) {

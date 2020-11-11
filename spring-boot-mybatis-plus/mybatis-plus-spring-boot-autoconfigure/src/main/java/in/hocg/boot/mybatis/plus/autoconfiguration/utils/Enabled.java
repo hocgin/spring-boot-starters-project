@@ -15,8 +15,8 @@ import java.io.Serializable;
 @Getter
 @RequiredArgsConstructor
 public enum Enabled implements DataDictEnum {
-    On(1, "开启"),
-    Off(0, "关闭");
+    On("on", "开启"),
+    Off("off", "关闭");
     private final Serializable code;
     private final String name;
 }
