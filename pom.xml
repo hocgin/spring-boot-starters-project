@@ -39,6 +39,7 @@
     <module>spring-boot-sms</module>
     <module>spring-boot-mail</module>
     <module>spring-boot-validation</module>
+    <module>spring-boot-utils</module>
   </modules>
 
   <repositories>

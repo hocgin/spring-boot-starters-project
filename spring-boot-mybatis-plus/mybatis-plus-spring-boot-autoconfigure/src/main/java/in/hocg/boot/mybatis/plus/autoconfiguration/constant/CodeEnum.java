@@ -1,6 +1,6 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.constant;
 
-import in.hocg.boot.mybatis.plus.autoconfiguration.utils.LangUtils;
+import in.hocg.boot.utils.LangUtils;
 
 import java.io.Serializable;
 import java.util.Optional;

@@ -16,6 +16,10 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>spring-boot-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>named-interface</artifactId>
     </dependency>
     <dependency>

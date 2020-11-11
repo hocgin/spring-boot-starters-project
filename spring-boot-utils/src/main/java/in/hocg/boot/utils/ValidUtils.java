@@ -1,7 +1,7 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.utils;
+package in.hocg.boot.utils;
 
+import cn.hutool.core.lang.Assert;
 import lombok.experimental.UtilityClass;
-import org.springframework.util.Assert;
 
 /**
  * Created by hocgin on 2020/2/15.
