@@ -34,7 +34,7 @@ public abstract class TreeEntity<T extends TreeEntity<?>> extends AbstractEntity
      * 启用状态
      */
     @TableField(TreeEntity.ENABLED)
-    private Integer enabled;
+    private String enabled;
 
     public static final String ID = "id";
     public static final String PARENT_ID = "parent_id";
