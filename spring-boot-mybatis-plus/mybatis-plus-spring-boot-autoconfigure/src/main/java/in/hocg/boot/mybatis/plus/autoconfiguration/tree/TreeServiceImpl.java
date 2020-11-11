@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import in.hocg.boot.mybatis.plus.autoconfiguration.AbstractServiceImpl;
 import in.hocg.boot.mybatis.plus.autoconfiguration.utils.Enabled;
-import in.hocg.boot.mybatis.plus.autoconfiguration.utils.LangUtils;
-import in.hocg.boot.mybatis.plus.autoconfiguration.utils.ValidUtils;
+import in.hocg.boot.utils.ValidUtils;
+import in.hocg.boot.utils.LangUtils;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 

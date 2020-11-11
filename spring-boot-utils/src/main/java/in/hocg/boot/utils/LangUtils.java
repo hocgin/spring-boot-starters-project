@@ -1,6 +1,5 @@
-package in.hocg.boot.named.autoconfiguration.core;
+package in.hocg.boot.utils;
 
-import com.google.common.collect.Lists;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Field;
@@ -13,7 +12,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * Created by hocgin on 2020/1/5.
+ * Created by hocgin on 2020/8/6
  * email: hocgin@gmail.com
  *
  * @author hocgin
@@ -138,7 +137,7 @@ public class LangUtils {
      * @return []
      */
     public List<Field> getAllField(Class<?> clazz) {
-        ArrayList<Field> result = new ArrayList<>();
+        List<Field> result = new ArrayList<>();
         result.addAll(Arrays.asList(clazz.getDeclaredFields()));
 
         Class<?> superclass = clazz.getSuperclass();
@@ -180,7 +179,7 @@ public class LangUtils {
     }
 
     public List<String> toList(Object[] arr) {
-        List<String> result = Lists.newArrayList();
+        List<String> result = new ArrayList<>();
         for (Object i : arr) {
             result.add(toString(i));
         }

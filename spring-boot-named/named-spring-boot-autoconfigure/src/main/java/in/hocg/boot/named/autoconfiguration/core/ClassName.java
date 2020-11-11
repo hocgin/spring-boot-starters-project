@@ -1,6 +1,7 @@
 package in.hocg.boot.named.autoconfiguration.core;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import in.hocg.boot.utils.LangUtils;
 
 /**
  * Created by hocgin on 2020/8/14
