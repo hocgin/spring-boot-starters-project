@@ -11,7 +11,3 @@ spring:
     druid:
       validation-query: SELECT 1
       test-while-idle: true
-mybatis-plus:
-  global-config:
-    banner: false
-  mapper-locations: classpath*:/**/xml/*.xml
