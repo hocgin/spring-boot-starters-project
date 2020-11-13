@@ -19,6 +19,7 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
@@ -28,8 +29,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
  * @author hocgin
  */
 @Configuration
-@EnableSwagger2WebMvc
 @EnableKnife4j
+@EnableSwagger2WebMvc
+@EnableSwagger2WebFlux
 @Import({BeanValidatorPluginsConfiguration.class})
 @ConditionalOnClass({Swagger.class, EnableKnife4j.class})
 @EnableConfigurationProperties(KnifeServiceProperties.class)
@@ -37,7 +39,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class KnifeServiceAutoConfiguration {
 
-    @Value("${spring.application.name:Unknown}")
+    @Value("${spring.application.name:unknown}")
     private String applicationName;
     private final KnifeServiceProperties properties;
 

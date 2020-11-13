@@ -89,10 +89,10 @@ public class LoggerAspect {
                 .collect(Collectors.toList());
 
             Optional<HttpServletRequest> requestOpt = this.getRequest();
-            String uri = "Unknown";
-            String requestMethod = "Unknown";
-            String host = "Unknown";
-            String userAgent = "Unknown";
+            String uri = "unknown";
+            String requestMethod = "unknown";
+            String host = "unknown";
+            String userAgent = "unknown";
             String clientIp = "0.0.0.0";
             String source = null;
             if (requestOpt.isPresent()) {
