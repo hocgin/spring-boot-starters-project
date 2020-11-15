@@ -206,7 +206,7 @@ public class NamedAspect {
             }
             final String value = annotation.value();
             if (!value.equals(namedType)) {
-                return Collections.emptyMap();
+                continue;
             }
             NamedArgs namedArgs = new NamedArgs().setArgs(args)
                 .setValues(Lists.newArrayList(ids));
