@@ -5,10 +5,14 @@ sso:
     clients:
       - client-id: client_example
         client-secret: hocgin
-        redirect-uris: http://example.hocgin.local:20001/login/oauth2/code/custom
+        redirect-uris:
+          - http://example.hocgin.local:20001/login/oauth2/code/custom
+          - http://example.hocgin2.local:20001/login/oauth2/code/custom
       - client-id: client_example2
         client-secret: hocgin
-        redirect-uris: http://example.hocgin2.local:20002/login/oauth2/code/custom2
+        redirect-uris:
+          - http://example.hocgin.local:20002/login/oauth2/code/custom
+          - http://example.hocgin2.local:20002/login/oauth2/code/custom2
 spring:
   security:
     oauth2:
