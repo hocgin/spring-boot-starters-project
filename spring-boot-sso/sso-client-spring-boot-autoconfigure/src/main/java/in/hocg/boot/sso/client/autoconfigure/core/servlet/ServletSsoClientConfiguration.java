@@ -1,7 +1,9 @@
 package in.hocg.boot.sso.client.autoconfigure.core.servlet;
 
+import in.hocg.boot.sso.client.autoconfigure.core.ExceptionHandlers;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.configurers.Expression
  *
  * @author hocgin
  */
+@Slf4j
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @ConditionalOnMissingBean(WebSecurityConfigurerAdapter.class)
@@ -37,6 +40,9 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
                 .authenticated().and();
         }
         http.oauth2Login();
+        http.exceptionHandling()
+            .defaultAuthenticationEntryPointFor((request, response, authException) -> ExceptionHandlers.handleAuthentication4Servlet(request, response), ExceptionHandlers.IS_AJAX);
+
         http.csrf().disable();
     }
 
