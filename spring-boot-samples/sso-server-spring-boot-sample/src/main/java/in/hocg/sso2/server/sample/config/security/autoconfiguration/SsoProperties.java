@@ -22,6 +22,6 @@ public class SsoProperties {
     public static class Client {
         private String clientId;
         private String clientSecret;
-        private String redirectUris;
+        private String[] redirectUris;
     }
 }
