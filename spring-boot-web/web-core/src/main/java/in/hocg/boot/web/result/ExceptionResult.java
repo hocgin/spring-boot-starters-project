@@ -22,8 +22,9 @@ public class ExceptionResult<T> extends Result<T> {
     @ApiModelProperty(value = "时间戳", example = "10000000")
     private Long timestamp;
 
-    public static <T> ExceptionResult<T> create(int status, String message) {
-        ExceptionResult<T> result = (ExceptionResult<T>) ExceptionResult.fail();
+    public static <T> ExceptionResult<T> fail(int status, String message) {
+        ExceptionResult<T> result = new ExceptionResult<>();
+        result.setSuccess(false);
         result.setStatus(status);
         result.setMessage(message);
         result.setTimestamp(System.currentTimeMillis());
