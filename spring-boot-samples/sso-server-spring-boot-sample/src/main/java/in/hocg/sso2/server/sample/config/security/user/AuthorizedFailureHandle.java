@@ -38,7 +38,7 @@ public class AuthorizedFailureHandle implements AuthenticationFailureHandler {
 
     private void handleAjaxRequest(HttpServletResponse response) throws IOException {
         log.warn("登录验证失败, 用户名或密码错误");
-        ExceptionResult result = ExceptionResult.create(HttpServletResponse.SC_OK, ResultCode.PARAMS_ERROR.getMessage());
+        ExceptionResult result = ExceptionResult.fail(HttpServletResponse.SC_OK, ResultCode.PARAMS_ERROR.getMessage());
         response.setStatus(HttpServletResponse.SC_OK);
         try (final PrintWriter writer = response.getWriter()) {
             writer.write(JSONUtil.toJsonStr(result));
