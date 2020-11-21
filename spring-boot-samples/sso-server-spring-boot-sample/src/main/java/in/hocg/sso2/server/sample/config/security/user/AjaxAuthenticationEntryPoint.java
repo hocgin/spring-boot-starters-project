@@ -25,7 +25,7 @@ public class AjaxAuthenticationEntryPoint extends OAuth2AuthenticationEntryPoint
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.warn("匿名访问被拒绝", authException);
-        ExceptionResult result = ExceptionResult.create(HttpServletResponse.SC_UNAUTHORIZED, ResultCode.ACCESS_DENIED_ERROR.getMessage());
+        ExceptionResult result = ExceptionResult.fail(HttpServletResponse.SC_UNAUTHORIZED, ResultCode.ACCESS_DENIED_ERROR.getMessage());
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         try (final PrintWriter writer = response.getWriter()) {
             writer.write(JSONUtil.toJsonStr(result));

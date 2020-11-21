@@ -66,7 +66,7 @@ public class DefaultExceptionAdvice {
     }
 
     protected ExceptionResult create(HttpStatus httpStatus, String message) {
-        return ExceptionResult.create(httpStatus.value(), message);
+        return ExceptionResult.fail(httpStatus.value(), message);
     }
 
     private String handleValidException(BindingResult result) {

@@ -40,7 +40,7 @@ public class AuthorizedSuccessHandle extends SavedRequestAwareAuthenticationSucc
     private void handleAjaxRequest(HttpServletResponse response) throws IOException {
         log.info("登录验证成功");
         final ResultCode resultCode = ResultCode.SUCCESS;
-        ExceptionResult result = ExceptionResult.create(HttpServletResponse.SC_OK, resultCode.getMessage());
+        ExceptionResult result = ExceptionResult.fail(HttpServletResponse.SC_OK, resultCode.getMessage());
         response.setStatus(HttpServletResponse.SC_OK);
         try (final PrintWriter writer = response.getWriter()) {
             writer.write(JSONUtil.toJsonStr(result));

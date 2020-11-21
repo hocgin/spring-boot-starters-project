@@ -35,7 +35,7 @@ public class RequestUtils {
         }
         ip = request.getHeader("X-Real-IP");
         if (StrUtil.isNotBlank(ip)
-            && !"unKnown".equalsIgnoreCase(ip)) {
+            && !"unknown".equalsIgnoreCase(ip)) {
             return ip;
         }
 
