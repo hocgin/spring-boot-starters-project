@@ -23,30 +23,29 @@ public class RequestUtils {
      * @return
      */
     public String getClientIp(HttpServletRequest request) {
-        String ip = request.getHeader("X-Forwarded-For");
-        if (StrUtil.isNotBlank(ip)
-            && !"unknown".equalsIgnoreCase(ip)) {
-            int index = ip.indexOf(",");
+        String ip;
+        String forwardedFor = request.getHeader("X-Forwarded-For");
+        String realIp = request.getHeader("X-Real-IP");
+        if (StrUtil.isNotBlank(forwardedFor)
+            && !"unknown".equalsIgnoreCase(forwardedFor)) {
+            int index = forwardedFor.indexOf(",");
             if (index != -1) {
-                return ip.substring(0, index);
+                ip = forwardedFor.substring(0, index);
             } else {
-                return ip;
+                ip = forwardedFor;
             }
-        }
-        ip = request.getHeader("X-Real-IP");
-        if (StrUtil.isNotBlank(ip)
-            && !"unknown".equalsIgnoreCase(ip)) {
-            return ip;
+        } else if (StrUtil.isNotBlank(realIp)
+            && !"unknown".equalsIgnoreCase(realIp)) {
+            ip = realIp;
+        } else {
+            ip = request.getRemoteAddr();
         }
 
         // 本地名单
-        if (Arrays.asList(new String[]{
-            "0:0:0:0:0:0:0:1",
-            "127.0.0.1"
-        }).contains(request.getRemoteAddr())) {
+        if (Arrays.asList(new String[]{"0:0:0:0:0:0:0:1", "127.0.0.1"}).contains(ip)) {
             return "110.80.68.212";
         }
-        return request.getRemoteAddr();
+        return ip;
     }
 
     /**
