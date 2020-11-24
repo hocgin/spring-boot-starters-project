@@ -72,26 +72,4 @@ public class ExceptionHandlers {
         }
     }
 
-    public Mono<Void> handleAuthentication4Webflux(ServerWebExchange exchange) {
-        ServerHttpRequest request = exchange.getRequest();
-        ServerHttpResponse response = exchange.getResponse();
-        HttpHeaders headers = request.getHeaders();
-
-        String redirectUrl = null;
-        String xPageUrl = headers.getFirst("X-Page-Url");
-        if (StringUtils.isEmpty(xPageUrl)) {
-            xPageUrl = headers.getFirst("Referer");
-        }
-
-        if (!StringUtils.isEmpty(xPageUrl)) {
-            redirectUrl = xPageUrl;
-        }
-
-        AuthenticationResult result = AuthenticationResult.create(redirectUrl);
-        DataBuffer buffer = response.bufferFactory()
-            .wrap(result.toJSON().getBytes(StandardCharsets.UTF_8));
-        response.setStatusCode(HttpStatus.UNAUTHORIZED);
-        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        return response.writeWith(Mono.just(buffer));
-    }
 }
