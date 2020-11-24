@@ -20,10 +20,12 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -76,7 +78,7 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
 
         AuthenticationResult result = AuthenticationResult.create(redirectUrl);
 
-        ResponseUtils.setUtf8(response);
+        this.setUtf8(response);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         try (final PrintWriter writer = response.getWriter()) {
             writer.write(result.toJSON());
@@ -89,11 +91,23 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
     private void handleAccessDenied4Servlet(HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         log.warn("登录后，访问被拒绝", accessDeniedException);
         ExceptionResult result = ExceptionResult.fail(HttpServletResponse.SC_UNAUTHORIZED, ResultCode.ACCESS_DENIED_ERROR.getMessage());
-        ResponseUtils.setUtf8(response);
+        this.setUtf8(response);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         try (final PrintWriter writer = response.getWriter()) {
             writer.write(JSONUtil.toJsonStr(result));
         }
     }
 
+    /**
+     * 指定输出 UTF-8
+     *
+     * @param response
+     * @return
+     */
+    private HttpServletResponse setUtf8(ServletResponse response) {
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        httpServletResponse.setContentType("text/html;charset=utf-8");
+        httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        return httpServletResponse;
+    }
 }
