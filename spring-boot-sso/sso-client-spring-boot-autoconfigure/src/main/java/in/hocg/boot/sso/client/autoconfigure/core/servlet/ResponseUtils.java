@@ -1,4 +1,4 @@
-package in.hocg.boot.sso.client.autoconfigure.utils;
+package in.hocg.boot.sso.client.autoconfigure.core.servlet;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
