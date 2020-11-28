@@ -15,11 +15,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <groupId>com.github.xiaoymin</groupId>
       <artifactId>knife4j-micro-spring-boot-starter</artifactId>
       <optional>true</optional>
