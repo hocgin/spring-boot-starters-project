@@ -19,8 +19,7 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Created by hocgin on 2020/8/15
@@ -30,8 +29,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
  */
 @Configuration
 @EnableKnife4j
-@EnableSwagger2WebMvc
-@EnableSwagger2WebFlux
+@EnableSwagger2
 @Import({BeanValidatorPluginsConfiguration.class})
 @ConditionalOnClass({Swagger.class, EnableKnife4j.class})
 @EnableConfigurationProperties(KnifeServiceProperties.class)
