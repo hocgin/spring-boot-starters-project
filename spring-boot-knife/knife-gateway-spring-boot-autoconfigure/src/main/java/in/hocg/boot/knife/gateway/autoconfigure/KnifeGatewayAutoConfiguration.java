@@ -1,5 +1,6 @@
 package in.hocg.boot.knife.gateway.autoconfigure;
 
+import com.github.xiaoymin.knife4j.spring.configuration.Knife4jAutoConfiguration;
 import in.hocg.boot.knife.gateway.DefaultSwaggerResourcesProvider;
 import in.hocg.boot.knife.gateway.SwaggerEndpoint;
 import in.hocg.boot.knife.gateway.SwaggerHeaderFilter;
@@ -11,6 +12,7 @@ import org.springframework.cloud.gateway.config.GatewayProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import springfox.documentation.swagger.web.SwaggerResourcesProvider;
@@ -22,6 +24,7 @@ import springfox.documentation.swagger.web.SwaggerResourcesProvider;
  * @author hocgin
  */
 @Configuration
+@Import({Knife4jAutoConfiguration.class})
 @EnableConfigurationProperties(KnifeGatewayProperties.class)
 @ConditionalOnProperty(prefix = KnifeGatewayProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
