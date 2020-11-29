@@ -66,10 +66,10 @@ public class WebFluxSsoClientConfiguration {
         http.csrf().disable();
 
 
-//        http.exceptionHandling()
-//            .authenticationEntryPoint(new DelegatingServerAuthenticationEntryPoint(
-//                getOAuthServerAuthenticationEntryPoint(), getAjaxServerAuthenticationEntryPoint()
-//            ));
+        http.exceptionHandling()
+            .authenticationEntryPoint(new DelegatingServerAuthenticationEntryPoint(
+                getOAuthServerAuthenticationEntryPoint(), getAjaxServerAuthenticationEntryPoint()
+            ));
         return http.build();
     }
 
