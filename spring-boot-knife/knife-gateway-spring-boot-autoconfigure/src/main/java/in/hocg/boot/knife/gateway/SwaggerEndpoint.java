@@ -49,7 +49,7 @@ public class SwaggerEndpoint {
 
     @GetMapping
     public Mono<ResponseEntity<?>> swaggerResources() {
-        return Mono.just((new ResponseEntity<>(swaggerResources.get(), HttpStatus.OK)));
+        return Mono.just(new ResponseEntity<>(swaggerResources.get(), HttpStatus.OK));
     }
 
 }
