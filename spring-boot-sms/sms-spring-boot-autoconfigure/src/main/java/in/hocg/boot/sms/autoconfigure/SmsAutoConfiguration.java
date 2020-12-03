@@ -27,7 +27,7 @@ public class SmsAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SmsService ossFileService() {
+    public SmsService smsService() {
         String accessKey = properties.getAccessKey();
         String secretKey = properties.getSecretKey();
         String regionId = properties.getRegionId();
@@ -36,7 +36,7 @@ public class SmsAutoConfiguration {
             case AliYun:
                 return new AliSmsServiceImpl(accessKey, secretKey, regionId);
             default:
-                throw new IllegalArgumentException("OSS 类型[" + type + "]不支持");
+                throw new IllegalArgumentException("SMS 类型[" + type + "]不支持");
         }
     }
 
