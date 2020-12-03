@@ -27,7 +27,7 @@ public class SmsAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SmsService ossFileService() {
+    public SmsService smsService() {
         String accessKey = properties.getAccessKey();
         String secretKey = properties.getSecretKey();
         String regionId = properties.getRegionId();
