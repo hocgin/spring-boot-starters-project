@@ -36,7 +36,7 @@ public class SmsAutoConfiguration {
             case AliYun:
                 return new AliSmsServiceImpl(accessKey, secretKey, regionId);
             default:
-                throw new IllegalArgumentException("OSS 类型[" + type + "]不支持");
+                throw new IllegalArgumentException("SMS 类型[" + type + "]不支持");
         }
     }
 
