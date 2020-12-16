@@ -6,13 +6,13 @@ spring:
       shostname: http://sso.hocgin.local:20000
       client:
         registration:
-          custom2:
-            client-id: client_example2
+          custom:
+            client-id: client_example
             client-secret: hocgin
             redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             authorization-grant-type: authorization_code
         provider:
-          custom2:
+          custom:
             user-info-uri: ${spring.security.oauth2.shostname}/oauth/user
             authorization-uri: ${spring.security.oauth2.shostname}/oauth/authorize
             token-uri: ${spring.security.oauth2.shostname}/oauth/token

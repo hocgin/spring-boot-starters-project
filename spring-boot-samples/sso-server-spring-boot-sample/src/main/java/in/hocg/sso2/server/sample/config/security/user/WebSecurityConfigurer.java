@@ -31,21 +31,27 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        // 基础信息配置
         http.csrf().disable()
             .cors().disable()
             .authorizeRequests()
             .antMatchers("/login/oauth2/code/github").permitAll()
             .anyRequest().authenticated().and()
         ;
+
+        // 异常处理配置(这边针对AJAX进行不同处理，如果不需要可以忽略)
         http.exceptionHandling()
             .defaultAuthenticationEntryPointFor(new AjaxAuthenticationEntryPoint(), new IsAjaxRequestMatcher())
             .defaultAccessDeniedHandlerFor(new AjaxAccessDeniedHandler(), new IsAjaxRequestMatcher());
 
+        // 登陆相关配置
         authenticationConfigs.configure(http, authenticationManagerBean());
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        // 指定处理如何处理用户登陆请求
         auth.userDetailsService(userDetailsService);
     }
 

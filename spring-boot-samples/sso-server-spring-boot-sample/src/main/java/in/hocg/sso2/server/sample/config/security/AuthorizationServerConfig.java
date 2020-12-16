@@ -30,6 +30,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+
+        // 这边使用内存的方式来存储，单点客户端信息
         InMemoryClientDetailsServiceBuilder builder = clients.inMemory();
         for (SsoProperties.Client client : properties.getClients()) {
             builder.withClient(client.getClientId())
@@ -51,22 +53,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager)
-//            .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST)
-//            .accessTokenConverter(jwtAccessTokenConverter())
-//            .tokenStore(jwtTokenStore())
-        ;
+        endpoints.authenticationManager(authenticationManager);
     }
 
-//    @Bean
-//    public TokenStore jwtTokenStore() {
-//        return new JwtTokenStore(jwtAccessTokenConverter());
-//    }
-//
-//    @Bean
-//    public JwtAccessTokenConverter jwtAccessTokenConverter() {
-//        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-//        converter.setSigningKey("hocgin");
-//        return converter;
-//    }
 }
