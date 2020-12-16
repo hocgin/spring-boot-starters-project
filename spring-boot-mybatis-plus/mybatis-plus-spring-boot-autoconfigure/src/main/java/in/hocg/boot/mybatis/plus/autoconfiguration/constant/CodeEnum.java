@@ -1,6 +1,6 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.constant;
 
-import in.hocg.boot.utils.LangUtils;
+import in.hocg.boot.validation.autoconfigure.core.ICode;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -11,19 +11,7 @@ import java.util.Optional;
  *
  * @author hocgin
  */
-public interface CodeEnum {
-
-    Serializable getCode();
-
-    default boolean eq(Serializable val) {
-        final Serializable code = this.getCode();
-        if (code instanceof String) {
-            return LangUtils.equals((String) code, (String) val);
-        } else if (code instanceof Integer) {
-            return LangUtils.equals((Integer) code, (Integer) val);
-        }
-        return code == val;
-    }
+public interface CodeEnum extends ICode {
 
     static <T extends CodeEnum> T ofThrow(Serializable code, Class<T> enumClass) {
         final Optional<T> enumOpl = of(code, enumClass);

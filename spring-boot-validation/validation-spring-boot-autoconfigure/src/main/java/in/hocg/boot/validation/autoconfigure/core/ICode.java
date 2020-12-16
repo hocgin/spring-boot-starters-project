@@ -1,5 +1,7 @@
 package in.hocg.boot.validation.autoconfigure.core;
 
+import in.hocg.boot.utils.LangUtils;
+
 import java.io.Serializable;
 
 /**
@@ -10,5 +12,15 @@ import java.io.Serializable;
  */
 public interface ICode {
 
-    boolean eq(Serializable code);
+    Serializable getCode();
+
+    default boolean eq(Serializable val) {
+        final Serializable code = this.getCode();
+        if (code instanceof String) {
+            return LangUtils.equals((String) code, (String) val);
+        } else if (code instanceof Integer) {
+            return LangUtils.equals((Integer) code, (Integer) val);
+        }
+        return false;
+    }
 }
