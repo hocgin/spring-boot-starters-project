@@ -16,7 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ToString
 @ConfigurationProperties(prefix = ValidationProperties.PREFIX)
 public class ValidationProperties {
-    public static final String PREFIX = "boot.sms";
+    public static final String PREFIX = "boot.validation";
     /**
      * 开启状态
      */
