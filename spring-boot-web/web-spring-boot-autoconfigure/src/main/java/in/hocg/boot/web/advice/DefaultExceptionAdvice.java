@@ -3,6 +3,7 @@ package in.hocg.boot.web.advice;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.web.exception.ServiceException;
+import in.hocg.boot.web.exception.UnAuthenticationException;
 import in.hocg.boot.web.result.ExceptionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,9 +26,17 @@ import java.util.Objects;
 @Slf4j
 public class DefaultExceptionAdvice {
 
+    @ExceptionHandler(UnAuthenticationException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ExceptionResult<Void> handleUnAuthenticationException(UnAuthenticationException ex) {
+        String message = "请先进行登陆";
+        log.warn(message, ex);
+        return create(HttpStatus.UNAUTHORIZED, message);
+    }
+
     @ExceptionHandler(ServiceException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ExceptionResult handleServiceException(ServiceException e) {
+    public ExceptionResult<Void> handleServiceException(ServiceException e) {
         String message = e.getMessage();
         log.warn(message, e);
         return create(HttpStatus.BAD_REQUEST, message);
@@ -35,7 +44,7 @@ public class DefaultExceptionAdvice {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ExceptionResult handleException(Exception e) {
+    public ExceptionResult<Void> handleException(Exception e) {
         String message = StrUtil.emptyToDefault(e.getMessage(), "系统繁忙, 请稍后");
         log.error("服务异常ID: [{}]", IdUtil.randomUUID(), e);
         return create(HttpStatus.INTERNAL_SERVER_ERROR, message);
@@ -43,7 +52,7 @@ public class DefaultExceptionAdvice {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ExceptionResult handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+    public ExceptionResult<Void> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         String message = "入参数据格式错误";
         log.warn(message, ex);
         return create(HttpStatus.BAD_REQUEST, message);
@@ -51,7 +60,7 @@ public class DefaultExceptionAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ExceptionResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ExceptionResult<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = handleValidException(e.getBindingResult());
         log.warn(message, e);
         return create(HttpStatus.BAD_REQUEST, message);
@@ -59,13 +68,13 @@ public class DefaultExceptionAdvice {
 
     @ExceptionHandler(value = {BindException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ExceptionResult handleBindException(BindException e) {
+    public ExceptionResult<Void> handleBindException(BindException e) {
         String message = handleValidException(e.getBindingResult());
         log.warn(message, e);
         return create(HttpStatus.BAD_REQUEST, message);
     }
 
-    protected ExceptionResult create(HttpStatus httpStatus, String message) {
+    protected ExceptionResult<Void> create(HttpStatus httpStatus, String message) {
         return ExceptionResult.fail(httpStatus.value(), message);
     }
 

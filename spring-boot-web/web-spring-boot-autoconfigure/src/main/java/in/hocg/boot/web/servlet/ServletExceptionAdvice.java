@@ -24,7 +24,7 @@ public class ServletExceptionAdvice extends DefaultExceptionAdvice {
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ExceptionResult handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+    public ExceptionResult<Void> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         String message = "请求方法不支持";
         log.warn(message, e);
         return create(HttpStatus.BAD_REQUEST, message);
@@ -32,7 +32,7 @@ public class ServletExceptionAdvice extends DefaultExceptionAdvice {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ExceptionResult handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+    public ExceptionResult<Void> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         String message = e.getParameterName() + " 不能为空";
         log.warn(message, e);
         return create(HttpStatus.BAD_REQUEST, message);
@@ -40,7 +40,7 @@ public class ServletExceptionAdvice extends DefaultExceptionAdvice {
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ExceptionResult handleMissingServletRequestParameterException(HttpMediaTypeNotSupportedException e) {
+    public ExceptionResult<Void> handleMissingServletRequestParameterException(HttpMediaTypeNotSupportedException e) {
         String message = "请求体内容不支持";
         log.warn(message, e);
         return create(HttpStatus.BAD_REQUEST, message);
