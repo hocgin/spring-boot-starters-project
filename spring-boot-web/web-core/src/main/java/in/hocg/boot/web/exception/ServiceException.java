@@ -14,7 +14,7 @@ public class ServiceException extends RuntimeException {
     @Getter
     private final int code;
 
-    private ServiceException(int code, String message) {
+    protected ServiceException(int code, String message) {
         super(message);
         this.code = code;
     }
