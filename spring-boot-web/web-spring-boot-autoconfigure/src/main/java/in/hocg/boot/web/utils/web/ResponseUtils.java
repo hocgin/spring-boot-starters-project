@@ -29,7 +29,7 @@ public class ResponseUtils {
     }
 
     public static <T> ResponseEntity<?> download(T t) {
-        return ResponseUtils.download(t, null);
+        return ResponseUtils.download(t, "unknown");
     }
 
     public static <T> ResponseEntity<?> preview(T t) {

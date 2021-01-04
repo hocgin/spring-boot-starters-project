@@ -1,10 +1,16 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by hocgin on 2020/1/5.
@@ -13,7 +19,7 @@ import java.util.Objects;
  * @author hocgin
  */
 public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends AbstractEntity<?>> extends ServiceImpl<M, T>
-        implements AbstractService<T> {
+    implements AbstractService<T> {
 
     @Override
     public void validEntity(T entity) {
@@ -36,12 +42,25 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void validInsertOrUpdate(T entity) {
+    public boolean validInsertOrUpdate(T entity) {
+        boolean isOk;
         if (Objects.nonNull(entity.pkVal())) {
-            validUpdateById(entity);
+            isOk = validUpdateById(entity);
         } else {
-            validInsert(entity);
+            isOk = validInsert(entity);
         }
+        return isOk;
+    }
+
+    @Override
+    public boolean has(SFunction<T, ?> field, Object val,
+                       SFunction<T, ?> ignoreField, Serializable... ignoreVal) {
+        List<Serializable> ignoreIds = Arrays.asList(ignoreVal).parallelStream()
+            .filter(Objects::nonNull).collect(Collectors.toList());
+
+        return !lambdaQuery().eq(field, val)
+            .notIn(!ignoreIds.isEmpty(), ignoreField, Arrays.stream(ignoreVal).toArray())
+            .page(new Page<>(1, 1, false)).getRecords().isEmpty();
     }
 
 }
