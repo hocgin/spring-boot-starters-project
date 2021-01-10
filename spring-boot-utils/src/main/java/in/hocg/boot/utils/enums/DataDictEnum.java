@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.constant;
+package in.hocg.boot.utils.enums;
 
 /**
  * Created by hocgin on 2020/6/13.

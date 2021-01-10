@@ -1,6 +1,6 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.utils;
 
-import in.hocg.boot.mybatis.plus.autoconfiguration.constant.DataDictEnum;
+import in.hocg.boot.utils.enums.DataDictEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

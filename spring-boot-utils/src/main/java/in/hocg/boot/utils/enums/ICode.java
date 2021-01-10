@@ -1,4 +1,5 @@
-package in.hocg.boot.validation.autoconfigure.core;
+package in.hocg.boot.utils.enums;
+
 
 import in.hocg.boot.utils.LangUtils;
 

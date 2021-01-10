@@ -1,6 +1,7 @@
 package in.hocg.boot.validation.autoconfigure.core;
 
 
+import in.hocg.boot.utils.enums.ICode;
 import in.hocg.boot.validation.autoconfigure.core.annotation.EnumRange;
 
 import javax.validation.ConstraintValidator;
