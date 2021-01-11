@@ -1,4 +1,4 @@
-package in.hocg.boot.changelog.autoconfiguration.utils.compare;
+package in.hocg.boot.changelog.compare;
 
 import in.hocg.boot.utils.enums.ICode;
 import io.swagger.annotations.ApiModelProperty;

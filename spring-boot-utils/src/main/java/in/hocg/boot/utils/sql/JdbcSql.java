@@ -1,4 +1,4 @@
-package in.hocg.boot.message.data.client.jdbc;
+package in.hocg.boot.utils.sql;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

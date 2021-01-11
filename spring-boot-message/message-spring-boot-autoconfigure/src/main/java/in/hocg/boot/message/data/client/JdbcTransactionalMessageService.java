@@ -2,8 +2,8 @@ package in.hocg.boot.message.data.client;
 
 import in.hocg.boot.message.core.transactional.TransactionalMessage;
 import in.hocg.boot.message.core.transactional.TransactionalMessageService;
-import in.hocg.boot.message.data.client.jdbc.JdbcSql;
 import in.hocg.boot.message.data.client.jdbc.JdbcSqlUtils;
+import in.hocg.boot.utils.sql.JdbcSql;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.util.Assert;
 

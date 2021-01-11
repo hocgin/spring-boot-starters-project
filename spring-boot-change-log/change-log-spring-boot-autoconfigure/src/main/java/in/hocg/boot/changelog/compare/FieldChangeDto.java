@@ -1,4 +1,4 @@
-package in.hocg.boot.changelog.autoconfiguration.utils.compare;
+package in.hocg.boot.changelog.compare;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

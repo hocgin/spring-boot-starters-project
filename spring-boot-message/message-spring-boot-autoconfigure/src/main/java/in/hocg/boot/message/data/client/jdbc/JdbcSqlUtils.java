@@ -2,6 +2,7 @@ package in.hocg.boot.message.data.client.jdbc;
 
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.message.core.transactional.TransactionalMessage;
+import in.hocg.boot.utils.sql.JdbcSql;
 
 import java.time.LocalDateTime;
 

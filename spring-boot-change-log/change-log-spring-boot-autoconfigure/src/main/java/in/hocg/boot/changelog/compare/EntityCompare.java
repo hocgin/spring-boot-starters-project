@@ -1,4 +1,4 @@
-package in.hocg.boot.changelog.autoconfiguration.utils.compare;
+package in.hocg.boot.changelog.compare;
 
 import com.google.common.collect.Lists;
 import in.hocg.boot.utils.ClassUtils;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  *
  * @author hocgin
  */
-public class EntityCompare<T> {
+public class EntityCompare {
 
     /**
      * 比较
@@ -34,10 +34,10 @@ public class EntityCompare<T> {
      * @param ignoreFunc
      * @return
      */
-    public List<FieldChangeDto> diffUseLambda(@NonNull T o, @NonNull T n, boolean ignoreNull, SFunction<T, ?>... ignoreFunc) {
+    public static <T> List<FieldChangeDto> diffUseLambda(@NonNull T o, @NonNull T n, boolean ignoreNull, SFunction<T, ?>... ignoreFunc) {
         final List<String> ignoreFieldNames = Arrays.stream(ignoreFunc).map(func -> PropertyNamer.methodToProperty(SerializedLambda.resolve(func).getImplMethodName()))
             .collect(Collectors.toList());
-        return this.diff(o, n, ignoreNull, ignoreFieldNames);
+        return EntityCompare.diff(o, n, ignoreNull, ignoreFieldNames);
     }
 
 
@@ -51,7 +51,7 @@ public class EntityCompare<T> {
      * @return
      */
     @SneakyThrows
-    public List<FieldChangeDto> diff(@NonNull T o, @NonNull T n, boolean ignoreNull, @NonNull List<String> ignoreFieldNames) {
+    public static <T> List<FieldChangeDto> diff(@NonNull T o, @NonNull T n, boolean ignoreNull, @NonNull List<String> ignoreFieldNames) {
         final List<FieldChangeDto> result = Lists.newArrayList();
         final Class<?> nClass = n.getClass();
         final Class<?> oClass = o.getClass();
@@ -60,7 +60,7 @@ public class EntityCompare<T> {
         final List<Field> nFields = ClassUtils.getAllField(nClass);
         for (Field nField : nFields) {
             final String nFieldName = nField.getName();
-            final Object nFieldValue = this.getFieldValue(n, nField);
+            final Object nFieldValue = EntityCompare.getFieldValue(n, nField);
 
             // 如果是通用忽略的字段
             if (Lists.newArrayList("serialVersionUID", "log").contains(nFieldName)) {
@@ -77,7 +77,7 @@ public class EntityCompare<T> {
                 continue;
             }
             final Field oField = oFieldMaps.get(nFieldName);
-            final Object oFieldValue = this.getFieldValue(o, oField);
+            final Object oFieldValue = EntityCompare.getFieldValue(o, oField);
             final String after = String.valueOf(nFieldValue);
             final String before = String.valueOf(oFieldValue);
 
@@ -86,10 +86,7 @@ public class EntityCompare<T> {
                 continue;
             }
 
-
             final String fieldRemark = getFieldRemark(nField);
-
-
             result.add(new FieldChangeDto()
                 .setFieldRemark(fieldRemark)
                 .setFieldName(nFieldName)
@@ -107,7 +104,7 @@ public class EntityCompare<T> {
      * @param field
      * @return
      */
-    private Object getFieldValue(T target, Field field) {
+    private static <T> Object getFieldValue(T target, Field field) {
         return ClassUtils.getFieldValue(target, field, null);
     }
 
@@ -117,7 +114,7 @@ public class EntityCompare<T> {
      * @param field
      * @return
      */
-    private String getFieldRemark(Field field) {
+    private static String getFieldRemark(Field field) {
         final boolean hasApiModeProperty = field.isAnnotationPresent(ApiModelProperty.class);
         if (hasApiModeProperty) {
             final ApiModelProperty annotation = field.getAnnotation(ApiModelProperty.class);
@@ -125,5 +122,4 @@ public class EntityCompare<T> {
         }
         return String.format("%s属性", field.getName());
     }
-
 }
