@@ -1,7 +1,15 @@
 package in.hocg.boot.utils;
 
+import com.google.common.collect.Lists;
+import lombok.experimental.UtilityClass;
+
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by hocgin on 2021/1/5
@@ -9,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  *
  * @author hocgin
  */
+@UtilityClass
 public class ClassUtils {
 
     public static <T> T newInstance(String clazzName) {
@@ -57,5 +66,49 @@ public class ClassUtils {
             }
         }
         return cl;
+    }
+
+
+    /**
+     * 获取所有字段
+     *
+     * @return
+     */
+    public static List<Field> getAllField(Class<?> clazz) {
+        ArrayList<Field> result = Lists.newArrayList();
+        result.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+        Class<?> superclass = clazz.getSuperclass();
+        if (Object.class.equals(superclass)) {
+            return result;
+        }
+        result.addAll(ClassUtils.getAllField(superclass));
+        return result;
+    }
+
+    /**
+     * 获取对象字段的值
+     *
+     * @param fieldObject
+     * @param field
+     * @param def
+     * @return
+     */
+    public Object getFieldValue(Object fieldObject, Field field,
+                                Object def) {
+        if (Objects.isNull(fieldObject)
+            || Objects.isNull(field)) {
+            return def;
+        }
+
+        boolean accessible = field.isAccessible();
+        try {
+            field.setAccessible(true);
+            return field.get(fieldObject);
+        } catch (IllegalAccessException ignored) {
+            return def;
+        } finally {
+            field.setAccessible(accessible);
+        }
     }
 }
