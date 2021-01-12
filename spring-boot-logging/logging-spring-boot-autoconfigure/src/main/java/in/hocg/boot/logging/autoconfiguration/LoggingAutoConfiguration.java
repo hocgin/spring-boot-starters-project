@@ -1,6 +1,6 @@
 package in.hocg.boot.logging.autoconfiguration;
 
-import in.hocg.boot.logging.autoconfiguration.core.DefaultLoggerListener;
+import in.hocg.boot.logging.autoconfiguration.handle.DefaultLoggerListener;
 import in.hocg.boot.logging.autoconfiguration.core.LoggerAspect;
 import in.hocg.boot.logging.autoconfiguration.core.LoggerListener;
 import lombok.RequiredArgsConstructor;
