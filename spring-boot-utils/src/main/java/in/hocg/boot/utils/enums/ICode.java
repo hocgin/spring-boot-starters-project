@@ -16,6 +16,14 @@ public interface ICode {
 
     Serializable getCode();
 
+    default String getStrCode() {
+        return String.valueOf(getCode());
+    }
+
+    default Integer getIntCode() {
+        return Integer.valueOf(getStrCode());
+    }
+
     default boolean eq(Serializable val) {
         final Serializable code = this.getCode();
         if (code instanceof String) {
