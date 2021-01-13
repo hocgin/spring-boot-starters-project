@@ -53,7 +53,7 @@ public interface ICode {
         return Optional.empty();
     }
 
-    static <T extends Enum<T>> Optional<T> of(String name, Class<T> enumClass) {
+    static <T extends Enum<T>> Optional<T> ofName(String name, Class<T> enumClass) {
         return Optional.of(Enum.valueOf(enumClass, name));
     }
 }
