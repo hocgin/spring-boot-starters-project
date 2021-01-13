@@ -16,12 +16,12 @@ public interface ICode {
 
     Serializable getCode();
 
-    default String getStrCode() {
+    default String getCodeStr() {
         return String.valueOf(getCode());
     }
 
-    default Integer getIntCode() {
-        return Integer.valueOf(getStrCode());
+    default Integer getCodeInt() {
+        return Integer.valueOf(getCodeStr());
     }
 
     default boolean eq(Serializable val) {
