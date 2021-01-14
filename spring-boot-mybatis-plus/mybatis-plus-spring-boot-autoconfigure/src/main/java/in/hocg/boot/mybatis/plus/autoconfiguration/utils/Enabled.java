@@ -19,4 +19,5 @@ public enum Enabled implements DataDictEnum {
     Off("off", "关闭");
     private final Serializable code;
     private final String name;
+    public final static String KEY = "enabled";
 }

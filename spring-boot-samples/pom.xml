@@ -27,6 +27,7 @@
     <module>sso-client-gateway-sample</module>
     <module>sso-server-spring-boot-sample</module>
     <module>mail-spring-boot-sample</module>
+    <module>change-log-spring-boot-sample</module>
   </modules>
 
 </project>

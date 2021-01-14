@@ -1,0 +1,11 @@
+debug: true
+spring:
+  profiles:
+    active: local
+boot:
+  mail:
+    host: smtp.163.com
+    from: "Eagle 官方邮件<13600747016@163.com>"
+    user: 13600747016@163.com
+    pass: BUVECAXMSKPIVBJP
+    debug: true

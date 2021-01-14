@@ -16,6 +16,14 @@ public interface ICode {
 
     Serializable getCode();
 
+    default String getCodeStr() {
+        return String.valueOf(getCode());
+    }
+
+    default Integer getCodeInt() {
+        return Integer.valueOf(getCodeStr());
+    }
+
     default boolean eq(Serializable val) {
         final Serializable code = this.getCode();
         if (code instanceof String) {
@@ -45,7 +53,7 @@ public interface ICode {
         return Optional.empty();
     }
 
-    static <T extends Enum<T>> Optional<T> of(String name, Class<T> enumClass) {
+    static <T extends Enum<T>> Optional<T> ofName(String name, Class<T> enumClass) {
         return Optional.of(Enum.valueOf(enumClass, name));
     }
 }
