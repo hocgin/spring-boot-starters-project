@@ -2,6 +2,7 @@ package in.hocg.boot.sso.client.autoconfigure.core.servlet;
 
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.AuthenticationResult;
+import in.hocg.boot.sso.client.autoconfigure.core.webflux.WebFluxExpandAuthenticationManager;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
 import in.hocg.boot.web.result.ExceptionResult;
 import in.hocg.boot.web.result.ResultCode;
@@ -9,12 +10,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
@@ -59,6 +63,14 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
             .defaultAuthenticationEntryPointFor((request, response, authException) -> this.handleAuthentication4Servlet(request, response), ServletSsoClientConfiguration.IS_AJAX);
 
         http.csrf().disable();
+
+        http.addFilterBefore(authenticationManager(getApplicationContext()), OAuth2AuthorizationRequestRedirectFilter.class);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ServletExpandAuthenticationManager authenticationManager(ApplicationContext applicationContext) {
+        return new ServletExpandAuthenticationManager(applicationContext);
     }
 
     private final static RequestMatcher IS_AJAX = new RequestHeaderRequestMatcher("X-Requested-With", "XMLHttpRequest");

@@ -1,8 +1,10 @@
 package in.hocg.boot.sso.client.autoconfigure.core.webflux;
 
 import in.hocg.boot.sso.client.autoconfigure.core.AuthenticationResult;
+import in.hocg.boot.sso.client.autoconfigure.core.webflux.bearer.ServerBearerTokenAuthenticationConverter;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -16,10 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.web.server.DelegatingServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.util.matcher.MediaTypeServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
@@ -48,8 +52,7 @@ public class WebFluxSsoClientConfiguration {
     private ApplicationContext context;
 
     @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http,
-                                                            ApplicationContext context) {
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ApplicationContext context) {
         this.context = context;
         String[] ignoreUrls = properties.getIgnoreUrls().toArray(new String[]{});
         {
@@ -65,12 +68,23 @@ public class WebFluxSsoClientConfiguration {
         http.oauth2Login();
         http.csrf().disable();
 
-
         http.exceptionHandling()
             .authenticationEntryPoint(new DelegatingServerAuthenticationEntryPoint(
                 getOAuthServerAuthenticationEntryPoint(), getAjaxServerAuthenticationEntryPoint()
             ));
+
+        AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager(context));
+        authenticationWebFilter.setAuthenticationFailureHandler((exchange, exception) -> handleAuthentication4Webflux(exchange.getExchange()));
+        authenticationWebFilter.setServerAuthenticationConverter(new ServerBearerTokenAuthenticationConverter()
+            .setAllowUriQueryParameter(true));
+        http.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public WebFluxExpandAuthenticationManager authenticationManager(ApplicationContext applicationContext) {
+        return new WebFluxExpandAuthenticationManager(applicationContext);
     }
 
     private DelegatingServerAuthenticationEntryPoint.DelegateEntry getAjaxServerAuthenticationEntryPoint() {
