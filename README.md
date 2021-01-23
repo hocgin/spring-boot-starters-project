@@ -16,3 +16,4 @@
      - web-spring-boot-starter `web常用配置 (自定义异常/工具)`
      - sms-spring-boot-starter `阿里云短信发送`
      - mail-spring-boot-starter `邮件发送`
+     - xxl-job-spring-boot-starter `xxl job`

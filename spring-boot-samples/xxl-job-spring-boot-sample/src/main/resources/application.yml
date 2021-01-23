@@ -1,0 +1,10 @@
+debug: true
+spring:
+  profiles:
+    active: local
+boot:
+  xxljob:
+    appname: ${spring.application.name:unknown}
+    ip: ${spring.cloud.client.ip-address}
+    port: 13501
+    log-path: ${logging.file.path}/xxl-job/
