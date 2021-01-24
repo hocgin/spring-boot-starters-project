@@ -174,7 +174,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
     private void updateOffStatusByRightLikeTreePath(@NonNull String rightRightTreePath) {
         final UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
         updateWrapper.likeRight(TreeEntity.TREE_PATH, rightRightTreePath);
-        updateWrapper.set(TreeEntity.ENABLED, Boolean.False);
+        updateWrapper.set(TreeEntity.ENABLED, false);
         update(updateWrapper);
     }
 }
