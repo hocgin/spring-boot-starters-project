@@ -52,6 +52,14 @@ public class LangUtils {
         return s1.compareTo(s2) == 0;
     }
 
+    public boolean equals(Boolean s1, Boolean s2) {
+        if (s1 == null || s2 == null) {
+            return Objects.equals(s1, s2);
+        }
+
+        return s1.equals(s2);
+    }
+
     public boolean equals(String s1, String s2) {
         if (s1 == null || s2 == null) {
             return Objects.equals(s1, s2);

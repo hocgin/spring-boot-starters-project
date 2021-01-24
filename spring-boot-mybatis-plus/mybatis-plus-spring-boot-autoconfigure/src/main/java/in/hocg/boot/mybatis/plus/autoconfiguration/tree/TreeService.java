@@ -37,5 +37,5 @@ public interface TreeService<T> extends AbstractService<T> {
      * @param enabled
      * @return
      */
-    List<T> selectListByParentId(Serializable parentId, Integer enabled);
+    List<T> listByParentId(Serializable parentId, Boolean enabled);
 }
