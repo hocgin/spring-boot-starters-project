@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import in.hocg.boot.mybatis.plus.autoconfiguration.AbstractServiceImpl;
-import in.hocg.boot.mybatis.plus.autoconfiguration.utils.Enabled;
 import in.hocg.boot.utils.ValidUtils;
 import in.hocg.boot.utils.LangUtils;
 import lombok.NonNull;
@@ -61,9 +60,9 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
         }
 
         // 如果关闭了状态
-        final String enabled = entity.getEnabled();
+        final Boolean enabled = entity.getEnabled();
         if (Objects.nonNull(enabled)
-            && Enabled.Off.eq(enabled)) {
+            && Boolean.FALSE.equals(enabled)) {
             updateOffStatusByRightLikeTreePath(fullEntity.getTreePath());
         }
 
@@ -75,7 +74,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
     public void validEntity(T entity) {
         final Long id = entity.getId();
         final Long parentId = entity.getParentId();
-        final String enabled = entity.getEnabled();
+        final Boolean enabled = entity.getEnabled();
 
         // 检查父级
         if (Objects.nonNull(parentId)) {
@@ -87,7 +86,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
 
         // 检查开启状态
         if (Objects.nonNull(enabled)
-            && Enabled.On.eq(enabled)) {
+            && Boolean.TRUE.equals(enabled)) {
             Optional<T> parentOpt = Optional.empty();
             if (Objects.nonNull(parentId)) {
                 parentOpt = Optional.ofNullable(getById(parentId));
@@ -96,8 +95,8 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
             }
 
             if (parentOpt.isPresent()) {
-                boolean parentIsOff = Enabled.Off.eq(parentOpt.get().getEnabled());
-                boolean nowIsOn = Enabled.On.eq(enabled);
+                boolean parentIsOff = Boolean.FALSE.equals(parentOpt.get().getEnabled());
+                boolean nowIsOn = Boolean.TRUE.equals(enabled);
                 ValidUtils.isFalse(parentIsOff && nowIsOn, "父级为禁用状态，子级不能为开启状态");
             }
         }
@@ -140,7 +139,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
     }
 
     @Override
-    public List<T> selectListByParentId(Serializable parentId, Integer enabled) {
+    public List<T> listByParentId(Serializable parentId, Boolean enabled) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (Objects.isNull(parentId)) {
             queryWrapper.isNull(TreeEntity.PARENT_ID);
@@ -175,7 +174,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
     private void updateOffStatusByRightLikeTreePath(@NonNull String rightRightTreePath) {
         final UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
         updateWrapper.likeRight(TreeEntity.TREE_PATH, rightRightTreePath);
-        updateWrapper.set(TreeEntity.ENABLED, Enabled.Off.getCode());
+        updateWrapper.set(TreeEntity.ENABLED, Boolean.False);
         update(updateWrapper);
     }
 }
