@@ -1,7 +1,6 @@
 package in.hocg.boot.web.jackson;
 
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Configuration
 public class SerializerConfiguration {
 
-    @Bean
+//    @Bean
     public Jackson2ObjectMapperBuilderCustomizer jacksonCustomizer() {
         return builder -> {
             builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer());
