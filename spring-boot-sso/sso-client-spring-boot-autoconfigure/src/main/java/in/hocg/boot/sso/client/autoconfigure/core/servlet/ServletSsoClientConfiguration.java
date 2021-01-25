@@ -53,14 +53,14 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
         {
             ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry =
                 http.authorizeRequests();
-            if (ignoreUrls.length > 0) {
-                expressionInterceptUrlRegistry.antMatchers(ignoreUrls).permitAll();
-            }
             if (denyUrls.length > 0) {
                 expressionInterceptUrlRegistry.antMatchers(denyUrls).denyAll();
             }
             if (authenticatedUrls.length > 0) {
                 expressionInterceptUrlRegistry.antMatchers(authenticatedUrls).authenticated();
+            }
+            if (ignoreUrls.length > 0) {
+                expressionInterceptUrlRegistry.antMatchers(ignoreUrls).permitAll();
             }
 
             expressionInterceptUrlRegistry

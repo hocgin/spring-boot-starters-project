@@ -60,14 +60,14 @@ public class WebFluxSsoClientConfiguration {
         {
             ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchangeSpec =
                 http.authorizeExchange();
-            if (ignoreUrls.length > 0) {
-                authorizeExchangeSpec.pathMatchers(ignoreUrls).permitAll();
-            }
             if (denyUrls.length > 0) {
                 authorizeExchangeSpec.pathMatchers(denyUrls).denyAll();
             }
             if (authenticatedUrls.length > 0) {
                 authorizeExchangeSpec.pathMatchers(authenticatedUrls).authenticated();
+            }
+            if (ignoreUrls.length > 0) {
+                authorizeExchangeSpec.pathMatchers(ignoreUrls).permitAll();
             }
 
             authorizeExchangeSpec
