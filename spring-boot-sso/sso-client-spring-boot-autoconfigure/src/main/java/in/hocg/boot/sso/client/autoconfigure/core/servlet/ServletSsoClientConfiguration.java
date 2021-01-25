@@ -48,12 +48,21 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         String[] ignoreUrls = properties.getIgnoreUrls().toArray(new String[]{});
+        String[] denyUrls = properties.getDenyUrls().toArray(new String[]{});
+        String[] authenticatedUrls = properties.getAuthenticatedUrls().toArray(new String[]{});
         {
             ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry =
                 http.authorizeRequests();
             if (ignoreUrls.length > 0) {
                 expressionInterceptUrlRegistry.antMatchers(ignoreUrls).permitAll();
             }
+            if (denyUrls.length > 0) {
+                expressionInterceptUrlRegistry.antMatchers(denyUrls).denyAll();
+            }
+            if (authenticatedUrls.length > 0) {
+                expressionInterceptUrlRegistry.antMatchers(authenticatedUrls).authenticated();
+            }
+
             expressionInterceptUrlRegistry
                 .anyRequest()
                 .authenticated().and();

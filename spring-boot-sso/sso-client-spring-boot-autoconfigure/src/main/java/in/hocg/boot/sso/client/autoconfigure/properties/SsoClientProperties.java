@@ -25,4 +25,12 @@ public class SsoClientProperties {
      * 忽略的路径(支持表达式)
      */
     private List<String> ignoreUrls = Collections.emptyList();
+    /**
+     * 拒绝访问(支持表达式)
+     */
+    private List<String> denyUrls = Collections.emptyList();
+    /**
+     * 需认证(支持表达式)
+     */
+    private List<String> authenticatedUrls = Collections.emptyList();
 }
