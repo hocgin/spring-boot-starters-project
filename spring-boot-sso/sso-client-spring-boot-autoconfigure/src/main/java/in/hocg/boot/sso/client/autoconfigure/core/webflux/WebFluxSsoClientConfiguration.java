@@ -55,12 +55,21 @@ public class WebFluxSsoClientConfiguration {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ApplicationContext context) {
         this.context = context;
         String[] ignoreUrls = properties.getIgnoreUrls().toArray(new String[]{});
+        String[] denyUrls = properties.getDenyUrls().toArray(new String[]{});
+        String[] authenticatedUrls = properties.getAuthenticatedUrls().toArray(new String[]{});
         {
             ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchangeSpec =
                 http.authorizeExchange();
+            if (denyUrls.length > 0) {
+                authorizeExchangeSpec.pathMatchers(denyUrls).denyAll();
+            }
+            if (authenticatedUrls.length > 0) {
+                authorizeExchangeSpec.pathMatchers(authenticatedUrls).authenticated();
+            }
             if (ignoreUrls.length > 0) {
                 authorizeExchangeSpec.pathMatchers(ignoreUrls).permitAll();
             }
+
             authorizeExchangeSpec
                 .anyExchange()
                 .authenticated().and();
