@@ -33,7 +33,7 @@ public class WebFluxExpandAuthenticationManager implements ReactiveAuthenticatio
                 BearerTokenAuthentication tokenAuthentication = context.getBean(BearerTokenAuthentication.class);
                 Authentication authenticationToken = tokenAuthentication.authentication(accessToken);
                 if (Objects.isNull(authenticationToken)) {
-                    return Mono.error(InvalidTokenAuthenticationException::new);
+                    return Mono.empty();
                 }
                 return Mono.just(authenticationToken);
             }))

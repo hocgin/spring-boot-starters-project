@@ -46,7 +46,8 @@ public class ServletExpandAuthenticationManager extends OncePerRequestFilter {
         Assert.notNull(tokenAuthentication);
         Authentication authentication = tokenAuthentication.authentication(token);
         if (Objects.isNull(authentication)) {
-            throw new InvalidTokenAuthenticationException();
+            filterChain.doFilter(request, response);
+            return;
         }
         final SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
