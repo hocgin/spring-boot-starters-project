@@ -3,7 +3,6 @@ package in.hocg.boot.sso.client.autoconfigure.core.servlet;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.BearerTokenAuthentication;
-import in.hocg.boot.sso.client.autoconfigure.core.InvalidTokenAuthenticationException;
 import in.hocg.boot.sso.client.autoconfigure.utils.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
