@@ -3,7 +3,6 @@ package in.hocg.boot.sso.client.autoconfigure.core.servlet;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.BearerTokenAuthentication;
-import in.hocg.boot.sso.client.autoconfigure.core.InvalidTokenAuthenticationException;
 import in.hocg.boot.sso.client.autoconfigure.utils.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,10 +45,10 @@ public class ServletExpandAuthenticationManager extends OncePerRequestFilter {
         Assert.notNull(tokenAuthentication);
         Authentication authentication = tokenAuthentication.authentication(token);
         if (Objects.isNull(authentication)) {
-            filterChain.doFilter(request, response);
-            return;
+            authentication = TokenUtils.ANONYMOUS_AUTHENTICATION_TOKEN;
         }
         final SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
+        filterChain.doFilter(request, response);
     }
 }
