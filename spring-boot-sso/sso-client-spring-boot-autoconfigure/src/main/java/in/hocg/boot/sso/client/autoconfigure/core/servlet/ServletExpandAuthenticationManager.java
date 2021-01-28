@@ -45,10 +45,10 @@ public class ServletExpandAuthenticationManager extends OncePerRequestFilter {
         Assert.notNull(tokenAuthentication);
         Authentication authentication = tokenAuthentication.authentication(token);
         if (Objects.isNull(authentication)) {
-            filterChain.doFilter(request, response);
-            return;
+            authentication = TokenUtils.ANONYMOUS_AUTHENTICATION_TOKEN;
         }
         final SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
+        filterChain.doFilter(request, response);
     }
 }
