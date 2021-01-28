@@ -34,9 +34,6 @@ public class WebFluxExpandAuthenticationManager implements ReactiveAuthenticatio
             .flatMap((accessToken -> {
                 BearerTokenAuthentication tokenAuthentication = context.getBean(BearerTokenAuthentication.class);
                 Authentication authenticationToken = tokenAuthentication.authentication(accessToken);
-                if (Objects.isNull(authenticationToken)) {
-                    return Mono.just(TokenUtils.ANONYMOUS_AUTHENTICATION_TOKEN);
-                }
                 return Mono.just(authenticationToken);
             }))
             .cast(Authentication.class);
