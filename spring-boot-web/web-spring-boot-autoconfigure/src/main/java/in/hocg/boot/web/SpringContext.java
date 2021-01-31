@@ -3,15 +3,24 @@ package in.hocg.boot.web;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.EmbeddedValueResolverAware;
+import org.springframework.util.StringValueResolver;
 
 /**
  * @author hocgin
  * @date 2019/7/19
  */
 @Slf4j
-public abstract class SpringContext implements ApplicationContextAware {
+public abstract class SpringContext
+    implements ApplicationContextAware, EmbeddedValueResolverAware {
 
     private static ApplicationContext APPLICATION_CONTEXT;
+    private static StringValueResolver STRING_VALUE_RESOLVER;
+
+    @Override
+    public void setEmbeddedValueResolver(StringValueResolver resolver) {
+        SpringContext.STRING_VALUE_RESOLVER = resolver;
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
@@ -27,6 +36,9 @@ public abstract class SpringContext implements ApplicationContextAware {
         return APPLICATION_CONTEXT;
     }
 
+    public static StringValueResolver getStringValueResolver() {
+        return STRING_VALUE_RESOLVER;
+    }
 
     /**
      * 通过名字获取上下文中的bean
