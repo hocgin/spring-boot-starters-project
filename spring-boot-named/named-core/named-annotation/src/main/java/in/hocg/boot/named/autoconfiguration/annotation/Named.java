@@ -39,11 +39,4 @@ public @interface Named {
      */
     String[] args() default {};
 
-    /**
-     * 服务提供类
-     *
-     * @return
-     */
-    Class<?> serviceClass() default NamedService.class;
-
 }
