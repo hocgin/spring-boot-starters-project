@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
 import in.hocg.boot.named.autoconfiguration.annotation.InjectNamed;
 import in.hocg.boot.named.autoconfiguration.annotation.Named;
+import in.hocg.boot.named.autoconfiguration.annotation.NamedService;
+import in.hocg.boot.named.autoconfiguration.annotation.UseNamedService;
 import in.hocg.boot.named.autoconfiguration.core.ClassName;
 import in.hocg.boot.named.autoconfiguration.core.NamedRow;
 import in.hocg.boot.named.autoconfiguration.ifc.NamedArgs;
@@ -108,6 +110,7 @@ public class NamedAspect {
 
     private Optional<NamedRow> getNamedRow(Object target, Map<String, Field> fieldMap, Field targetField) {
         final Named named = targetField.getAnnotation(Named.class);
+        UseNamedService useService = targetField.getAnnotation(UseNamedService.class);
         final Field idField = fieldMap.get(named.idFor());
         if (Objects.isNull(idField)) {
             return Optional.empty();
@@ -118,7 +121,10 @@ public class NamedAspect {
         }
         final String namedType = named.type();
         final Object idValue = LangUtils.getObjectValue(target, idField, null);
-        Class<?> serviceClass = named.serviceClass();
+        Class<?> serviceClass = NamedService.class;
+        if (Objects.nonNull(useService)) {
+            serviceClass = useService.value();
+        }
         NamedRow namedRow = new NamedRow()
             .setTarget(target)
             .setIdValue(idValue)

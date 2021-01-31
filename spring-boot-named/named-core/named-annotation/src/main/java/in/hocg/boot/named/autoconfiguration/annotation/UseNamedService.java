@@ -15,28 +15,13 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Named {
-
+public @interface UseNamedService {
 
     /**
-     * 字典项标识
+     * 服务提供类
      *
      * @return
      */
-    String idFor();
-
-    /**
-     * 注入类型
-     *
-     * @return
-     */
-    String type() default "";
-
-    /**
-     * 参数(默认为: {named.idFor()})
-     *
-     * @return
-     */
-    String[] args() default {};
+    Class<?> value() default NamedService.class;
 
 }
