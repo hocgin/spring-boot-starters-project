@@ -61,7 +61,7 @@ public class NamedAspect {
     private void handleResult(Object result) {
         List<NamedRow> namedRows = getNamedRows(result);
         Map<String, List<NamedRow>> namedGroup = namedRows.parallelStream().collect(Collectors.groupingBy(this::getGroupKey));
-        namedGroup.values().parallelStream().forEach(this::injectValue);
+        namedGroup.values().forEach(this::injectValue);
     }
 
     private String getGroupKey(NamedRow namedRow) {
