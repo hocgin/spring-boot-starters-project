@@ -38,10 +38,6 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>spring-boot-utils</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
     <!-- Spring Boot dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
