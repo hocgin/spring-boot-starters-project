@@ -8,6 +8,7 @@ import in.hocg.boot.named.autoconfiguration.annotation.Named;
 import in.hocg.boot.named.autoconfiguration.annotation.NamedService;
 import in.hocg.boot.named.autoconfiguration.annotation.UseNamedService;
 import in.hocg.boot.named.autoconfiguration.core.ClassName;
+import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import in.hocg.boot.named.autoconfiguration.core.NamedRow;
 import in.hocg.boot.named.autoconfiguration.ifc.NamedArgs;
 import in.hocg.boot.named.autoconfiguration.ifc.NamedHandler;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class NamedAspect {
     private final ApplicationContext context;
-    private final ThreadLocal<Map<String, Object>> cache = ThreadLocal.withInitial(WeakHashMap::new);
 
     @Pointcut("@within(org.springframework.stereotype.Service) && execution((*) *(..))")
     public void pointcut() {
@@ -155,8 +154,10 @@ public class NamedAspect {
 
     private void injectValueWithCache(List<NamedRow> namedRows) {
         namedRows.parallelStream().forEach(namedRow -> {
-            Object value = cache.get().get(getCacheKey(namedRow));
-            setValue(namedRow, value);
+            Object value = getNamedCacheService().get(getCacheKey(namedRow));
+            if (Objects.nonNull(value)) {
+                setValue(namedRow, value);
+            }
         });
     }
 
@@ -192,7 +193,7 @@ public class NamedAspect {
         }
         namedRow.setTargetValue(value);
         LangUtils.setFieldValue(namedRow.getTarget(), namedRow.getTargetField(), value);
-        cache.get().put(getCacheKey(namedRow), value);
+        getNamedCacheService().put(getCacheKey(namedRow), value);
     }
 
     private String getCacheKey(NamedRow namedRow) {
@@ -233,4 +234,7 @@ public class NamedAspect {
         return Collections.emptyMap();
     }
 
+    private NamedCacheService getNamedCacheService() {
+        return context.getBean(NamedCacheService.class);
+    }
 }
