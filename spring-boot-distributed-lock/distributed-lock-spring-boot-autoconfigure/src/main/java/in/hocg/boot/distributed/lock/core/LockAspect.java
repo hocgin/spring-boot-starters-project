@@ -16,6 +16,7 @@ import org.springframework.core.annotation.Order;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -95,8 +96,10 @@ public class LockAspect {
      */
     private String getLockKey(ProceedingJoinPoint point, Method method, UseLock annotation) {
         String prefix = annotation.prefix();
+        String key;
         switch (annotation.keyType()) {
-            case Parameter:
+            case Parameter: {
+                String lockKey = null;
                 Parameter[] parameters = method.getParameters();
                 for (int i = 0; i < parameters.length; i++) {
                     Parameter parameter = parameters[i];
@@ -104,16 +107,26 @@ public class LockAspect {
                     if (hasKeyParam) {
                         Object arg = point.getArgs()[i];
                         if (arg instanceof String || arg instanceof Integer) {
-                            return prefix + arg;
+                            lockKey = prefix + arg;
+                            break;
                         }
                     }
                 }
+                if (Objects.nonNull(lockKey)) {
+                    key = lockKey;
+                    break;
+                }
                 throw new IllegalArgumentException("未找到 Redis Key, 请在函数参数上指定锁的标识，使用 @" + LockKey.class.getName());
-            case MethodName:
-                return prefix + method.getName();
+            }
+            case MethodName: {
+                key = method.getName();
+                break;
+            }
             case Key:
-            default:
-                return prefix + annotation.key();
+            default: {
+                key = annotation.key();
+            }
         }
+        return prefix + ":" + key;
     }
 }

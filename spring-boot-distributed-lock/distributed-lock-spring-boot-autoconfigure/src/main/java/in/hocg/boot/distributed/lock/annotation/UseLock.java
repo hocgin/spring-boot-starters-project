@@ -24,7 +24,7 @@ public @interface UseLock {
      *
      * @return
      */
-    String prefix() default "LOCK#";
+    String prefix() default "lock";
 
     /**
      * 指定锁
