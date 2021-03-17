@@ -127,6 +127,6 @@ public class LockAspect {
                 key = annotation.key();
             }
         }
-        return prefix + ":" + key;
+        return prefix + "#" + key;
     }
 }
