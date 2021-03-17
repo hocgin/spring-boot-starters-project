@@ -6,6 +6,7 @@ import in.hocg.boot.distributed.lock.core.KeyType;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hocgin on 2019-09-29.
@@ -23,7 +24,7 @@ public @interface UseLock {
      *
      * @return
      */
-    String prefix() default "LOCK#";
+    String prefix() default "lock";
 
     /**
      * 指定锁
@@ -37,7 +38,7 @@ public @interface UseLock {
      *
      * @return
      */
-    KeyType keyType() default KeyType.None;
+    KeyType keyType() default KeyType.Key;
 
     /**
      * 获取不到锁的错误信息
@@ -59,4 +60,18 @@ public @interface UseLock {
      * @return
      */
     long tryInterval() default 0;
+
+    /**
+     * 超时时间
+     *
+     * @return
+     */
+    long expireTime() default 30;
+
+    /**
+     * 超时时间单位
+     *
+     * @return
+     */
+    TimeUnit expireTimeUnit() default TimeUnit.SECONDS;
 }

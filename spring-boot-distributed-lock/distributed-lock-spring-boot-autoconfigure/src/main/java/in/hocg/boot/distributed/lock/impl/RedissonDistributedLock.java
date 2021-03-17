@@ -21,7 +21,7 @@ public class RedissonDistributedLock implements DistributedLock {
     private final RedissonClient redisson;
 
     @Override
-    public void removeLock(String key) {
+    public void release(String key) {
         RLock lock = redisson.getLock(key);
         if (lock.isLocked()) {
             lock.unlock();
@@ -29,13 +29,13 @@ public class RedissonDistributedLock implements DistributedLock {
     }
 
     @Override
-    public boolean getLock(String key) {
+    public boolean acquire(String key, long timeout, TimeUnit timeUnit) {
         RLock lock = redisson.getLock(key);
         if (lock.isLocked()) {
             return false;
         }
         try {
-            return lock.tryLock(30, TimeUnit.SECONDS);
+            return lock.tryLock(timeout, timeUnit);
         } catch (InterruptedException e) {
             return false;
         }

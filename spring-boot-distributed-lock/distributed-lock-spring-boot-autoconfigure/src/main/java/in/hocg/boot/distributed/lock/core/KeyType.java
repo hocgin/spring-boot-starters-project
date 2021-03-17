@@ -9,7 +9,7 @@ package in.hocg.boot.distributed.lock.core;
  */
 public enum KeyType {
     // 使用注解的 key 值
-    None,
+    Key,
     // 使用函数参数
     Parameter,
     // 使用函数名
