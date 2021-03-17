@@ -16,6 +16,7 @@ import org.springframework.core.annotation.Order;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hocgin on 2019-09-29.
@@ -44,12 +45,16 @@ public class LockAspect {
         Class<?>[] parameterTypes = signature.getMethod().getParameterTypes();
         Method method = target.getClass().getMethod(methodName, parameterTypes);
         UseLock annotation = method.getAnnotation(UseLock.class);
+        int tryNumber = annotation.tryNumber();
+        long tryInterval = annotation.tryInterval();
+        TimeUnit timeUnit = annotation.expireTimeUnit();
+        long timeout = annotation.expireTime();
 
         // 根据类型获取锁标识
         String key = getLockKey(point, method, annotation);
 
         log.debug("正在申请锁, 锁标识为: {}", key);
-        if (!tryGetLock(key, annotation.tryNumber(), annotation.tryInterval())) {
+        if (!tryGetLock(key, tryNumber, tryInterval, timeout, timeUnit)) {
             log.debug("申请锁失败, 锁标识为: {}", key);
             throw new DistributedLockException(annotation.errorMessage());
         }
@@ -58,7 +63,7 @@ public class LockAspect {
             ret = point.proceed();
         } finally {
             log.debug("正在释放锁, 锁标识为: {}", key);
-            lock.removeLock(key);
+            lock.release(key);
         }
         return ret;
     }
@@ -70,9 +75,9 @@ public class LockAspect {
      * @param tryNumber 尝试次数
      * @return
      */
-    public boolean tryGetLock(String key, int tryNumber, long tryInterval) throws InterruptedException {
+    private boolean tryGetLock(String key, int tryNumber, long tryInterval, long timeout, TimeUnit timeUnit) throws InterruptedException {
         for (int i = 0; i < tryNumber; i++) {
-            if (lock.getLock(key)) {
+            if (lock.acquire(key, timeout, timeUnit)) {
                 return true;
             }
             Thread.sleep(tryInterval);
@@ -106,7 +111,7 @@ public class LockAspect {
                 throw new IllegalArgumentException("未找到 Redis Key, 请在函数参数上指定锁的标识，使用 @" + LockKey.class.getName());
             case MethodName:
                 return prefix + method.getName();
-            case None:
+            case Key:
             default:
                 return prefix + annotation.key();
         }
