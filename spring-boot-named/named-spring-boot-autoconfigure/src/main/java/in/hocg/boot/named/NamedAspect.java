@@ -1,6 +1,5 @@
 package in.hocg.boot.named;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
@@ -142,6 +141,12 @@ public class NamedAspect {
         Class<?> serviceClass = NamedService.class;
         if (Objects.nonNull(useService)) {
             serviceClass = useService.value();
+        } else {
+            try {
+                final Object namedService = context.getBean(serviceClass);
+                serviceClass = namedService.getClass();
+            } catch (Exception ignored) {
+            }
         }
         NamedRow namedRow = new NamedRow()
             .setTarget(target)
@@ -224,35 +229,35 @@ public class NamedAspect {
 
     private Map<String, Object> callNamedHandleMethod(Class<?> serviceClass, String namedType, Object[] ids, String[] args) {
         final Object namedService = context.getBean(serviceClass);
-        Assert.notNull(namedService);
 
-        Class<?> namedServiceClass = namedService.getClass();
-        for (Method method : namedServiceClass.getMethods()) {
-            final NamedHandler annotation = method.getAnnotation(NamedHandler.class);
-            if (Objects.isNull(annotation)) {
-                continue;
-            }
-            final String value = annotation.value();
-            if (!value.equals(namedType)) {
-                continue;
-            }
-            NamedArgs namedArgs = new NamedArgs().setArgs(args)
-                .setValues(Lists.newArrayList(ids));
-            try {
-                Object invokeResult = method.invoke(namedService, namedArgs);
-                if (Objects.isNull(invokeResult)) {
-                    return Collections.emptyMap();
-                } else if (invokeResult instanceof Map) {
-                    return (Map<String, Object>) invokeResult;
-                } else {
-                    return Collections.emptyMap();
+        Optional<Method> methodOpt = Arrays.stream(serviceClass.getMethods()).parallel()
+            .filter(method -> {
+                final NamedHandler annotation = method.getAnnotation(NamedHandler.class);
+                if (Objects.isNull(annotation)) {
+                    return false;
                 }
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                log.warn("服务调用失败, 请检查参数 @Named 提供者[{}], 函数[{}], 参数[{}]", namedService, method, JSONUtil.toJsonStr(namedArgs), e);
+                return annotation.value().equals(namedType);
+            }).findAny();
+
+        if (!methodOpt.isPresent()) {
+            return Collections.emptyMap();
+        }
+
+        Method method = methodOpt.get();
+        NamedArgs namedArgs = new NamedArgs().setArgs(args).setValues(Lists.newArrayList(ids));
+        try {
+            Object invokeResult = method.invoke(namedService, namedArgs);
+            if (Objects.isNull(invokeResult)) {
+                return Collections.emptyMap();
+            } else if (invokeResult instanceof Map) {
+                return (Map<String, Object>) invokeResult;
+            } else {
                 return Collections.emptyMap();
             }
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            log.warn("服务调用失败, 请检查参数 @Named 提供者[{}], 函数[{}], 参数[{}]", namedService, method, JSONUtil.toJsonStr(namedArgs), e);
+            return Collections.emptyMap();
         }
-        return Collections.emptyMap();
     }
 
     private NamedCacheService getNamedCacheService() {
