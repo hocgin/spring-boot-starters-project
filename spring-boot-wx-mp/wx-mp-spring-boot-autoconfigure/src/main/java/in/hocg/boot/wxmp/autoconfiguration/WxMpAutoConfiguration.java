@@ -38,7 +38,7 @@ public class WxMpAutoConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Map<String, WxMpConfigStorage> wxMpConfigMaps = LangUtils.toMap(properties.getConfigs(), WxMpProperties.Config::getAppid, config -> {
+        Map<String, WxMpConfigStorage> configs = LangUtils.toMap(properties.getConfigs(), WxMpProperties.Config::getAppid, config -> {
             WxMpDefaultConfigImpl result = new WxMpDefaultConfigImpl();
             result.setAppId(config.getAppid());
             result.setSecret(config.getSecret());
@@ -46,7 +46,7 @@ public class WxMpAutoConfiguration implements InitializingBean {
             result.setAesKey(config.getAesKey());
             return result;
         });
-        mpServices.setMultiConfigStorages(wxMpConfigMaps);
+        mpServices.setMultiConfigStorages(configs);
     }
 
     @Bean
