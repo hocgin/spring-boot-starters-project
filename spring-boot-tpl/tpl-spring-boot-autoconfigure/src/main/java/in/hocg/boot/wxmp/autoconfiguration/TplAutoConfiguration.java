@@ -1,4 +1,4 @@
-package in.hocg.boot.tpl.autoconfiguration;
+package in.hocg.boot.wxmp.autoconfiguration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

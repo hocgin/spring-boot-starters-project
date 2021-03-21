@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.wxmp.autoconfiguration.TplAutoConfiguration
+in.hocg.boot.wxma.autoconfiguration.WxMaAutoConfiguration
