@@ -1,17 +1,17 @@
-package in.hocg.boot.named.autoconfiguration;
+package in.hocg.boot.named;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
-import in.hocg.boot.named.autoconfiguration.annotation.InjectNamed;
-import in.hocg.boot.named.autoconfiguration.annotation.Named;
-import in.hocg.boot.named.autoconfiguration.annotation.NamedService;
-import in.hocg.boot.named.autoconfiguration.annotation.UseNamedService;
-import in.hocg.boot.named.autoconfiguration.core.ClassName;
-import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
-import in.hocg.boot.named.autoconfiguration.core.NamedRow;
-import in.hocg.boot.named.autoconfiguration.ifc.NamedArgs;
-import in.hocg.boot.named.autoconfiguration.ifc.NamedHandler;
+import in.hocg.boot.named.annotation.InjectNamed;
+import in.hocg.boot.named.annotation.Named;
+import in.hocg.boot.named.annotation.NamedService;
+import in.hocg.boot.named.annotation.UseNamedService;
+import in.hocg.boot.named.core.ClassName;
+import in.hocg.boot.named.core.NamedCacheService;
+import in.hocg.boot.named.core.NamedRow;
+import in.hocg.boot.named.ifc.NamedArgs;
+import in.hocg.boot.named.ifc.NamedHandler;
 import in.hocg.boot.utils.LangUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

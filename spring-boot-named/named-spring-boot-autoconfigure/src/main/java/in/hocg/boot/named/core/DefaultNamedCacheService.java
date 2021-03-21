@@ -1,4 +1,4 @@
-package in.hocg.boot.named.autoconfiguration.core;
+package in.hocg.boot.named.core;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

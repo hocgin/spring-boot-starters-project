@@ -1,4 +1,4 @@
-package in.hocg.boot.named.autoconfiguration.annotation;
+package in.hocg.boot.named.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

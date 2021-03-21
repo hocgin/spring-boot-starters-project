@@ -1,4 +1,4 @@
-package in.hocg.boot.named.autoconfiguration.annotation;
+package in.hocg.boot.named.annotation;
 
 /**
  * Created by hocgin on 2020/6/14.

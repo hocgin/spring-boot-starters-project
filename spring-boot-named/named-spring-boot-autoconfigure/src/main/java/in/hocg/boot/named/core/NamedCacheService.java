@@ -1,4 +1,4 @@
-package in.hocg.boot.named.autoconfiguration.core;
+package in.hocg.boot.named.core;
 
 /**
  * Created by hocgin on 2021/2/25

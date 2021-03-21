@@ -1,4 +1,4 @@
-package in.hocg.boot.named.autoconfiguration.ifc;
+package in.hocg.boot.named.ifc;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

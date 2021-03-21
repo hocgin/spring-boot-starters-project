@@ -18,6 +18,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>wx-mp-spring-boot-autoconfigure</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.github.binarywang</groupId>
+      <artifactId>weixin-java-mp</artifactId>
+    </dependency>
     <!-- Spring Boot dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
