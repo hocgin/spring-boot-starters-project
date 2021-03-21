@@ -19,6 +19,19 @@
 
   <dependencies>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>web-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>named-spring-boot-starter</artifactId>
+    </dependency>
+    <!--    -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-logging</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
     </dependency>
@@ -29,10 +42,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>named-spring-boot-starter</artifactId>
     </dependency>
   </dependencies>
 </project>

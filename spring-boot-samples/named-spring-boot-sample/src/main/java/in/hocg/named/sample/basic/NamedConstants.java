@@ -1,4 +1,4 @@
-package in.hocg.named.sample.named;
+package in.hocg.named.sample.basic;
 
 import lombok.experimental.UtilityClass;
 
@@ -11,4 +11,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class NamedConstants {
     public final String Test = "Test";
+    public final String Test2 = "Test2";
+    public final String Test3 = "Test3";
 }

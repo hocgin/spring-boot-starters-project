@@ -1,5 +1,6 @@
 package in.hocg.boot.named;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
@@ -21,6 +22,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -32,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -59,8 +63,23 @@ public class NamedAspect {
 
     private void handleResult(Object result) {
         List<NamedRow> namedRows = getNamedRows(result);
+        if (CollectionUtils.isEmpty(namedRows)) {
+            return;
+        }
+
         Map<String, List<NamedRow>> namedGroup = namedRows.parallelStream().collect(Collectors.groupingBy(this::getGroupKey));
-        namedGroup.values().forEach(this::injectValue);
+        CompletableFuture[] completableFutures = namedGroup.values().parallelStream()
+            .map(nrs -> CompletableFuture.runAsync(() -> this.injectValue(nrs))).toArray(CompletableFuture[]::new);
+
+        if (completableFutures.length <= 0) {
+            return;
+        }
+
+        try {
+            CompletableFuture.allOf(completableFutures).get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Exception", e);
+        }
     }
 
     private String getGroupKey(NamedRow namedRow) {
@@ -205,8 +224,10 @@ public class NamedAspect {
 
     private Map<String, Object> callNamedHandleMethod(Class<?> serviceClass, String namedType, Object[] ids, String[] args) {
         final Object namedService = context.getBean(serviceClass);
+        Assert.notNull(namedService);
 
-        for (Method method : serviceClass.getMethods()) {
+        Class<?> namedServiceClass = namedService.getClass();
+        for (Method method : namedServiceClass.getMethods()) {
             final NamedHandler annotation = method.getAnnotation(NamedHandler.class);
             if (Objects.isNull(annotation)) {
                 continue;

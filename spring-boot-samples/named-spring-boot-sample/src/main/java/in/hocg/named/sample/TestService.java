@@ -1,4 +1,4 @@
-package in.hocg.named.sample.test;
+package in.hocg.named.sample;
 
 import cn.hutool.core.util.IdUtil;
 import com.google.common.collect.Lists;
