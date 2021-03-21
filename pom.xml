@@ -42,6 +42,7 @@
     <module>spring-boot-change-log</module>
     <module>spring-boot-xxl-job</module>
     <module>spring-boot-utils</module>
+    <module>spring-boot-tpl</module>
   </modules>
 
   <repositories>
