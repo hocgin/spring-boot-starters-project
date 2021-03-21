@@ -38,6 +38,7 @@
     <p6spy.version>3.8.7</p6spy.version>
     <rocketmq-spring-boot-starter.version>2.1.0</rocketmq-spring-boot-starter.version>
     <jjwt.version>0.9.1</jjwt.version>
+    <weixin-java.version>4.0.0</weixin-java.version>
     <aliyun-log-log4j2-appender.version>0.1.11</aliyun-log-log4j2-appender.version>
     <aliyun-java-sdk-core.version>4.4.6</aliyun-java-sdk-core.version>
     <mail.version>1.4.7</mail.version>
@@ -46,6 +47,40 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- WX MP -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>wx-mp-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>wx-mp-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- WX MA -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>wx-ma-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>wx-ma-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- TPL -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>tpl-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>tpl-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!--      -->
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>change-log-spring-boot-autoconfigure</artifactId>
@@ -359,6 +394,16 @@
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt</artifactId>
         <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.binarywang</groupId>
+        <artifactId>weixin-java-mp</artifactId>
+        <version>${weixin-java.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.binarywang</groupId>
+        <artifactId>weixin-java-miniapp</artifactId>
+        <version>${weixin-java.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
