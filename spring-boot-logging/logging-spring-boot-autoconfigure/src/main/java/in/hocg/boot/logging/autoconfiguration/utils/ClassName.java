@@ -8,6 +8,11 @@ package in.hocg.boot.logging.autoconfiguration.utils;
  */
 public class ClassName {
     public static final String SecurityContextHoldersName = "org.springframework.security.core.context.SecurityContextHolder";
+    public static final String ApiOperationName = "io.swagger.annotations.ApiOperation";
+
+    public static boolean hasApiOperation() {
+        return ClassName.isPresent(ApiOperationName);
+    }
 
     public static boolean hasSecurityContextHolders() {
         return ClassName.isPresent(SecurityContextHoldersName);
