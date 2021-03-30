@@ -3,8 +3,10 @@ package in.hocg.boot.logging.autoconfiguration.core;
 import cn.hutool.core.collection.CollectionUtil;
 import in.hocg.boot.logging.autoconfiguration.utils.ClassName;
 import in.hocg.boot.logging.autoconfiguration.utils.RequestUtils;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -105,7 +107,12 @@ public class LoggerAspect {
                 source = request.getParameter("source");
             }
             final LoggerEvent logger = new LoggerEvent();
-            final String enterRemark = annotation.value();
+            String enterRemark = annotation.value();
+            if (Strings.isBlank(enterRemark) && ClassName.hasApiOperation()) {
+                ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
+                enterRemark = apiOperation.value();
+            }
+
             logger.setMapping(mapping)
                 .setCurrentUser(this.getCurrentUser().orElse(null))
                 .setSource(source)

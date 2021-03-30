@@ -47,6 +47,17 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- Test -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>test-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>test-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- WX MP -->
       <dependency>
         <groupId>${project.groupId}</groupId>
