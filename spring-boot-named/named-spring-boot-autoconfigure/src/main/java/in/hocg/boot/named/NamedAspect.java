@@ -1,5 +1,6 @@
 package in.hocg.boot.named;
 
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.google.common.collect.Lists;
@@ -35,6 +36,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +52,9 @@ import java.util.stream.Collectors;
 @Aspect
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class NamedAspect {
+    private static final int MAX_THREAD_POOL_SIZE = 80;
+    private static final ThreadPoolExecutor NAMED_WORKER_EXECUTOR = new ThreadPoolExecutor(8, MAX_THREAD_POOL_SIZE, 30L,
+        TimeUnit.SECONDS, new LinkedBlockingQueue<>(), ThreadFactoryBuilder.create().setNamePrefix("named-thread-worker").build());
     private final ApplicationContext context;
 
     @Pointcut("@within(org.springframework.stereotype.Service) && execution((*) *(..))")
@@ -68,15 +76,15 @@ public class NamedAspect {
 
         Map<String, List<NamedRow>> namedGroup = namedRows.parallelStream().collect(Collectors.groupingBy(this::getGroupKey));
         CompletableFuture[] completableFutures = namedGroup.values().parallelStream()
-            .map(nrs -> CompletableFuture.runAsync(() -> this.injectValue(nrs))).toArray(CompletableFuture[]::new);
+            .map(nrs -> CompletableFuture.runAsync(() -> this.injectValue(nrs), NAMED_WORKER_EXECUTOR)).toArray(CompletableFuture[]::new);
 
         if (completableFutures.length <= 0) {
             return;
         }
 
         try {
-            CompletableFuture.allOf(completableFutures).get();
-        } catch (InterruptedException | ExecutionException e) {
+            CompletableFuture.allOf(completableFutures).get(5, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             log.warn("Exception", e);
         }
     }
