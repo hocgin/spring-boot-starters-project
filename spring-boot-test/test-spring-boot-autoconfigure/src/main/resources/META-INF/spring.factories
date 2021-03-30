@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.tpl.autoconfiguration.TplAutoConfiguration
+in.hocg.boot.test.autoconfiguration.TestAutoConfiguration
