@@ -1,0 +1,6 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: prod
+#https://help.aliyun.com/document_detail/161998.html?spm=a2c4g.11186623.6.557.d699290cnxO2nD
