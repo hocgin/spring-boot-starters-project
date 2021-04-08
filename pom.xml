@@ -45,6 +45,7 @@
     <module>spring-boot-tpl</module>
     <module>spring-boot-wx-mp</module>
     <module>spring-boot-wx-ma</module>
+    <module>spring-boot-schedulerx</module>
     <module>spring-boot-test</module>
   </modules>
 

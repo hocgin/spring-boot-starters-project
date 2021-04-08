@@ -43,10 +43,22 @@
     <aliyun-java-sdk-core.version>4.4.6</aliyun-java-sdk-core.version>
     <mail.version>1.4.7</mail.version>
     <xxl-job.version>2.2.0</xxl-job.version>
+    <aliyun-schedulerx-spring-boot-starter.version>1.2.4.3</aliyun-schedulerx-spring-boot-starter.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      <!-- Scheduler X -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>schedulerx-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>schedulerx-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Test -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -320,6 +332,11 @@
         <groupId>com.aliyun.openservices</groupId>
         <artifactId>aliyun-log-log4j2-appender</artifactId>
         <version>${aliyun-log-log4j2-appender.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.aliyun.schedulerx</groupId>
+        <artifactId>schedulerx2-spring-boot-starter</artifactId>
+        <version>${aliyun-schedulerx-spring-boot-starter.version}</version>
       </dependency>
       <dependency>
         <groupId>p6spy</groupId>

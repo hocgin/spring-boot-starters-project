@@ -29,8 +29,9 @@
     <module>mail-spring-boot-sample</module>
     <module>change-log-spring-boot-sample</module>
     <module>xxl-job-spring-boot-sample</module>
-    <module>tpl-spring-boot-sample</module>
     <module>test-spring-boot-sample</module>
+    <module>schedulerx-spring-boot-sample</module>
+    <module>tpl-spring-boot-sample</module>
   </modules>
 
 </project>
