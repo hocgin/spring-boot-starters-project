@@ -1,4 +1,4 @@
-package in.hocg.boot.tpl.sample;
+package in.hocg.boot.schedulerx.sample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

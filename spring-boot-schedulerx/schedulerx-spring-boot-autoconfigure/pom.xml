@@ -15,8 +15,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.alibaba.cloud</groupId>
-      <artifactId>aliyun-schedulerx-spring-boot-starter</artifactId>
+      <groupId>com.aliyun.schedulerx</groupId>
+      <artifactId>schedulerx2-spring-boot-starter</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

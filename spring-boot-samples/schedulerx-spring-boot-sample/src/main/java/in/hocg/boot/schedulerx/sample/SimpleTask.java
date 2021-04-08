@@ -1,8 +1,8 @@
 package in.hocg.boot.schedulerx.sample;
 
-import com.alibaba.edas.schedulerx.ProcessResult;
-import com.alibaba.edas.schedulerx.ScxSimpleJobContext;
-import com.alibaba.edas.schedulerx.ScxSimpleJobProcessor;
+import com.alibaba.schedulerx.worker.domain.JobContext;
+import com.alibaba.schedulerx.worker.processor.JavaProcessor;
+import com.alibaba.schedulerx.worker.processor.ProcessResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class SimpleTask implements ScxSimpleJobProcessor {
+public class SimpleTask extends JavaProcessor {
 
     @Override
-    public ProcessResult process(ScxSimpleJobContext scxSimpleJobContext) {
-        System.out.println("OK");
+    public ProcessResult process(JobContext context) throws Exception {
+        log.info("Hi");
         return new ProcessResult(true);
     }
 }

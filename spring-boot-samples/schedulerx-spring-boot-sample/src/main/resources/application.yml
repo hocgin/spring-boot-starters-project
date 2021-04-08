@@ -3,4 +3,14 @@ server:
 spring:
   profiles:
     active: prod
-#https://help.aliyun.com/document_detail/161998.html?spm=a2c4g.11186623.6.557.d699290cnxO2nD
+  #https://help.aliyun.com/document_detail/161998.html?spm=a2c4g.11186623.6.557.d699290cnxO2nD
+  schedulerx2:
+    # https://help.aliyun.com/document_detail/162000.html?spm=a2c4g.11186623.2.9.3869212fxto1TK
+    endpoint: acm.aliyun.com
+    endpointPort: 8080
+    # namespace为命名空间ID，可以在控制台命名空间页面获取。
+    namespace: 6186ac89-041b-45b4-8ba2-68bca89c16df
+    # groupId为应用ID，appKey为应用key，可以在控制台应用管理页面获取。多个id用,号拼接
+    groupId: rabbit-hold
+    # 1.2.1及以上版本设置appKey
+    appKey: hr3g+Up7k91lHL4eAX4DhQ==

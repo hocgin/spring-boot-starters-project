@@ -1,15 +1,10 @@
 package in.hocg.boot.schedulerx.autoconfiguration;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-
-import javax.sql.DataSource;
 
 /**
  * Created by hocgin on 2020/8/15
@@ -18,8 +13,6 @@ import javax.sql.DataSource;
  * @author hocgin
  */
 @Configuration
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@ConditionalOnBean({DataSource.class})
 @ConditionalOnProperty(prefix = SchedulerXProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(SchedulerXProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
