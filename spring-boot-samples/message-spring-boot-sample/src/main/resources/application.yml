@@ -15,3 +15,6 @@ mybatis-plus:
   global-config:
     banner: false
   mapper-locations: classpath*:/**/xml/*.xml
+boot:
+  message:
+    type: Rocket

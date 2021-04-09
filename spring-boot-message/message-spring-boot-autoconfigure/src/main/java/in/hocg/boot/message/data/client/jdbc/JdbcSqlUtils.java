@@ -1,7 +1,6 @@
 package in.hocg.boot.message.data.client.jdbc;
 
-import cn.hutool.json.JSONUtil;
-import in.hocg.boot.message.core.transactional.TransactionalMessage;
+import in.hocg.boot.message.data.PersistenceMessage;
 import in.hocg.boot.utils.sql.JdbcSql;
 
 import java.time.LocalDateTime;
@@ -15,11 +14,10 @@ import java.time.LocalDateTime;
 public class JdbcSqlUtils {
     private static final String TABLE_NAME = "boot_persistence_message";
 
-    public static JdbcSql getInsertMessageArgs(TransactionalMessage message) {
+    public static JdbcSql getInsertMessageArgs(PersistenceMessage message) {
         String sql = "insert into " + TABLE_NAME + "(group_sn, headers, destination, payload, published, prepared_at, created_at) values (?,?,?,?,?,?,?)";
-        return JdbcSql.create(sql,
-            message.getGroupSn(),
-            JSONUtil.toJsonStr(message.getHeaders()),
+        return JdbcSql.create(sql, message.getGroupSn(),
+            message.getHeaders(),
             message.getDestination(),
             message.getPayload(),
             PersistenceMessagePublished.Prepare.getCode(),

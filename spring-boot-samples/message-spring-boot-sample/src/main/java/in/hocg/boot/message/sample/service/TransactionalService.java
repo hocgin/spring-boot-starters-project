@@ -1,7 +1,7 @@
 package in.hocg.boot.message.sample.service;
 
 import in.hocg.boot.message.MessageFactory;
-import in.hocg.boot.message.core.transactional.TransactionalMessage;
+import in.hocg.boot.message.core.message.TransactionalMessage;
 import in.hocg.boot.message.sample.controller.TransactionalController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
@@ -24,11 +24,11 @@ public class TransactionalService {
         final TransactionalMessage message = new TransactionalMessage();
         message.setDestination(topic);
         message.setPayload("XXX");
-        MessageFactory.transactional().prepare(message);
+        MessageFactory.normal().prepare(message);
 
         message.setDestination(topic);
         message.setPayload("XXX");
-        MessageFactory.transactional().prepare(message);
+        MessageFactory.normal().prepare(message);
 //        publisher.publishEvent(new TransactionalEvent());
     }
 
@@ -36,6 +36,6 @@ public class TransactionalService {
         final TransactionalMessage message = new TransactionalMessage();
         message.setDestination(topic);
         message.setPayload("XXX");
-        MessageFactory.transactional().prepare(message);
+        MessageFactory.normal().prepare(message);
     }
 }

@@ -6,5 +6,5 @@ package in.hocg.boot.message.data;
  *
  * @author hocgin
  */
-public class TransactionalEvent {
+public final class TransactionalEvent {
 }
