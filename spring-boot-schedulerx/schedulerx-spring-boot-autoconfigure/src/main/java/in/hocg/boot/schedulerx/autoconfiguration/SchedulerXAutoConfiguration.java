@@ -1,6 +1,8 @@
 package in.hocg.boot.schedulerx.autoconfiguration;
 
+import com.alibaba.schedulerx.SchedulerxProperties;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +15,9 @@ import org.springframework.context.annotation.Lazy;
  * @author hocgin
  */
 @Configuration
+@AutoConfigureAfter(com.alibaba.schedulerx.SchedulerxAutoConfigure.class)
 @ConditionalOnProperty(prefix = SchedulerXProperties.PREFIX, name = "enabled", matchIfMissing = true)
-@EnableConfigurationProperties(SchedulerXProperties.class)
+@EnableConfigurationProperties({SchedulerXProperties.class, SchedulerxProperties.class})
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class SchedulerXAutoConfiguration {
 

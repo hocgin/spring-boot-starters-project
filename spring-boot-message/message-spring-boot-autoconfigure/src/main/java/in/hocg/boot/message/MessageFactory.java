@@ -1,8 +1,8 @@
 package in.hocg.boot.message;
 
-import in.hocg.boot.message.core.local.LocalMessageFactory;
-import in.hocg.boot.message.core.normal.NormalMessageFactory;
-import in.hocg.boot.message.core.transactional.TransactionalMessageFactory;
+import in.hocg.boot.message.service.local.LocalMessageService;
+import in.hocg.boot.message.service.normal.NormalMessageService;
+import in.hocg.boot.web.SpringContext;
 
 /**
  * Created by hocgin on 2020/7/20.
@@ -12,15 +12,11 @@ import in.hocg.boot.message.core.transactional.TransactionalMessageFactory;
  */
 public class MessageFactory {
 
-    public static TransactionalMessageFactory transactional() {
-        return TransactionalMessageFactory.ME;
+    public static LocalMessageService local() {
+        return SpringContext.getBean(LocalMessageService.class);
     }
 
-    public static LocalMessageFactory local() {
-        return LocalMessageFactory.ME;
-    }
-
-    public static NormalMessageFactory normal() {
-        return NormalMessageFactory.ME;
+    public static NormalMessageService normal() {
+        return SpringContext.getBean(NormalMessageService.class);
     }
 }

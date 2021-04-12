@@ -1,7 +1,9 @@
 package in.hocg.boot.message.core;
 
-import in.hocg.boot.message.MessageFactory;
 import in.hocg.boot.message.data.TransactionalEvent;
+import in.hocg.boot.message.service.local.LocalMessageService;
+import in.hocg.boot.message.service.normal.NormalMessageService;
+import in.hocg.boot.web.SpringContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -25,7 +27,8 @@ public class TransactionalMessageListener {
         if (log.isDebugEnabled()) {
             log.debug("==> 事务提交前 {}", event);
         }
-        MessageFactory.transactional().publish();
+        SpringContext.getBean(NormalMessageService.class).publish();
+        SpringContext.getBean(LocalMessageService.class).publish();
     }
 
     /**
@@ -50,7 +53,8 @@ public class TransactionalMessageListener {
         if (log.isDebugEnabled()) {
             log.debug("==> 事务回滚后 {}", event);
         }
-        MessageFactory.transactional().clear();
+        SpringContext.getBean(NormalMessageService.class).clear();
+        SpringContext.getBean(LocalMessageService.class).clear();
     }
 
     /**
@@ -64,6 +68,7 @@ public class TransactionalMessageListener {
             log.debug("==> 事务完成后 {}", event);
         }
     }
+
 
 }
 

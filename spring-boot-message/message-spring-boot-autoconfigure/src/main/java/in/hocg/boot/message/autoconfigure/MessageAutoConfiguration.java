@@ -1,9 +1,14 @@
 package in.hocg.boot.message.autoconfigure;
 
 import in.hocg.boot.message.core.TransactionalMessageListener;
-import in.hocg.boot.message.core.transactional.TransactionalMessageService;
+import in.hocg.boot.message.core.TransactionalMessageService;
 import in.hocg.boot.message.data.TransactionalAspect;
-import in.hocg.boot.message.data.client.JdbcTransactionalMessageService;
+import in.hocg.boot.message.data.client.JdbcTransactionalMessageServiceImpl;
+import in.hocg.boot.message.service.local.LocalMessageQueueService;
+import in.hocg.boot.message.service.local.LocalMessageService;
+import in.hocg.boot.message.service.normal.NoneMessageQueueService;
+import in.hocg.boot.message.service.normal.NormalMessageService;
+import in.hocg.boot.message.service.normal.RocketMessageQueueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
@@ -41,7 +46,7 @@ public class MessageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public TransactionalMessageService transactionalMessageService(DataSource dataSource) {
-        return new JdbcTransactionalMessageService(dataSource);
+        return new JdbcTransactionalMessageServiceImpl(dataSource);
     }
 
     @Bean
@@ -54,5 +59,21 @@ public class MessageAutoConfiguration {
     @ConditionalOnMissingBean
     public TransactionalAspect transactionalAspect(ApplicationEventPublisher publisher) {
         return new TransactionalAspect(publisher);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public LocalMessageService localMessageService() {
+        return new LocalMessageQueueService();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public NormalMessageService normalMessageService() {
+        MessageProperties.MessageType messageType = properties.getType();
+        if (MessageProperties.MessageType.Rocket.equals(messageType)) {
+            return new RocketMessageQueueService();
+        }
+        return new NoneMessageQueueService();
     }
 }

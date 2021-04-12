@@ -1,7 +1,8 @@
-package in.hocg.boot.message.core.transactional;
+package in.hocg.boot.message.core.message;
 
 import cn.hutool.json.JSONUtil;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -13,8 +14,9 @@ import java.util.Map;
  *
  * @author hocgin
  */
-@Data
-public class TransactionalMessage {
+@Getter
+@Setter
+public class TransactionalMessage implements Message {
     private String groupSn;
     private Map<String, Object> headers = Collections.emptyMap();
     private String destination;

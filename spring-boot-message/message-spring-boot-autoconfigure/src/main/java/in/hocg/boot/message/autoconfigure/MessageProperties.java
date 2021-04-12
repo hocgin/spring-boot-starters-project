@@ -13,4 +13,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(MessageProperties.PREFIX)
 public class MessageProperties {
     public static final String PREFIX = "boot.message";
+
+    /**
+     * 消息类型
+     */
+    private MessageType type = MessageType.None;
+
+    public enum MessageType {
+        None,
+        Rocket
+    }
 }

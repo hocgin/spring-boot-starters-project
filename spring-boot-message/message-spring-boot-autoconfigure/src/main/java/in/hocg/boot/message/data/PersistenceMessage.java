@@ -1,6 +1,7 @@
 package in.hocg.boot.message.data;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -14,7 +15,8 @@ import java.time.LocalDateTime;
  * @author hocgin
  * @since 2020-07-20
  */
-@Data
+@Setter
+@Getter
 @Accessors(chain = true)
 public class PersistenceMessage implements Serializable {
 

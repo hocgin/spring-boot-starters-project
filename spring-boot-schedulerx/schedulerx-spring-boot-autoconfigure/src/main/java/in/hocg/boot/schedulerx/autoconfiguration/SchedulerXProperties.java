@@ -1,6 +1,7 @@
 package in.hocg.boot.schedulerx.autoconfiguration;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -9,9 +10,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(SchedulerXProperties.PREFIX)
 public class SchedulerXProperties {
-    public static final String PREFIX = "boot.scheduler-x";
+    public static final String PREFIX = "boot.schedulerx2";
 
 }
