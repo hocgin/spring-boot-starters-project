@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DefaultNamedCacheService implements NamedCacheService {
     private final Cache<String, Object> cachePool = CacheBuilder.newBuilder()
-        .maximumSize(1000L)
+        .maximumSize(10000L)
         .expireAfterWrite(5, TimeUnit.MINUTES)
         .build();
 
