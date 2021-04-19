@@ -182,7 +182,7 @@ public class NamedAspect {
             return;
         }
         Map<String, Object> values = callNamedHandleMethod(serviceClass, namedType, ids, args);
-        log.info("===> {}-{}-{}::{}", namedType, ids, args, values);
+        log.debug("===> {}-{}-{}::{}", namedType, ids, args, values);
         newNamedRows.parallelStream().forEach(row -> {
             Object value = values.get(LangUtils.toString(row.getIdValue()));
             if (Objects.nonNull(value)) {
