@@ -8,7 +8,7 @@ import in.hocg.boot.message.service.local.LocalMessageQueueService;
 import in.hocg.boot.message.service.local.LocalMessageService;
 import in.hocg.boot.message.service.normal.NoneMessageQueueService;
 import in.hocg.boot.message.service.normal.NormalMessageService;
-import in.hocg.boot.message.service.normal.RocketMessageQueueService;
+import in.hocg.boot.message.service.normal.rocket.RocketMessageQueueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
