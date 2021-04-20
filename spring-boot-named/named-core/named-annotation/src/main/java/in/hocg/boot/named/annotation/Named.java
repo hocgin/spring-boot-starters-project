@@ -17,26 +17,32 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Named {
 
-
     /**
      * 字典项标识
      *
-     * @return
+     * @return id field
      */
     String idFor();
 
     /**
      * 注入类型
      *
-     * @return
+     * @return type
      */
     String type() default "";
 
     /**
      * 参数(默认为: {named.idFor()})
      *
-     * @return
+     * @return []
      */
     String[] args() default {};
+
+    /**
+     * 是否使用缓存
+     *
+     * @return true
+     */
+    boolean useCache() default true;
 
 }
