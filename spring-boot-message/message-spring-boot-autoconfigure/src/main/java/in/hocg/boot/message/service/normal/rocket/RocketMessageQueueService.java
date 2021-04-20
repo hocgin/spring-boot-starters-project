@@ -1,5 +1,6 @@
-package in.hocg.boot.message.service.normal;
+package in.hocg.boot.message.service.normal.rocket;
 
+import in.hocg.boot.message.service.normal.AbsMessageQueueService;
 import in.hocg.boot.web.SpringContext;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.messaging.Message;

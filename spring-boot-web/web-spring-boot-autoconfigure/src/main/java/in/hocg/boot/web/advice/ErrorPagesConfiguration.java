@@ -31,20 +31,20 @@ public class ErrorPagesConfiguration implements ErrorPageRegistrar {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @RequestMapping(value = "/error/404")
-    public ExceptionResult error404() {
+    public ExceptionResult<?> error404() {
         return ExceptionResult.fail(HttpStatus.NOT_FOUND.value(), "请求的资源不存在");
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @RequestMapping(value = "/error/500")
-    public ExceptionResult error500() {
+    public ExceptionResult<?> error500() {
         log.error("服务异常ID: [{}]", IdUtil.randomUUID());
         return ExceptionResult.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), "系统繁忙, 请稍后");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @RequestMapping(value = "/error/400")
-    public ExceptionResult error400() {
+    public ExceptionResult<?> error400() {
         return ExceptionResult.fail(HttpStatus.BAD_REQUEST.value(), "请求有误");
     }
 }

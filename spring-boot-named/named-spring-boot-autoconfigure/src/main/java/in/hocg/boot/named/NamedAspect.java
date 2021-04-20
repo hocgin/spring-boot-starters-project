@@ -116,6 +116,7 @@ public class NamedAspect {
         if (argsValue.length == 0) {
             argsValue = new String[]{named.idFor()};
         }
+        final boolean useCache = named.useCache();
         final String namedType = named.type();
         final Object idValue = LangUtils.getObjectValue(target, idField, null);
         Class<?> serviceClass = NamedService.class;
@@ -129,6 +130,7 @@ public class NamedAspect {
             }
         }
         NamedRow namedRow = new NamedRow()
+            .setUseCache(useCache)
             .setTarget(target)
             .setIdValue(idValue)
             .setArgs(argsValue)
@@ -157,7 +159,7 @@ public class NamedAspect {
     }
 
     private void injectValueWithCache(List<NamedRow> namedRows) {
-        namedRows.parallelStream().forEach(namedRow -> {
+        namedRows.parallelStream().filter(NamedRow::getUseCache).forEach(namedRow -> {
             Object value = getNamedCacheService().get(getCacheKey(namedRow));
             if (Objects.nonNull(value)) {
                 setValue(namedRow, value);
@@ -182,7 +184,7 @@ public class NamedAspect {
             return;
         }
         Map<String, Object> values = callNamedHandleMethod(serviceClass, namedType, ids, args);
-        log.info("===> {}-{}-{}::{}", namedType, ids, args, values);
+        log.debug("===> {}-{}-{}::{}", namedType, ids, args, values);
         newNamedRows.parallelStream().forEach(row -> {
             Object value = values.get(LangUtils.toString(row.getIdValue()));
             if (Objects.nonNull(value)) {
@@ -197,7 +199,9 @@ public class NamedAspect {
         }
         namedRow.setTargetValue(value);
         LangUtils.setFieldValue(namedRow.getTarget(), namedRow.getTargetField(), value);
-        getNamedCacheService().put(getCacheKey(namedRow), value);
+        if (namedRow.getUseCache()) {
+            getNamedCacheService().put(getCacheKey(namedRow), value);
+        }
     }
 
     private String getCacheKey(NamedRow namedRow) {
