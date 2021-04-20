@@ -43,6 +43,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>spring-boot-utils</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-messaging</artifactId>
+    </dependency>
     <!-- Spring Boot dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
