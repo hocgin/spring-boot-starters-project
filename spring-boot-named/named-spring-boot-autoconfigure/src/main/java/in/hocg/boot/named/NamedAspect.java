@@ -188,18 +188,22 @@ public class NamedAspect {
         newNamedRows.parallelStream().forEach(row -> {
             Object value = values.get(LangUtils.toString(row.getIdValue()));
             if (Objects.nonNull(value)) {
-                setValue(row, value);
+                setValue(row, value, true);
             }
         });
     }
 
     private void setValue(NamedRow namedRow, Object value) {
+        this.setValue(namedRow, value, false);
+    }
+
+    private void setValue(NamedRow namedRow, Object value, boolean needSave) {
         if (Objects.isNull(value)) {
             return;
         }
         namedRow.setTargetValue(value);
         LangUtils.setFieldValue(namedRow.getTarget(), namedRow.getTargetField(), value);
-        if (namedRow.getUseCache()) {
+        if (needSave && namedRow.getUseCache()) {
             getNamedCacheService().put(getCacheKey(namedRow), value);
         }
     }

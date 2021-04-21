@@ -17,4 +17,4 @@ mybatis-plus:
   mapper-locations: classpath*:/**/xml/*.xml
 boot:
   message:
-    type: Rocket
+    type: Redis

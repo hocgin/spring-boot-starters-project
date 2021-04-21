@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAspectJAutoProxy(exposeProxy = true)
 @SpringBootApplication
 public class BootApplication {
-    String testTopic = "TEST_TOPIC";
 
     public static void main(String[] args) {
         SpringApplication.run(BootApplication.class, args);
     }
-
 
 }

@@ -21,6 +21,7 @@ public class MessageProperties {
 
     public enum MessageType {
         None,
-        Rocket
+        Rocket,
+        Redis;
     }
 }
