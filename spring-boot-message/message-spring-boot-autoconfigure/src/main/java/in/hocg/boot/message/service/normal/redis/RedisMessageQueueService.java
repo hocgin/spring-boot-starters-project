@@ -1,8 +1,10 @@
 package in.hocg.boot.message.service.normal.redis;
 
 import in.hocg.boot.message.service.normal.AbsMessageQueueService;
+import in.hocg.boot.web.SpringContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.messaging.Message;
 
 /**
@@ -13,29 +15,37 @@ import org.springframework.messaging.Message;
  */
 @RequiredArgsConstructor
 public class RedisMessageQueueService extends AbsMessageQueueService {
-    private final RedisTemplate redisTemplate;
 
     @Override
     public boolean asyncSend(String destination, Message<?> message) {
-        redisTemplate.convertAndSend(destination, message);
+        this.convertAndSend(destination, message);
         return true;
     }
 
     @Override
     public boolean asyncSend(String destination, Message<?> message, long timeout) {
-        redisTemplate.convertAndSend(destination, message);
+        this.convertAndSend(destination, message);
         return false;
     }
 
     @Override
     public boolean syncSend(String destination, Message<?> message) {
-        redisTemplate.convertAndSend(destination, message);
+        this.convertAndSend(destination, message);
         return false;
     }
 
     @Override
     public boolean syncSend(String destination, Message<?> message, long timeout) {
-        redisTemplate.convertAndSend(destination, message);
+        this.convertAndSend(destination, message);
         return false;
+    }
+
+    private void convertAndSend(String destination, Message<?> message) {
+        byte[] rawChannel = RedisSerializer.string().serialize(destination);
+        byte[] rawMessage = RedisSerializer.java().serialize(message);
+        SpringContext.getBean(StringRedisTemplate.class).execute(connection -> {
+            connection.publish(rawChannel, rawMessage);
+            return null;
+        }, true);
     }
 }

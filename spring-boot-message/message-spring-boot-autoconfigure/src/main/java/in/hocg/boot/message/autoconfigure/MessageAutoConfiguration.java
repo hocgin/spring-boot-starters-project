@@ -8,13 +8,15 @@ import in.hocg.boot.message.service.local.LocalMessageQueueService;
 import in.hocg.boot.message.service.local.LocalMessageService;
 import in.hocg.boot.message.service.normal.NoneMessageQueueService;
 import in.hocg.boot.message.service.normal.NormalMessageService;
+import in.hocg.boot.message.service.normal.redis.RedisMessageQueueService;
 import in.hocg.boot.message.service.normal.rocket.RocketMessageQueueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.*;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -33,8 +35,7 @@ import javax.sql.DataSource;
  */
 @Slf4j
 @Configuration
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@ConditionalOnBean({DataSource.class})
+//@AutoConfigureAfter(DataSourceAutoConfiguration.class)
 @ConditionalOnClass({Aspect.class})
 @ConditionalOnProperty(prefix = MessageProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(MessageProperties.class)
@@ -44,6 +45,7 @@ public class MessageAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean({DataSource.class})
     public TransactionalMessageService transactionalMessageService(DataSource dataSource) {
         return new JdbcTransactionalMessageServiceImpl(dataSource);
     }
@@ -72,6 +74,8 @@ public class MessageAutoConfiguration {
         MessageProperties.MessageType messageType = properties.getType();
         if (MessageProperties.MessageType.Rocket.equals(messageType)) {
             return new RocketMessageQueueService();
+        } else if (MessageProperties.MessageType.Redis.equals(messageType)) {
+            return new RedisMessageQueueService();
         }
         return new NoneMessageQueueService();
     }
