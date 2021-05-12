@@ -1,4 +1,4 @@
-package in.hocg.boot.utils;
+package in.hocg.boot.utils.exception;
 
 /**
  * Created by hocgin on 2021/1/5
