@@ -49,6 +49,7 @@
     <module>spring-boot-test</module>
     <module>spring-boot-monitor</module>
     <module>spring-boot-excel</module>
+    <module>spring-boot-elasticsearch</module>
   </modules>
 
   <repositories>
