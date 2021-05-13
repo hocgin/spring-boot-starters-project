@@ -1,5 +1,6 @@
 package in.hocg.boot.cache.autoconfiguration;
 
+import in.hocg.boot.utils.StringPoolUtils;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Data
 @ConfigurationProperties(CacheProperties.PREFIX)
 public class CacheProperties {
+    public static final String COLON = StringPoolUtils.COLON;
     public static final String PREFIX = "boot.cache";
 
     /**

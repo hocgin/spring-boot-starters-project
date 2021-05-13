@@ -48,6 +48,39 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- TPL -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>tpl-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>tpl-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- Excel -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>excel-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>excel-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- Monitor -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>monitor-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>monitor-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Scheduler X -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -90,17 +123,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>wx-ma-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <!-- TPL -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>tpl-spring-boot-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!--      -->

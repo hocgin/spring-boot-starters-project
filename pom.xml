@@ -47,6 +47,8 @@
     <module>spring-boot-wx-ma</module>
     <module>spring-boot-schedulerx</module>
     <module>spring-boot-test</module>
+    <module>spring-boot-monitor</module>
+    <module>spring-boot-excel</module>
   </modules>
 
   <repositories>
