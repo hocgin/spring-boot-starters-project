@@ -34,7 +34,7 @@ public class PageUtils {
      * @return 新分页对象
      */
     public static <T> IPage<T> emptyPage(IPage<T> page) {
-        return page(page.getTotal(), page.getCurrent(), page.getSize(), Collections.emptyList());
+        return fillPage(page.getTotal(), page.getCurrent(), page.getSize(), Collections.emptyList());
     }
 
     /**
@@ -45,7 +45,7 @@ public class PageUtils {
      * @return 分页对象
      */
     public static <T> IPage<T> emptyPage(long current, long size) {
-        return page(0L, current, size, Collections.emptyList());
+        return fillPage(0L, current, size, Collections.emptyList());
     }
 
     /**
@@ -58,7 +58,7 @@ public class PageUtils {
      * @param <T>     对象
      * @return 分页对象
      */
-    public static <T> IPage<T> page(long total, long current, long size, List<T> data) {
+    public static <T> IPage<T> fillPage(long total, long current, long size, List<T> data) {
         return new Page<T>(current, size, total)
             .setRecords(data);
     }
