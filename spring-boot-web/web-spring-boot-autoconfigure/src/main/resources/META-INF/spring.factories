@@ -1,4 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 in.hocg.boot.web.autoconfiguration.WebAutoConfiguration
-org.springframework.context.ApplicationContextInitializer=\
-in.hocg.boot.web.autoconfiguration.AllowBeanDefinitionOverridingApplicationContextInitializer
