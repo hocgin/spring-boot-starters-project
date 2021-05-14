@@ -1,7 +1,7 @@
 package in.hocg.boot.named.autoconfiguration;
 
 import in.hocg.boot.named.NamedAspect;
-import in.hocg.boot.named.core.DefaultNamedCacheService;
+import in.hocg.boot.named.core.MemoryNamedCacheService;
 import in.hocg.boot.named.core.NamedCacheService;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -28,6 +28,6 @@ public class NamedAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public NamedCacheService namedCacheService() {
-        return new DefaultNamedCacheService();
+        return new MemoryNamedCacheService();
     }
 }
