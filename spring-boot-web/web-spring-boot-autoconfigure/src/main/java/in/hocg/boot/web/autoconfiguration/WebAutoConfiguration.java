@@ -41,9 +41,9 @@ public class WebAutoConfiguration {
         return validatorFactory.getValidator();
     }
 
-    @Bean
-    public BeanFactoryPostProcessor beanFactoryPostProcessor() {
-        return beanFactory -> ((DefaultListableBeanFactory) beanFactory).setAllowBeanDefinitionOverriding(true);
-    }
+//    @Bean
+//    public BeanFactoryPostProcessor beanFactoryPostProcessor() {
+//        return beanFactory -> ((DefaultListableBeanFactory) beanFactory).setAllowBeanDefinitionOverriding(true);
+//    }
 
 }
