@@ -6,8 +6,6 @@ import in.hocg.boot.web.servlet.ServletConfiguration;
 import in.hocg.boot.web.webflux.WebFluxConfiguration;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.HibernateValidator;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -40,10 +38,5 @@ public class WebAutoConfiguration {
             .buildValidatorFactory();
         return validatorFactory.getValidator();
     }
-
-//    @Bean
-//    public BeanFactoryPostProcessor beanFactoryPostProcessor() {
-//        return beanFactory -> ((DefaultListableBeanFactory) beanFactory).setAllowBeanDefinitionOverriding(true);
-//    }
 
 }

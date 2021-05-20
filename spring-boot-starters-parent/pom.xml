@@ -60,6 +60,17 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- WebMagic -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>webmagic-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>webmagic-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Excel -->
       <dependency>
         <groupId>${project.groupId}</groupId>

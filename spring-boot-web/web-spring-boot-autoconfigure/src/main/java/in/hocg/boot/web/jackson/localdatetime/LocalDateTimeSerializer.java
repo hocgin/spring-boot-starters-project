@@ -1,4 +1,4 @@
-package in.hocg.boot.web.jackson;
+package in.hocg.boot.web.jackson.localdatetime;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

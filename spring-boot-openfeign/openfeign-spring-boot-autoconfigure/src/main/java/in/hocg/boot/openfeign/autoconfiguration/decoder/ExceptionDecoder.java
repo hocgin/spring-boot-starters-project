@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
  * @author hocgin
  */
 @Slf4j
-public class ExceptionErrorDecoder implements ErrorDecoder {
+public class ExceptionDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String s, Response response) {
         Exception exception = null;

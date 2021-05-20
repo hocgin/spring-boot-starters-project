@@ -3,3 +3,5 @@
 - 多数据源 [https://github.com/hocgin/wolves-spring-boot-project]
 - spring-boot-excel
 - spring-boot-elasticsearch
+- spring-boot-webmagic
+ http://webmagic.io/

@@ -1,4 +1,4 @@
-package in.hocg.boot.openfeign.autoconfiguration;
+package in.hocg.boot.openfeign.autoconfiguration.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,4 +13,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(OpenFeignProperties.PREFIX)
 public class OpenFeignProperties {
     public static final String PREFIX = "boot.openfeign";
+
+    /**
+     * X-USERAGENT 标记。默认: feign
+     */
+    private String userAgent = "feign";
 }
