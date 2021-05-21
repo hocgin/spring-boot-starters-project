@@ -52,7 +52,7 @@ jobs:
           mkdir -p ~/.m2
           echo "<settings><servers><server><id>\${env.ID}</id><username>\${env.USERNAME}</username><password>\${env.PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
           REPO="\${env.ID}::default::\${env.URL}"
-          mvn deploy -DaltDeploymentRepository="${REPO}" -DskipTests
+          mvn deploy -P release -DaltDeploymentRepository="${REPO}" -DskipTests
         env:
           ID: rdc-releases
           URL: https://packages.aliyun.com/maven/repository/2026582-release-AuUWIo
