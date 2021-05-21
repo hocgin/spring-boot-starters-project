@@ -18,6 +18,7 @@
   <properties>
     <revision>1.0.0-SNAPSHOT</revision>
     <flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
+    <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
   </properties>
 
   <modules>
@@ -54,11 +55,11 @@
   </modules>
 
   <repositories>
-    <repository>
-      <id>alibaba-maven</id>
-      <name>alibaba</name>
-      <url>http://maven.aliyun.com/nexus/content/groups/public</url>
-    </repository>
+<!--    <repository>-->
+<!--      <id>alibaba-maven</id>-->
+<!--      <name>alibaba</name>-->
+<!--      <url>http://maven.aliyun.com/nexus/content/groups/public</url>-->
+<!--    </repository>-->
   </repositories>
 
   <build>
@@ -87,6 +88,27 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>3.0.1</version>
+<!--        <version>${maven-gpg-plugin.version}</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>sign-artifacts</id>-->
+<!--            <phase>verify</phase>-->
+<!--            <goals>-->
+<!--              <goal>sign</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--        <configuration>-->
+<!--          <gpgArguments>-->
+<!--            <arg>&#45;&#45;pinentry-mode</arg>-->
+<!--            <arg>loopback</arg>-->
+<!--          </gpgArguments>-->
+<!--        </configuration>-->
       </plugin>
     </plugins>
   </build>
