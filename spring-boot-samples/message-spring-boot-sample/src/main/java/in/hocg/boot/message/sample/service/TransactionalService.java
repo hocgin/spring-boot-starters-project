@@ -1,7 +1,7 @@
 package in.hocg.boot.message.sample.service;
 
-import in.hocg.boot.message.MessageFactory;
-import in.hocg.boot.message.core.message.TransactionalMessage;
+import in.hocg.boot.message.autoconfigure.MessageFactory;
+import in.hocg.boot.message.autoconfigure.core.message.TransactionalMessage;
 import in.hocg.boot.message.sample.controller.TransactionalController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;

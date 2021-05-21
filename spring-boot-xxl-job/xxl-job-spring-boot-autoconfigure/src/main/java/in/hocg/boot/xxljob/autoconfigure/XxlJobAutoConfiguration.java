@@ -1,6 +1,7 @@
 package in.hocg.boot.xxljob.autoconfigure;
 
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
+import in.hocg.boot.xxljob.autoconfigure.properties.XxlJobProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

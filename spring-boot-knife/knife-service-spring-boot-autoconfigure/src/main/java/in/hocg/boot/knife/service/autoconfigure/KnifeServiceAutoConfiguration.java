@@ -1,6 +1,7 @@
 package in.hocg.boot.knife.service.autoconfigure;
 
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
+import in.hocg.boot.knife.service.autoconfigure.properties.KnifeServiceProperties;
 import io.swagger.annotations.Api;
 import io.swagger.models.Swagger;
 import lombok.RequiredArgsConstructor;

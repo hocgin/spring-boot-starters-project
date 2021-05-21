@@ -36,6 +36,8 @@
     <module>wx-mp-spring-boot-starter</module>
     <module>test-spring-boot-starter</module>
     <module>schedulerx-spring-boot-starter</module>
+    <module>monitor-spring-boot-starter</module>
+    <module>excel-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

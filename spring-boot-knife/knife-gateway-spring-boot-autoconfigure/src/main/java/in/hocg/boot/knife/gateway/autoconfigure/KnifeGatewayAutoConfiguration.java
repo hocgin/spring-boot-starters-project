@@ -1,8 +1,9 @@
 package in.hocg.boot.knife.gateway.autoconfigure;
 
-import in.hocg.boot.knife.gateway.DefaultSwaggerResourcesProvider;
-import in.hocg.boot.knife.gateway.SwaggerEndpoint;
-import in.hocg.boot.knife.gateway.SwaggerHeaderFilter;
+import in.hocg.boot.knife.gateway.autoconfigure.core.DefaultSwaggerResourcesProvider;
+import in.hocg.boot.knife.gateway.autoconfigure.core.SwaggerEndpoint;
+import in.hocg.boot.knife.gateway.autoconfigure.core.SwaggerHeaderFilter;
+import in.hocg.boot.knife.gateway.autoconfigure.properties.KnifeGatewayProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

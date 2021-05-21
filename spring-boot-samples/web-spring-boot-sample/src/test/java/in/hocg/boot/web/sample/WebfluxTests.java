@@ -1,7 +1,7 @@
 package in.hocg.boot.web.sample;
 
-import in.hocg.boot.web.servlet.ServletConfiguration;
-import in.hocg.boot.web.webflux.WebFluxConfiguration;
+import in.hocg.boot.web.autoconfiguration.servlet.ServletConfiguration;
+import in.hocg.boot.web.autoconfiguration.webflux.WebFluxConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

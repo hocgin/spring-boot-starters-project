@@ -1,5 +1,6 @@
 package in.hocg.boot.validation.autoconfigure;
 
+import in.hocg.boot.validation.autoconfigure.properties.ValidationProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

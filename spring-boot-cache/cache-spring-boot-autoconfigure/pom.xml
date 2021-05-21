@@ -29,6 +29,10 @@
       <artifactId>spring-boot-starter-web</artifactId>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>spring-boot-utils</artifactId>
+    </dependency>
     <!-- Basic -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

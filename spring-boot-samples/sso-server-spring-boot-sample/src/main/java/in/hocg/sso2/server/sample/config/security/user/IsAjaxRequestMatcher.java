@@ -1,6 +1,6 @@
 package in.hocg.sso2.server.sample.config.security.user;
 
-import in.hocg.boot.web.utils.web.RequestUtils;
+import in.hocg.boot.web.autoconfiguration.utils.web.RequestUtils;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;

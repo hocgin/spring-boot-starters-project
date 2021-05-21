@@ -1,6 +1,7 @@
 package in.hocg.boot.utils;
 
 import cn.hutool.core.util.StrUtil;
+import in.hocg.boot.utils.exception.ToolsException;
 import lombok.experimental.UtilityClass;
 
 /**

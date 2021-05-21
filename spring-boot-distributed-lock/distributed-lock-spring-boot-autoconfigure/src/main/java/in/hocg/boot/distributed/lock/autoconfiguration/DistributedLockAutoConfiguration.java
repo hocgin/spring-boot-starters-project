@@ -1,10 +1,10 @@
 package in.hocg.boot.distributed.lock.autoconfiguration;
 
-import in.hocg.boot.cache.autoconfiguration.DistributedLockProperties;
-import in.hocg.boot.distributed.lock.core.DistributedLock;
-import in.hocg.boot.distributed.lock.core.LockAspect;
-import in.hocg.boot.distributed.lock.impl.RedissonDistributedLock;
-import in.hocg.boot.distributed.lock.impl.SimpleRedisDistributedLock;
+import in.hocg.boot.distributed.lock.autoconfiguration.properties.DistributedLockProperties;
+import in.hocg.boot.distributed.lock.autoconfiguration.core.DistributedLock;
+import in.hocg.boot.distributed.lock.autoconfiguration.core.LockAspect;
+import in.hocg.boot.distributed.lock.autoconfiguration.impl.RedissonDistributedLock;
+import in.hocg.boot.distributed.lock.autoconfiguration.impl.SimpleRedisDistributedLock;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.redisson.api.RedissonClient;

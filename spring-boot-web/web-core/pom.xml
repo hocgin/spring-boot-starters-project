@@ -19,8 +19,8 @@
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>cn.hutool</groupId>
-      <artifactId>hutool-all</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>spring-boot-utils</artifactId>
     </dependency>
     <dependency>
       <groupId>io.swagger</groupId>

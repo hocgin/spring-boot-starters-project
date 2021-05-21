@@ -44,10 +44,56 @@
     <mail.version>1.4.7</mail.version>
     <xxl-job.version>2.2.0</xxl-job.version>
     <aliyun-schedulerx-spring-boot-starter.version>1.2.4.3</aliyun-schedulerx-spring-boot-starter.version>
+    <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+    <webmagic.version>0.7.4</webmagic.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
+      <!-- TPL -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>tpl-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>tpl-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- WebMagic -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>webmagic-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>webmagic-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- Excel -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>excel-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>excel-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- Monitor -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>monitor-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>monitor-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Scheduler X -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -90,17 +136,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>wx-ma-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <!-- TPL -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>tpl-spring-boot-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!--      -->
@@ -433,6 +468,16 @@
         <artifactId>weixin-java-miniapp</artifactId>
         <version>${weixin-java.version}</version>
       </dependency>
+      <dependency>
+        <groupId>us.codecraft</groupId>
+        <artifactId>webmagic-core</artifactId>
+        <version>${webmagic.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>us.codecraft</groupId>
+        <artifactId>webmagic-extension</artifactId>
+        <version>${webmagic.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -458,6 +503,19 @@
     </resources>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${maven-source-plugin.version}</version>
+          <executions>
+            <execution>
+              <phase>compile</phase>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>

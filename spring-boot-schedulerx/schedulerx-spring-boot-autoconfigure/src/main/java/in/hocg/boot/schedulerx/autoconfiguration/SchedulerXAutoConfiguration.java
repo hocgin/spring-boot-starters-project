@@ -1,6 +1,7 @@
 package in.hocg.boot.schedulerx.autoconfiguration;
 
 import com.alibaba.schedulerx.SchedulerxProperties;
+import in.hocg.boot.schedulerx.autoconfiguration.properties.SchedulerXProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

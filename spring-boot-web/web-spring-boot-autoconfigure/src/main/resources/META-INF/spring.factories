@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 in.hocg.boot.web.autoconfiguration.WebAutoConfiguration
-org.springframework.context.ApplicationContextInitializer=\
-in.hocg.boot.web.autoconfiguration.AllowBeanDefinitionOverridingApplicationContextInitializer
+org.springframework.boot.env.EnvironmentPostProcessor=\
+in.hocg.boot.web.autoconfiguration.WebEnvironmentPostProcessor

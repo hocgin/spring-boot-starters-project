@@ -1,5 +1,6 @@
 package in.hocg.boot.test.autoconfiguration;
 
+import in.hocg.boot.test.autoconfiguration.properties.TestProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

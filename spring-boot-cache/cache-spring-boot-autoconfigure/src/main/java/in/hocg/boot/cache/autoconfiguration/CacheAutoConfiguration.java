@@ -1,5 +1,9 @@
 package in.hocg.boot.cache.autoconfiguration;
 
+import cn.hutool.core.util.StrUtil;
+import in.hocg.boot.cache.autoconfiguration.properties.CacheProperties;
+import in.hocg.boot.cache.autoconfiguration.repository.CacheRepository;
+import in.hocg.boot.cache.autoconfiguration.repository.RedisRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -17,8 +21,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
+
+import static in.hocg.boot.cache.autoconfiguration.properties.CacheProperties.COLON;
 
 /**
  * Created by hocgin on 2020/8/15
@@ -51,6 +58,17 @@ public class CacheAutoConfiguration {
         };
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public CacheRepository cacheRepository(RedisTemplate redisTemplate) {
+        return new RedisRepositoryImpl(redisTemplate, getKeyPrefix() + COLON);
+    }
+
+    private String getKeyPrefix() {
+        org.springframework.boot.autoconfigure.cache.CacheProperties.Redis redisProperties = properties.getRedis();
+        return StrUtil.emptyToDefault(redisProperties.getKeyPrefix(), applicationName);
+    }
+
     private RedisCacheConfiguration redisCacheConfiguration() {
         org.springframework.boot.autoconfigure.cache.CacheProperties.Redis redisProperties = properties.getRedis();
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
@@ -58,11 +76,8 @@ public class CacheAutoConfiguration {
         if (redisProperties.getTimeToLive() != null) {
             config = config.entryTtl(redisProperties.getTimeToLive());
         }
-        if (redisProperties.getKeyPrefix() != null) {
-            config = config.computePrefixWith(cacheName -> redisProperties.getKeyPrefix() + ":" + cacheName + ":");
-        } else {
-            config = config.computePrefixWith(cacheName -> applicationName + ":" + cacheName + ":");
-        }
+        config = config.computePrefixWith(cacheName -> getKeyPrefix() + COLON + cacheName + COLON);
+
         if (!redisProperties.isCacheNullValues()) {
             config = config.disableCachingNullValues();
         }
