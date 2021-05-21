@@ -1,0 +1,30 @@
+name: Java CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          server-id: github
+          java-version: 1.8
+
+      - name: Deploy to Alibaba Package Registry
+        run: |
+          mkdir -p ~/.m2
+          echo "<settings><servers><server><id>\${env.ID}</id><username>\${env.USERNAME}</username><password>\${env.PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
+          REPO="\${env.ID}::default::\${env.URL}"
+          mvn deploy -P release -DaltDeploymentRepository="${REPO}" -DskipTests
+        env:
+          ID: rdc-releases
+          URL: https://packages.aliyun.com/maven/repository/2026582-release-AuUWIo
+          USERNAME: 5f3fc340209ad8bf48f5dd13
+          PASSWORD: ${{ secrets.ALIYUN_PASSWORD }}
