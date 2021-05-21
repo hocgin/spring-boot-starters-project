@@ -1,5 +1,6 @@
 package in.hocg.boot.tpl.autoconfiguration;
 
+import in.hocg.boot.tpl.autoconfiguration.properties.TplProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

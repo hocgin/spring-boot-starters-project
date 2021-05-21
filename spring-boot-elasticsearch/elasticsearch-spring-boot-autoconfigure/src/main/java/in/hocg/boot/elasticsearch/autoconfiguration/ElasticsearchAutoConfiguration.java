@@ -1,5 +1,6 @@
 package in.hocg.boot.elasticsearch.autoconfiguration;
 
+import in.hocg.boot.elasticsearch.autoconfiguration.properties.ElasticsearchProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

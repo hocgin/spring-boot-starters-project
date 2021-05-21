@@ -1,9 +1,9 @@
 package in.hocg.boot.web.autoconfiguration;
 
-import in.hocg.boot.web.advice.ErrorPagesConfiguration;
-import in.hocg.boot.web.jackson.SerializerConfiguration;
-import in.hocg.boot.web.servlet.ServletConfiguration;
-import in.hocg.boot.web.webflux.WebFluxConfiguration;
+import in.hocg.boot.web.autoconfiguration.advice.ErrorPagesConfiguration;
+import in.hocg.boot.web.autoconfiguration.jackson.SerializerConfiguration;
+import in.hocg.boot.web.autoconfiguration.servlet.ServletConfiguration;
+import in.hocg.boot.web.autoconfiguration.webflux.WebFluxConfiguration;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.context.annotation.Bean;

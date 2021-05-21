@@ -1,5 +1,6 @@
 package in.hocg.boot.webmagic.autoconfiguration;
 
+import in.hocg.boot.webmagic.autoconfiguration.properties.WebMagicProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -1,5 +1,6 @@
 package in.hocg.boot.monitor.autoconfiguration;
 
+import in.hocg.boot.monitor.autoconfiguration.properties.MonitorProperties;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

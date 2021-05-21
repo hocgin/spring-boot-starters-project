@@ -45,6 +45,7 @@
     <xxl-job.version>2.2.0</xxl-job.version>
     <aliyun-schedulerx-spring-boot-starter.version>1.2.4.3</aliyun-schedulerx-spring-boot-starter.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+    <webmagic.version>0.7.4</webmagic.version>
   </properties>
 
   <dependencyManagement>
@@ -466,6 +467,16 @@
         <groupId>com.github.binarywang</groupId>
         <artifactId>weixin-java-miniapp</artifactId>
         <version>${weixin-java.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>us.codecraft</groupId>
+        <artifactId>webmagic-core</artifactId>
+        <version>${webmagic.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>us.codecraft</groupId>
+        <artifactId>webmagic-extension</artifactId>
+        <version>${webmagic.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

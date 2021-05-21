@@ -1,5 +1,6 @@
 package in.hocg.boot.excel.autoconfiguration;
 
+import in.hocg.boot.excel.autoconfiguration.properties.ExcelProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

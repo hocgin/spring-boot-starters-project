@@ -1,6 +1,6 @@
 package in.hocg.boot.test.sample;
 
-import in.hocg.boot.test.AbstractSpringBootTest;
+import in.hocg.boot.test.autoconfiguration.core.AbstractSpringBootTest;
 import in.hocg.boot.test.sample.controller.IndexController;
 import in.hocg.boot.test.sample.service.IndexService;
 import lombok.extern.slf4j.Slf4j;

@@ -3,6 +3,7 @@ package in.hocg.boot.logging.autoconfiguration;
 import in.hocg.boot.logging.autoconfiguration.handle.DefaultLoggerListener;
 import in.hocg.boot.logging.autoconfiguration.core.LoggerAspect;
 import in.hocg.boot.logging.autoconfiguration.core.LoggerListener;
+import in.hocg.boot.logging.autoconfiguration.properties.LoggingProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

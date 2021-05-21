@@ -1,8 +1,8 @@
 package in.hocg.boot.cache.tests;
 
-import in.hocg.boot.cache.repository.CacheRepository;
+import in.hocg.boot.cache.autoconfiguration.repository.CacheRepository;
 import in.hocg.boot.cache.sample.BootApplication;
-import in.hocg.boot.test.AbstractSpringBootTest;
+import in.hocg.boot.test.autoconfiguration.core.AbstractSpringBootTest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package in.hocg.boot.message.sample.message;
 
 import in.hocg.boot.message.sample.pojo.TestMessageDto;
-import in.hocg.boot.message.service.normal.redis.RedisMessageListener;
+import in.hocg.boot.message.autoconfigure.service.normal.redis.RedisMessageListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.Topic;

@@ -1,6 +1,7 @@
 package in.hocg.boot.wxmp.autoconfiguration;
 
 import in.hocg.boot.utils.LangUtils;
+import in.hocg.boot.wxmp.autoconfiguration.properties.WxMpProperties;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.impl.WxMpServiceImpl;

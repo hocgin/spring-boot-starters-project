@@ -1,15 +1,16 @@
 package in.hocg.boot.message.autoconfigure;
 
-import in.hocg.boot.message.core.TransactionalMessageListener;
-import in.hocg.boot.message.core.TransactionalMessageService;
-import in.hocg.boot.message.data.TransactionalAspect;
-import in.hocg.boot.message.data.client.JdbcTransactionalMessageServiceImpl;
-import in.hocg.boot.message.service.local.LocalMessageQueueService;
-import in.hocg.boot.message.service.local.LocalMessageService;
-import in.hocg.boot.message.service.normal.NoneMessageQueueService;
-import in.hocg.boot.message.service.normal.NormalMessageService;
-import in.hocg.boot.message.service.normal.redis.RedisMessageQueueService;
-import in.hocg.boot.message.service.normal.rocket.RocketMessageQueueService;
+import in.hocg.boot.message.autoconfigure.properties.MessageProperties;
+import in.hocg.boot.message.autoconfigure.core.TransactionalMessageListener;
+import in.hocg.boot.message.autoconfigure.core.TransactionalMessageService;
+import in.hocg.boot.message.autoconfigure.data.TransactionalAspect;
+import in.hocg.boot.message.autoconfigure.data.client.JdbcTransactionalMessageServiceImpl;
+import in.hocg.boot.message.autoconfigure.service.local.LocalMessageQueueService;
+import in.hocg.boot.message.autoconfigure.service.local.LocalMessageService;
+import in.hocg.boot.message.autoconfigure.service.normal.NoneMessageQueueService;
+import in.hocg.boot.message.autoconfigure.service.normal.NormalMessageService;
+import in.hocg.boot.message.autoconfigure.service.normal.redis.RedisMessageQueueService;
+import in.hocg.boot.message.autoconfigure.service.normal.rocket.RocketMessageQueueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;

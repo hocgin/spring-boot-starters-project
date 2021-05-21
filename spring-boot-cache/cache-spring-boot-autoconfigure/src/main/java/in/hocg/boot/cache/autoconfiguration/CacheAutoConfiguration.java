@@ -1,8 +1,9 @@
 package in.hocg.boot.cache.autoconfiguration;
 
 import cn.hutool.core.util.StrUtil;
-import in.hocg.boot.cache.repository.CacheRepository;
-import in.hocg.boot.cache.repository.RedisRepositoryImpl;
+import in.hocg.boot.cache.autoconfiguration.properties.CacheProperties;
+import in.hocg.boot.cache.autoconfiguration.repository.CacheRepository;
+import in.hocg.boot.cache.autoconfiguration.repository.RedisRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -24,7 +25,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
-import static in.hocg.boot.cache.autoconfiguration.CacheProperties.COLON;
+import static in.hocg.boot.cache.autoconfiguration.properties.CacheProperties.COLON;
 
 /**
  * Created by hocgin on 2020/8/15

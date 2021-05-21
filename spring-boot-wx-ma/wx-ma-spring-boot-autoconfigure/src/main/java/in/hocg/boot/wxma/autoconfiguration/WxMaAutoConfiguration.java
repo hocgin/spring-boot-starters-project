@@ -6,6 +6,7 @@ import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.config.WxMaConfig;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
 import in.hocg.boot.utils.LangUtils;
+import in.hocg.boot.wxma.autoconfiguration.properties.WxMaProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;

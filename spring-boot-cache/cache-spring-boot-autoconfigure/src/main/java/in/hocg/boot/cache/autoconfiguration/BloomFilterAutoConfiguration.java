@@ -1,6 +1,7 @@
 package in.hocg.boot.cache.autoconfiguration;
 
-import in.hocg.boot.cache.bloom.RedisBloomFilter;
+import in.hocg.boot.cache.autoconfiguration.properties.BloomFilterProperties;
+import in.hocg.boot.cache.autoconfiguration.bloom.RedisBloomFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

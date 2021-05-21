@@ -1,8 +1,8 @@
 package in.hocg.boot.named.autoconfiguration;
 
-import in.hocg.boot.named.NamedAspect;
-import in.hocg.boot.named.core.MemoryNamedCacheService;
-import in.hocg.boot.named.core.NamedCacheService;
+import in.hocg.boot.named.autoconfiguration.aspect.NamedAspect;
+import in.hocg.boot.named.autoconfiguration.core.MemoryNamedCacheService;
+import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
