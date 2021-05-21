@@ -15,8 +15,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
+          java-version: '11'
           server-id: maven
-          java-version: 1.8
           server-username: MAVEN_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
