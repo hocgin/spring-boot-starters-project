@@ -182,6 +182,7 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>${maven-javadoc-plugin.version}</version>
           <configuration>
+            <sourcepath>${delombok.output}</sourcepath>
             <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
             <additionalJOptions>
               <additionalJOption>-Xdoclint:none</additionalJOption>
@@ -207,6 +208,24 @@
               <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
             </annotationProcessors>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok-maven-plugin</artifactId>
+          <version>1.18.0.0</version>
+          <configuration>
+            <sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+            <outputDirectory>${delombok.output}</outputDirectory>
+            <addOutputDirectory>false</addOutputDirectory>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>delombok</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
