@@ -203,6 +203,9 @@
             <source>${java.source.version}</source>
             <target>${java.target.version}</target>
             <encoding>${project.build.sourceEncoding}</encoding>
+            <annotationProcessors>
+              <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
+            </annotationProcessors>
           </configuration>
         </plugin>
       </plugins>
