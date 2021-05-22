@@ -3,8 +3,14 @@ name: Publish Package
 on:
   workflow_dispatch:
   push:
-    branches:
-      - master
+    tags:
+      - 'v*'
+    paths-ignore:
+      - 'docs/**'
+      - 'scripts/**'
+      - '*.md'
+      - '*.editorconfig'
+      - '*.gitignore'
 
 jobs:
   build:
