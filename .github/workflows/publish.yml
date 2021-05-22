@@ -28,7 +28,7 @@ jobs:
         run: |
           SNAPSHOT_REPO="\${env.MAVEN_SERVER_ID}::default::\${env.SNAPSHOT_URL}"
           RELEASE_REPO="\${env.MAVEN_SERVER_ID}::default::\${env.RELEASE_URL}"
-          mvn --batch-mode deploy -DaltDeploymentRepository="${RELEASE_REPO}" -DaltSnapshotDeploymentRepository="${SNAPSHOT_REPO}" -DskipTests
+          mvn --batch-mode deploy -P release -DaltDeploymentRepository="${RELEASE_REPO}" -DaltSnapshotDeploymentRepository="${SNAPSHOT_REPO}" -DskipTests
         env:
           SNAPSHOT_URL: https://oss.sonatype.org/content/repositories/snapshots
           RELEASE_URL: https://oss.sonatype.org/service/local/staging/deploy/maven2
