@@ -24,7 +24,7 @@ jobs:
           REPO="\${env.ID}::default::\${env.URL}"
           mvn deploy -DaltDeploymentRepository="${REPO}" -DskipTests
         env:
-          ID: sonatype-snapshots
-          URL: https://oss.sonatype.org/content/repositories/snapshots
+          ID: sonatype
+          URL: https://oss.sonatype.org/content/repositories/releases
           USERNAME: hocgin
           PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
