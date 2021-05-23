@@ -23,8 +23,8 @@ public abstract class RedisMessageListener<T> implements MessageListener, Initia
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        RedisSerializer serializer = RedisSerializer.java();
-        this.onMessage(((T) serializer.deserialize(message.getBody())));
+        RedisSerializer serializer = RedisHelper.getValueSerializer();
+        this.onMessage((T) serializer.deserialize(message.getBody()));
     }
 
     @Override
