@@ -31,7 +31,7 @@ public class EnumRangeValidator implements ConstraintValidator<EnumRange, Serial
 
         ICode intEnum;
         for (Class<? extends Enum> aClass : enumClass) {
-            if (ICode.class.isAssignableFrom(aClass)) {
+            if (!ICode.class.isAssignableFrom(aClass)) {
                 break;
             }
             for (Enum enumConstant : aClass.getEnumConstants()) {

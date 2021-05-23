@@ -41,8 +41,8 @@ public class RedisMessageQueueService extends AbsMessageQueueService {
     }
 
     private void convertAndSend(String destination, Message<?> message) {
-        byte[] rawChannel = RedisSerializer.string().serialize(destination);
-        byte[] rawMessage = RedisSerializer.java().serialize(message);
+        byte[] rawChannel = RedisHelper.getKeySerializer().serialize(destination);
+        byte[] rawMessage = RedisHelper.getValueSerializer().serialize(message);
         SpringContext.getBean(StringRedisTemplate.class).execute(connection -> {
             connection.publish(rawChannel, rawMessage);
             return null;
