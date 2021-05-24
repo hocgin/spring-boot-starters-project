@@ -125,9 +125,11 @@ public class NamedAspect {
             serviceClass = useService.value();
         } else {
             try {
-                serviceClass = context.getBeansOfType(serviceClass)
-                    .values().parallelStream().findFirst()
+                Class<?> beanClass = context.getBeansOfType(serviceClass).values().stream().findFirst()
                     .map((Function<Object, Class<?>>) Object::getClass).orElse(serviceClass);
+                if (serviceClass.isAssignableFrom(beanClass)) {
+                    serviceClass = beanClass;
+                }
             } catch (Exception e) {
                 log.debug("@Named 自动获取 serviceClass 异常", e);
             }
