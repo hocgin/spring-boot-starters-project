@@ -27,6 +27,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -124,9 +125,11 @@ public class NamedAspect {
             serviceClass = useService.value();
         } else {
             try {
-                final Object namedService = context.getBean(serviceClass);
-                serviceClass = namedService.getClass();
-            } catch (Exception ignored) {
+                serviceClass = context.getBeansOfType(serviceClass)
+                    .values().parallelStream().findFirst()
+                    .map((Function<Object, Class<?>>) Object::getClass).orElse(serviceClass);
+            } catch (Exception e) {
+                log.debug("@Named 自动获取 serviceClass 异常", e);
             }
         }
         NamedRow namedRow = new NamedRow()
