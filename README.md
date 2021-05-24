@@ -1,6 +1,8 @@
 # spring-boot-starters-project
 
-> ![Java CI](https://github.com/hocgin/spring-boot-starters-project/workflows/Java%20CI/badge.svg)
+> [![Publish Package](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/publish.yml/badge.svg)](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/publish.yml)
+
+[Maven Center](https://search.maven.org/search?q=in.hocg.boot)
 
 |组件|功能描述|案例|
 |---|---|---|
