@@ -6,6 +6,10 @@ import in.hocg.boot.web.autoconfiguration.servlet.ServletConfiguration;
 import in.hocg.boot.web.autoconfiguration.webflux.WebFluxConfiguration;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.HibernateValidator;
+import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
+import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -37,6 +41,13 @@ public class WebAutoConfiguration {
             .addProperty("hibernate.validator.fail_fast", "true")
             .buildValidatorFactory();
         return validatorFactory.getValidator();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnClass(HttpTraceRepository.class)
+    public HttpTraceRepository httpTraceRepository() {
+        return new InMemoryHttpTraceRepository();
     }
 
 }
