@@ -23,7 +23,7 @@ public class AppNamedService implements NamedService {
         Map<String, Object> result = Maps.newHashMap();
         List<String> values = args.getValues();
         for (String value : values) {
-            Thread.sleep(100L);
+            // Thread.sleep(100L);
             result.put(value, "xx-1#" + value);
         }
         return result;
@@ -34,7 +34,7 @@ public class AppNamedService implements NamedService {
         Map<String, Object> result = Maps.newHashMap();
         List<String> values = args.getValues();
         for (String value : values) {
-            Thread.sleep(100L);
+            // Thread.sleep(100L);
             result.put(value, "xx-2#" + value);
         }
         return result;
@@ -45,9 +45,10 @@ public class AppNamedService implements NamedService {
         Map<String, Object> result = Maps.newHashMap();
         List<String> values = args.getValues();
         for (String value : values) {
-            Thread.sleep(100L);
+            // Thread.sleep(100L);
             result.put(value, "xx-3#" + value);
         }
         throw new RuntimeException(" -> 异常");
+//        return result;
     }
 }

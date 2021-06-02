@@ -5,19 +5,16 @@ import com.google.common.collect.Lists;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.lang.reflect.Modifier;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.function.Function.identity;
 
 /**
  * Created by hocgin on 2020/8/6
@@ -27,6 +24,8 @@ import java.util.function.Function;
  */
 @UtilityClass
 public class LangUtils {
+    private static final Map<Class<?>, List<Field>> CLASS_FIELD_CACHE = new ConcurrentHashMap<>();
+
     public boolean isPresent(String name) {
         try {
             Thread.currentThread().getContextClassLoader().loadClass(name);
@@ -106,26 +105,19 @@ public class LangUtils {
      * @param def         def
      * @return object
      */
-    public Object getFieldValue(Object fieldObject, Field field,
-                                Object def) {
-        if (Objects.isNull(fieldObject)
-            || Objects.isNull(field)) {
+    public Object getFieldValue(Object fieldObject, Field field, Object def) {
+        if (Objects.isNull(fieldObject) || Objects.isNull(field)) {
             return def;
         }
-
-        boolean accessible = field.isAccessible();
         try {
             field.setAccessible(true);
             return field.get(fieldObject);
         } catch (IllegalAccessException ignored) {
             return def;
-        } finally {
-            field.setAccessible(accessible);
         }
     }
 
-    public <T> T getObjectValue(Object fieldObject, Field field,
-                                Object def) {
+    public <T> T getObjectValue(Object fieldObject, Field field, Object def) {
         return ((T) getFieldValue(fieldObject, field, def));
     }
 
@@ -147,21 +139,65 @@ public class LangUtils {
         }
     }
 
+    public static <K, V> V computeIfAbsent(Map<K, V> concurrentHashMap, K key, Function<? super K, ? extends V> mappingFunction) {
+        V v = concurrentHashMap.get(key);
+        if (v != null) {
+            return v;
+        }
+        return concurrentHashMap.computeIfAbsent(key, mappingFunction);
+    }
+
     /**
      * 获取所有字段
      *
      * @return []
      */
-    public List<Field> getAllField(Class<?> clazz) {
-        List<Field> result = new ArrayList<>();
-        result.addAll(Arrays.asList(clazz.getDeclaredFields()));
-
-        Class<?> superclass = clazz.getSuperclass();
-        if (Object.class.equals(superclass)) {
-            return result;
+    public static List<Field> getAllField(Class<?> clazz) {
+        if (Objects.isNull(clazz)) {
+            return Collections.emptyList();
         }
-        result.addAll(getAllField(superclass));
-        return result;
+        return LangUtils.computeIfAbsent(CLASS_FIELD_CACHE, clazz, k -> {
+            Field[] fields = k.getDeclaredFields();
+            List<Field> superFields = new ArrayList<>();
+            Class<?> currentClass = k.getSuperclass();
+            while (currentClass != null) {
+                Field[] declaredFields = currentClass.getDeclaredFields();
+                Collections.addAll(superFields, declaredFields);
+                currentClass = currentClass.getSuperclass();
+            }
+            /* 排除重载属性 */
+            Map<String, Field> fieldMap = excludeOverrideSuperField(fields, superFields);
+            /*
+             * 重写父类属性过滤后处理忽略部分，支持过滤父类属性功能
+             * 场景：中间表不需要记录创建时间，忽略父类 createTime 公共属性
+             * 中间表实体重写父类属性 ` private transient Date createTime; `
+             */
+            return fieldMap.values().stream()
+                /* 过滤静态属性 */
+                .filter(f -> !Modifier.isStatic(f.getModifiers()))
+                /* 过滤 transient关键字修饰的属性 */
+                .filter(f -> !Modifier.isTransient(f.getModifiers()))
+                .collect(Collectors.toList());
+        });
+    }
+
+    /**
+     * 排序重置父类属性
+     *
+     * @param fields
+     * @param superFieldList
+     * @return
+     */
+    public static Map<String, Field> excludeOverrideSuperField(Field[] fields, List<Field> superFieldList) {
+        // 子类属性
+        Map<String, Field> fieldMap = Stream.of(fields).collect(Collectors.toMap(Field::getName, identity(),
+            (u, v) -> {
+                throw new IllegalStateException(String.format("Duplicate key %s", u));
+            },
+            LinkedHashMap::new));
+        superFieldList.stream().filter(field -> !fieldMap.containsKey(field.getName()))
+            .forEach(f -> fieldMap.put(f.getName(), f));
+        return fieldMap;
     }
 
     /**

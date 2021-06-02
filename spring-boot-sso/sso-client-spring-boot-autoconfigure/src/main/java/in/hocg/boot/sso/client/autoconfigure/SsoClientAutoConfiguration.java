@@ -6,9 +6,14 @@ import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 
 /**
  * Created by hocgin on 2019/6/12.
@@ -24,5 +29,19 @@ import org.springframework.context.annotation.Lazy;
 public class SsoClientAutoConfiguration {
     private final SsoClientProperties properties;
 
-
+    @Bean
+    @Primary
+    @LoadBalanced
+    public RestTemplate lbRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+            @Override
+            public void handleError(ClientHttpResponse response) throws IOException {
+                if (response.getRawStatusCode() != HttpStatus.BAD_REQUEST.value()) {
+                    super.handleError(response);
+                }
+            }
+        });
+        return restTemplate;
+    }
 }
