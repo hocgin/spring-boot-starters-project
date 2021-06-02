@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by hocgin on 2020/8/9
@@ -32,14 +33,26 @@ public class BootApplication {
 
     @GetMapping("/worked")
     public List<TestBean> worked() {
-
-
-        // 10 * 100
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        StopWatch watch = new StopWatch();
+        watch.start();
         List<TestBean> result = service.worked();
-        stopWatch.stop();
-        log.info("响应时间: {} s", stopWatch.getTotalTimeSeconds());
+        watch.stop();
+        log.info("{}, 响应时间: {} s", Objects.nonNull(result.get(0).getCode2Name()), watch.getLastTaskInfo().getTimeSeconds());
         return result;
     }
+
+    @GetMapping("/test")
+    public String test() {
+        return "ok";
+    }
+
+//    @GetMapping("/ipage")
+//    public IPage<TestBean> ipage() {
+//        return service.ipage();
+//    }
+//
+//    @GetMapping("/page")
+//    public IPage<TestBean> page() {
+//        return service.page();
+//    }
 }

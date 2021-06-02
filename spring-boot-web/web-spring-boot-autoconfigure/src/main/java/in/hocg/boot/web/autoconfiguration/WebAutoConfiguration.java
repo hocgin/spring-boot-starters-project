@@ -43,11 +43,15 @@ public class WebAutoConfiguration {
         return validatorFactory.getValidator();
     }
 
-    @Bean
-    @ConditionalOnMissingBean
+    @Configuration(proxyBeanMethods = false)
     @ConditionalOnClass(HttpTraceRepository.class)
-    public HttpTraceRepository httpTraceRepository() {
-        return new InMemoryHttpTraceRepository();
+    public static class HttpTraceConfiguration {
+        @Bean
+        @ConditionalOnMissingBean
+        public HttpTraceRepository httpTraceRepository() {
+            return new InMemoryHttpTraceRepository();
+        }
     }
+
 
 }

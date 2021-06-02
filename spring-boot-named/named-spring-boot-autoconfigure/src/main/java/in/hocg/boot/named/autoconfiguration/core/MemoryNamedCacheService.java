@@ -2,7 +2,12 @@ package in.hocg.boot.named.autoconfiguration.core;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Maps;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,16 +19,23 @@ import java.util.concurrent.TimeUnit;
 public class MemoryNamedCacheService implements NamedCacheService {
     private final Cache<String, Object> cachePool = CacheBuilder.newBuilder()
         .maximumSize(10000L)
-        .expireAfterWrite(5, TimeUnit.MINUTES)
+        .expireAfterWrite(10, TimeUnit.MINUTES)
         .build();
 
     @Override
-    public Object get(String key) {
-        return cachePool.getIfPresent(key);
+    public Map<String, Object> batchGet(Collection<String> keys) {
+        HashMap<String, Object> result = Maps.newHashMap();
+        keys.parallelStream().forEach(key -> {
+            Object value = cachePool.getIfPresent(key);
+            if (Objects.nonNull(value)) {
+                result.put(key, value);
+            }
+        });
+        return result;
     }
 
     @Override
-    public void put(String key, Object value) {
-        cachePool.put(key, value);
+    public void batchPut(Map<String, Object> caches) {
+        caches.entrySet().parallelStream().forEach(entry -> cachePool.put(entry.getKey(), entry.getValue()));
     }
 }
