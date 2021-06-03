@@ -170,8 +170,10 @@ public class NamedAspect implements InitializingBean {
     }
 
     private void injectValueWithCache(List<NamedRow> namedRows) {
-        Map<String, NamedRow> namedRowMaps = namedRows.parallelStream().filter(NamedRow::getUseCache)
-            .collect(Collectors.toMap(this::getCacheKey, Function.identity()));
+        // 按缓存key进行分组
+        Map<String, List<NamedRow>> namedRowMaps = namedRows.parallelStream()
+            .filter(namedRow -> Objects.isNull(namedRow.getTargetValue()) && Objects.nonNull(namedRow.getIdValue()))
+            .collect(Collectors.groupingBy(this::getCacheKey));
 
         if (CollUtil.isEmpty(namedRowMaps)) {
             return;
@@ -187,10 +189,8 @@ public class NamedAspect implements InitializingBean {
         keyValues.entrySet().parallelStream().forEach(entry -> {
             String key = entry.getKey();
             Object value = entry.getValue();
-            NamedRow namedRow = namedRowMaps.get(key);
-            if (Objects.nonNull(namedRow)) {
-                setValue(namedRow, value);
-            }
+            List<NamedRow> rNamedRows = namedRowMaps.getOrDefault(key, Collections.emptyList());
+            rNamedRows.parallelStream().forEach(row -> setValue(row, value));
         });
     }
 

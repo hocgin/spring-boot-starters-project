@@ -1,5 +1,6 @@
 package in.hocg.boot.utils.lambda;
 
+import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.utils.ClassUtils;
 
 import java.io.ByteArrayInputStream;
@@ -8,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by hocgin on 2020/4/10.
@@ -125,4 +128,15 @@ public class SerializedLambda implements Serializable {
     private String normalizedName(String name) {
         return name.replace('/', '.');
     }
+
+    private static final Pattern INSTANTIATED_METHOD_TYPE = Pattern.compile("\\(L(?<instantiatedMethodType>[\\S&&[^;)]]+);\\)L[\\S]+;");
+
+    public Class getInstantiatedMethodType() {
+        Matcher matcher = INSTANTIATED_METHOD_TYPE.matcher(instantiatedMethodType);
+        if (matcher.find()) {
+            return ClassUtils.toClassConfident(normalizedName(matcher.group("instantiatedMethodType")));
+        }
+        throw new RuntimeException(StrUtil.format("无法从 {} 解析调用实例", instantiatedMethodType));
+    }
+
 }
