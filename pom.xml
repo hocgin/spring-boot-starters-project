@@ -16,7 +16,7 @@
   <version>${revision}</version>
 
   <properties>
-    <revision>1.0.3</revision>
+    <revision>1.0.4</revision>
 
     <java.version>1.8</java.version>
     <java.source.version>1.8</java.source.version>
