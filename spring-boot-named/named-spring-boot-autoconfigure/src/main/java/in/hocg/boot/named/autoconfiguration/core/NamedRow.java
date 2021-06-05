@@ -41,7 +41,7 @@ public class NamedRow {
     /**
      * 提供服务Bean
      */
-    private Class<?> serviceClass;
+    private Object serviceObject;
     /**
      * 是否使用缓存
      */

@@ -7,5 +7,4 @@ package in.hocg.boot.named.annotation;
  * @author hocgin
  */
 public interface NamedService {
-
 }

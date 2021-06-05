@@ -47,7 +47,7 @@ public class MockTests extends AbstractSpringBootTest {
     public void mock() {
         when(indexService.worked()).thenReturn("Mock Data");
 
-        Assertions.assertEquals("Mock Data", indexController.worked());
+        Assertions.assertEquals("Mock Data", indexController.worked(""));
     }
 
     @Test
