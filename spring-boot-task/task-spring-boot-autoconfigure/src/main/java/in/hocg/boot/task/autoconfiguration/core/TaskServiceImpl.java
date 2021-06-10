@@ -1,15 +1,14 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
-import cn.hutool.extra.spring.SpringUtil;
+import com.google.common.base.Stopwatch;
 import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
-import in.hocg.boot.utils.lambda.SFunction;
-import in.hocg.boot.utils.lambda.SerializedLambda;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.StopWatch;
+import net.jodah.typetools.TypeResolver;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -19,18 +18,18 @@ import java.util.function.Function;
  * @author hocgin
  */
 @Slf4j
-public class TaskServiceImpl implements TaskService, InitializingBean {
-    private TaskRepository repository;
+@RequiredArgsConstructor
+public class TaskServiceImpl implements TaskService {
+    private final TaskRepository repository;
 
     @Override
-    public <T, R> TaskResult<R> runAsync(String taskSn, SFunction<T, R> runnable) {
+    public <T, R> TaskResult<R> runAsync(String taskSn, Function<T, R> runnable) {
         return this.runSync(taskSn, runnable);
     }
 
     @Override
-    public <T, R> TaskResult<R> runSync(String taskSn, SFunction<T, R> runnable) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start(taskSn);
+    public <T, R> TaskResult<R> runSync(String taskSn, Function<T, R> runnable) {
+        Stopwatch stopWatch = Stopwatch.createStarted();
 
         Optional<TaskInfo> taskOpt = getTask(taskSn);
         if (!taskOpt.isPresent()) {
@@ -46,16 +45,16 @@ public class TaskServiceImpl implements TaskService, InitializingBean {
         String errorMsg = "ok";
         R result = null;
         try {
-            Class<T> paramClazz = SerializedLambda.resolve(runnable).getInstantiatedMethodType();
-            result = this.run(runnable, taskInfo.resolveParams(paramClazz));
+            Class<?>[] typeArgs = TypeResolver.resolveRawArguments(Function.class, runnable.getClass());
+            result = this.run(runnable, taskInfo.resolveParams(typeArgs[0]));
             return TaskResult.success(result);
         } catch (Exception e) {
             isOk = false;
             errorMsg = e.getMessage();
             log.info("执行任务发生错误: 任务执行异常, 任务编号:[{}], 异常信息:[{}]", taskSn, e);
         } finally {
-            stopWatch.stop();
-            repository.doneTask(taskSn, isOk ? TableTask.DoneStatus.Success : TableTask.DoneStatus.Fail, stopWatch.getTotalTimeMillis(), errorMsg, result);
+            repository.doneTask(taskSn, isOk ? TableTask.DoneStatus.Success : TableTask.DoneStatus.Fail,
+                stopWatch.stop().elapsed(TimeUnit.SECONDS), errorMsg, result);
             TaskLogger.clear();
         }
         return TaskResult.fail();
@@ -69,9 +68,5 @@ public class TaskServiceImpl implements TaskService, InitializingBean {
         return runnable.apply(params);
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        this.repository = SpringUtil.getBean(TaskRepository.class);
-    }
 }
 

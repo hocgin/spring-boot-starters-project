@@ -4,6 +4,7 @@ import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
 import lombok.NonNull;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -13,6 +14,13 @@ import java.util.Optional;
  * @author hocgin
  */
 public interface TaskRepository {
+    /**
+     * 查询任务类型
+     *
+     * @param taskType _
+     * @return _
+     */
+    List<TaskInfo> listByType(@NonNull Serializable taskType);
 
     /**
      * 创建任务
@@ -67,4 +75,5 @@ public interface TaskRepository {
      * @return
      */
     Optional<TaskInfo> getByTaskSn(Serializable taskSn);
+
 }

@@ -1,7 +1,7 @@
 package in.hocg.boot.changelog.autoconfiguration.compare;
 
+import cn.hutool.core.util.ReflectUtil;
 import com.google.common.collect.Lists;
-import in.hocg.boot.utils.ClassUtils;
 import in.hocg.boot.utils.LangUtils;
 import in.hocg.boot.utils.PropertyNamer;
 import in.hocg.boot.utils.lambda.SFunction;
@@ -55,29 +55,23 @@ public class EntityCompare {
         final List<FieldChangeDto> result = Lists.newArrayList();
         final Class<?> nClass = n.getClass();
         final Class<?> oClass = o.getClass();
-        final List<Field> oFields = ClassUtils.getAllField(oClass);
-        final Map<String, Field> oFieldMaps = LangUtils.toMap(oFields, Field::getName);
-        final List<Field> nFields = ClassUtils.getAllField(nClass);
+        final Map<String, Field> oFieldMaps = ReflectUtil.getFieldMap(oClass);
+        final List<Field> nFields = Lists.newArrayList(ReflectUtil.getFields(nClass));
         for (Field nField : nFields) {
             final String nFieldName = nField.getName();
-            final Object nFieldValue = EntityCompare.getFieldValue(n, nField);
-
-            // 如果是通用忽略的字段
-            if (Lists.newArrayList("serialVersionUID", "log").contains(nFieldName)) {
-                continue;
-            }
 
             // 如果需要忽略字段名
             if (ignoreFieldNames.contains(nFieldName)) {
                 continue;
             }
 
+            final Object nFieldValue = ReflectUtil.getFieldValue(n, nField);
             // 如果需要忽略 NULL 值
-            if (Objects.isNull(nFieldValue) && ignoreNull) {
+            if (ignoreNull && Objects.isNull(nFieldValue)) {
                 continue;
             }
             final Field oField = oFieldMaps.get(nFieldName);
-            final Object oFieldValue = EntityCompare.getFieldValue(o, oField);
+            final Object oFieldValue = ReflectUtil.getFieldValue(o, oField);
             final String after = String.valueOf(nFieldValue);
             final String before = String.valueOf(oFieldValue);
 
@@ -86,26 +80,14 @@ public class EntityCompare {
                 continue;
             }
 
-            final String fieldRemark = getFieldRemark(nField);
             result.add(new FieldChangeDto()
-                .setFieldRemark(fieldRemark)
+                .setFieldRemark(getFieldRemark(nField))
                 .setFieldName(nFieldName)
                 .setChangeRemark(String.format("%s: %s -> %s", nFieldName, before, after))
                 .setAfterValue(after)
                 .setBeforeValue(before));
         }
         return result;
-    }
-
-    /**
-     * 获取字段的值
-     *
-     * @param target
-     * @param field
-     * @return
-     */
-    private static <T> Object getFieldValue(T target, Field field) {
-        return ClassUtils.getFieldValue(target, field, null);
     }
 
     /**

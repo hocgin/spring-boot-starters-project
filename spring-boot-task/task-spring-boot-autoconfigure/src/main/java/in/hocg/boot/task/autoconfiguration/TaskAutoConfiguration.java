@@ -35,7 +35,6 @@ import java.util.concurrent.Executor;
 @EnableConfigurationProperties(TaskProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class TaskAutoConfiguration {
-
     public static final String EXECUTOR_NAME = "bootAsyncTaskExecutor";
 
     @Bean(TaskAutoConfiguration.EXECUTOR_NAME)
@@ -50,13 +49,12 @@ public class TaskAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskService taskService() {
-        return new TaskServiceImpl();
+    public TaskService taskService(TaskRepository repository) {
+        return new TaskServiceImpl(repository);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean(DataSource.class)
     public TaskRepository taskRepository(DataSource dataSource) {
         return new TaskRepositoryImpl(dataSource);
     }

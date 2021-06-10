@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * Created by hocgin on 2021/5/25
@@ -19,11 +20,12 @@ public class TaskInfo {
     private Serializable id;
     private String taskSn;
     private String params;
+    private LocalDateTime readyAt;
 
-    public <R> R resolveParams(Class<R> clazz) {
+    public <R> R resolveParams(Class<?> clazz) {
         if (StrUtil.isBlank(params) || !JSONUtil.isJson(params)) {
             return null;
         }
-        return JSONUtil.toBean(params, clazz);
+        return (R) JSONUtil.toBean(params, clazz);
     }
 }

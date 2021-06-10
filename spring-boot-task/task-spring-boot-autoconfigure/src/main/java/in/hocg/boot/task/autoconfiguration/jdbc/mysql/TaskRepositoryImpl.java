@@ -1,5 +1,6 @@
 package in.hocg.boot.task.autoconfiguration.jdbc.mysql;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
@@ -18,8 +19,10 @@ import javax.sql.DataSource;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by hocgin on 2021/6/10
@@ -33,11 +36,26 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     @SneakyThrows(SQLException.class)
+    public List<TaskInfo> listByType(@NonNull Serializable taskType) {
+        return Db.use(dataSource).find(Entity.create(TableTask.TABLE_NAME).set(TableTask.FIELD_TYPE, taskType))
+            .stream().map(entity -> new TaskInfo()
+                .setId(entity.getLong(TableTask.FIELD_ID))
+                .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN))
+                .setReadyAt(DateUtil.toLocalDateTime(entity.getDate(TableTask.FIELD_READY_AT)))
+                .setParams(entity.getStr(TableTask.FIELD_PARAMS)))
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
     public TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser, Object params, @NonNull Long delaySecond, boolean executeNow) {
         LocalDateTime now = LocalDateTime.now();
+        LocalDateTime readyAt = now.plusSeconds(delaySecond);
+
         TaskInfo result = new TaskInfo();
         result.setTaskSn(IdUtil.objectId());
         result.setParams(LangUtils.callIfNotNull(params, JSONUtil::toJsonStr).orElse(null));
+        result.setReadyAt(readyAt);
 
         Long id = Db.use(dataSource).insertForGeneratedKey(
             Entity.create(TableTask.TABLE_NAME)
@@ -47,7 +65,7 @@ public class TaskRepositoryImpl implements TaskRepository {
                 .set(TableTask.FIELD_TYPE, taskType)
                 .set(TableTask.FIELD_CREATOR, createUser)
                 .set(TableTask.FIELD_CREATED_AT, now)
-                .set(TableTask.FIELD_READY_AT, now.plusSeconds(delaySecond))
+                .set(TableTask.FIELD_READY_AT, readyAt)
         );
         return result.setId(id);
     }
@@ -101,6 +119,7 @@ public class TaskRepositoryImpl implements TaskRepository {
         return Optional.ofNullable(new TaskInfo()
             .setId(entity.getLong(TableTask.FIELD_ID))
             .setParams(entity.getStr(TableTask.FIELD_PARAMS))
+            .setReadyAt(DateUtil.toLocalDateTime(entity.getDate(TableTask.FIELD_READY_AT)))
             .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN)));
     }
 }

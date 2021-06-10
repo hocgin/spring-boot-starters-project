@@ -24,7 +24,7 @@ CREATE TABLE `boot_task_info`
         COMMENT '执行结束产生的消息',
     done_result            TEXT
         COMMENT '执行结束产生的结果',
-    done_total_time_millis TINYINT(10)
+    done_total_time_millis BIGINT
         COMMENT '总耗时',
     # ---
     created_at             TIMESTAMP(6) NOT NULL
