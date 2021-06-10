@@ -38,6 +38,7 @@
     <module>schedulerx-spring-boot-starter</module>
     <module>monitor-spring-boot-starter</module>
     <module>excel-spring-boot-starter</module>
+    <module>task-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 
