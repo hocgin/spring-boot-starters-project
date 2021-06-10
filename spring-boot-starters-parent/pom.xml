@@ -55,6 +55,28 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- dynamic datasource -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>dynamic-datasource-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- flyway -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>flyway-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>flyway-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Task -->
       <dependency>
         <groupId>${project.groupId}</groupId>

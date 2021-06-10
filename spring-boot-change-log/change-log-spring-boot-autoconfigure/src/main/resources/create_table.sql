@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `com_change_log`;
-CREATE TABLE `com_change_log`
+DROP TABLE IF EXISTS `boot_change_log`;
+CREATE TABLE `boot_change_log`
 (
     id          BIGINT AUTO_INCREMENT,
     log_sn      VARCHAR(32)  NOT NULL UNIQUE,
@@ -15,11 +15,11 @@ CREATE TABLE `com_change_log`
         COMMENT '创建人',
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4
-    COMMENT '[基础模块] 业务操作日志表';
+  DEFAULT CHARSET = utf8mb4
+    COMMENT '[BOOT] 业务操作日志表';
 
-DROP TABLE IF EXISTS `com_field_change`;
-CREATE TABLE `com_field_change`
+DROP TABLE IF EXISTS `boot_field_change`;
+CREATE TABLE `boot_field_change`
 (
     id            BIGINT AUTO_INCREMENT,
     change_log_id BIGINT       NOT NULL
@@ -34,9 +34,8 @@ CREATE TABLE `com_field_change`
         COMMENT '变更前',
     after_value   VARCHAR(255) NOT NULL
         COMMENT '变更后',
-
-    FOREIGN KEY (`change_log_id`) REFERENCES com_change_log (`id`),
+    FOREIGN KEY (`change_log_id`) REFERENCES boot_change_log (`id`),
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4
-    COMMENT '[基础模块] 业务日志-字段变更记录表';
+  DEFAULT CHARSET = utf8mb4
+    COMMENT '[BOOT] 业务日志-字段变更记录表';

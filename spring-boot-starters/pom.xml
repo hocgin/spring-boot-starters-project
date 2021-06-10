@@ -39,6 +39,9 @@
     <module>monitor-spring-boot-starter</module>
     <module>excel-spring-boot-starter</module>
     <module>task-spring-boot-starter</module>
+    <module>webmagic-spring-boot-starter</module>
+    <module>flyway-spring-boot-starter</module>
+    <module>dynamic-datasource-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

@@ -1,5 +1,6 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
+import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
 import lombok.NonNull;
 
 import java.io.Serializable;
@@ -38,7 +39,7 @@ public interface TaskRepository {
      * @param message
      * @param data
      */
-    void execTaskLog(@NonNull Serializable taskSn, Boolean isOk, String message, String data);
+    void execTaskLog(@NonNull Serializable taskSn, String message);
 
     /**
      * 任务开始
@@ -57,7 +58,7 @@ public interface TaskRepository {
      * @param message
      * @param data
      */
-    void doneTask(@NonNull Serializable taskSn, @NonNull Boolean isOk, @NonNull Long totalTimeMillis, String message, Object data);
+    void doneTask(@NonNull Serializable taskSn, @NonNull TableTask.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data);
 
     /**
      * 获取唯一任务

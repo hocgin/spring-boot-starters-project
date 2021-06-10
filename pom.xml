@@ -52,7 +52,6 @@
     <module>spring-boot-change-log</module>
     <module>spring-boot-xxl-job</module>
     <module>spring-boot-utils</module>
-    <module>spring-boot-tpl</module>
     <module>spring-boot-wx-mp</module>
     <module>spring-boot-wx-ma</module>
     <module>spring-boot-schedulerx</module>
@@ -63,6 +62,8 @@
     <module>spring-boot-elasticsearch</module>
     <module>spring-boot-flyway</module>
     <module>spring-boot-task</module>
+    <module>spring-boot-dynamic-datasource</module>
+    <module>spring-boot-tpl</module>
   </modules>
 
   <licenses>

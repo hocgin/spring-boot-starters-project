@@ -19,4 +19,4 @@ CREATE TABLE `boot_persistence_message`
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    COMMENT '[基础模块] 持久化消息表';
+    COMMENT '[BOOT] 持久化消息表';

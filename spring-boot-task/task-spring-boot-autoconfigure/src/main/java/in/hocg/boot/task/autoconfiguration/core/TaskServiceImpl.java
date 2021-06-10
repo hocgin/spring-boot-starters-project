@@ -1,6 +1,7 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
 import cn.hutool.extra.spring.SpringUtil;
+import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
 import in.hocg.boot.utils.lambda.SFunction;
 import in.hocg.boot.utils.lambda.SerializedLambda;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class TaskServiceImpl implements TaskService, InitializingBean {
             log.info("执行任务发生错误: 任务执行异常, 任务编号:[{}], 异常信息:[{}]", taskSn, e);
         } finally {
             stopWatch.stop();
-            repository.doneTask(taskSn, isOk, stopWatch.getTotalTimeMillis(), errorMsg, result);
+            repository.doneTask(taskSn, isOk ? TableTask.DoneStatus.Success : TableTask.DoneStatus.Fail, stopWatch.getTotalTimeMillis(), errorMsg, result);
             TaskLogger.clear();
         }
         return TaskResult.fail();

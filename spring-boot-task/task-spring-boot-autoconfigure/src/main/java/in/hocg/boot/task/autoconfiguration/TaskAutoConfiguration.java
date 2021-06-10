@@ -1,7 +1,9 @@
 package in.hocg.boot.task.autoconfiguration;
 
+import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
 import in.hocg.boot.task.autoconfiguration.core.TaskService;
 import in.hocg.boot.task.autoconfiguration.core.TaskServiceImpl;
+import in.hocg.boot.task.autoconfiguration.jdbc.mysql.TaskRepositoryImpl;
 import in.hocg.boot.task.autoconfiguration.properties.TaskProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -50,5 +52,12 @@ public class TaskAutoConfiguration {
     @ConditionalOnMissingBean
     public TaskService taskService() {
         return new TaskServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnBean(DataSource.class)
+    public TaskRepository taskRepository(DataSource dataSource) {
+        return new TaskRepositoryImpl(dataSource);
     }
 }

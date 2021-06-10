@@ -52,7 +52,7 @@ public abstract class AbsMessageQueueService implements NormalMessageService {
         TransactionalMessageService messageService = SpringContext.getBean(TransactionalMessageService.class);
         for (TransactionalMessage message : messages) {
             message.setGroupSn(messageGroupSn);
-            messageService.insertMessage(message);
+            boolean isOk = messageService.insertMessage(message);
             if (isAsync) {
                 this.asyncSend(message);
             } else {
