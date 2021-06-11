@@ -28,7 +28,7 @@ public class TransactionalMessageServiceImpl implements TransactionalMessageServ
     @SneakyThrows(SQLException.class)
     public boolean insertMessage(TransactionalMessage message) {
         LocalDateTime now = LocalDateTime.now();
-        int row = Db.use(dataSource).insert(Entity.create().setTableName(TablePersistenceMessage.TABLE_NAME)
+        int row = Db.use(dataSource).insert(Entity.create(TablePersistenceMessage.TABLE_NAME)
             .setIgnoreNull(TablePersistenceMessage.FIELD_PREPARED_AT, message.getPreparedAt())
             .setIgnoreNull(TablePersistenceMessage.FIELD_PUBLISHED, TablePersistenceMessage.PersistenceMessagePublished.Prepare.getCode())
             .setIgnoreNull(TablePersistenceMessage.FIELD_PAYLOAD, message.getPayload())

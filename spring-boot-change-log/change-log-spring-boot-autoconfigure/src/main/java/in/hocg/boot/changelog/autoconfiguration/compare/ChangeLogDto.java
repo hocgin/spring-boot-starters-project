@@ -35,7 +35,7 @@ public class ChangeLogDto {
     @Getter
     @RequiredArgsConstructor
     public enum ChangeType implements ICode {
-        Update("update", "更新"),
+        Modify("modify", "更新"),
         Insert("insert", "新增"),
         Delete("delete", "删除");
         private final Serializable code;

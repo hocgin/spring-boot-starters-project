@@ -8,7 +8,7 @@ CREATE TABLE `boot_change_log`
     ref_id      BIGINT       NOT NULL
         COMMENT '业务ID: 如: 订单ID',
     change_type VARCHAR(8)   NOT NULL
-        COMMENT '操作类型: 0->新增, 1->修改, 2->删除',
+        COMMENT '操作类型: insert->新增, modify->修改, delete->删除',
     created_at  TIMESTAMP(6) NOT NULL
         COMMENT '创建时间',
     creator     BIGINT
@@ -18,8 +18,8 @@ CREATE TABLE `boot_change_log`
   DEFAULT CHARSET = utf8mb4
     COMMENT '[BOOT] 业务操作日志表';
 
-DROP TABLE IF EXISTS `boot_field_change`;
-CREATE TABLE `boot_field_change`
+DROP TABLE IF EXISTS `boot_field_change_log`;
+CREATE TABLE `boot_field_change_log`
 (
     id            BIGINT AUTO_INCREMENT,
     change_log_id BIGINT       NOT NULL

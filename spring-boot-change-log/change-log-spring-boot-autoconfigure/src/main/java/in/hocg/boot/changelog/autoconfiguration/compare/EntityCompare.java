@@ -8,13 +8,9 @@ import in.hocg.boot.utils.lambda.SFunction;
 import in.hocg.boot.utils.lambda.SerializedLambda;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,53 +21,64 @@ import java.util.stream.Collectors;
  */
 public class EntityCompare {
 
+    public static <T> List<FieldChangeDto> diffLambdaNotNull(@NonNull T o, @NonNull T n, String... fields) {
+        List<String> ignoreFieldNames = LangUtils.callIfNotNull(fields, Lists::newArrayList).orElse(Lists.newArrayList());
+        return EntityCompare.diff(o, n, true, ignoreFieldNames);
+    }
+
+    public static <T> List<FieldChangeDto> diffNotNull(@NonNull T o, @NonNull T n, SFunction<T, ?>... fields) {
+        return EntityCompare.diffLambda(o, n, true, fields);
+    }
+
     /**
      * 比较
      *
-     * @param o
-     * @param n
+     * @param basicValue
+     * @param newValue
      * @param ignoreNull
-     * @param ignoreFunc
+     * @param fields
      * @return
      */
-    public static <T> List<FieldChangeDto> diffUseLambda(@NonNull T o, @NonNull T n, boolean ignoreNull, SFunction<T, ?>... ignoreFunc) {
-        final List<String> ignoreFieldNames = Arrays.stream(ignoreFunc).map(func -> PropertyNamer.methodToProperty(SerializedLambda.resolve(func).getImplMethodName()))
-            .collect(Collectors.toList());
-        return EntityCompare.diff(o, n, ignoreNull, ignoreFieldNames);
+    public static <T> List<FieldChangeDto> diffLambda(@NonNull T basicValue, @NonNull T newValue, boolean ignoreNull, SFunction<T, ?>... fields) {
+        List<String> fieldNames = Collections.emptyList();
+        if (Objects.nonNull(fields)) {
+            fieldNames = Arrays.stream(fields).map(func -> PropertyNamer.methodToProperty(SerializedLambda.resolve(func).getImplMethodName()))
+                .collect(Collectors.toList());
+        }
+        return EntityCompare.diff(basicValue, newValue, ignoreNull, fieldNames);
     }
 
 
     /**
      * 对比记录变更的字段
      *
-     * @param o                旧的值
-     * @param n                新的值
-     * @param ignoreNull       是否忽略 NULL
-     * @param ignoreFieldNames 需忽略的字段名
+     * @param basicValue 旧的值
+     * @param newValue   新的值
+     * @param ignoreNull 是否忽略 NULL
+     * @param fields     需忽略的字段名
      * @return
      */
-    @SneakyThrows
-    public static <T> List<FieldChangeDto> diff(@NonNull T o, @NonNull T n, boolean ignoreNull, @NonNull List<String> ignoreFieldNames) {
+    public static <T> List<FieldChangeDto> diff(@NonNull T basicValue, @NonNull T newValue, boolean ignoreNull, @NonNull List<String> fields) {
         final List<FieldChangeDto> result = Lists.newArrayList();
-        final Class<?> nClass = n.getClass();
-        final Class<?> oClass = o.getClass();
+        final Class<?> nClass = newValue.getClass();
+        final Class<?> oClass = basicValue.getClass();
         final Map<String, Field> oFieldMaps = ReflectUtil.getFieldMap(oClass);
         final List<Field> nFields = Lists.newArrayList(ReflectUtil.getFields(nClass));
         for (Field nField : nFields) {
             final String nFieldName = nField.getName();
 
             // 如果需要忽略字段名
-            if (ignoreFieldNames.contains(nFieldName)) {
+            if (fields.contains(nFieldName)) {
                 continue;
             }
 
-            final Object nFieldValue = ReflectUtil.getFieldValue(n, nField);
+            final Object nFieldValue = ReflectUtil.getFieldValue(newValue, nField);
             // 如果需要忽略 NULL 值
             if (ignoreNull && Objects.isNull(nFieldValue)) {
                 continue;
             }
             final Field oField = oFieldMaps.get(nFieldName);
-            final Object oFieldValue = ReflectUtil.getFieldValue(o, oField);
+            final Object oFieldValue = ReflectUtil.getFieldValue(basicValue, oField);
             final String after = String.valueOf(nFieldValue);
             final String before = String.valueOf(oFieldValue);
 

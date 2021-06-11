@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 
+import java.io.Serializable;
+
 /**
  * Created by hocgin on 2021/6/10
  * email: hocgin@gmail.com
@@ -26,9 +28,9 @@ public class TablePersistenceMessage {
     @Getter
     @RequiredArgsConstructor
     public enum PersistenceMessagePublished {
-        Prepare(0, "准备状态"),
-        Complete(1, "已完成状态");
-        private final Integer code;
+        Prepare("prepare", "准备就绪"),
+        Complete("complete", "已完成");
+        private final Serializable code;
         private final String name;
     }
 }

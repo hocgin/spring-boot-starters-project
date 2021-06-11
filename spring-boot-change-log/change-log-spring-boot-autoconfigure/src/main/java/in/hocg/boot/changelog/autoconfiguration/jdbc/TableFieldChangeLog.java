@@ -9,8 +9,8 @@ import lombok.experimental.UtilityClass;
  * @author hocgin
  */
 @UtilityClass
-public class TableFieldChange {
-    public static final String TABLE_NAME = "boot_field_change";
+public class TableFieldChangeLog {
+    public static final String TABLE_NAME = "boot_field_change_log";
 
     public static final String FIELD_CHANGE_LOG_ID = "change_log_id";
     public static final String FIELD_FIELD_NAME = "field_name";
