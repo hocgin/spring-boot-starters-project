@@ -28,7 +28,7 @@ public class DefaultLoggerListener implements LoggerListener {
     private void printlnPrettyLogger(LoggerEvent logger) {
         StringJoiner stringJoiner = new StringJoiner("\n")
             .add("")
-            .add("╔═[{}]═{}════════════════════════════════════════════════")
+            .add("╔═[{}]═{}══════════════════════════════════════════════════════════════")
             .add("║ {}")
             .add("║ > {} ({})")
             .add("╠═[请求体]════════════════════════════════════════════════════════════════════════════")

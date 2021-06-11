@@ -1,21 +1,31 @@
 package in.hocg.boot.logging.autoconfiguration.utils;
 
 import cn.hutool.core.util.StrUtil;
+import in.hocg.boot.utils.ClassUtils;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
 /**
- * Created by hocgin on 2018/9/4.
+ * Created by hocgin on 2020/8/14
  * email: hocgin@gmail.com
  *
  * @author hocgin
  */
-@Slf4j
 @UtilityClass
-public class RequestUtils {
+public class LoggingUtils {
+    public static final String SECURITY_CONTEXT_HOLDERS_NAME = "org.springframework.security.core.context.SecurityContextHolder";
+    public static final String API_OPERATION_NAME = "io.swagger.annotations.ApiOperation";
+
+    public boolean hasApiOperation() {
+        return ClassUtils.hasClass(API_OPERATION_NAME);
+    }
+
+    public boolean hasSecurityContextHolders() {
+        return ClassUtils.hasClass(SECURITY_CONTEXT_HOLDERS_NAME);
+    }
+
     /**
      * 获取客户端真实IP
      *
@@ -35,7 +45,7 @@ public class RequestUtils {
         }
         ip = request.getHeader("X-Real-IP");
         if (StrUtil.isNotBlank(ip)
-            && !"unKnown".equalsIgnoreCase(ip)) {
+            && !"unknown".equalsIgnoreCase(ip)) {
             return ip;
         }
 
@@ -62,9 +72,5 @@ public class RequestUtils {
 
     public String getHost(HttpServletRequest request) {
         return request.getHeader("Host");
-    }
-
-    public boolean isAJAX(HttpServletRequest request) {
-        return "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
     }
 }

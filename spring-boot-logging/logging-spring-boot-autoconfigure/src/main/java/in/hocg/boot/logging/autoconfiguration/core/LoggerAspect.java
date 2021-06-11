@@ -1,8 +1,9 @@
 package in.hocg.boot.logging.autoconfiguration.core;
 
 import cn.hutool.core.collection.CollectionUtil;
-import in.hocg.boot.logging.autoconfiguration.utils.ClassName;
-import in.hocg.boot.logging.autoconfiguration.utils.RequestUtils;
+import com.google.common.base.Stopwatch;
+import in.hocg.boot.logging.autoconfiguration.utils.LoggingUtils;
+import in.hocg.boot.utils.StringPoolUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +11,6 @@ import org.apache.logging.log4j.util.Strings;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -22,7 +22,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.StopWatch;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -37,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -49,19 +49,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LoggerAspect {
     private final ApplicationEventPublisher publisher;
-    @Autowired
     @Lazy
+    @Autowired
     private LoggerAspect self;
 
-    @Pointcut("@annotation(in.hocg.boot.logging.autoconfiguration.core.UseLogger)")
-    public void pointcut() {
-    }
-
-    @Around("pointcut()")
-    public Object around(ProceedingJoinPoint point) throws Throwable {
+    @Around("@annotation(annotation)")
+    public Object pointcut(ProceedingJoinPoint point, UseLogger annotation) throws Throwable {
         // 耗时统计
-        StopWatch watch = new StopWatch();
-        watch.start();
+        Stopwatch watch = Stopwatch.createStarted();
         Object ret = null;
         String errorMessage = null;
         try {
@@ -80,7 +75,6 @@ public class LoggerAspect {
             String mapping = String.format("%s#%s(%s)", aClass.getName(), methodName, Arrays.toString(parameterNames));
             Class<?>[] parameterTypes = signature.getMethod().getParameterTypes();
             Method method = target.getClass().getMethod(methodName, parameterTypes);
-            UseLogger annotation = method.getAnnotation(UseLogger.class);
             List<Object> args = CollectionUtil.newArrayList(point.getArgs())
                 .parallelStream()
                 .filter(arg -> (!(arg instanceof ServletRequest)
@@ -90,51 +84,45 @@ public class LoggerAspect {
                     && !(arg instanceof OutputStream))
                 .collect(Collectors.toList());
 
-            Optional<HttpServletRequest> requestOpt = this.getRequest();
-            String uri = "unknown";
-            String requestMethod = "unknown";
-            String host = "unknown";
-            String userAgent = "unknown";
+            String uri = StringPoolUtils.UNKNOWN;
+            String requestMethod = StringPoolUtils.UNKNOWN;
+            String host = StringPoolUtils.UNKNOWN;
+            String userAgent = StringPoolUtils.UNKNOWN;
+            String source = StringPoolUtils.UNKNOWN;
+            String username = null;
             String clientIp = "0.0.0.0";
-            String source = null;
+            Optional<HttpServletRequest> requestOpt = this.getRequest();
             if (requestOpt.isPresent()) {
                 final HttpServletRequest request = requestOpt.get();
                 uri = request.getRequestURI();
                 requestMethod = request.getMethod();
-                userAgent = RequestUtils.getUserAgent(request);
-                host = RequestUtils.getHost(request);
-                clientIp = RequestUtils.getClientIp(request);
-                source = request.getParameter("source");
+                userAgent = LoggingUtils.getUserAgent(request);
+                host = LoggingUtils.getHost(request);
+                clientIp = LoggingUtils.getClientIp(request);
+                source = request.getHeader(StringPoolUtils.HEADER_SOURCE);
+                username = request.getHeader(StringPoolUtils.HEADER_USERNAME);
             }
-            final LoggerEvent logger = new LoggerEvent();
             String enterRemark = annotation.value();
-            if (Strings.isBlank(enterRemark) && ClassName.hasApiOperation()) {
+            if (Strings.isBlank(enterRemark) && LoggingUtils.hasApiOperation()) {
                 ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
                 enterRemark = apiOperation.value();
             }
 
-            logger.setMapping(mapping)
-                .setCurrentUser(this.getCurrentUser().orElse(null))
-                .setSource(source)
-                .setException(errorMessage)
-                .setEnterRemark(enterRemark)
-                .setHost(host)
-                .setCreatedAt(LocalDateTime.now())
-                .setClientIp(clientIp)
-                .setUserAgent(userAgent)
-                .setMethod(requestMethod)
-                .setTotalTimeMillis(watch.getTotalTimeMillis())
-                .setUri(uri)
-                .setRet(ret)
-                .setArgs(args);
-            self.sendAsync(logger);
+            self.sendAsync(new LoggerEvent().setMapping(mapping)
+                .setCurrentUser(this.getCurrentUser().orElse(username))
+                .setSource(source).setException(errorMessage)
+                .setEnterRemark(enterRemark).setHost(host)
+                .setCreatedAt(LocalDateTime.now()).setClientIp(clientIp)
+                .setUserAgent(userAgent).setMethod(requestMethod)
+                .setTotalTimeMillis(watch.elapsed(TimeUnit.MILLISECONDS))
+                .setUri(uri).setRet(ret).setArgs(args));
         }
 
         return ret;
     }
 
     private Optional<Object> getCurrentUser() {
-        if (ClassName.hasSecurityContextHolders()) {
+        if (LoggingUtils.hasSecurityContextHolders()) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (Objects.isNull(auth) || auth instanceof AnonymousAuthenticationToken) {
                 return Optional.empty();
