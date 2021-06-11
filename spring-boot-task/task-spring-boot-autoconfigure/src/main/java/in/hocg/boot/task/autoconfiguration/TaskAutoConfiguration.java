@@ -1,7 +1,9 @@
 package in.hocg.boot.task.autoconfiguration;
 
+import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
 import in.hocg.boot.task.autoconfiguration.core.TaskService;
 import in.hocg.boot.task.autoconfiguration.core.TaskServiceImpl;
+import in.hocg.boot.task.autoconfiguration.jdbc.mysql.TaskRepositoryImpl;
 import in.hocg.boot.task.autoconfiguration.properties.TaskProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -33,7 +35,6 @@ import java.util.concurrent.Executor;
 @EnableConfigurationProperties(TaskProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class TaskAutoConfiguration {
-
     public static final String EXECUTOR_NAME = "bootAsyncTaskExecutor";
 
     @Bean(TaskAutoConfiguration.EXECUTOR_NAME)
@@ -48,7 +49,13 @@ public class TaskAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskService taskService() {
-        return new TaskServiceImpl();
+    public TaskService taskService(TaskRepository repository) {
+        return new TaskServiceImpl(repository);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public TaskRepository taskRepository(DataSource dataSource) {
+        return new TaskRepositoryImpl(dataSource);
     }
 }

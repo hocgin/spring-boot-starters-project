@@ -1,13 +1,12 @@
 package in.hocg.boot.changelog.autoconfiguration.core;
 
-import com.google.common.collect.Lists;
 import in.hocg.boot.changelog.autoconfiguration.compare.ChangeLogDto;
 import in.hocg.boot.changelog.autoconfiguration.compare.FieldChangeDto;
-import in.hocg.boot.utils.enums.ICode;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,38 +21,38 @@ public interface ChangeLogService {
     void insert(ChangeLogDto dto);
 
     @Transactional(rollbackFor = Exception.class)
-    default void updateLog(@NonNull ICode refType, @NonNull Long refId, List<FieldChangeDto> changes, Long userId) {
+    default void updateLog(@NonNull String refType, @NonNull Long refId, List<FieldChangeDto> changes, Long userId) {
         final ChangeLogDto result = new ChangeLogDto();
-        result.setChangeType(ChangeLogDto.ChangeType.Update);
+        result.setChangeType(ChangeLogDto.ChangeType.Modify);
         result.setCreatedAt(LocalDateTime.now());
         result.setRefId(refId);
-        result.setRefType(String.valueOf(refType.getCode()));
+        result.setRefType(refType);
         result.setCreator(userId);
         result.setChange(changes);
         this.insert(result);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    default void deleteLog(@NonNull ICode refType, @NonNull Long refId, Long userId) {
+    default void deleteLog(@NonNull String refType, @NonNull Long refId, Long userId) {
         final ChangeLogDto result = new ChangeLogDto();
         result.setChangeType(ChangeLogDto.ChangeType.Delete);
         result.setCreatedAt(LocalDateTime.now());
         result.setRefId(refId);
-        result.setRefType(String.valueOf(refType.getCode()));
+        result.setRefType(refType);
         result.setCreator(userId);
-        result.setChange(Lists.newArrayList());
+        result.setChange(Collections.emptyList());
         this.insert(result);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    default void insertLog(@NonNull ICode refType, @NonNull Long refId, Long userId) {
+    default void insertLog(@NonNull String refType, @NonNull Long refId, Long userId) {
         final ChangeLogDto result = new ChangeLogDto();
         result.setChangeType(ChangeLogDto.ChangeType.Insert);
         result.setCreatedAt(LocalDateTime.now());
         result.setRefId(refId);
-        result.setRefType(String.valueOf(refType.getCode()));
+        result.setRefType(refType);
         result.setCreator(userId);
-        result.setChange(Lists.newArrayList());
+        result.setChange(Collections.emptyList());
         this.insert(result);
     }
 

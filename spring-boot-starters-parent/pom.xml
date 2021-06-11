@@ -40,6 +40,8 @@
     <aliyun-schedulerx-spring-boot-starter.version>1.2.4.3</aliyun-schedulerx-spring-boot-starter.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <webmagic.version>0.7.4</webmagic.version>
+    <typetools.version>0.6.3</typetools.version>
+    <easyexcel.version>2.2.10</easyexcel.version>
   </properties>
 
   <dependencyManagement>
@@ -53,6 +55,28 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>tpl-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- dynamic datasource -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>dynamic-datasource-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- flyway -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>flyway-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>flyway-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- Task -->
@@ -385,6 +409,11 @@
       </dependency>
       <dependency>
         <groupId>com.alibaba</groupId>
+        <artifactId>easyexcel</artifactId>
+        <version>${easyexcel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
         <artifactId>druid-spring-boot-starter</artifactId>
         <version>${druid.version}</version>
       </dependency>
@@ -442,6 +471,11 @@
         <groupId>cn.hutool</groupId>
         <artifactId>hutool-all</artifactId>
         <version>${hutool-all.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.jodah</groupId>
+        <artifactId>typetools</artifactId>
+        <version>${typetools.version}</version>
       </dependency>
       <dependency>
         <groupId>com.baomidou</groupId>

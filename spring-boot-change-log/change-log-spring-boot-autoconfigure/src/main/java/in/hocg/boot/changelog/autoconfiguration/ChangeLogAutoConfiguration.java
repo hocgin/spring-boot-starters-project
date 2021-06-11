@@ -1,8 +1,8 @@
 package in.hocg.boot.changelog.autoconfiguration;
 
-import in.hocg.boot.changelog.autoconfiguration.properties.ChangeLogProperties;
 import in.hocg.boot.changelog.autoconfiguration.core.ChangeLogService;
-import in.hocg.boot.changelog.autoconfiguration.data.JdbcChangeLogService;
+import in.hocg.boot.changelog.autoconfiguration.jdbc.mysql.ChangeLogServiceImpl;
+import in.hocg.boot.changelog.autoconfiguration.properties.ChangeLogProperties;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -36,6 +36,6 @@ public class ChangeLogAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public ChangeLogService changeLogService(DataSource dataSource) {
-        return new JdbcChangeLogService(dataSource);
+        return new ChangeLogServiceImpl(dataSource);
     }
 }

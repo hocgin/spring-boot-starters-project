@@ -111,4 +111,19 @@ public class ClassUtils {
             field.setAccessible(accessible);
         }
     }
+
+    /**
+     * 是否存在类
+     *
+     * @param className 类全名
+     * @return 是否存在
+     */
+    public static boolean hasClass(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 }

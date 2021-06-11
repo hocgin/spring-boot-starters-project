@@ -32,6 +32,7 @@
     <module>test-spring-boot-sample</module>
     <module>schedulerx-spring-boot-sample</module>
     <module>cache-spring-boot-sample</module>
+    <module>task-spring-boot-sample</module>
     <module>tpl-spring-boot-sample</module>
   </modules>
 

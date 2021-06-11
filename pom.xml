@@ -16,7 +16,7 @@
   <version>${revision}</version>
 
   <properties>
-    <revision>1.0.4</revision>
+    <revision>1.0.5</revision>
 
     <java.version>1.8</java.version>
     <java.source.version>1.8</java.source.version>
@@ -52,7 +52,6 @@
     <module>spring-boot-change-log</module>
     <module>spring-boot-xxl-job</module>
     <module>spring-boot-utils</module>
-    <module>spring-boot-tpl</module>
     <module>spring-boot-wx-mp</module>
     <module>spring-boot-wx-ma</module>
     <module>spring-boot-schedulerx</module>
@@ -61,7 +60,10 @@
     <module>spring-boot-excel</module>
     <module>spring-boot-webmagic</module>
     <module>spring-boot-elasticsearch</module>
+    <module>spring-boot-flyway</module>
     <module>spring-boot-task</module>
+    <module>spring-boot-dynamic-datasource</module>
+    <module>spring-boot-tpl</module>
   </modules>
 
   <licenses>

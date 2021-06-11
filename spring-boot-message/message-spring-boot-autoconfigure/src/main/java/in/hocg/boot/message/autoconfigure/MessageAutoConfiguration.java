@@ -1,10 +1,10 @@
 package in.hocg.boot.message.autoconfigure;
 
-import in.hocg.boot.message.autoconfigure.properties.MessageProperties;
 import in.hocg.boot.message.autoconfigure.core.TransactionalMessageListener;
 import in.hocg.boot.message.autoconfigure.core.TransactionalMessageService;
 import in.hocg.boot.message.autoconfigure.data.TransactionalAspect;
-import in.hocg.boot.message.autoconfigure.data.client.JdbcTransactionalMessageServiceImpl;
+import in.hocg.boot.message.autoconfigure.jdbc.mysql.TransactionalMessageServiceImpl;
+import in.hocg.boot.message.autoconfigure.properties.MessageProperties;
 import in.hocg.boot.message.autoconfigure.service.local.LocalMessageQueueService;
 import in.hocg.boot.message.autoconfigure.service.local.LocalMessageService;
 import in.hocg.boot.message.autoconfigure.service.normal.NoneMessageQueueService;
@@ -48,7 +48,7 @@ public class MessageAutoConfiguration {
     @ConditionalOnMissingBean
     @ConditionalOnBean({DataSource.class})
     public TransactionalMessageService transactionalMessageService(DataSource dataSource) {
-        return new JdbcTransactionalMessageServiceImpl(dataSource);
+        return new TransactionalMessageServiceImpl(dataSource);
     }
 
     @Bean

@@ -7,7 +7,7 @@ package in.hocg.boot.named.autoconfiguration.core.convert;
  * @author hocgin
  */
 public interface NamedRowsConvert {
-    boolean isMatch(Object source);
+    boolean isMatch(Class<?> source);
 
     Object convert(Object source);
 }

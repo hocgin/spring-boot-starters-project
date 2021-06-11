@@ -1,8 +1,9 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
 import in.hocg.boot.task.autoconfiguration.TaskAutoConfiguration;
-import in.hocg.boot.utils.lambda.SFunction;
 import org.springframework.scheduling.annotation.Async;
+
+import java.util.function.Function;
 
 /**
  * Created by hocgin on 2021/5/25
@@ -21,7 +22,7 @@ public interface TaskService {
      * @return 执行结果
      */
     @Async(TaskAutoConfiguration.EXECUTOR_NAME)
-    <T, R> TaskResult<R> runAsync(String taskSn, SFunction<T, R> runnable);
+    <T, R> TaskResult<R> runAsync(String taskSn, Function<T, R> runnable);
 
     /**
      * 同步执行任务
@@ -31,6 +32,6 @@ public interface TaskService {
      * @param <T>      执行结果
      * @return 执行结果
      */
-    <T, R> TaskResult<R> runSync(String taskSn, SFunction<T, R> runnable);
+    <T, R> TaskResult<R> runSync(String taskSn, Function<T, R> runnable);
 
 }

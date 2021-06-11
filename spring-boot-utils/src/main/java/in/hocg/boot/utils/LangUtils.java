@@ -129,13 +129,10 @@ public class LangUtils {
      * @param value       value
      */
     public void setFieldValue(Object fieldObject, Field field, Object value) {
-        boolean accessible = field.isAccessible();
         try {
             field.setAccessible(true);
             field.set(fieldObject, value);
         } catch (IllegalAccessException ignored) {
-        } finally {
-            field.setAccessible(accessible);
         }
     }
 

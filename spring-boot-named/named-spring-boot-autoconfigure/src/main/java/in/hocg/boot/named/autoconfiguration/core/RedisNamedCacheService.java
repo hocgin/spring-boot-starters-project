@@ -3,7 +3,10 @@ package in.hocg.boot.named.autoconfiguration.core;
 import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisStringCommands;
+import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
@@ -31,28 +34,32 @@ public class RedisNamedCacheService implements NamedCacheService {
     @Override
     public Map<String, Object> batchGet(Collection<String> keys) {
         Map<String, Object> result = Maps.newHashMap();
-        redisTemplate.executePipelined((RedisCallback<Void>) connection -> {
-            connection.openPipeline();
-            keys.parallelStream().forEach(key -> {
-                Object value = valueSerializer.deserialize(connection.get(Objects.requireNonNull(keySerializer.serialize(key))));
-                if (Objects.nonNull(value)) {
-                    result.put(key, value);
-                }
-            });
-            connection.closePipeline();
-            return null;
+        redisTemplate.execute(new RedisCallback<Object>() {
+            @Override
+            public Object doInRedis(RedisConnection connection) throws DataAccessException {
+                keys.parallelStream().forEach(key -> {
+                    Object value = valueSerializer.deserialize(connection.get(Objects.requireNonNull(keySerializer.serialize(key))));
+                    if (Objects.nonNull(value)) {
+                        result.put(key, value);
+                    }
+                });
+                return null;
+            }
         });
         return result;
     }
 
     @Override
     public void batchPut(Map<String, Object> caches) {
-        redisTemplate.executePipelined((RedisCallback<Void>) connection -> {
-            connection.openPipeline();
-            caches.entrySet().parallelStream()
-                .forEach(entry -> connection.set(Objects.requireNonNull(keySerializer.serialize(entry.getKey())), Objects.requireNonNull(valueSerializer.serialize(entry.getValue())), EXPIRATION, RedisStringCommands.SetOption.UPSERT));
-            connection.closePipeline();
-            return null;
+        redisTemplate.executePipelined(new RedisCallback<Object>() {
+            @Override
+            public Object doInRedis(RedisConnection connection) throws DataAccessException {
+                connection.openPipeline();
+                caches.entrySet().parallelStream().forEach(entry ->
+                    connection.set(Objects.requireNonNull(keySerializer.serialize(entry.getKey())), Objects.requireNonNull(valueSerializer.serialize(entry.getValue())),
+                        EXPIRATION, RedisStringCommands.SetOption.UPSERT));
+                return null;
+            }
         });
     }
 }

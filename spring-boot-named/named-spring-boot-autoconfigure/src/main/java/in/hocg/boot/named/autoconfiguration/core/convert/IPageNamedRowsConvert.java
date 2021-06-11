@@ -11,8 +11,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 public class IPageNamedRowsConvert implements NamedRowsConvert{
 
     @Override
-    public boolean isMatch(Object source) {
-        return source instanceof IPage;
+    public boolean isMatch(Class<?> aClazz) {
+        return IPage.class.isAssignableFrom(aClazz);
     }
 
     @Override
