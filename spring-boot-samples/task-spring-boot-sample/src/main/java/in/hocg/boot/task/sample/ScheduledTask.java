@@ -1,6 +1,5 @@
 package in.hocg.boot.task.sample;
 
-import in.hocg.boot.task.autoconfiguration.core.TaskInfo;
 import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
 import in.hocg.boot.task.autoconfiguration.core.TaskService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class ScheduledTask {
 
     @Scheduled(cron = "0/30 0/1 * * * ?  ")
     public void taskCenter() {
-        taskRepository.listByType(TASK_TYPE)
+        taskRepository.listByType(ScheduledTask.TASK_TYPE)
             .forEach(taskInfo -> taskService.runAsync(taskInfo.getTaskSn(), this::myTask));
     }
 
@@ -36,7 +35,7 @@ public class ScheduledTask {
 
     @Scheduled(cron = "0/30 * * * * ? ")
     public void pushTask() {
-        TaskInfo taskInfo = taskRepository.createTask("自动任务", TASK_TYPE, 0, null);
+        taskRepository.createTask("自动任务", TASK_TYPE, 0, null);
         log.info("==> 提交任务");
     }
 }

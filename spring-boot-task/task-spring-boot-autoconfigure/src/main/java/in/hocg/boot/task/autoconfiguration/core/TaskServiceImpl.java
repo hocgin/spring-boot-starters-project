@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.jodah.typetools.TypeResolver;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -37,6 +39,12 @@ public class TaskServiceImpl implements TaskService {
             return TaskResult.fail();
         }
         TaskInfo taskInfo = taskOpt.get();
+        LocalDateTime taskInfoReadyAt = taskInfo.getReadyAt();
+        if (Objects.nonNull(taskInfoReadyAt) && LocalDateTime.now().isAfter(taskInfoReadyAt)) {
+            log.info("任务未到执行时间, 任务编号:[{}]", taskSn);
+            return TaskResult.fail();
+        }
+
         Serializable taskId = taskInfo.getId();
         TaskLogger.setTaskId(taskId);
         repository.startTask(taskSn);
