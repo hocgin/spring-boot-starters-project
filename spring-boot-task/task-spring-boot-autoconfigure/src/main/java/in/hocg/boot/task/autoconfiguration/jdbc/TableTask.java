@@ -30,7 +30,7 @@ public class TableTask {
     public static final String FIELD_DONE_STATUS = "done_status";
     public static final String FIELD_DONE_MESSAGE = "done_message";
     public static final String FIELD_DONE_RESULT = "done_result";
-    public static final String FIELD_DONE_TOTAL_TIME_MILLIS = "done_total_time_millis";
+    public static final String FIELD_TOTAL_TIME_MILLIS = "total_time_millis";
     public static final String FIELD_PARAMS = "params";
 
     @Getter

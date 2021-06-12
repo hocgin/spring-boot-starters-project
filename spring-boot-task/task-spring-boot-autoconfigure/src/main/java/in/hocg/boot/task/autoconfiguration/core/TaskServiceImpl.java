@@ -36,13 +36,13 @@ public class TaskServiceImpl implements TaskService {
         Optional<TaskInfo> taskOpt = getTask(taskSn);
         if (!taskOpt.isPresent()) {
             log.info("执行任务发生错误: 未找到任务编号:[{}]", taskSn);
-            return TaskResult.fail();
+            return TaskResult.fail("未找到任务");
         }
         TaskInfo taskInfo = taskOpt.get();
         LocalDateTime taskInfoReadyAt = taskInfo.getReadyAt();
         if (Objects.nonNull(taskInfoReadyAt) && LocalDateTime.now().isAfter(taskInfoReadyAt)) {
             log.info("任务未到执行时间, 任务编号:[{}]", taskSn);
-            return TaskResult.fail();
+            return TaskResult.fail("任务未到执行时间");
         }
 
         Serializable taskId = taskInfo.getId();
@@ -62,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
             log.info("执行任务发生错误: 任务执行异常, 任务编号:[{}], 异常信息:[{}]", taskSn, e);
         } finally {
             repository.doneTask(taskSn, isOk ? TableTask.DoneStatus.Success : TableTask.DoneStatus.Fail,
-                stopWatch.stop().elapsed(TimeUnit.SECONDS), errorMsg, result);
+                stopWatch.stop().elapsed(TimeUnit.MILLISECONDS), errorMsg, result);
             TaskLogger.clear();
         }
         return TaskResult.fail();

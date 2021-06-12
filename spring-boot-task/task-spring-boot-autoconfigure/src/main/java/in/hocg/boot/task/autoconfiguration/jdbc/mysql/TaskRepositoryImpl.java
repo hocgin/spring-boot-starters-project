@@ -104,7 +104,7 @@ public class TaskRepositoryImpl implements TaskRepository {
             .setIgnoreNull(TableTask.FIELD_DONE_RESULT, LangUtils.callIfNotNull(data, JSONUtil::toJsonStr).orElse(null))
             .set(TableTask.FIELD_DONE_STATUS, doneStatus.getCode())
             .set(TableTask.FIELD_DONE_AT, now)
-            .set(TableTask.FIELD_DONE_TOTAL_TIME_MILLIS, totalTimeMillis)
+            .set(TableTask.FIELD_TOTAL_TIME_MILLIS, totalTimeMillis)
             .set(TableTask.FIELD_STATUS, TableTask.Status.Done.getCode());
         Db.use(dataSource).update(update, where);
     }

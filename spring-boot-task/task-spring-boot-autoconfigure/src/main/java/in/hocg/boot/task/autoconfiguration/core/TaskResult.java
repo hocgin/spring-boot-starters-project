@@ -27,6 +27,11 @@ public class TaskResult<R> implements Serializable {
         return TaskResult.result(false);
     }
 
+    public static <R> TaskResult<R> fail(String message) {
+        TaskResult<R> result = TaskResult.fail();
+        return result.setMessage(message);
+    }
+
     public static <R> TaskResult<R> success() {
         return TaskResult.result(true);
     }
