@@ -42,6 +42,12 @@
     <webmagic.version>0.7.4</webmagic.version>
     <typetools.version>0.6.3</typetools.version>
     <easyexcel.version>2.2.10</easyexcel.version>
+    <jackson-mapper-asl.version>1.9.4</jackson-mapper-asl.version>
+    <google-collections.version>1.0</google-collections.version>
+    <google-api-services-youtube.version>v3-rev182-1.22.0</google-api-services-youtube.version>
+    <google-api-services-youtubeAnalytics.version>v1-rev63-1.22.0</google-api-services-youtubeAnalytics.version>
+    <google-api-services-youtubereporting.version>v1-rev10-1.22.0</google-api-services-youtubereporting.version>
+    <google-http-client-jackson2.version>1.20.0</google-http-client-jackson2.version>
   </properties>
 
   <dependencyManagement>
@@ -55,6 +61,17 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>tpl-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- youtube -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>youtube-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>youtube-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- Vars -->
@@ -527,6 +544,36 @@
         <groupId>us.codecraft</groupId>
         <artifactId>webmagic-extension</artifactId>
         <version>${webmagic.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-youtube</artifactId>
+        <version>${google-api-services-youtube.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-youtubeAnalytics</artifactId>
+        <version>${google-api-services-youtubeAnalytics.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.apis</groupId>
+        <artifactId>google-api-services-youtubereporting</artifactId>
+        <version>${google-api-services-youtubereporting.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.jackson</groupId>
+        <artifactId>jackson-mapper-asl</artifactId>
+        <version>${jackson-mapper-asl.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.http-client</groupId>
+        <artifactId>google-http-client-jackson2</artifactId>
+        <version>${google-http-client-jackson2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.collections</groupId>
+        <artifactId>google-collections</artifactId>
+        <version>${google-collections.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

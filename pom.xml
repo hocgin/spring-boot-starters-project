@@ -64,6 +64,7 @@
     <module>spring-boot-task</module>
     <module>spring-boot-dynamic-datasource</module>
     <module>spring-boot-vars</module>
+    <module>spring-boot-youtube</module>
     <module>spring-boot-tpl</module>
   </modules>
 

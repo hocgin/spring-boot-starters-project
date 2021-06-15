@@ -43,6 +43,7 @@
     <module>flyway-spring-boot-starter</module>
     <module>dynamic-datasource-spring-boot-starter</module>
     <module>vars-spring-boot-starter</module>
+    <module>youtube-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

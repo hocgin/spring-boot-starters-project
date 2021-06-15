@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>spring-boot-youtube</artifactId>
+    <groupId>in.hocg.boot</groupId>
+    <version>${revision}</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+
+  <name>Youtube :: Spring Boot :: AutoConfigure</name>
+  <artifactId>youtube-spring-boot-autoconfigure</artifactId>
+
+  <dependencies>
+    <!-- YouTube Data V3 support -->
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-youtube</artifactId>
+    </dependency>
+    <!-- Required for any code that makes calls to the YouTube Analytics API -->
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-youtubeAnalytics</artifactId>
+    </dependency>
+    <!-- Required for any code that makes calls to the YouTube Reporting API -->
+    <dependency>
+      <groupId>com.google.apis</groupId>
+      <artifactId>google-api-services-youtubereporting</artifactId>
+    </dependency>
+    <!-- This dependency is only used for the Topics API sample, which requires the Jackson JSON parser -->
+    <dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-asl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.http-client</groupId>
+      <artifactId>google-http-client-jackson2</artifactId>
+    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.google.collections</groupId>-->
+<!--      <artifactId>google-collections</artifactId>-->
+<!--    </dependency>-->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <!-- Basic -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>spring-boot-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+</project>
