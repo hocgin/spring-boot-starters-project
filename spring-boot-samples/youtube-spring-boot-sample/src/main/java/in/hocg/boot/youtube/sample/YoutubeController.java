@@ -12,7 +12,7 @@ import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
-import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBootService;
+import in.hocg.boot.youtube.autoconfiguration.core.YoutubeService;
 import in.hocg.boot.youtube.autoconfiguration.properties.YoutubeProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -35,7 +35,7 @@ import java.util.function.BiConsumer;
 @RequestMapping("/ytb")
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class YoutubeController {
-    private final YoutubeBootService youtubeBootService;
+    private final YoutubeService youtubeBootService;
 
     @ResponseBody
     @GetMapping("/link")
@@ -44,7 +44,7 @@ public class YoutubeController {
         scopes.add("https://www.googleapis.com/auth/youtube");
 
         String re = StrUtil.format("http://127.0.0.1:8080/ytb/{}/callback", clientId);
-        return youtubeBootService.auth(clientId, re, scopes);
+        return youtubeBootService.authorize(clientId, re, scopes);
     }
 
     @ResponseBody
@@ -62,8 +62,8 @@ public class YoutubeController {
     public Object work(@PathVariable String clientId) {
         List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
         youtubeBootService.youtube(clientId, scopes, new BiConsumer<YoutubeProperties.ClientConfig, YouTube>() {
-            @SneakyThrows
             @Override
+            @SneakyThrows
             public void accept(YoutubeProperties.ClientConfig clientConfig, YouTube youTube) {
                 YouTube.Channels.List contentDetails = youTube.channels().list("contentDetails");
                 contentDetails.setMine(true);
@@ -118,6 +118,8 @@ public class YoutubeController {
                         case NOT_STARTED:
                             System.out.println("Upload Not Started!");
                             break;
+                        default:
+                            throw new UnsupportedOperationException();
                     }
                 };
                 uploader.setProgressListener(progressListener);

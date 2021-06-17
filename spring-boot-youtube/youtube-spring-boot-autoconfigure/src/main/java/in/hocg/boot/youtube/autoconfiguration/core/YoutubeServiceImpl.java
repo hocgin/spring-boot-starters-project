@@ -16,7 +16,7 @@ import java.util.Map;
  * @author hocgin
  */
 @RequiredArgsConstructor
-public class YoutubeBootServiceImpl implements YoutubeBootService {
+public class YoutubeServiceImpl implements YoutubeService {
     @Getter
     @Setter
     private Map<String, YoutubeProperties.ClientConfig> configMap = Collections.emptyMap();

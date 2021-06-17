@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
  *
  * @author hocgin
  */
-public interface YoutubeBootService {
+public interface YoutubeService {
 
     default GoogleAuthorizationCodeFlow getAuthorizationCodeFlow(String clientId, List<String> scopes) {
         YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
@@ -25,7 +25,8 @@ public interface YoutubeBootService {
 
     @SneakyThrows
     default Credential getCredential(String clientId, List<String> scopes) {
-        return getAuthorizationCodeFlow(clientId, scopes).loadCredential("userid");
+        YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
+        return YoutubeUtils.loadCredential(clientConfig.getClientId(), clientConfig.getClientSecret(), scopes);
     }
 
     default Credential getCredential(String clientId, String redirectUri, List<String> scopes, String code) {
@@ -33,9 +34,9 @@ public interface YoutubeBootService {
         return YoutubeUtils.getCredential(clientConfig.getClientId(), clientConfig.getClientSecret(), redirectUri, scopes, code);
     }
 
-    default String auth(String clientId, String redirectUri, List<String> scopes) {
+    default String authorize(String clientId, String redirectUri, List<String> scopes) {
         YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
-        return YoutubeUtils.auth(clientConfig.getClientId(), clientConfig.getClientSecret(), redirectUri, scopes);
+        return YoutubeUtils.authorize(clientConfig.getClientId(), clientConfig.getClientSecret(), redirectUri, scopes);
     }
 
     default void youtube(String clientId, List<String> scopes, BiConsumer<YoutubeProperties.ClientConfig, YouTube> consumer) {

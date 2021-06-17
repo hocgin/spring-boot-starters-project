@@ -1,17 +1,24 @@
 package in.hocg.boot.youtube.autoconfiguration;
 
+import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.client.util.store.MemoryDataStoreFactory;
 import in.hocg.boot.utils.LangUtils;
-import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBootService;
-import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBootServiceImpl;
+import in.hocg.boot.youtube.autoconfiguration.core.YoutubeService;
+import in.hocg.boot.youtube.autoconfiguration.core.YoutubeServiceImpl;
+import in.hocg.boot.youtube.autoconfiguration.core.datastore.RedisDataStoreFactory;
 import in.hocg.boot.youtube.autoconfiguration.properties.YoutubeProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.Map;
 
@@ -27,7 +34,7 @@ import java.util.Map;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class YoutubeAutoConfiguration implements InitializingBean {
     private final YoutubeProperties properties;
-    private final YoutubeBootService bootService;
+    private final YoutubeService bootService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -36,8 +43,26 @@ public class YoutubeAutoConfiguration implements InitializingBean {
     }
 
     @Bean
-    @ConditionalOnMissingBean(YoutubeBootService.class)
-    public YoutubeBootService mpService() {
-        return new YoutubeBootServiceImpl();
+    @ConditionalOnMissingBean(YoutubeService.class)
+    public YoutubeService mpService() {
+        return new YoutubeServiceImpl();
+    }
+
+    @Bean
+    @Order
+    @ConditionalOnMissingBean
+    public DataStoreFactory memoryDataStoreFactory() {
+        return MemoryDataStoreFactory.getDefaultInstance();
+    }
+
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnClass(StringRedisTemplate.class)
+    public static class RedisDataStoreConfiguration {
+        @Bean
+        @Order(Ordered.HIGHEST_PRECEDENCE)
+        @ConditionalOnMissingBean
+        public DataStoreFactory redisDataStoreFactory(StringRedisTemplate redisTemplate) {
+            return new RedisDataStoreFactory(redisTemplate);
+        }
     }
 }
