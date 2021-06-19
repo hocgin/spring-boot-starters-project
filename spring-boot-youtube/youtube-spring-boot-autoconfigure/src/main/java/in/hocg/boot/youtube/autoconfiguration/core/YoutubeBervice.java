@@ -39,12 +39,15 @@ public interface YoutubeBervice {
         return YoutubeUtils.authorize(clientConfig.getClientId(), clientConfig.getClientSecret(), redirectUri, scopes);
     }
 
-    @SneakyThrows(Exception.class)
     default void youtube(String clientId, List<String> scopes, BiConsumerThrow<YoutubeProperties.ClientConfig, YouTube> consumer) {
         YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
         YouTube youtube = new YouTube.Builder(YoutubeUtils.HTTP_TRANSPORT, YoutubeUtils.JSON_FACTORY, getCredential(clientId, scopes))
             .setApplicationName(clientConfig.getApplicationName()).build();
-        consumer.accept(clientConfig, youtube);
+        try {
+            consumer.accept(clientConfig, youtube);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
