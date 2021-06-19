@@ -3,7 +3,7 @@ package in.hocg.boot.message.autoconfigure.service.normal;
 import cn.hutool.core.map.MapUtil;
 import in.hocg.boot.message.autoconfigure.core.message.TransactionalMessage;
 import in.hocg.boot.message.autoconfigure.core.TransactionalMessageContext;
-import in.hocg.boot.message.autoconfigure.core.TransactionalMessageService;
+import in.hocg.boot.message.autoconfigure.core.TransactionalMessageBervice;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import org.springframework.messaging.support.MessageBuilder;
 
@@ -49,7 +49,7 @@ public abstract class AbsMessageQueueService implements NormalMessageService {
         }
 
         final String messageGroupSn = getMessageGroupSn();
-        TransactionalMessageService messageService = SpringContext.getBean(TransactionalMessageService.class);
+        TransactionalMessageBervice messageService = SpringContext.getBean(TransactionalMessageBervice.class);
         for (TransactionalMessage message : messages) {
             message.setGroupSn(messageGroupSn);
             boolean isOk = messageService.insertMessage(message);

@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author hocgin
  */
-public interface MailService {
+public interface MailBervice {
 
     /**
      * 使用配置文件中设置的账户发送文本邮件，发送给单个或多个收件人<br>

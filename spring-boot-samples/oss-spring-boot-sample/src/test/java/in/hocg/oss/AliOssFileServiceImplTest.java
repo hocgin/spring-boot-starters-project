@@ -1,6 +1,6 @@
 package in.hocg.oss;
 
-import in.hocg.boot.oss.autoconfigure.core.OssFileService;
+import in.hocg.boot.oss.autoconfigure.core.OssFileBervice;
 import in.hocg.oss.core.AbstractSpringBootTest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("aliyun")
 public class AliOssFileServiceImplTest extends AbstractSpringBootTest {
     @Autowired
-    OssFileService ossFileService;
+    OssFileBervice ossFileService;
 
 //    @Test
 //    public void testUpload() {

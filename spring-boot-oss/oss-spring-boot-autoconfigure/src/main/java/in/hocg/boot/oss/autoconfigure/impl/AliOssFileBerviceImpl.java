@@ -2,7 +2,7 @@ package in.hocg.boot.oss.autoconfigure.impl;
 
 import cn.hutool.core.util.URLUtil;
 import com.aliyun.oss.OSSClient;
-import in.hocg.boot.oss.autoconfigure.core.OssFileService;
+import in.hocg.boot.oss.autoconfigure.core.OssFileBervice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,7 +19,7 @@ import java.io.InputStream;
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class AliOssFileServiceImpl implements OssFileService, InitializingBean {
+public class AliOssFileBerviceImpl implements OssFileBervice, InitializingBean {
     private final String accessKey;
     private final String secretKey;
     private final String space;

@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author hocgin
  */
-public interface ChangeLogService {
+public interface ChangeLogBervice {
 
     @Transactional(rollbackFor = Exception.class)
     void insert(ChangeLogDto dto);
