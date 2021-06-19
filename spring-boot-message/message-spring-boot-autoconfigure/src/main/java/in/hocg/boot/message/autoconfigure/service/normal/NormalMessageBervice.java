@@ -1,7 +1,7 @@
 package in.hocg.boot.message.autoconfigure.service.normal;
 
 import in.hocg.boot.message.autoconfigure.core.message.TransactionalMessage;
-import in.hocg.boot.message.autoconfigure.service.TransactionalMessageQueueService;
+import in.hocg.boot.message.autoconfigure.service.TransactionalMessageQueueBervice;
 import org.springframework.messaging.Message;
 
 /**
@@ -10,7 +10,7 @@ import org.springframework.messaging.Message;
  *
  * @author hocgin
  */
-public interface NormalMessageService extends TransactionalMessageQueueService<TransactionalMessage> {
+public interface NormalMessageBervice extends TransactionalMessageQueueBervice<TransactionalMessage> {
 
     boolean asyncSend(String destination, Message<?> message);
 

@@ -27,7 +27,7 @@ public class MailAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MailBervice service() {
+    public MailBervice mailBervice() {
         return new MailBerviceImpl(properties);
     }
 }

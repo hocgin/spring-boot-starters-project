@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author hocgin
  */
-public interface TransactionalMessageQueueService<M> {
+public interface TransactionalMessageQueueBervice<M> {
     boolean syncSend(M message);
 
     boolean asyncSend(M message);

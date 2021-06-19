@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @author hocgin
  */
-public abstract class AbsMessageQueueService implements NormalMessageService {
+public abstract class AbsMessageQueueBervice implements NormalMessageBervice {
     protected static final TransactionalMessageContext<TransactionalMessage> MESSAGE_CONTEXT = new TransactionalMessageContext<>();
 
     @Override

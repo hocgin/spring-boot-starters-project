@@ -50,7 +50,7 @@ public class WxMpAutoConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingBean(WxMpService.class)
-    public WxMpService wxMpService() {
+    public WxMpService wxMpBervice() {
         return new WxMpServiceImpl();
     }
 }

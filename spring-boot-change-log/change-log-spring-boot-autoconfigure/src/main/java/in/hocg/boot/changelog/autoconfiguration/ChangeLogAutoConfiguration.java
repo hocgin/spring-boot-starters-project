@@ -35,7 +35,7 @@ public class ChangeLogAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ChangeLogBervice changeLogService(DataSource dataSource) {
+    public ChangeLogBervice changeLogBervice(DataSource dataSource) {
         return new ChangeLogBerviceImpl(dataSource);
     }
 }

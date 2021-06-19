@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
  *
  * @author hocgin
  */
-public class LocalMessageQueueService implements LocalMessageService {
+public class LocalMessageQueueBervice implements LocalMessageBervice {
     protected static final TransactionalMessageContext<Object> MESSAGE_CONTEXT = new TransactionalMessageContext<>();
 
     @Override

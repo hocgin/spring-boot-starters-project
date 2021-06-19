@@ -1,6 +1,6 @@
 package in.hocg.boot.message.autoconfigure.service.normal.rocket;
 
-import in.hocg.boot.message.autoconfigure.service.normal.AbsMessageQueueService;
+import in.hocg.boot.message.autoconfigure.service.normal.AbsMessageQueueBervice;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.messaging.Message;
@@ -11,7 +11,7 @@ import org.springframework.messaging.Message;
  *
  * @author hocgin
  */
-public class RocketMessageQueueService extends AbsMessageQueueService {
+public class RocketMessageQueueBervice extends AbsMessageQueueBervice {
 
     @Override
     public boolean asyncSend(String destination, Message<?> message) {
