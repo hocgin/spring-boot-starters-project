@@ -51,7 +51,7 @@ public class TaskAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskBervice taskService(TaskRepository repository) {
+    public TaskBervice taskBervice(TaskRepository repository) {
         return new TaskBerviceImpl(repository);
     }
 

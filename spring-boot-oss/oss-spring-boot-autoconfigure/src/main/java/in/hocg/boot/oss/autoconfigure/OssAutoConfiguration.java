@@ -28,7 +28,7 @@ public class OssAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OssFileBervice ossFileService() {
+    public OssFileBervice ossFileBervice() {
         String accessKey = properties.getAccessKey();
         String secretKey = properties.getSecretKey();
         String space = properties.getSpace();

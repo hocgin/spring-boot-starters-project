@@ -70,7 +70,7 @@ public class MessageAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public NormalMessageBervice normalMessageService() {
+    public NormalMessageBervice normalMessageBervice() {
         MessageProperties.MessageType messageType = properties.getType();
         if (MessageProperties.MessageType.Rocket.equals(messageType)) {
             return new RocketMessageQueueBervice();

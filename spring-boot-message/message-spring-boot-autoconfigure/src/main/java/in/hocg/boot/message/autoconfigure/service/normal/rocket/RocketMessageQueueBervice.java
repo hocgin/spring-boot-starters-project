@@ -15,29 +15,29 @@ public class RocketMessageQueueBervice extends AbsMessageQueueBervice {
 
     @Override
     public boolean asyncSend(String destination, Message<?> message) {
-        getMessageQueueService().asyncSend(destination, message, null);
+        getMessageQueueBervice().asyncSend(destination, message, null);
         return true;
     }
 
     @Override
     public boolean asyncSend(String destination, Message<?> message, long timeout) {
-        getMessageQueueService().asyncSend(destination, message, null, timeout);
+        getMessageQueueBervice().asyncSend(destination, message, null, timeout);
         return false;
     }
 
     @Override
     public boolean syncSend(String destination, Message<?> message) {
-        getMessageQueueService().syncSend(destination, message);
+        getMessageQueueBervice().syncSend(destination, message);
         return true;
     }
 
     @Override
     public boolean syncSend(String destination, Message<?> message, long timeout) {
-        getMessageQueueService().syncSend(destination, message, timeout);
+        getMessageQueueBervice().syncSend(destination, message, timeout);
         return true;
     }
 
-    private RocketMQTemplate getMessageQueueService() {
+    private RocketMQTemplate getMessageQueueBervice() {
         return SpringContext.getBean(RocketMQTemplate.class);
     }
 

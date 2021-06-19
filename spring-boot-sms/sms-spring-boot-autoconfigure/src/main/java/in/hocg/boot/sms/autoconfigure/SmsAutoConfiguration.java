@@ -27,7 +27,7 @@ public class SmsAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SmsBervice smsService() {
+    public SmsBervice smsBervice() {
         String accessKey = properties.getAccessKey();
         String secretKey = properties.getSecretKey();
         String regionId = properties.getRegionId();

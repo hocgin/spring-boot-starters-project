@@ -44,7 +44,7 @@ public class YoutubeAutoConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingBean(YoutubeBervice.class)
-    public YoutubeBervice mpService() {
+    public YoutubeBervice youtubeBervice() {
         return new YoutubeBerviceImpl();
     }
 
