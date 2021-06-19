@@ -1,8 +1,8 @@
 package in.hocg.boot.oss.autoconfigure;
 
-import in.hocg.boot.oss.autoconfigure.core.OssFileService;
-import in.hocg.boot.oss.autoconfigure.impl.AliOssFileServiceImpl;
-import in.hocg.boot.oss.autoconfigure.impl.QiNiuOssFileServiceImpl;
+import in.hocg.boot.oss.autoconfigure.core.OssFileBervice;
+import in.hocg.boot.oss.autoconfigure.impl.AliOssFileBerviceImpl;
+import in.hocg.boot.oss.autoconfigure.impl.QiNiuOssFileBerviceImpl;
 import in.hocg.boot.oss.autoconfigure.properties.OssProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -28,7 +28,7 @@ public class OssAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OssFileService ossFileService() {
+    public OssFileBervice ossFileBervice() {
         String accessKey = properties.getAccessKey();
         String secretKey = properties.getSecretKey();
         String space = properties.getSpace();
@@ -36,9 +36,9 @@ public class OssAutoConfiguration {
         OssProperties.OssType type = properties.getType();
         switch (type) {
             case QiNiu:
-                return new QiNiuOssFileServiceImpl(accessKey, secretKey, space, domain);
+                return new QiNiuOssFileBerviceImpl(accessKey, secretKey, space, domain);
             case AliYun:
-                return new AliOssFileServiceImpl(accessKey, secretKey, space, domain);
+                return new AliOssFileBerviceImpl(accessKey, secretKey, space, domain);
             default:
                 throw new IllegalArgumentException("OSS 类型[" + type + "]不支持");
         }

@@ -8,7 +8,7 @@ import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
-import in.hocg.boot.sms.autoconfigure.core.SmsService;
+import in.hocg.boot.sms.autoconfigure.core.SmsBervice;
 import in.hocg.boot.sms.autoconfigure.exception.SmsException;
 import in.hocg.boot.sms.autoconfigure.impl.aliyun.request.BatchSmsRequest;
 import in.hocg.boot.sms.autoconfigure.impl.aliyun.request.SmsRequest;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class AliSmsServiceImpl implements SmsService, InitializingBean {
+public class AliSmsBerviceImpl implements SmsBervice, InitializingBean {
     private final String accessKey;
     private final String secretKey;
     private final String regionId;

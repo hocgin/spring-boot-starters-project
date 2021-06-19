@@ -1,7 +1,7 @@
 package in.hocg.boot.task.sample;
 
 import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
-import in.hocg.boot.task.autoconfiguration.core.TaskService;
+import in.hocg.boot.task.autoconfiguration.core.TaskBervice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class ScheduledTask {
     private final TaskRepository taskRepository;
-    private final TaskService taskService;
+    private final TaskBervice taskService;
     private final static String TASK_TYPE = "auto_task";
 
     @Scheduled(cron = "0/30 0/1 * * * ?  ")

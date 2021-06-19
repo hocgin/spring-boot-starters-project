@@ -3,7 +3,7 @@ package in.hocg.boot.message.autoconfigure.jdbc.mysql;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.json.JSONUtil;
-import in.hocg.boot.message.autoconfigure.core.TransactionalMessageService;
+import in.hocg.boot.message.autoconfigure.core.TransactionalMessageBervice;
 import in.hocg.boot.message.autoconfigure.core.message.TransactionalMessage;
 import in.hocg.boot.message.autoconfigure.jdbc.TablePersistenceMessage;
 import in.hocg.boot.utils.LangUtils;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
  * @author hocgin
  */
 @RequiredArgsConstructor
-public class TransactionalMessageServiceImpl implements TransactionalMessageService {
+public class TransactionalMessageBerviceImpl implements TransactionalMessageBervice {
     private final DataSource dataSource;
 
     @Override

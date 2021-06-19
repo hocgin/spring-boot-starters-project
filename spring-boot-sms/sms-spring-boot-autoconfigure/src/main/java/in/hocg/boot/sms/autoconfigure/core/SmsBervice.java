@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author hocgin
  */
-public interface SmsService {
+public interface SmsBervice {
 
     String sendBatchSms(@NotNull List<BatchSmsRequest.Item> items, @NonNull String templateCode);
 

@@ -1,7 +1,7 @@
 package in.hocg.boot.changelog.autoconfiguration;
 
-import in.hocg.boot.changelog.autoconfiguration.core.ChangeLogService;
-import in.hocg.boot.changelog.autoconfiguration.jdbc.mysql.ChangeLogServiceImpl;
+import in.hocg.boot.changelog.autoconfiguration.core.ChangeLogBervice;
+import in.hocg.boot.changelog.autoconfiguration.jdbc.mysql.ChangeLogBerviceImpl;
 import in.hocg.boot.changelog.autoconfiguration.properties.ChangeLogProperties;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
@@ -35,7 +35,7 @@ public class ChangeLogAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public ChangeLogService changeLogService(DataSource dataSource) {
-        return new ChangeLogServiceImpl(dataSource);
+    public ChangeLogBervice changeLogBervice(DataSource dataSource) {
+        return new ChangeLogBerviceImpl(dataSource);
     }
 }

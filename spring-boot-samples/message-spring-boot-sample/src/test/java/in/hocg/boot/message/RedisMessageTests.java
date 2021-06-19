@@ -3,7 +3,7 @@ package in.hocg.boot.message;
 import in.hocg.boot.message.sample.BootApplication;
 import in.hocg.boot.message.sample.message.TestMessageListener;
 import in.hocg.boot.message.sample.pojo.TestMessageDto;
-import in.hocg.boot.message.autoconfigure.service.normal.NormalMessageService;
+import in.hocg.boot.message.autoconfigure.service.normal.NormalMessageBervice;
 import in.hocg.boot.test.autoconfiguration.core.AbstractSpringBootTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(classes = {BootApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class RedisMessageTests extends AbstractSpringBootTest {
     @Autowired
-    private NormalMessageService messageService;
+    private NormalMessageBervice messageService;
 
     @Test
     public void sendTest() {

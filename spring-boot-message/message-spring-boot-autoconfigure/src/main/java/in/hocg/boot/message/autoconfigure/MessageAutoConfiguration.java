@@ -1,16 +1,16 @@
 package in.hocg.boot.message.autoconfigure;
 
 import in.hocg.boot.message.autoconfigure.core.TransactionalMessageListener;
-import in.hocg.boot.message.autoconfigure.core.TransactionalMessageService;
+import in.hocg.boot.message.autoconfigure.core.TransactionalMessageBervice;
 import in.hocg.boot.message.autoconfigure.data.TransactionalAspect;
-import in.hocg.boot.message.autoconfigure.jdbc.mysql.TransactionalMessageServiceImpl;
+import in.hocg.boot.message.autoconfigure.jdbc.mysql.TransactionalMessageBerviceImpl;
 import in.hocg.boot.message.autoconfigure.properties.MessageProperties;
-import in.hocg.boot.message.autoconfigure.service.local.LocalMessageQueueService;
-import in.hocg.boot.message.autoconfigure.service.local.LocalMessageService;
-import in.hocg.boot.message.autoconfigure.service.normal.NoneMessageQueueService;
-import in.hocg.boot.message.autoconfigure.service.normal.NormalMessageService;
-import in.hocg.boot.message.autoconfigure.service.normal.redis.RedisMessageQueueService;
-import in.hocg.boot.message.autoconfigure.service.normal.rocket.RocketMessageQueueService;
+import in.hocg.boot.message.autoconfigure.service.local.LocalMessageQueueBervice;
+import in.hocg.boot.message.autoconfigure.service.local.LocalMessageBervice;
+import in.hocg.boot.message.autoconfigure.service.normal.NoneMessageQueueBervice;
+import in.hocg.boot.message.autoconfigure.service.normal.NormalMessageBervice;
+import in.hocg.boot.message.autoconfigure.service.normal.redis.RedisMessageQueueBervice;
+import in.hocg.boot.message.autoconfigure.service.normal.rocket.RocketMessageQueueBervice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,7 +36,6 @@ import javax.sql.DataSource;
  */
 @Slf4j
 @Configuration
-//@AutoConfigureAfter(DataSourceAutoConfiguration.class)
 @ConditionalOnClass({Aspect.class})
 @ConditionalOnProperty(prefix = MessageProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(MessageProperties.class)
@@ -47,8 +46,8 @@ public class MessageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean({DataSource.class})
-    public TransactionalMessageService transactionalMessageService(DataSource dataSource) {
-        return new TransactionalMessageServiceImpl(dataSource);
+    public TransactionalMessageBervice transactionalMessageBervice(DataSource dataSource) {
+        return new TransactionalMessageBerviceImpl(dataSource);
     }
 
     @Bean
@@ -65,20 +64,20 @@ public class MessageAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public LocalMessageService localMessageService() {
-        return new LocalMessageQueueService();
+    public LocalMessageBervice localMessageBervice() {
+        return new LocalMessageQueueBervice();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public NormalMessageService normalMessageService() {
+    public NormalMessageBervice normalMessageBervice() {
         MessageProperties.MessageType messageType = properties.getType();
         if (MessageProperties.MessageType.Rocket.equals(messageType)) {
-            return new RocketMessageQueueService();
+            return new RocketMessageQueueBervice();
         } else if (MessageProperties.MessageType.Redis.equals(messageType)) {
-            return new RedisMessageQueueService();
+            return new RedisMessageQueueBervice();
         }
-        return new NoneMessageQueueService();
+        return new NoneMessageQueueBervice();
     }
 
     @Bean

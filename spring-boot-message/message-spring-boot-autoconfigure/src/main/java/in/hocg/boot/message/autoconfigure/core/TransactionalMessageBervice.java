@@ -9,7 +9,7 @@ import in.hocg.boot.message.autoconfigure.core.message.TransactionalMessage;
  *
  * @author hocgin
  */
-public interface TransactionalMessageService {
+public interface TransactionalMessageBervice {
 
     /**
      * 保存消息

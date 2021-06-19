@@ -2,7 +2,7 @@ package in.hocg.boot.changelog;
 
 import in.hocg.boot.changelog.autoconfiguration.compare.EntityCompare;
 import in.hocg.boot.changelog.autoconfiguration.compare.FieldChangeDto;
-import in.hocg.boot.changelog.autoconfiguration.core.ChangeLogService;
+import in.hocg.boot.changelog.autoconfiguration.core.ChangeLogBervice;
 import in.hocg.boot.changelog.sample.BootApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import java.util.List;
 @SpringBootTest(classes = BootApplication.class)
 public class MainTests {
     @Autowired
-    ChangeLogService changeLogService;
+    ChangeLogBervice changeLogService;
 
     @Test
     public void test() {

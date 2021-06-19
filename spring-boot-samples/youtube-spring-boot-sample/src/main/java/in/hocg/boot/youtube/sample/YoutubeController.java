@@ -12,7 +12,7 @@ import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.api.services.youtube.model.VideoStatus;
 import com.google.common.collect.Lists;
-import in.hocg.boot.youtube.autoconfiguration.core.YoutubeService;
+import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBervice;
 import in.hocg.boot.youtube.autoconfiguration.properties.YoutubeProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -35,7 +35,7 @@ import java.util.function.BiConsumer;
 @RequestMapping("/ytb")
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class YoutubeController {
-    private final YoutubeService youtubeBootService;
+    private final YoutubeBervice youtubeBootService;
 
     @ResponseBody
     @GetMapping("/link")

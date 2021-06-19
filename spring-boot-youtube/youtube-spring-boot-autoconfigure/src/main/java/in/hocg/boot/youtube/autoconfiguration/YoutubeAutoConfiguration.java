@@ -3,8 +3,8 @@ package in.hocg.boot.youtube.autoconfiguration;
 import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.MemoryDataStoreFactory;
 import in.hocg.boot.utils.LangUtils;
-import in.hocg.boot.youtube.autoconfiguration.core.YoutubeService;
-import in.hocg.boot.youtube.autoconfiguration.core.YoutubeServiceImpl;
+import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBervice;
+import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBerviceImpl;
 import in.hocg.boot.youtube.autoconfiguration.core.datastore.RedisDataStoreFactory;
 import in.hocg.boot.youtube.autoconfiguration.properties.YoutubeProperties;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ import java.util.Map;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class YoutubeAutoConfiguration implements InitializingBean {
     private final YoutubeProperties properties;
-    private final YoutubeService bootService;
+    private final YoutubeBervice bootService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -43,9 +43,9 @@ public class YoutubeAutoConfiguration implements InitializingBean {
     }
 
     @Bean
-    @ConditionalOnMissingBean(YoutubeService.class)
-    public YoutubeService mpService() {
-        return new YoutubeServiceImpl();
+    @ConditionalOnMissingBean(YoutubeBervice.class)
+    public YoutubeBervice youtubeBervice() {
+        return new YoutubeBerviceImpl();
     }
 
     @Bean

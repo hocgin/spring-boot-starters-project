@@ -1,10 +1,9 @@
 package in.hocg.boot.message.autoconfigure.service.normal.redis;
 
-import in.hocg.boot.message.autoconfigure.service.normal.AbsMessageQueueService;
+import in.hocg.boot.message.autoconfigure.service.normal.AbsMessageQueueBervice;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.messaging.Message;
 
 /**
@@ -14,7 +13,7 @@ import org.springframework.messaging.Message;
  * @author hocgin
  */
 @RequiredArgsConstructor
-public class RedisMessageQueueService extends AbsMessageQueueService {
+public class RedisMessageQueueBervice extends AbsMessageQueueBervice {
 
     @Override
     public boolean asyncSend(String destination, Message<?> message) {

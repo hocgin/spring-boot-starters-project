@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import in.hocg.boot.changelog.autoconfiguration.compare.ChangeLogDto;
-import in.hocg.boot.changelog.autoconfiguration.core.ChangeLogService;
+import in.hocg.boot.changelog.autoconfiguration.core.ChangeLogBervice;
 import in.hocg.boot.changelog.autoconfiguration.jdbc.TableChangeLog;
 import in.hocg.boot.changelog.autoconfiguration.jdbc.TableFieldChangeLog;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author hocgin
  */
 @RequiredArgsConstructor
-public class ChangeLogServiceImpl implements ChangeLogService {
+public class ChangeLogBerviceImpl implements ChangeLogBervice {
     private final DataSource dataSource;
 
     @Override

@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
  *
  * @author hocgin
  */
-public interface YoutubeService {
+public interface YoutubeBervice {
 
     default GoogleAuthorizationCodeFlow getAuthorizationCodeFlow(String clientId, List<String> scopes) {
         YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);

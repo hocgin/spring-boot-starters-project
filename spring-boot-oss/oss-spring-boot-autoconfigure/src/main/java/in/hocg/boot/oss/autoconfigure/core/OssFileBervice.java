@@ -16,7 +16,7 @@ import java.nio.file.Files;
  *
  * @author hocgin
  */
-public interface OssFileService {
+public interface OssFileBervice {
 
     default String upload(MultipartFile file) {
         try {

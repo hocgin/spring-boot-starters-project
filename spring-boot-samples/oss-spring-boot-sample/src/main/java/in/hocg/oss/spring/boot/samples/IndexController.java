@@ -1,6 +1,6 @@
 package in.hocg.oss.spring.boot.samples;
 
-import in.hocg.boot.oss.autoconfigure.core.OssFileService;
+import in.hocg.boot.oss.autoconfigure.core.OssFileBervice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ import java.io.IOException;
 @RequestMapping
 @RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class IndexController {
-    private final OssFileService ossFileService;
+    private final OssFileBervice ossFileService;
 
     @PostMapping("/upload")
     public ResponseEntity uploadFile(@RequestParam("file") MultipartFile file) throws IOException {

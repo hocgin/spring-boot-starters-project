@@ -21,7 +21,7 @@ import java.util.function.Function;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class TaskServiceImpl implements TaskService {
+public class TaskBerviceImpl implements TaskBervice {
     private final TaskRepository repository;
 
     @Override

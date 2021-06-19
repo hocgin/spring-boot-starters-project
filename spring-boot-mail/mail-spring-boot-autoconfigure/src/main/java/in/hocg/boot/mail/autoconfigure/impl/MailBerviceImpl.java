@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
-import in.hocg.boot.mail.autoconfigure.core.MailService;
+import in.hocg.boot.mail.autoconfigure.core.MailBervice;
 import in.hocg.boot.mail.autoconfigure.properties.MailProperties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ import java.util.Map;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class MailServiceImpl implements MailService, InitializingBean {
+public class MailBerviceImpl implements MailBervice, InitializingBean {
     private final MailProperties properties;
     @Getter
     private MailAccount mailAccount;

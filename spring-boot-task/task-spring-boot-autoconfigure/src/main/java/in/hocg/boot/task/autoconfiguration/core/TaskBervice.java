@@ -11,7 +11,7 @@ import java.util.function.Function;
  *
  * @author hocgin
  */
-public interface TaskService {
+public interface TaskBervice {
 
     /**
      * 异步执行任务

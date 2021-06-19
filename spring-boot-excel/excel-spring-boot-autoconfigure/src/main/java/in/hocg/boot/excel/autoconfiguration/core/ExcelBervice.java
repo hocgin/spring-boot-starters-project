@@ -6,5 +6,6 @@ package in.hocg.boot.excel.autoconfiguration.core;
  *
  * @author hocgin
  */
-public class ExcelServiceImpl implements ExcelService {
+public interface ExcelBervice {
+
 }

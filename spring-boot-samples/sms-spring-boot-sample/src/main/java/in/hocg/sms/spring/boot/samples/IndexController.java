@@ -1,6 +1,6 @@
 package in.hocg.sms.spring.boot.samples;
 
-import in.hocg.boot.sms.autoconfigure.core.SmsService;
+import in.hocg.boot.sms.autoconfigure.core.SmsBervice;
 import in.hocg.boot.sms.autoconfigure.impl.aliyun.request.BatchSmsRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
@@ -23,7 +23,7 @@ import java.util.Map;
 @RequestMapping
 @RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class IndexController {
-    private final SmsService service;
+    private final SmsBervice service;
 
     @GetMapping("/send-sms")
     public String sendSms(@RequestParam("phone") String phone) {

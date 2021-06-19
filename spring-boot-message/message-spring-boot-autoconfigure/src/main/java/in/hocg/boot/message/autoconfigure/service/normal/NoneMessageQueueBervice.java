@@ -8,7 +8,7 @@ import org.springframework.messaging.Message;
  *
  * @author hocgin
  */
-public class NoneMessageQueueService extends AbsMessageQueueService {
+public class NoneMessageQueueBervice extends AbsMessageQueueBervice {
     @Override
     public boolean asyncSend(String destination, Message<?> message) {
         throw new UnsupportedOperationException();

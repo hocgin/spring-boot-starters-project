@@ -10,7 +10,7 @@ import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
 import in.hocg.boot.oss.autoconfigure.exception.UploadOssException;
-import in.hocg.boot.oss.autoconfigure.core.OssFileService;
+import in.hocg.boot.oss.autoconfigure.core.OssFileBervice;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,7 +26,7 @@ import java.io.InputStream;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class QiNiuOssFileServiceImpl implements OssFileService, InitializingBean {
+public class QiNiuOssFileBerviceImpl implements OssFileBervice, InitializingBean {
     private final String accessKey;
     private final String secretKey;
     private final String space;
