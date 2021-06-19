@@ -33,11 +33,11 @@ public interface TaskRepository {
      * @param executeNow
      */
     TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser,
-                        Object params, @NonNull Long delaySecond, boolean executeNow);
+                        Object params, @NonNull Long delaySecond);
 
 
     default TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser, Object params) {
-        return this.createTask(taskName, taskType, createUser, params, 0L, true);
+        return this.createTask(taskName, taskType, createUser, params, 0L);
     }
 
     /**

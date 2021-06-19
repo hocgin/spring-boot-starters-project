@@ -48,7 +48,7 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     @SneakyThrows(SQLException.class)
-    public TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser, Object params, @NonNull Long delaySecond, boolean executeNow) {
+    public TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser, Object params, @NonNull Long delaySecond) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime readyAt = now.plusSeconds(delaySecond);
 
