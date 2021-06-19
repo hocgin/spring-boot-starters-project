@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class TaskInfo {
     private Serializable id;
     private String taskSn;
+    private String type;
     private String params;
     private LocalDateTime readyAt;
 

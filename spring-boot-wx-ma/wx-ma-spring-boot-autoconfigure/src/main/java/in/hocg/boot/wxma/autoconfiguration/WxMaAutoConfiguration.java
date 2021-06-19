@@ -9,17 +9,13 @@ import in.hocg.boot.utils.LangUtils;
 import in.hocg.boot.wxma.autoconfiguration.properties.WxMaProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
-import javax.sql.DataSource;
 import java.util.Map;
 
 /**
@@ -29,8 +25,6 @@ import java.util.Map;
  * @author hocgin
  */
 @Configuration
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@ConditionalOnBean({DataSource.class})
 @ConditionalOnProperty(prefix = WxMaProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(WxMaProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
@@ -40,7 +34,7 @@ public class WxMaAutoConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingBean(WxMaService.class)
-    public WxMaService maService() {
+    public WxMaService wxMaService() {
         return new WxMaServiceImpl();
     }
 

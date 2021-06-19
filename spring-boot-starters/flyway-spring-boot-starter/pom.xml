@@ -18,6 +18,10 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>flyway-spring-boot-autoconfigure</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+    </dependency>
     <!-- Spring Boot dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

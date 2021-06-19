@@ -1,7 +1,7 @@
 package in.hocg.boot.message.autoconfigure;
 
-import in.hocg.boot.message.autoconfigure.service.local.LocalMessageService;
-import in.hocg.boot.message.autoconfigure.service.normal.NormalMessageService;
+import in.hocg.boot.message.autoconfigure.service.local.LocalMessageBervice;
+import in.hocg.boot.message.autoconfigure.service.normal.NormalMessageBervice;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 
 /**
@@ -12,11 +12,11 @@ import in.hocg.boot.web.autoconfiguration.SpringContext;
  */
 public class MessageFactory {
 
-    public static LocalMessageService local() {
-        return SpringContext.getBean(LocalMessageService.class);
+    public static LocalMessageBervice local() {
+        return SpringContext.getBean(LocalMessageBervice.class);
     }
 
-    public static NormalMessageService normal() {
-        return SpringContext.getBean(NormalMessageService.class);
+    public static NormalMessageBervice normal() {
+        return SpringContext.getBean(NormalMessageBervice.class);
     }
 }

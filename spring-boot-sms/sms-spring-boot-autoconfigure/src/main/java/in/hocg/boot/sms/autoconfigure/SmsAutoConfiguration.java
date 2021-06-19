@@ -1,7 +1,7 @@
 package in.hocg.boot.sms.autoconfigure;
 
-import in.hocg.boot.sms.autoconfigure.core.SmsService;
-import in.hocg.boot.sms.autoconfigure.impl.aliyun.AliSmsServiceImpl;
+import in.hocg.boot.sms.autoconfigure.core.SmsBervice;
+import in.hocg.boot.sms.autoconfigure.impl.aliyun.AliSmsBerviceImpl;
 import in.hocg.boot.sms.autoconfigure.properties.SmsProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +27,14 @@ public class SmsAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SmsService smsService() {
+    public SmsBervice smsBervice() {
         String accessKey = properties.getAccessKey();
         String secretKey = properties.getSecretKey();
         String regionId = properties.getRegionId();
         SmsProperties.SmsType type = properties.getType();
         switch (type) {
             case AliYun:
-                return new AliSmsServiceImpl(accessKey, secretKey, regionId);
+                return new AliSmsBerviceImpl(accessKey, secretKey, regionId);
             default:
                 throw new IllegalArgumentException("SMS 类型[" + type + "]不支持");
         }

@@ -1,6 +1,6 @@
 package in.hocg.mail.spring.boot.samples;
 
-import in.hocg.boot.mail.autoconfigure.core.MailService;
+import in.hocg.boot.mail.autoconfigure.core.MailBervice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 @RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class IndexController {
-    private final MailService service;
+    private final MailBervice service;
 
     @GetMapping("/send-mail")
     public String sendSms() {

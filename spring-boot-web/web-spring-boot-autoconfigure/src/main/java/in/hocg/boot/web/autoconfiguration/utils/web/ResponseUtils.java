@@ -4,11 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.CacheControl;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +19,12 @@ import java.net.URI;
  */
 @UtilityClass
 public class ResponseUtils {
+
+    public static ResponseEntity<Void> found(String url) {
+        return ResponseEntity.status(HttpStatus.FOUND)
+            .location(URI.create(url))
+            .build();
+    }
 
     public static ResponseEntity<Void> notFound() {
         return ResponseEntity.notFound().build();

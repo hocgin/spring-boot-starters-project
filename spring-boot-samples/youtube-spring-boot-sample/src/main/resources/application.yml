@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+boot:
+  youtube:
+    clients:
+      - application-name: simple-app
+        client-id: 854840501995-v67uhbkpipjdicve031ka4rdjqqojmf1.apps.googleusercontent.com
+        client-secret: gV04XZx4G0TFyOsR0YC3jaRW
+spring:
+  redis:
+    host: 39.100.87.79
+    port: 32079

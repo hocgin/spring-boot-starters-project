@@ -36,38 +36,41 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     @SneakyThrows(SQLException.class)
-    public List<TaskInfo> listByType(@NonNull Serializable taskType) {
-        return Db.use(dataSource).find(Entity.create(TableTask.TABLE_NAME).set(TableTask.FIELD_TYPE, taskType))
-            .stream().map(entity -> new TaskInfo()
-                .setId(entity.getLong(TableTask.FIELD_ID))
-                .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN))
-                .setReadyAt(DateUtil.toLocalDateTime(entity.getDate(TableTask.FIELD_READY_AT)))
-                .setParams(entity.getStr(TableTask.FIELD_PARAMS)))
-            .collect(Collectors.toList());
+    public List<TaskInfo> listByTypeAndReady(@NonNull Serializable taskType) {
+        return Db.use(dataSource).find(Entity.create(
+            TableTask.TABLE_NAME).set(TableTask.FIELD_TYPE, taskType).set(TableTask.FIELD_STATUS, TableTask.Status.Ready.getCode())
+        ).stream().map(this::asTaskInfo).collect(Collectors.toList());
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser, Object params, @NonNull Long delaySecond, boolean executeNow) {
+    public List<TaskInfo> listByReady() {
+        return Db.use(dataSource).find(Entity.create(
+            TableTask.TABLE_NAME).set(TableTask.FIELD_STATUS, TableTask.Status.Ready.getCode())
+        ).stream().map(this::asTaskInfo).collect(Collectors.toList());
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser, Object params, @NonNull Long delaySecond) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime readyAt = now.plusSeconds(delaySecond);
 
-        TaskInfo result = new TaskInfo();
-        result.setTaskSn(IdUtil.objectId());
-        result.setParams(LangUtils.callIfNotNull(params, JSONUtil::toJsonStr).orElse(null));
-        result.setReadyAt(readyAt);
+        String taskSn = IdUtil.objectId();
+        String paramsStr = LangUtils.callIfNotNull(params, JSONUtil::toJsonStr).orElse(null);
 
-        Long id = Db.use(dataSource).insertForGeneratedKey(
-            Entity.create(TableTask.TABLE_NAME)
-                .setIgnoreNull(TableTask.FIELD_PARAMS, result.getParams())
-                .set(TableTask.FIELD_TASK_SN, result.getTaskSn())
-                .set(TableTask.FIELD_TITLE, taskName)
-                .set(TableTask.FIELD_TYPE, taskType)
-                .set(TableTask.FIELD_CREATOR, createUser)
-                .set(TableTask.FIELD_CREATED_AT, now)
-                .set(TableTask.FIELD_READY_AT, readyAt)
-        );
-        return result.setId(id);
+        Entity entity = Entity.create(TableTask.TABLE_NAME)
+            .setIgnoreNull(TableTask.FIELD_PARAMS, paramsStr)
+            .set(TableTask.FIELD_TASK_SN, taskSn)
+            .set(TableTask.FIELD_TITLE, taskName)
+            .set(TableTask.FIELD_TYPE, taskType)
+            .set(TableTask.FIELD_CREATOR, createUser)
+            .set(TableTask.FIELD_CREATED_AT, now)
+            .set(TableTask.FIELD_READY_AT, readyAt);
+        Long id = Db.use(dataSource).insertForGeneratedKey(entity);
+        entity.set(TableTask.FIELD_ID, id);
+
+        return this.asTaskInfo(entity);
     }
 
     @Override
@@ -85,28 +88,32 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     @SneakyThrows(SQLException.class)
-    public void startTask(@NonNull Serializable taskSn) {
+    public boolean startTask(@NonNull Serializable taskSn) {
         LocalDateTime now = LocalDateTime.now();
-        Entity where = Entity.create(TableTask.TABLE_NAME).set(TableTask.FIELD_TASK_SN, taskSn);
+        Entity where = Entity.create(TableTask.TABLE_NAME)
+            .set(TableTask.FIELD_TASK_SN, taskSn)
+            .set(TableTask.FIELD_STATUS, TableTask.Status.Ready.getCode());
         Entity update = Entity.create(TableTask.TABLE_NAME)
             .set(TableTask.FIELD_START_AT, now)
             .set(TableTask.FIELD_STATUS, TableTask.Status.Executing.getCode());
-        Db.use(dataSource).update(update, where);
+        return Db.use(dataSource).update(update, where) > 0;
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public void doneTask(@NonNull Serializable taskSn, @NonNull TableTask.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data) {
+    public boolean doneTask(@NonNull Serializable taskSn, @NonNull TableTask.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data) {
         LocalDateTime now = LocalDateTime.now();
-        Entity where = Entity.create(TableTask.TABLE_NAME).set(TableTask.FIELD_TASK_SN, taskSn);
+        Entity where = Entity.create(TableTask.TABLE_NAME)
+            .set(TableTask.FIELD_TASK_SN, taskSn)
+            .set(TableTask.FIELD_STATUS, TableTask.Status.Executing.getCode());
         Entity update = Entity.create(TableTask.TABLE_NAME)
             .setIgnoreNull(TableTask.FIELD_DONE_MESSAGE, message)
             .setIgnoreNull(TableTask.FIELD_DONE_RESULT, LangUtils.callIfNotNull(data, JSONUtil::toJsonStr).orElse(null))
             .set(TableTask.FIELD_DONE_STATUS, doneStatus.getCode())
             .set(TableTask.FIELD_DONE_AT, now)
-            .set(TableTask.FIELD_DONE_TOTAL_TIME_MILLIS, totalTimeMillis)
+            .set(TableTask.FIELD_TOTAL_TIME_MILLIS, totalTimeMillis)
             .set(TableTask.FIELD_STATUS, TableTask.Status.Done.getCode());
-        Db.use(dataSource).update(update, where);
+        return Db.use(dataSource).update(update, where) > 0;
     }
 
     @Override
@@ -116,10 +123,14 @@ public class TaskRepositoryImpl implements TaskRepository {
         if (Objects.isNull(entity)) {
             return Optional.empty();
         }
-        return Optional.ofNullable(new TaskInfo()
-            .setId(entity.getLong(TableTask.FIELD_ID))
-            .setParams(entity.getStr(TableTask.FIELD_PARAMS))
+        return Optional.ofNullable(this.asTaskInfo(entity));
+    }
+
+    private TaskInfo asTaskInfo(Entity entity) {
+        return new TaskInfo().setId(entity.getLong(TableTask.FIELD_ID))
+            .setType(entity.getStr(TableTask.FIELD_TYPE))
+            .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN))
             .setReadyAt(DateUtil.toLocalDateTime(entity.getDate(TableTask.FIELD_READY_AT)))
-            .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN)));
+            .setParams(entity.getStr(TableTask.FIELD_PARAMS));
     }
 }

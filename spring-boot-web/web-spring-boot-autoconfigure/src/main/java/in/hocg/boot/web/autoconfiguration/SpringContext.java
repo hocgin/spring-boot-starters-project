@@ -1,5 +1,6 @@
 package in.hocg.boot.web.autoconfiguration;
 
+import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -58,6 +59,15 @@ public abstract class SpringContext
      */
     public static <T> T getBean(Class<T> requiredType) {
         return APPLICATION_CONTEXT.getBean(requiredType);
+    }
+
+    /**
+     * 系统配置
+     *
+     * @return
+     */
+    public static BootProperties getBootConfig() {
+        return getBean(BootProperties.class);
     }
 
 }

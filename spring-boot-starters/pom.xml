@@ -34,6 +34,7 @@
     <module>xxl-job-spring-boot-starter</module>
     <module>wx-ma-spring-boot-starter</module>
     <module>wx-mp-spring-boot-starter</module>
+    <module>wx-cp-spring-boot-starter</module>
     <module>test-spring-boot-starter</module>
     <module>schedulerx-spring-boot-starter</module>
     <module>monitor-spring-boot-starter</module>
@@ -42,6 +43,8 @@
     <module>webmagic-spring-boot-starter</module>
     <module>flyway-spring-boot-starter</module>
     <module>dynamic-datasource-spring-boot-starter</module>
+    <module>vars-spring-boot-starter</module>
+    <module>youtube-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

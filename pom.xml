@@ -16,7 +16,7 @@
   <version>${revision}</version>
 
   <properties>
-    <revision>1.0.5</revision>
+    <revision>1.0.6</revision>
 
     <java.version>1.8</java.version>
     <java.source.version>1.8</java.source.version>
@@ -54,6 +54,7 @@
     <module>spring-boot-utils</module>
     <module>spring-boot-wx-mp</module>
     <module>spring-boot-wx-ma</module>
+    <module>spring-boot-wx-cp</module>
     <module>spring-boot-schedulerx</module>
     <module>spring-boot-test</module>
     <module>spring-boot-monitor</module>
@@ -63,6 +64,8 @@
     <module>spring-boot-flyway</module>
     <module>spring-boot-task</module>
     <module>spring-boot-dynamic-datasource</module>
+    <module>spring-boot-vars</module>
+    <module>spring-boot-youtube</module>
     <module>spring-boot-tpl</module>
   </modules>
 

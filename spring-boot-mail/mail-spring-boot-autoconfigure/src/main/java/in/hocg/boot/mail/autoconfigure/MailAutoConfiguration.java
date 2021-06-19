@@ -1,7 +1,7 @@
 package in.hocg.boot.mail.autoconfigure;
 
-import in.hocg.boot.mail.autoconfigure.core.MailService;
-import in.hocg.boot.mail.autoconfigure.impl.MailServiceImpl;
+import in.hocg.boot.mail.autoconfigure.core.MailBervice;
+import in.hocg.boot.mail.autoconfigure.impl.MailBerviceImpl;
 import in.hocg.boot.mail.autoconfigure.properties.MailProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class MailAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MailService service() {
-        return new MailServiceImpl(properties);
+    public MailBervice mailBervice() {
+        return new MailBerviceImpl(properties);
     }
 }

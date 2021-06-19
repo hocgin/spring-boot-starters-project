@@ -1,8 +1,8 @@
 package in.hocg.boot.task.autoconfiguration;
 
 import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
-import in.hocg.boot.task.autoconfiguration.core.TaskService;
-import in.hocg.boot.task.autoconfiguration.core.TaskServiceImpl;
+import in.hocg.boot.task.autoconfiguration.core.TaskBervice;
+import in.hocg.boot.task.autoconfiguration.core.TaskBerviceImpl;
 import in.hocg.boot.task.autoconfiguration.jdbc.mysql.TaskRepositoryImpl;
 import in.hocg.boot.task.autoconfiguration.properties.TaskProperties;
 import lombok.RequiredArgsConstructor;
@@ -35,22 +35,24 @@ import java.util.concurrent.Executor;
 @EnableConfigurationProperties(TaskProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class TaskAutoConfiguration {
+    private final TaskProperties properties;
     public static final String EXECUTOR_NAME = "bootAsyncTaskExecutor";
 
     @Bean(TaskAutoConfiguration.EXECUTOR_NAME)
     public Executor bootAsyncTaskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5);
-        executor.setMaxPoolSize(5);
-        executor.setQueueCapacity(1000);
-        executor.setThreadNamePrefix("boot-async-task-service-");
-        return executor;
+        TaskProperties.Executor executor = properties.getExecutor();
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(executor.getCorePoolSize());
+        taskExecutor.setMaxPoolSize(executor.getMaxPoolSize());
+        taskExecutor.setQueueCapacity(executor.getQueueCapacity());
+        taskExecutor.setThreadNamePrefix(executor.getThreadNamePrefix());
+        return taskExecutor;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskService taskService(TaskRepository repository) {
-        return new TaskServiceImpl(repository);
+    public TaskBervice taskBervice(TaskRepository repository) {
+        return new TaskBerviceImpl(repository);
     }
 
     @Bean
