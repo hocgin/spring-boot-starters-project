@@ -35,16 +35,18 @@ import java.util.concurrent.Executor;
 @EnableConfigurationProperties(TaskProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class TaskAutoConfiguration {
+    private final TaskProperties properties;
     public static final String EXECUTOR_NAME = "bootAsyncTaskExecutor";
 
     @Bean(TaskAutoConfiguration.EXECUTOR_NAME)
     public Executor bootAsyncTaskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(5);
-        executor.setMaxPoolSize(5);
-        executor.setQueueCapacity(1000);
-        executor.setThreadNamePrefix("boot-async-task-service-");
-        return executor;
+        TaskProperties.Executor executor = properties.getExecutor();
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(executor.getCorePoolSize());
+        taskExecutor.setMaxPoolSize(executor.getMaxPoolSize());
+        taskExecutor.setQueueCapacity(executor.getQueueCapacity());
+        taskExecutor.setThreadNamePrefix(executor.getThreadNamePrefix());
+        return taskExecutor;
     }
 
     @Bean

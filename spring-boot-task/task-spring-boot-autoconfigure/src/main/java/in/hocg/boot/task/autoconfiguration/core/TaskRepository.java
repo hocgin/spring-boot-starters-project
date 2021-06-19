@@ -20,7 +20,14 @@ public interface TaskRepository {
      * @param taskType _
      * @return _
      */
-    List<TaskInfo> listByType(@NonNull Serializable taskType);
+    List<TaskInfo> listByTypeAndReady(@NonNull Serializable taskType);
+
+    /**
+     * 查询所有准备状态的任务
+     *
+     * @return
+     */
+    List<TaskInfo> listByReady();
 
     /**
      * 创建任务
@@ -54,7 +61,7 @@ public interface TaskRepository {
      *
      * @param taskSn
      */
-    void startTask(@NonNull Serializable taskSn);
+    boolean startTask(@NonNull Serializable taskSn);
 
     /**
      * 任务完成
@@ -66,7 +73,7 @@ public interface TaskRepository {
      * @param message
      * @param data
      */
-    void doneTask(@NonNull Serializable taskSn, @NonNull TableTask.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data);
+    boolean doneTask(@NonNull Serializable taskSn, @NonNull TableTask.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data);
 
     /**
      * 获取唯一任务

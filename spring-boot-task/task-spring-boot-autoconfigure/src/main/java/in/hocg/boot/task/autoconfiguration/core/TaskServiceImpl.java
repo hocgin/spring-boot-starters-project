@@ -47,7 +47,10 @@ public class TaskServiceImpl implements TaskService {
 
         Serializable taskId = taskInfo.getId();
         TaskLogger.setTaskId(taskId);
-        repository.startTask(taskSn);
+        if (!repository.startTask(taskSn)) {
+            log.info("任务已经执行或执行完成, 任务编号:[{}]", taskSn);
+            return TaskResult.fail("任务已经执行");
+        }
 
         boolean isOk = true;
         String errorMsg = "ok";
@@ -61,8 +64,9 @@ public class TaskServiceImpl implements TaskService {
             errorMsg = e.getMessage();
             log.info("执行任务发生错误: 任务执行异常, 任务编号:[{}], 异常信息:[{}]", taskSn, e);
         } finally {
-            repository.doneTask(taskSn, isOk ? TableTask.DoneStatus.Success : TableTask.DoneStatus.Fail,
-                stopWatch.stop().elapsed(TimeUnit.MILLISECONDS), errorMsg, result);
+            long totalTimeMillis = stopWatch.stop().elapsed(TimeUnit.MILLISECONDS);
+            TableTask.DoneStatus doneStatus = isOk ? TableTask.DoneStatus.Success : TableTask.DoneStatus.Fail;
+            repository.doneTask(taskSn, doneStatus, totalTimeMillis, errorMsg, result);
             TaskLogger.clear();
         }
         return TaskResult.fail();

@@ -24,7 +24,7 @@ public class ScheduledTask {
 
     @Scheduled(cron = "0/30 0/1 * * * ?  ")
     public void taskCenter() {
-        taskRepository.listByType(ScheduledTask.TASK_TYPE)
+        taskRepository.listByTypeAndReady(ScheduledTask.TASK_TYPE)
             .forEach(taskInfo -> taskService.runAsync(taskInfo.getTaskSn(), this::myTask));
     }
 

@@ -2,6 +2,7 @@ package in.hocg.boot.web.autoconfiguration;
 
 import in.hocg.boot.web.autoconfiguration.advice.ErrorPagesConfiguration;
 import in.hocg.boot.web.autoconfiguration.jackson.SerializerConfiguration;
+import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
 import in.hocg.boot.web.autoconfiguration.servlet.ServletConfiguration;
 import in.hocg.boot.web.autoconfiguration.webflux.WebFluxConfiguration;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -31,6 +33,7 @@ import javax.validation.ValidatorFactory;
     SerializerConfiguration.class,
     ErrorPagesConfiguration.class
 })
+@EnableConfigurationProperties(BootProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class WebAutoConfiguration {
 
