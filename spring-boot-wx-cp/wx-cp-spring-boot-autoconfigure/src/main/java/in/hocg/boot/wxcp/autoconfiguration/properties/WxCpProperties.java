@@ -23,6 +23,10 @@ public class WxCpProperties {
      */
     private String secret;
     /**
+     * 微信企业号应用ID
+     */
+    private String agentId;
+    /**
      * 企业微信 token
      */
     private String token;
