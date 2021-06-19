@@ -14,9 +14,16 @@ import java.io.Serializable;
 @Data
 @Accessors(chain = true)
 public class DataCredential implements Serializable {
+    /**
+     * 访问token
+     */
     private String accessToken;
-
+    /**
+     * 过期时间 ms
+     */
     private Long expirationTimeMilliseconds;
-
+    /**
+     * 刷新token
+     */
     private String refreshToken;
 }

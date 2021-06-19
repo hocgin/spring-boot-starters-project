@@ -18,13 +18,25 @@ import java.util.List;
 public class YoutubeProperties {
     public static final String PREFIX = "boot.youtube";
 
+    /**
+     * 客户端配置
+     */
     private List<ClientConfig> clients = Collections.emptyList();
 
     @Data
     @Accessors(chain = true)
     public static class ClientConfig {
+        /**
+         * 客户id
+         */
         private String clientId;
+        /**
+         * 客户密钥
+         */
         private String clientSecret;
+        /**
+         * 应用名称
+         */
         private String applicationName;
     }
 }
