@@ -63,6 +63,17 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- WX CP -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>wx-cp-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>wx-cp-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- youtube -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -524,6 +535,11 @@
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt</artifactId>
         <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.binarywang</groupId>
+        <artifactId>weixin-java-cp</artifactId>
+        <version>${weixin-java.version}</version>
       </dependency>
       <dependency>
         <groupId>com.github.binarywang</groupId>

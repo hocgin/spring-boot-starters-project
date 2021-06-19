@@ -28,8 +28,6 @@ import java.util.Map;
  * @author hocgin
  */
 @Configuration
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@ConditionalOnBean({DataSource.class})
 @ConditionalOnProperty(prefix = WxMpProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(WxMpProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))

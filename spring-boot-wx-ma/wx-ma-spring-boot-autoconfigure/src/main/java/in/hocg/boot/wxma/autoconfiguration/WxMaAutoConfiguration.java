@@ -29,8 +29,6 @@ import java.util.Map;
  * @author hocgin
  */
 @Configuration
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@ConditionalOnBean({DataSource.class})
 @ConditionalOnProperty(prefix = WxMaProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(WxMaProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))

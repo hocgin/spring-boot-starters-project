@@ -54,6 +54,7 @@
     <module>spring-boot-utils</module>
     <module>spring-boot-wx-mp</module>
     <module>spring-boot-wx-ma</module>
+    <module>spring-boot-wx-cp</module>
     <module>spring-boot-schedulerx</module>
     <module>spring-boot-test</module>
     <module>spring-boot-monitor</module>
