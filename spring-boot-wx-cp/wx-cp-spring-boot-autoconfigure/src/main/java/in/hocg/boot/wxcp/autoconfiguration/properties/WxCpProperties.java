@@ -25,7 +25,7 @@ public class WxCpProperties {
     /**
      * 微信企业号应用ID
      */
-    private String agentId;
+    private Integer agentId;
     /**
      * 企业微信 token
      */

@@ -32,6 +32,7 @@ public class WxCpAutoConfiguration implements InitializingBean {
         WxCpDefaultConfigImpl configStorage = new WxCpDefaultConfigImpl();
         configStorage.setCorpId(properties.getCorpId());
         configStorage.setCorpSecret(properties.getSecret());
+        configStorage.setAgentId(properties.getAgentId());
         configStorage.setToken(properties.getToken());
         configStorage.setAesKey(properties.getAesKey());
         cpService.setWxCpConfigStorage(configStorage);
