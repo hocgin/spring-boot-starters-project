@@ -222,6 +222,11 @@
                 <artifactId>lombok</artifactId>
                 <version>1.18.20</version>
               </path>
+              <path>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <version>2.2.6.RELEASE</version>
+              </path>
             </annotationProcessorPaths>
           </configuration>
         </plugin>
