@@ -40,4 +40,12 @@ public interface VarsConfigRepository {
      * @return
      */
     <T> Optional<T> getValue(String key, Class<T> clazz);
+
+    /**
+     * 获取值
+     *
+     * @param key
+     * @return
+     */
+    String getValue(String key);
 }

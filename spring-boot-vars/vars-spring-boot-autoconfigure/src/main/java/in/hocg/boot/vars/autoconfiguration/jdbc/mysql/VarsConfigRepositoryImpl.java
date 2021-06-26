@@ -53,14 +53,18 @@ public class VarsConfigRepositoryImpl implements VarsConfigRepository {
     }
 
     @Override
-    @SneakyThrows(SQLException.class)
     public <T> Optional<T> getValue(String key, Class<T> clazz) {
+        return Optional.ofNullable(this.asValue(this.getValue(key), clazz));
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public String getValue(String key) {
         Entity entity = Db.use(dataSource).get(
             Entity.create(TableVarsConfig.TABLE_NAME)
                 .setFieldNames(TableVarsConfig.FIELD_VAR_VALUE)
                 .set(TableVarsConfig.FIELD_VAR_KEY, key));
-        String value = entity.getStr(TableVarsConfig.FIELD_VAR_VALUE);
-        return Optional.ofNullable(this.asValue(clazz, value));
+        return entity.getStr(TableVarsConfig.FIELD_VAR_VALUE);
     }
 
     @SneakyThrows(SQLException.class)
@@ -85,7 +89,7 @@ public class VarsConfigRepositoryImpl implements VarsConfigRepository {
         return result;
     }
 
-    private <T> T asValue(Class<T> clazz, String value) {
+    private <T> T asValue(String value, Class<T> clazz) {
         T result;
         if (Objects.isNull(value)) {
             result = null;
