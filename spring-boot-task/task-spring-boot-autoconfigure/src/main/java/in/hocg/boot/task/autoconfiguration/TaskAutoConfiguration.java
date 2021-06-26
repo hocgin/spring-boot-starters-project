@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -49,14 +50,14 @@ public class TaskAutoConfiguration {
         return taskExecutor;
     }
 
-    @Bean
+    @Bean("taskRepository")
     @ConditionalOnMissingBean(TaskRepository.class)
     public TaskRepository taskRepository(DataSource dataSource) {
         return new TaskRepositoryImpl(dataSource);
     }
 
     @Bean
-    @ConditionalOnBean(TaskRepository.class)
+    @DependsOn("taskRepository")
     @ConditionalOnMissingBean(TaskBervice.class)
     public TaskBervice taskBervice(TaskRepository taskRepository) {
         return new TaskBerviceImpl(taskRepository);
