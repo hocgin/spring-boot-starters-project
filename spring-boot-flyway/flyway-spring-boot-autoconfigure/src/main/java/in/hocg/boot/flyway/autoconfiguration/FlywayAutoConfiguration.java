@@ -28,7 +28,7 @@ public class FlywayAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(value = FlywayProperties.PREFIX + ".repair-on-migrate", havingValue = "true")
+    @ConditionalOnProperty(prefix = FlywayProperties.PREFIX, name = "repair-on-migrate", havingValue = "true")
     public FlywayMigrationStrategy cleanMigrateStrategy() {
         return flyway -> {
             flyway.repair();

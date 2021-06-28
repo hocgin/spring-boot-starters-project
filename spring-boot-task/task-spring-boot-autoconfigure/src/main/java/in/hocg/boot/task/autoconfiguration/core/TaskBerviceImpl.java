@@ -5,6 +5,8 @@ import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.jodah.typetools.TypeResolver;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,7 +24,9 @@ import java.util.function.Function;
 @Slf4j
 @RequiredArgsConstructor
 public class TaskBerviceImpl implements TaskBervice {
-    private final TaskRepository repository;
+    @Lazy
+    @Autowired(required = false)
+    private TaskRepository repository;
 
     @Override
     public <T, R> TaskResult<R> runAsync(String taskSn, Function<T, R> runnable) {

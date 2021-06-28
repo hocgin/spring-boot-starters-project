@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author hocgin
  */
-public class MemoryNamedCacheService implements NamedCacheService {
+public class MemoryNamedCacheServiceImpl implements NamedCacheService {
     private final Cache<String, Object> cachePool = CacheBuilder.newBuilder()
         .maximumSize(10000L)
         .expireAfterWrite(10, TimeUnit.MINUTES)

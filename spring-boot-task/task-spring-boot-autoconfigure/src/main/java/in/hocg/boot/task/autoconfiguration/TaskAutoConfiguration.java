@@ -1,8 +1,8 @@
 package in.hocg.boot.task.autoconfiguration;
 
-import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
 import in.hocg.boot.task.autoconfiguration.core.TaskBervice;
 import in.hocg.boot.task.autoconfiguration.core.TaskBerviceImpl;
+import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
 import in.hocg.boot.task.autoconfiguration.jdbc.mysql.TaskRepositoryImpl;
 import in.hocg.boot.task.autoconfiguration.properties.TaskProperties;
 import lombok.RequiredArgsConstructor;
@@ -51,13 +51,13 @@ public class TaskAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskBervice taskBervice(TaskRepository repository) {
-        return new TaskBerviceImpl(repository);
+    public TaskRepository taskRepository(DataSource dataSource) {
+        return new TaskRepositoryImpl(dataSource);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskRepository taskRepository(DataSource dataSource) {
-        return new TaskRepositoryImpl(dataSource);
+    public TaskBervice taskBervice() {
+        return new TaskBerviceImpl();
     }
 }

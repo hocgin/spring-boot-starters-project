@@ -1,7 +1,7 @@
 package in.hocg.boot.vars.autoconfiguration;
 
-import in.hocg.boot.vars.autoconfiguration.core.VarsRepository;
-import in.hocg.boot.vars.autoconfiguration.jdbc.mysql.VarsRepositoryImpl;
+import in.hocg.boot.vars.autoconfiguration.core.VarsConfigRepository;
+import in.hocg.boot.vars.autoconfiguration.jdbc.mysql.VarsConfigRepositoryImpl;
 import in.hocg.boot.vars.autoconfiguration.properties.VarsProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -32,7 +32,7 @@ public class VarsAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public VarsRepository taskRepository(DataSource dataSource) {
-        return new VarsRepositoryImpl(dataSource);
+    public VarsConfigRepository taskRepository(DataSource dataSource) {
+        return new VarsConfigRepositoryImpl(dataSource);
     }
 }

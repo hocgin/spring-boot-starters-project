@@ -19,8 +19,6 @@ import javax.sql.DataSource;
  * @author hocgin
  */
 @Configuration
-@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-@ConditionalOnBean({DataSource.class})
 @ConditionalOnProperty(prefix = TestProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(TestProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
