@@ -3,6 +3,7 @@ package in.hocg.boot.cache.autoconfiguration.properties;
 import in.hocg.boot.utils.StringPoolUtils;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author hocgin
  */
 @Data
+@RefreshScope
 @ConfigurationProperties(CacheProperties.PREFIX)
 public class CacheProperties {
     public static final String COLON = StringPoolUtils.COLON;

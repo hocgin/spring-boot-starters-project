@@ -11,7 +11,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
 
 /**
  * Created by hocgin on 2020/8/15
@@ -28,9 +27,8 @@ public class FlywayAutoConfiguration {
     private FlywayProperties properties;
 
     @Bean
-    @Primary
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(value = FlywayProperties.PREFIX + ".repair-on-migrate", havingValue = "true")
+    @ConditionalOnProperty(prefix = FlywayProperties.PREFIX, name = "repair-on-migrate", havingValue = "true")
     public FlywayMigrationStrategy cleanMigrateStrategy() {
         return flyway -> {
             flyway.repair();
