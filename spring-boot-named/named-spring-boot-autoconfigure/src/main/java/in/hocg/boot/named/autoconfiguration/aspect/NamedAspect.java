@@ -48,9 +48,9 @@ public class NamedAspect implements InitializingBean {
     private final List<NamedRowsConvert> converts;
     private NamedCacheService cacheService;
     /**
-     * Named.field, ServiceClass
+     * ServiceClass, ServiceClass Bean
      */
-    private final Map<String, Object> namedServiceClassMaps = Maps.newConcurrentMap();
+    private final Map<Class<?>, Object> namedServiceClassMaps = Maps.newConcurrentMap();
 
     @Pointcut("@within(org.springframework.stereotype.Service) && execution((*) *(..))")
     public void pointcut() {
@@ -58,22 +58,40 @@ public class NamedAspect implements InitializingBean {
 
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
-        return handleResult(point.proceed());
+        try {
+            log.debug("=> @Named 调用开始");
+            NamedContext.push();
+            return handleResult(point.proceed());
+        } finally {
+            NamedContext.pop();
+            log.debug("=> @Named 调用结束");
+        }
     }
 
     private Object handleResult(Object result) {
-        Stopwatch started = Stopwatch.createStarted();
+        Stopwatch started = null;
+        if (log.isDebugEnabled()) {
+            started = Stopwatch.createStarted();
+        }
         List<NamedRow> namedRows = getNamedRows(result);
-        log.debug("查找需要匹配的 @Named 数量: {} " + started.toString(), namedRows.size());
+        if (log.isDebugEnabled()) {
+            log.debug("1. 查找需要匹配的 @Named 数量: [{}], 时间: [{}]", namedRows.size(), started);
+        }
 
         if (CollectionUtils.isEmpty(namedRows)) {
             return result;
         }
+
         Map<String, List<NamedRow>> namedGroup = namedRows.parallelStream().collect(Collectors.groupingBy(this::getGroupKey));
-        log.debug("@Named 分组数量: {} " + started.toString(), namedGroup.size());
+
+        if (log.isDebugEnabled()) {
+            log.debug("2. @Named 分组数量: [{}], 时间: [{}]", namedGroup.size(), started);
+        }
 
         namedGroup.values().parallelStream().forEach(this::injectValue);
-        log.debug("@Named 处理完成: {} " + started.stop().toString(), namedGroup.size());
+        if (log.isDebugEnabled()) {
+            log.debug("3. @Named 处理完成: [{}], 时间: [{}]", namedGroup.size(), LangUtils.callIfNotNull(started, Stopwatch::stop));
+        }
         return result;
     }
 
@@ -85,6 +103,10 @@ public class NamedAspect implements InitializingBean {
     }
 
     protected List<NamedRow> getNamedRows(Object result) {
+        if (!NamedContext.add(NamedContext.hash(result))) {
+            return Collections.emptyList();
+        }
+        // =====================================================================
         if (Objects.isNull(result) || !this.isSupportClass(result.getClass())) {
             return Collections.emptyList();
         }
@@ -100,7 +122,7 @@ public class NamedAspect implements InitializingBean {
             .filter(namedRowsConvert -> namedRowsConvert.isMatch(result.getClass())).findFirst();
         if (convertOpt.isPresent()) {
             NamedRowsConvert convert = convertOpt.get();
-            Object tResult = convertOpt.get().convert(result);
+            Object tResult = convert.convert(result);
             if (Objects.isNull(tResult) || tResult.getClass().equals(result.getClass())) {
                 log.warn("在 @Named 扩展了非法转换器[{}], 请及时更正", convert.getClass());
                 return Collections.emptyList();
@@ -140,8 +162,8 @@ public class NamedAspect implements InitializingBean {
         if (Objects.isNull(idField)) {
             return Optional.empty();
         }
-        Object serviceBean = LangUtils.computeIfAbsent(namedServiceClassMaps, StrUtil.format("{}.{}", target.getClass(), targetField.getName()),
-            s -> this.getServiceBeanOrDefault(targetField.getAnnotation(UseNamedService.class), NamedService.class));
+        Class<?> nameServiceClass = LangUtils.callIfNotNull(targetField.getAnnotation(UseNamedService.class), UseNamedService::value).orElse(null);
+        Object serviceBean = LangUtils.computeIfAbsent(namedServiceClassMaps, LangUtils.getOrDefault(nameServiceClass, NamedService.class), context::getBean);
         return Optional.of(new NamedRow()
             .setUseCache(named.useCache())
             .setTarget(target)
@@ -172,7 +194,7 @@ public class NamedAspect implements InitializingBean {
      * @param namedRows
      */
     private void injectValueWithCache(List<NamedRow> namedRows) {
-        Map<String, List<NamedRow>> namedRowMaps = namedRows.parallelStream()
+        Map<String, List<NamedRow>> namedRowMaps = namedRows.stream()
             .filter(NamedRow::getUseCache)
             .filter(namedRow -> Objects.isNull(namedRow.getTargetValue()) && Objects.nonNull(namedRow.getIdValue()))
             .collect(Collectors.groupingBy(this::getCacheKey));
@@ -181,18 +203,14 @@ public class NamedAspect implements InitializingBean {
         }
 
         // 读取缓存内容
-        Map<String, Object> keyValues = cacheService.batchGet(namedRowMaps.keySet());
-        if (CollUtil.isEmpty(keyValues)) {
+        Map<String, Object> values = cacheService.batchGet(namedRowMaps.keySet());
+        if (CollUtil.isEmpty(values)) {
             return;
         }
 
-        keyValues.entrySet().parallelStream().forEach(entry -> {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            namedRowMaps.getOrDefault(key, Collections.emptyList()).parallelStream().forEach(row -> {
-                setValue(row, value);
-            });
-        });
+        values.entrySet().parallelStream().filter(entry -> Objects.nonNull(entry.getValue())).forEach(entry ->
+            namedRowMaps.getOrDefault(entry.getKey(), Collections.emptyList()).forEach(row -> setValue(row, entry.getValue()))
+        );
     }
 
     /**
@@ -201,7 +219,7 @@ public class NamedAspect implements InitializingBean {
      * @param namedRows
      */
     private void injectValueWithMethod(List<NamedRow> namedRows) {
-        Map<Object, List<NamedRow>> idNamedRowGroup = namedRows.parallelStream()
+        Map<Object, List<NamedRow>> idNamedRowGroup = namedRows.stream()
             .filter(namedRow -> Objects.isNull(namedRow.getTargetValue()) && Objects.nonNull(namedRow.getIdValue()))
             .collect(Collectors.groupingBy(row -> String.valueOf(row.getIdValue())));
         if (CollUtil.isEmpty(idNamedRowGroup)) {
@@ -214,7 +232,7 @@ public class NamedAspect implements InitializingBean {
         Object serviceObject = namedRow.getServiceObject();
         String[] args = namedRow.getArgs();
         Object[] ids = idNamedRowGroup.keySet().toArray();
-        Map<String, Object> values = callNamedHandleMethod(serviceObject, namedType, ids, args);
+        Map<String, Object> values = this.callNamedHandleMethod(serviceObject, namedType, ids, args);
         log.debug("===> {}-{}-{}::{}", namedType, ids, args, values);
         if (CollUtil.isEmpty(values)) {
             return;
@@ -222,13 +240,9 @@ public class NamedAspect implements InitializingBean {
 
         // 进行翻译工作
         Map<String, Object> caches = Maps.newConcurrentMap();
-        values.entrySet().parallelStream().filter(entry -> Objects.nonNull(entry.getValue())).forEach(entry -> {
-            Object value = entry.getValue();
-            idNamedRowGroup.getOrDefault(entry.getKey(), Collections.emptyList()).parallelStream().forEach(row -> {
-                setValue(row, value);
-                caches.put(getCacheKey(row), value);
-            });
-        });
+        values.entrySet().parallelStream().filter(entry -> Objects.nonNull(entry.getValue())).forEach(entry ->
+            idNamedRowGroup.getOrDefault(entry.getKey(), Collections.emptyList()).forEach(row -> caches.put(getCacheKey(row), setValue(row, entry.getValue())))
+        );
 
         if (CollUtil.isNotEmpty(caches)) {
             // 批量更新到缓存中..
@@ -236,19 +250,17 @@ public class NamedAspect implements InitializingBean {
         }
     }
 
-    private void setValue(NamedRow namedRow, Object value) {
+    private Object setValue(NamedRow namedRow, Object value) {
         if (Objects.isNull(value)) {
-            return;
+            return null;
         }
         namedRow.setTargetValue(value);
         NamedUtils.setFieldValue(namedRow.getTarget(), namedRow.getTargetField(), value);
+        return value;
     }
 
     private String getGroupKey(NamedRow namedRow) {
-        String namedType = namedRow.getNamedType();
-        String[] args = namedRow.getArgs();
-        Class<?> serviceClass = namedRow.getServiceObject().getClass();
-        return StrUtil.format("{}@{}@{}", serviceClass.getName(), namedType, Arrays.toString(args));
+        return StrUtil.format("{}@{}", namedRow.getNamedType(), Arrays.toString(namedRow.getArgs()));
     }
 
     private String getCacheKey(NamedRow namedRow) {
