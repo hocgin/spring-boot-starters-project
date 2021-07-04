@@ -1,0 +1,18 @@
+server:
+  port: 20002
+
+boot:
+  sso:
+    client:
+      ignore-urls:
+        - '/ignore'
+debug: true
+security:
+  oauth2:
+    hostname: http://sso.hocgin.local:20000
+    resource:
+      token-info-uri: ${security.oauth2.hostname}/oauth/check_token
+    client:
+      client-id: client_example
+      client-secret: hocgin
+      scope: user_info

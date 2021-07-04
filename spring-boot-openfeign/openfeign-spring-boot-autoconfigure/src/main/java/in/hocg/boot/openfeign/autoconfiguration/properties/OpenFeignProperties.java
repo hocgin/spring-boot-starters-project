@@ -15,7 +15,7 @@ public class OpenFeignProperties {
     public static final String PREFIX = "boot.openfeign";
 
     /**
-     * X-USERAGENT 标记。默认: feign
+     * X-Useragent 标记。默认: feign
      */
     private String userAgent = "feign";
 }
