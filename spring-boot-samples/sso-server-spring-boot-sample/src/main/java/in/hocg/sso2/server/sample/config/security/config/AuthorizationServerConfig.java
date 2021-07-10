@@ -1,10 +1,8 @@
-package in.hocg.sso.server2.sample.config.security;
+package in.hocg.sso2.server.sample.config.security.config;
 
 
-import com.google.common.collect.Lists;
-import in.hocg.sso.server2.sample.config.security.autoconfiguration.SsoProperties;
+import in.hocg.sso2.server.sample.config.security.autoconfiguration.SsoProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,9 +14,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
 /**
  * Created by hocgin on 2020/1/6.
@@ -34,7 +29,6 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final SsoProperties properties;
-    private final BootTokenEnhancer tokenEnhancer;
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -61,22 +55,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Lists.newArrayList(tokenEnhancer));
-        endpoints
-            // 密码模式支持
-            .authenticationManager(authenticationManager)
-            // 刷新令牌支持
-            .userDetailsService(userDetailsService)
-            // Token 存储策略
-            .tokenStore(tokenStore())
-            .tokenEnhancer(tokenEnhancerChain)
-        ;
+        endpoints.authenticationManager(authenticationManager)
+            .userDetailsService(userDetailsService);
     }
 
-    @Bean
-    public TokenStore tokenStore() {
-        // new RedisTokenStore()
-        return new InMemoryTokenStore();
-    }
+
+
 }

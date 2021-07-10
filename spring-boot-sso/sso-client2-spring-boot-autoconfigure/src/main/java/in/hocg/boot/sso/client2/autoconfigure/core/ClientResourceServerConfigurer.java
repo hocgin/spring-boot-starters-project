@@ -25,14 +25,30 @@ public class ClientResourceServerConfigurer extends ResourceServerConfigurerAdap
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
             .anyRequest().authenticated()
-            .and().csrf().disable();
+            ;
+
+        http.cors().disable();
+        http.csrf().disable();
+        http.httpBasic().disable();
     }
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        remoteTokenServices.setRestTemplate(restTemplate);
-        resources.tokenServices(remoteTokenServices)
-            .authenticationEntryPoint(authenticationEntryPoint);
+//        remoteTokenServices.setRestTemplate(restTemplate);
+//        resources.tokenServices(remoteTokenServices)
+//            .authenticationEntryPoint(authenticationEntryPoint)
+//        ;
     }
+
+//    @Bean
+//    public RequestInterceptor oauth2FeignRequestInterceptor() {
+//        return new OAuth2FeignRequestInterceptor(new DefaultOAuth2ClientContext(), clientCredentialsResourceDetails());
+//    }
+//
+//    @Bean
+//    public OAuth2RestTemplate clientCredentialsRestTemplate() {
+//        return new OAuth2RestTemplate(clientCredentialsResourceDetails());
+//    }
+
 
 }

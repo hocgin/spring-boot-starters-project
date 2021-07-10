@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.sso.client.autoconfigure.SsoClientAutoConfiguration
+in.hocg.boot.sso.client2.autoconfigure.SsoClientAutoConfiguration
