@@ -10,9 +10,11 @@ import in.hocg.boot.named.annotation.InjectNamed;
 import in.hocg.boot.named.annotation.Named;
 import in.hocg.boot.named.annotation.NamedService;
 import in.hocg.boot.named.annotation.UseNamedService;
+import in.hocg.boot.named.autoconfiguration.core.CachePool;
 import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import in.hocg.boot.named.autoconfiguration.core.NamedRow;
 import in.hocg.boot.named.autoconfiguration.core.convert.NamedRowsConvert;
+import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
 import in.hocg.boot.named.autoconfiguration.utils.NamedUtils;
 import in.hocg.boot.named.ifc.NamedArgs;
 import in.hocg.boot.utils.LangUtils;
@@ -46,11 +48,8 @@ import java.util.stream.Collectors;
 public class NamedAspect implements InitializingBean {
     private final ApplicationContext context;
     private final List<NamedRowsConvert> converts;
+    private final NamedProperties properties;
     private NamedCacheService cacheService;
-    /**
-     * ServiceClass, ServiceClass Bean
-     */
-    private final Map<Class<?>, Object> namedServiceClassMaps = Maps.newConcurrentMap();
 
     @Pointcut("@within(org.springframework.stereotype.Service) && execution((*) *(..))")
     public void pointcut() {
@@ -58,13 +57,23 @@ public class NamedAspect implements InitializingBean {
 
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
+        Stopwatch started = null;
+        if (log.isDebugEnabled()) {
+            started = Stopwatch.createStarted();
+            log.debug("=> @Named 调用开始, 时间: [{}]", started);
+        }
         try {
-            log.debug("=> @Named 调用开始");
             NamedContext.push();
-            return handleResult(point.proceed());
+            Object proceed = point.proceed();
+            if (log.isDebugEnabled()) {
+                log.debug("=> @Named Service 层处理完成, 时间: [{}]", started);
+            }
+            return handleResult(proceed);
         } finally {
             NamedContext.pop();
-            log.debug("=> @Named 调用结束");
+            if (log.isDebugEnabled()) {
+                log.debug("=> @Named 调用结束, 时间: [{}]", LangUtils.callIfNotNull(started, Stopwatch::stop).orElse(null));
+            }
         }
     }
 
@@ -90,7 +99,7 @@ public class NamedAspect implements InitializingBean {
 
         namedGroup.values().parallelStream().forEach(this::injectValue);
         if (log.isDebugEnabled()) {
-            log.debug("3. @Named 处理完成: [{}], 时间: [{}]", namedGroup.size(), LangUtils.callIfNotNull(started, Stopwatch::stop));
+            log.debug("3. @Named 处理完成: [{}], 时间: [{}]", namedGroup.size(), LangUtils.callIfNotNull(started, Stopwatch::stop).orElse(null));
         }
         return result;
     }
@@ -162,8 +171,13 @@ public class NamedAspect implements InitializingBean {
         if (Objects.isNull(idField)) {
             return Optional.empty();
         }
-        Class<?> nameServiceClass = LangUtils.callIfNotNull(targetField.getAnnotation(UseNamedService.class), UseNamedService::value).orElse(null);
-        Object serviceBean = LangUtils.computeIfAbsent(namedServiceClassMaps, LangUtils.getOrDefault(nameServiceClass, NamedService.class), context::getBean);
+
+        Class<?> nameServiceClass = NamedService.class;
+        Optional<Class<?>> namedServiceClass = LangUtils.callIfNotNull(targetField.getAnnotation(UseNamedService.class), UseNamedService::value);
+        if (namedServiceClass.isPresent()) {
+            nameServiceClass = namedServiceClass.get();
+        }
+        Object serviceBean = this.getNamedServiceClassMaps().get(nameServiceClass);
         return Optional.of(new NamedRow()
             .setUseCache(named.useCache())
             .setTarget(target)
@@ -264,7 +278,8 @@ public class NamedAspect implements InitializingBean {
     }
 
     private String getCacheKey(NamedRow namedRow) {
-        return cacheService.getCacheKey(namedRow);
+        String prefix = StrUtil.nullToEmpty(properties.getCache().getPrefix());
+        return StrUtil.format("{}:{}", prefix, cacheService.getCacheKey(namedRow));
     }
 
     private Map<String, Object> callNamedHandleMethod(Object namedService, String namedType, Object[] ids, String[] args) {
@@ -279,7 +294,7 @@ public class NamedAspect implements InitializingBean {
             if (Objects.isNull(invokeResult)) {
                 return Collections.emptyMap();
             } else if (invokeResult instanceof Map) {
-                return (Map<String, Object>) invokeResult;
+                return (Map) invokeResult;
             } else {
                 return Collections.emptyMap();
             }
@@ -289,24 +304,13 @@ public class NamedAspect implements InitializingBean {
         }
     }
 
-
-    /**
-     * 获取 Service Class 默认为 NamedService.class 的实现类
-     *
-     * @param useNamedService _
-     * @param defServiceClass _
-     * @return _
-     */
-    private Object getServiceBeanOrDefault(UseNamedService useNamedService, Class<?> defServiceClass) {
-        if (Objects.nonNull(useNamedService)) {
-            return context.getBean(useNamedService.value());
-        }
-        return context.getBean(defServiceClass);
+    public Map<Class<?>, Object> getNamedServiceClassMaps() {
+        return CachePool.NAMED_SERVICE_CLASS_MAPS;
     }
-
 
     @Override
     public void afterPropertiesSet() throws Exception {
         cacheService = context.getBean(NamedCacheService.class);
+        CachePool.load(context);
     }
 }

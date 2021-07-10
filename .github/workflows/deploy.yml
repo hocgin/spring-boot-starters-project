@@ -1,4 +1,4 @@
-name: Publish Package
+name: Deploy
 
 on:
   workflow_dispatch:
@@ -41,28 +41,4 @@ jobs:
           MAVEN_USERNAME: hocgin
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-
-      # 企业微信通知
-      - id: wx_prep
-        run: |
-          echo ::set-output name=wx_created::$(TZ=Asia/Shanghai date -d @`date +%s` "+%Y-%m-%d %H:%M:%S")
-          GITHUB_REF=${{github.base_ref}}
-          echo ::set-output name=wx_base_ref::$(echo ${GITHUB_REF#refs/heads/})
-          GITHUB_REF=${{github.event.ref}}
-          echo ::set-output name=wx_target_ref::$(echo ${GITHUB_REF#refs/heads/})
-      - name: WeChat Work Notification
-        uses: chf007/action-wechat-work@master
-        env:
-          WECHAT_WORK_BOT_WEBHOOK: ${{secrets.WECHAT_WORK_BOT_WEBHOOK}}
-        with:
-          msgtype: markdown
-          content: "🎉**【[${{ github.repository }}](https://github.com/${{ github.repository }})】** \n
-          \n
-          🏃 [@${{ github.actor }}](https://github.com/${{ github.actor }})\n
-          🕐 <font color=\"comment\">${{ steps.wx_prep.outputs.wx_created }}</font> \n
-          🔧 <font color=\"warning\">${{ steps.wx_prep.outputs.wx_base_ref || '∅' }} -> ${{ steps.wx_prep.outputs.wx_target_ref }}</font> \n
-          📝 <font color=\"comment\"> ${{ github.event.head_commit.message }}</font> \n
-          \n
-          [查看详情](https://www.hocgin.top)
-          "
 

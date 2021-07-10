@@ -7,13 +7,19 @@ import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import in.hocg.boot.named.autoconfiguration.core.RedisNamedCacheServiceImpl;
 import in.hocg.boot.named.autoconfiguration.core.convert.IPageNamedRowsConvert;
 import in.hocg.boot.named.autoconfiguration.core.convert.NamedRowsConvert;
+import in.hocg.boot.named.autoconfiguration.core.convert.OptionalNamedRowsConvert;
+import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -29,12 +35,16 @@ import java.util.List;
  */
 @Configuration
 @EnableAsync
+@ConditionalOnProperty(prefix = NamedProperties.PREFIX, name = "enabled", matchIfMissing = true)
+@EnableConfigurationProperties(NamedProperties.class)
 @ConditionalOnClass({Aspect.class})
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class NamedAutoConfiguration {
+    private final NamedProperties properties;
 
     @Bean
     public NamedAspect namedAspect(ApplicationContext context, List<NamedRowsConvert> converts) {
-        return new NamedAspect(context, converts);
+        return new NamedAspect(context, converts, properties);
     }
 
     @Bean
@@ -47,12 +57,13 @@ public class NamedAutoConfiguration {
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnClass(RedisTemplate.class)
     public static class RedisNamedConfiguration {
+
         @Bean
         @Order(Ordered.HIGHEST_PRECEDENCE)
         @ConditionalOnMissingBean
-        @ConditionalOnBean(RedisTemplate.class)
-        public NamedCacheService redisNamedCacheService(RedisTemplate redisTemplate) {
-            return new RedisNamedCacheServiceImpl(redisTemplate);
+        @ConditionalOnBean({RedisTemplate.class, NamedProperties.class})
+        public NamedCacheService redisNamedCacheService(RedisTemplate redisTemplate, NamedProperties properties) {
+            return new RedisNamedCacheServiceImpl(redisTemplate, properties);
         }
     }
 
@@ -67,4 +78,9 @@ public class NamedAutoConfiguration {
         }
     }
 
+    @Bean
+    @ConditionalOnMissingBean(OptionalNamedRowsConvert.class)
+    public OptionalNamedRowsConvert optionalNamedRowsConvert() {
+        return new OptionalNamedRowsConvert();
+    }
 }
