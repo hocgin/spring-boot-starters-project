@@ -3,6 +3,9 @@ package in.hocg.boot.named.autoconfiguration.core;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Maps;
+import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,8 +19,11 @@ import java.util.concurrent.TimeUnit;
  *
  * @author hocgin
  */
-public class MemoryNamedCacheServiceImpl implements NamedCacheService {
-    private final Cache<String, Object> cachePool = CacheBuilder.newBuilder()
+@RequiredArgsConstructor
+public class MemoryNamedCacheServiceImpl implements NamedCacheService, InitializingBean {
+    private final NamedProperties properties;
+    private Cache<String, Object> cachePool = CacheBuilder.newBuilder()
+        .softValues()
         .maximumSize(10000L)
         .expireAfterWrite(10, TimeUnit.MINUTES)
         .build();
@@ -37,5 +43,15 @@ public class MemoryNamedCacheServiceImpl implements NamedCacheService {
     @Override
     public void batchPut(Map<String, Object> caches) {
         caches.entrySet().parallelStream().forEach(entry -> cachePool.put(entry.getKey(), entry.getValue()));
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        NamedProperties.CacheConfig cacheConfig = properties.getCache();
+        cachePool = CacheBuilder.newBuilder()
+            .softValues()
+            .maximumSize(10000L)
+            .expireAfterWrite(cacheConfig.getExpired())
+            .build();
     }
 }

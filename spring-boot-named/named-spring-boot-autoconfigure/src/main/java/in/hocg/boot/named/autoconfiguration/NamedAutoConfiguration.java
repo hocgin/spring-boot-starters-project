@@ -51,7 +51,7 @@ public class NamedAutoConfiguration {
     @Order
     @ConditionalOnMissingBean
     public NamedCacheService memoryNamedCacheService() {
-        return new MemoryNamedCacheServiceImpl();
+        return new MemoryNamedCacheServiceImpl(properties);
     }
 
     @Configuration(proxyBeanMethods = false)
