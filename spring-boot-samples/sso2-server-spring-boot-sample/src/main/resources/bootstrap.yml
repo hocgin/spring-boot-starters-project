@@ -8,6 +8,8 @@ sso:
         redirect-uris:
           - http://example.hocgin.local:20001/login
           - http://example2.hocgin.local:20002/login
+          - http://example.hocgin.local:20001/login/oauth2/code/custom
+          - http://example2.hocgin.local:20002/login/oauth2/code/custom
 spring:
   security:
     oauth2:

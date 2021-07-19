@@ -21,16 +21,16 @@ public class WarmUpLazyBeanRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         ApplicationContext context = SpringContext.getApplicationContext();
-        log.debug("预热 Bean 开始执行 [{}]", WarmUpLazyBeanRunner.class);
+        log.debug("Warm Up Bean Task Start [{}]", WarmUpLazyBeanRunner.class);
         for (String beanDefinitionName : context.getBeanDefinitionNames()) {
             try {
                 context.getBean(beanDefinitionName);
-            } catch (BeansException e) {
-                log.warn("预热 Bean=[{}] 发生错误: {}", beanDefinitionName, e);
+            } catch (Exception e) {
+                log.warn("Warm Up Bean=[{}] Error: {}", beanDefinitionName, e);
             } finally {
-                log.debug("预热 Bean=[{}]", beanDefinitionName);
+                log.debug("Warm Up Bean=[{}]", beanDefinitionName);
             }
         }
-        log.debug("预热 Bean 结束执行 [{}]", WarmUpLazyBeanRunner.class);
+        log.debug("Warm Up Bean Task End [{}]", WarmUpLazyBeanRunner.class);
     }
 }

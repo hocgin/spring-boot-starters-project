@@ -2,6 +2,7 @@ package in.hocg.boot.sso2.client.autoconfigure;
 
 import in.hocg.boot.sso2.client.autoconfigure.properties.SsoClientProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableOAuth2Sso
 @EnableConfigurationProperties(SsoClientProperties.class)
+@ConditionalOnProperty(prefix = SsoClientProperties.PREFIX, name = "enabled", matchIfMissing = true)
 public class SsoClientAutoConfiguration {
 
 

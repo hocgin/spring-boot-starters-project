@@ -1,0 +1,31 @@
+logging:
+  level:
+    root: debug
+boot:
+  sso:
+    client:
+      ignore-urls:
+        - '/ignore'
+debug: true
+
+spring:
+  autoconfigure:
+    # TODO: remove when fixed https://github.com/spring-projects/spring-security/issues/6314
+    exclude: org.springframework.boot.actuate.autoconfigure.security.reactive.ReactiveManagementWebSecurityAutoConfiguration
+  security:
+    oauth2:
+      hostname: http://sso.hocgin.local:20000
+      client:
+        registration:
+          custom:
+            client-id: client_example
+            client-secret: hocgin
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+        provider:
+          custom:
+            authorization-uri: ${spring.security.oauth2.hostname}/oauth/authorize
+            token-uri: ${spring.security.oauth2.hostname}/oauth/token
+            jwt-set-uri: ${spring.security.oauth2.hostname}/oauth/token_key
+            user-info-uri: ${spring.security.oauth2.hostname}/oauth/user
+            user-name-attribute: name

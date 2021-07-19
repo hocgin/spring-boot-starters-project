@@ -1,8 +1,7 @@
-package in.hocg.sso2.client.sample;
+package in.hocg.sso2.gateway.sample;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,13 +9,12 @@ import java.security.Principal;
 import java.util.Objects;
 
 /**
- * Created by hocgin on 2020/8/15.
+ * Created by hocgin on 2020/8/27
  * email: hocgin@gmail.com
  *
  * @author hocgin
  */
 @RestController
-@EnableOAuth2Sso
 @SpringBootApplication
 public class BootApplication {
 
