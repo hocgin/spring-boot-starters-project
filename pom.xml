@@ -16,7 +16,7 @@
   <version>${revision}</version>
 
   <properties>
-    <revision>1.0.8</revision>
+    <revision>1.0.9</revision>
 
     <java.version>1.8</java.version>
     <java.source.version>1.8</java.source.version>
@@ -27,7 +27,9 @@
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
     <flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
-    <lombok-maven-plugin.version>1.18.0.0</lombok-maven-plugin.version>
+
+    <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+    <lombok.version>1.18.12</lombok.version>
   </properties>
 
   <modules>
@@ -91,6 +93,12 @@
 
   <profiles>
     <profile>
+      <id>local</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+    <profile>
       <id>release</id>
       <build>
         <plugins>
@@ -112,6 +120,17 @@
   </profiles>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -121,13 +140,13 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
       </plugin>
-      <plugin>
-        <groupId>org.projectlombok</groupId>
-        <artifactId>lombok-maven-plugin</artifactId>
-      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>flatten-maven-plugin</artifactId>
@@ -220,12 +239,12 @@
               <path>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.20</version>
+                <version>${lombok.version}</version>
               </path>
               <path>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-configuration-processor</artifactId>
-                <version>2.2.6.RELEASE</version>
+                <version>${spring-boot.version}</version>
               </path>
             </annotationProcessorPaths>
           </configuration>

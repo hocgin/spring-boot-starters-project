@@ -1,0 +1,14 @@
+server:
+  port: 20001
+spring:
+  cloud:
+    # https://cloud.spring.io/spring-cloud-static/spring-cloud-security/2.1.0.RC3/single/spring-cloud-security.html
+    gateway:
+      routes:
+        - id: test
+          uri: http://example2.hocgin.local:20002/user
+          predicates:
+            - Path=/test/**
+          filters:
+            - StripPrefix=1
+debug: true

@@ -1,6 +1,7 @@
 package in.hocg.boot.web.autoconfiguration;
 
 import in.hocg.boot.web.autoconfiguration.advice.ErrorPagesConfiguration;
+import in.hocg.boot.web.autoconfiguration.core.WarmUpLazyBeanRunner;
 import in.hocg.boot.web.autoconfiguration.jackson.SerializerConfiguration;
 import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
 import in.hocg.boot.web.autoconfiguration.servlet.ServletConfiguration;
@@ -46,6 +47,11 @@ public class WebAutoConfiguration {
         return validatorFactory.getValidator();
     }
 
+    @Bean
+    public WarmUpLazyBeanRunner warmUpLazyBeanRunner() {
+        return new WarmUpLazyBeanRunner();
+    }
+
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnClass(HttpTraceRepository.class)
     public static class HttpTraceConfiguration {
@@ -55,6 +61,5 @@ public class WebAutoConfiguration {
             return new InMemoryHttpTraceRepository();
         }
     }
-
 
 }

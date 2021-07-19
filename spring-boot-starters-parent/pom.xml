@@ -16,9 +16,7 @@
 
   <properties>
     <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
-    <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
     <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
-    <lombok.version>1.18.12</lombok.version>
     <mybatis-plus.version>3.3.0</mybatis-plus.version>
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
     <guava.version>28.1-jre</guava.version>
@@ -234,12 +232,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>sso-client2-spring-boot-autoconfigure</artifactId>
+        <artifactId>sso2-client-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>sso-client2-spring-boot-starter</artifactId>
+        <artifactId>sso2-client-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -611,26 +609,4 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/java</directory>
-        <includes>
-          <include>**/*.xml</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-    </resources>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
 </project>

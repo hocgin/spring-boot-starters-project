@@ -2,8 +2,8 @@ package in.hocg.boot.sso.client.autoconfigure.core.servlet;
 
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.AuthenticationResult;
-import in.hocg.boot.sso.client.autoconfigure.core.webflux.WebFluxExpandAuthenticationManager;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
+import in.hocg.boot.utils.StringPoolUtils;
 import in.hocg.boot.web.result.ExceptionResult;
 import in.hocg.boot.web.result.ResultCode;
 import lombok.RequiredArgsConstructor;
@@ -82,15 +82,16 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
         return new ServletExpandAuthenticationManager(applicationContext);
     }
 
-    private final static RequestMatcher IS_AJAX = new RequestHeaderRequestMatcher("X-Requested-With", "XMLHttpRequest");
 
-    private AuthenticationResult handleAuthentication4Servlet(HttpServletRequest request, HttpServletResponse response) {
+    private final static RequestMatcher IS_AJAX = new RequestHeaderRequestMatcher(StringPoolUtils.HEADER_REQUESTED_WITH, StringPoolUtils.HEADER_VALUE_XMLHTTPREQUEST);
+
+    private void handleAuthentication4Servlet(HttpServletRequest request, HttpServletResponse response) {
         log.debug("匿名访问被拒绝");
 
         String redirectUrl = null;
-        String xPageUrl = request.getHeader("X-Page-Url");
+        String xPageUrl = request.getHeader(StringPoolUtils.HEADER_PAGE_URL);
         if (StringUtils.isEmpty(xPageUrl)) {
-            xPageUrl = request.getHeader("Referer");
+            xPageUrl = request.getHeader(StringPoolUtils.HEADER_REFERER);
         }
 
         if (!StringUtils.isEmpty(xPageUrl)) {
@@ -104,9 +105,8 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
         try (final PrintWriter writer = response.getWriter()) {
             writer.write(result.toJSON());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("匿名访问被拒绝: ", e);
         }
-        return result;
     }
 
     private void handleAccessDenied4Servlet(HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {

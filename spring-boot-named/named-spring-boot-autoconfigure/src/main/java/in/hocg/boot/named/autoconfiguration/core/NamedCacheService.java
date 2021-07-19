@@ -43,4 +43,5 @@ public interface NamedCacheService {
         String[] args = namedRow.getArgs();
         return StrUtil.format("NamedCache:{}:{}:{}", namedType, id, Arrays.toString(args));
     }
+
 }

@@ -16,7 +16,7 @@
 
   <modules>
     <module>sso-client-spring-boot-autoconfigure</module>
-    <module>sso-client2-spring-boot-autoconfigure</module>
+    <module>sso2-client-spring-boot-autoconfigure</module>
   </modules>
 
 </project>

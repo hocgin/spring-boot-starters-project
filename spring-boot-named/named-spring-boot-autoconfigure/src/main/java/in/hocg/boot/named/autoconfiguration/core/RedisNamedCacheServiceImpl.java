@@ -1,6 +1,7 @@
 package in.hocg.boot.named.autoconfiguration.core;
 
 import com.google.common.collect.Maps;
+import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.connection.RedisStringCommands;
@@ -12,7 +13,6 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hocgin on 2021/2/25
@@ -24,9 +24,9 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class RedisNamedCacheServiceImpl implements NamedCacheService {
     private final RedisTemplate<String, Object> redisTemplate;
+    private final NamedProperties properties;
     private final RedisSerializer<String> keySerializer = RedisSerializer.string();
     private final RedisSerializer<Object> valueSerializer = RedisSerializer.java();
-    private static final Expiration EXPIRATION = Expiration.from(1, TimeUnit.DAYS);
 
     @Override
     public Map<String, Object> batchGet(Collection<String> keys) {
@@ -45,11 +45,14 @@ public class RedisNamedCacheServiceImpl implements NamedCacheService {
 
     @Override
     public void batchPut(Map<String, Object> caches) {
+        NamedProperties.CacheConfig cache = properties.getCache();
+        Expiration expiration = Expiration.from(cache.getExpired());
         redisTemplate.executePipelined((RedisCallback<Object>) connection -> {
             connection.openPipeline();
             caches.entrySet().parallelStream().forEach(entry ->
-                connection.set(Objects.requireNonNull(keySerializer.serialize(entry.getKey())), Objects.requireNonNull(valueSerializer.serialize(entry.getValue())),
-                    EXPIRATION, RedisStringCommands.SetOption.UPSERT));
+                connection.set(Objects.requireNonNull(keySerializer.serialize(entry.getKey())),
+                    Objects.requireNonNull(valueSerializer.serialize(entry.getValue())),
+                    expiration, RedisStringCommands.SetOption.UPSERT));
             return null;
         });
     }

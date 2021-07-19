@@ -1,0 +1,25 @@
+server:
+  port: 20002
+logging:
+  level:
+    root: debug
+boot:
+  sso:
+    client:
+      ignore-urls:
+        - '/ignore'
+debug: true
+
+
+
+security:
+  oauth2:
+    hostname: http://sso.hocgin.local:20000
+    client:
+      client-id: client_example
+      client-secret: hocgin
+      user-authorization-uri: ${security.oauth2.hostname}/oauth/authorize
+      access-token-uri: ${security.oauth2.hostname}/oauth/token
+    resource:
+      jwt:
+        key-uri: ${security.oauth2.hostname}/oauth/token_key

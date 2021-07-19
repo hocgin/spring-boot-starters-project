@@ -76,7 +76,7 @@ public class LangUtils {
      * @param <V>         any
      * @return Map
      */
-    public <K, V> Map<K, V> toMap(List<V> values, Function<? super V, K> keyFunction) {
+    public <K, V> Map<K, V> toMap(Collection<V> values, Function<? super V, K> keyFunction) {
         Map<K, V> result = new HashMap<>();
         for (V val : values) {
             K key = keyFunction.apply(val);
@@ -85,7 +85,7 @@ public class LangUtils {
         return result;
     }
 
-    public <K, V, Z> Map<K, Z> toMap(List<V> values,
+    public <K, V, Z> Map<K, Z> toMap(Collection<V> values,
                                      Function<? super V, K> keyFunction,
                                      Function<? super V, Z> valueFunction) {
         Map<K, Z> result = new HashMap<>();
