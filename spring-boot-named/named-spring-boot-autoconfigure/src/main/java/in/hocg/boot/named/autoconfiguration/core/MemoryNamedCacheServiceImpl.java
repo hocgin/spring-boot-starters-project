@@ -7,6 +7,7 @@ import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,10 +49,11 @@ public class MemoryNamedCacheServiceImpl implements NamedCacheService, Initializ
     @Override
     public void afterPropertiesSet() throws Exception {
         NamedProperties.CacheConfig cacheConfig = properties.getCache();
+        Duration expired = cacheConfig.getExpired();
         cachePool = CacheBuilder.newBuilder()
             .softValues()
             .maximumSize(10000L)
-            .expireAfterWrite(cacheConfig.getExpired())
+            .expireAfterWrite(expired.getSeconds(), TimeUnit.SECONDS)
             .build();
     }
 }

@@ -46,6 +46,8 @@
     <google-api-services-youtubeAnalytics.version>v1-rev63-1.22.0</google-api-services-youtubeAnalytics.version>
     <google-api-services-youtubereporting.version>v1-rev10-1.22.0</google-api-services-youtubereporting.version>
     <google-http-client-jackson2.version>1.20.0</google-http-client-jackson2.version>
+    <reflections.version>0.9.10</reflections.version>
+    <javassist.version>3.25.0-GA</javassist.version>
   </properties>
 
   <dependencyManagement>
@@ -545,6 +547,11 @@
         <version>${jjwt.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>${reflections.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.github.binarywang</groupId>
         <artifactId>weixin-java-cp</artifactId>
         <version>${weixin-java.version}</version>
@@ -598,6 +605,11 @@
         <groupId>com.google.collections</groupId>
         <artifactId>google-collections</artifactId>
         <version>${google-collections.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>${javassist.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
