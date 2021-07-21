@@ -58,6 +58,22 @@ public class DefaultExceptionAdvice {
         return create(HttpStatus.BAD_REQUEST, message);
     }
 
+    @ExceptionHandler(value = {NullPointerException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ExceptionResult<Void> handleNullPointerException(NullPointerException e) {
+        String message = "空指针异常";
+        log.warn(message, e);
+        return create(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler(value = {UnsupportedOperationException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ExceptionResult<Void> handleUnsupportedOperationException(UnsupportedOperationException e) {
+        String message = "操作不支持";
+        log.warn(message, e);
+        return create(HttpStatus.BAD_REQUEST, message);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ExceptionResult<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {

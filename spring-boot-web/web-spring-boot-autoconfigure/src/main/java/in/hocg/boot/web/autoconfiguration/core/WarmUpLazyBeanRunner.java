@@ -2,7 +2,6 @@ package in.hocg.boot.web.autoconfiguration.core;
 
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
@@ -24,7 +23,7 @@ public class WarmUpLazyBeanRunner implements ApplicationRunner {
         log.debug("Warm Up Bean Task Start [{}]", WarmUpLazyBeanRunner.class);
         for (String beanDefinitionName : context.getBeanDefinitionNames()) {
             try {
-                context.getBean(beanDefinitionName);
+                context.getType(beanDefinitionName, true);
             } catch (Exception e) {
                 log.warn("Warm Up Bean=[{}] Error: {}", beanDefinitionName, e);
             } finally {

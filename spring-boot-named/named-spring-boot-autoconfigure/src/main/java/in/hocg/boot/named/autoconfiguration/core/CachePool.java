@@ -1,12 +1,16 @@
 package in.hocg.boot.named.autoconfiguration.core;
 
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.google.common.collect.Maps;
 import in.hocg.boot.named.annotation.InjectNamed;
 import in.hocg.boot.named.annotation.NamedService;
 import in.hocg.boot.named.autoconfiguration.utils.NamedUtils;
 import in.hocg.boot.named.ifc.NamedHandler;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.ClassUtils;
@@ -22,6 +26,7 @@ import java.util.WeakHashMap;
  *
  * @author hocgin
  */
+@Slf4j
 public class CachePool {
     public static Map<Class<?>, Object> NAMED_SERVICE_CLASS_MAPS = new WeakHashMap<>();
 
@@ -30,6 +35,7 @@ public class CachePool {
      *
      * @param context
      */
+    @SneakyThrows
     public static void load(ApplicationContext context) {
         // 1.1 预热 NamedBean
         Map<String, NamedService> namedServiceMaps = context.getBeansOfType(NamedService.class);
@@ -53,6 +59,8 @@ public class CachePool {
         );
 
         // 2. 扫描字段
-        ClassUtil.scanPackage().stream().filter(aClass -> aClass.isAnnotationPresent(InjectNamed.class)).forEach(NamedUtils::getAllField);
+        Reflections reflections = new Reflections(".*", new SubTypesScanner(), new TypeAnnotationsScanner());
+        reflections.getTypesAnnotatedWith(InjectNamed.class).forEach(NamedUtils::getAllField);
     }
+
 }
