@@ -112,7 +112,7 @@ public class NamedAspect implements InitializingBean {
     }
 
     protected List<NamedRow> getNamedRows(Object result) {
-        if (!NamedContext.add(NamedContext.hash(result))) {
+        if (!NamedContext.add(NamedContext.id(result))) {
             return Collections.emptyList();
         }
         // =====================================================================

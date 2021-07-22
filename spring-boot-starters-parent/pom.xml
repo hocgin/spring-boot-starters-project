@@ -48,6 +48,7 @@
     <google-http-client-jackson2.version>1.20.0</google-http-client-jackson2.version>
     <reflections.version>0.9.10</reflections.version>
     <javassist.version>3.25.0-GA</javassist.version>
+    <jol-core.version>0.16</jol-core.version>
   </properties>
 
   <dependencyManagement>
@@ -610,6 +611,11 @@
         <groupId>org.javassist</groupId>
         <artifactId>javassist</artifactId>
         <version>${javassist.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jol</groupId>
+        <artifactId>jol-core</artifactId>
+        <version>${jol-core.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
