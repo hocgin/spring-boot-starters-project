@@ -3,6 +3,7 @@ package in.hocg.boot.named.autoconfiguration.aspect;
 import cn.hutool.core.collection.ConcurrentHashSet;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.openjdk.jol.vm.VM;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,11 +17,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @UtilityClass
 public class NamedContext {
-    private final ThreadLocal<ConcurrentHashSet<Integer>> hashPool = ThreadLocal.withInitial(ConcurrentHashSet::new);
+    private final ThreadLocal<ConcurrentHashSet<Long>> hashPool = ThreadLocal.withInitial(ConcurrentHashSet::new);
     private final ThreadLocal<AtomicInteger> count = ThreadLocal.withInitial(AtomicInteger::new);
 
-    public boolean add(int hash) {
-        return hashPool.get().add(hash);
+    public boolean add(long id) {
+        return hashPool.get().add(id);
     }
 
     public void push() {
@@ -33,8 +34,8 @@ public class NamedContext {
         }
     }
 
-    public boolean contains(int hash) {
-        return hashPool.get().contains(hash);
+    public boolean contains(long id) {
+        return hashPool.get().contains(id);
     }
 
     public void clear() {
@@ -42,8 +43,8 @@ public class NamedContext {
         count.set(new AtomicInteger());
     }
 
-    public int hash(Object object) {
-        return Objects.isNull(object) ? 0 : object.hashCode();
+    public long id(Object object) {
+        return Objects.isNull(object) ? 0 : VM.current().addressOf(object);
     }
 
 }
