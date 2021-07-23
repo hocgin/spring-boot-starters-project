@@ -44,7 +44,7 @@ public class NamedContext {
     }
 
     public long id(Object object) {
-        return Objects.isNull(object) ? 0 : VM.current().addressOf(object);
+        return Objects.isNull(object) ? 0L : VM.current().addressOf(object);
     }
 
 }

@@ -44,7 +44,7 @@ public class TaskBerviceImpl implements TaskBervice {
         }
         TaskInfo taskInfo = taskOpt.get();
         LocalDateTime taskInfoReadyAt = taskInfo.getReadyAt();
-        if (Objects.nonNull(taskInfoReadyAt) && LocalDateTime.now().isAfter(taskInfoReadyAt)) {
+        if (Objects.nonNull(taskInfoReadyAt) && LocalDateTime.now().isBefore(taskInfoReadyAt)) {
             log.info("任务未到执行时间, 任务编号:[{}]", taskSn);
             return TaskResult.fail("任务未到执行时间");
         }
