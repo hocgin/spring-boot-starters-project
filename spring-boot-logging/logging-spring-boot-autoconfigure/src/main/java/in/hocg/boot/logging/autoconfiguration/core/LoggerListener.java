@@ -14,6 +14,5 @@ public interface LoggerListener {
      *
      * @param logger
      */
-    @EventListener(classes = LoggerEvent.class)
     void handle(LoggerEvent logger);
 }
