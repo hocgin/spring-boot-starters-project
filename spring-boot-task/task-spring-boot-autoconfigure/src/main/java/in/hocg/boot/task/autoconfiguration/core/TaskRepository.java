@@ -83,4 +83,23 @@ public interface TaskRepository {
      */
     Optional<TaskInfo> getByTaskSn(Serializable taskSn);
 
+    /**
+     * 删除旧任务
+     * - 状态为 成功
+     * - 类型为 所有
+     *
+     * @param minusDays
+     * @return
+     */
+    Integer deleteDays(@NonNull Long minusDays);
+
+    /**
+     * 删除旧任务
+     *
+     * @param minusDays
+     * @param eqTypes
+     * @param eqStatus
+     * @return
+     */
+    Integer deleteDays(@NonNull Long minusDays, List<Serializable> eqTypes, List<Serializable> eqStatus);
 }
