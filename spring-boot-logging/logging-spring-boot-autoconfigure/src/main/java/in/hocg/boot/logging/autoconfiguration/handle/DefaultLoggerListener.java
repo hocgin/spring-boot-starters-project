@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.logging.autoconfiguration.core.LoggerEvent;
 import in.hocg.boot.logging.autoconfiguration.core.LoggerListener;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -21,6 +22,7 @@ import java.util.StringJoiner;
 public class DefaultLoggerListener implements LoggerListener {
 
     @Override
+    @EventListener(classes = LoggerEvent.class)
     public void handle(LoggerEvent logger) {
         printlnPrettyLogger(logger);
     }
