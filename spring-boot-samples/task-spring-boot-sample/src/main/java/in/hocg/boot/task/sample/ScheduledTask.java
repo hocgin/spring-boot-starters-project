@@ -1,7 +1,9 @@
 package in.hocg.boot.task.sample;
 
+import com.google.common.collect.Lists;
 import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
 import in.hocg.boot.task.autoconfiguration.core.TaskBervice;
+import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -30,6 +32,8 @@ public class ScheduledTask {
 
     private Object myTask(String nil) {
         log.info("任务执行过程: {}", nil);
+        taskRepository.deleteDays(10L);
+        taskRepository.deleteDays(10L, null, Lists.newArrayList(TableTask.DoneStatus.Fail, TableTask.DoneStatus.Success.getCode()));
         return null;
     }
 

@@ -1,11 +1,14 @@
 package in.hocg.boot.task.autoconfiguration.jdbc.mysql;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.json.JSONUtil;
+import com.google.common.collect.Lists;
 import in.hocg.boot.task.autoconfiguration.core.TaskInfo;
 import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
 import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
@@ -126,11 +129,33 @@ public class TaskRepositoryImpl implements TaskRepository {
         return Optional.ofNullable(this.asTaskInfo(entity));
     }
 
+    @Override
+    public Integer deleteDays(@NonNull Long minusDays) {
+        return this.deleteDays(minusDays, null, Lists.newArrayList(TableTask.DoneStatus.Success.getCode()));
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public Integer deleteDays(@NonNull Long minusDays, List<Serializable> eqTypes, List<Serializable> eqDoneStatus) {
+        LocalDateTime preDateTime = LocalDateTime.now().minusDays(minusDays);
+        Entity where = Entity.create(TableTask.TABLE_NAME)
+            .set(TableTask.FIELD_STATUS, TableTask.Status.Done.getCode())
+            .set(TableTask.FIELD_CREATED_AT, StrUtil.format("< {}", DateUtil.formatLocalDateTime(preDateTime)));
+        if (Objects.nonNull(eqTypes)) {
+            where = where.set(TableTask.FIELD_TYPE, StrUtil.format("in {}", ArrayUtil.join(eqTypes.toArray(), ",")));
+        }
+        if (Objects.nonNull(eqDoneStatus)) {
+            where = where.set(TableTask.FIELD_DONE_RESULT, StrUtil.format("in {}", ArrayUtil.join(eqDoneStatus.toArray(), ",")));
+        }
+        return Db.use(dataSource).del(where);
+    }
+
     private TaskInfo asTaskInfo(Entity entity) {
         return new TaskInfo().setId(entity.getLong(TableTask.FIELD_ID))
             .setType(entity.getStr(TableTask.FIELD_TYPE))
             .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN))
-            .setReadyAt(DateUtil.toLocalDateTime(entity.getDate(TableTask.FIELD_READY_AT)))
+            .setReadyAt(Convert.convert(LocalDateTime.class, entity.get(TableTask.FIELD_READY_AT)))
             .setParams(entity.getStr(TableTask.FIELD_PARAMS));
     }
+
 }

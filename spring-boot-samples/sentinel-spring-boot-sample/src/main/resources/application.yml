@@ -1,0 +1,8 @@
+server:
+  port: 8080
+boot:
+  sentinel:
+    flow-rules:
+      - resource: TEST_SENTINEL
+        grade: 1
+        count: 1

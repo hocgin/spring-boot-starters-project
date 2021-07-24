@@ -17,4 +17,8 @@ public class BootProperties {
      * 配置域名
      */
     private String hostname;
+    /**
+     * 是否调试模式
+     */
+    private Boolean isDebug = Boolean.FALSE;
 }

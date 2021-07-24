@@ -49,6 +49,7 @@
     <reflections.version>0.9.10</reflections.version>
     <javassist.version>3.25.0-GA</javassist.version>
     <jol-core.version>0.16</jol-core.version>
+    <sentinel.version>1.8.2</sentinel.version>
   </properties>
 
   <dependencyManagement>
@@ -62,6 +63,17 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>tpl-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- Sentinel -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>sentinel-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>sentinel-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- WX CP -->
@@ -616,6 +628,26 @@
         <groupId>org.openjdk.jol</groupId>
         <artifactId>jol-core</artifactId>
         <version>${jol-core.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-core</artifactId>
+        <version>${sentinel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-annotation-aspectj</artifactId>
+        <version>${sentinel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-spring-webmvc-adapter</artifactId>
+        <version>${sentinel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba.csp</groupId>
+        <artifactId>sentinel-spring-webflux-adapter</artifactId>
+        <version>${sentinel.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

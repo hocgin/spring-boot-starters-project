@@ -48,6 +48,7 @@ public class WebAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public WarmUpLazyBeanRunner warmUpLazyBeanRunner() {
         return new WarmUpLazyBeanRunner();
     }
