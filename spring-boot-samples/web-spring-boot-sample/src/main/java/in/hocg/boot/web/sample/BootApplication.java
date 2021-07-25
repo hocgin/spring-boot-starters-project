@@ -15,4 +15,15 @@ public class BootApplication {
     public static void main(String[] args) {
         SpringApplication.run(BootApplication.class, args);
     }
+
+//    @Bean("writer1")
+//    public Writer getWriter1() {
+//        return new Writer("工作 1");
+//    }
+//
+//    @Bean("writer2")
+//    public Writer getWriter2() {
+//        return new Writer("工作 2");
+//    }
+
 }

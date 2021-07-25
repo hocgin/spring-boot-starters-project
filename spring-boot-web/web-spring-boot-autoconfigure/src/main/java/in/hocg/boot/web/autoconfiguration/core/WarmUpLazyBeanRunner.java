@@ -23,11 +23,9 @@ public class WarmUpLazyBeanRunner implements ApplicationRunner {
         log.debug("Warm Up Bean Task Start [{}]", WarmUpLazyBeanRunner.class);
         for (String beanDefinitionName : context.getBeanDefinitionNames()) {
             try {
-                context.getType(beanDefinitionName, true);
+                context.getBeansOfType(context.getType(beanDefinitionName), false, true);
             } catch (Exception e) {
-                log.warn("Warm Up Bean=[{}] Error: {}", beanDefinitionName, e);
-            } finally {
-                log.debug("Warm Up Bean=[{}]", beanDefinitionName);
+                log.warn("Warm Up Bean=[{}] Error: {}", beanDefinitionName, e.getMessage());
             }
         }
         log.debug("Warm Up Bean Task End [{}]", WarmUpLazyBeanRunner.class);

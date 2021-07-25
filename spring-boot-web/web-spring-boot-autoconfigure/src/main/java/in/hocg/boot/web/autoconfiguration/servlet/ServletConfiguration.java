@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 
 import javax.servlet.Servlet;
 
@@ -22,6 +23,7 @@ import javax.servlet.Servlet;
 @Import(ServletExceptionAdvice.class)
 public class ServletConfiguration {
     @Bean
+    @Lazy(false)
     public SpringContext springContext() {
         return new SpringServletContext();
     }
