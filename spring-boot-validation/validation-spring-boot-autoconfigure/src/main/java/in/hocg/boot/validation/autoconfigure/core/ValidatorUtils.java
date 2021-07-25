@@ -27,10 +27,11 @@ public class ValidatorUtils {
         return getValidation().validate(object, groups);
     }
 
-    public static <T> void validThrow(T object, Class<?>... groups) {
+    public static <T> T validThrow(T object, Class<?>... groups) {
         final Set<ConstraintViolation<T>> validate = ValidatorUtils.validate(object, groups);
         for (ConstraintViolation<T> violation : validate) {
             throw new ValidationException(violation.getMessage());
         }
+        return object;
     }
 }
