@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * Created by hocgin on 2020/8/15
@@ -16,7 +17,9 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.REACTIVE)
 @Import(WebFluxExceptionAdvice.class)
 public class WebFluxConfiguration {
+
     @Bean
+    @Lazy(false)
     public SpringContext springContext() {
         return new SpringWebFluxContext();
     }

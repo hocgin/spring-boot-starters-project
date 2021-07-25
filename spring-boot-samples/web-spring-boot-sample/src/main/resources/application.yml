@@ -1,0 +1,8 @@
+debug: true
+logging:
+  level:
+    in.hocg: DEBUG
+spring:
+  mvc:
+    servlet:
+      load-on-startup: 1
