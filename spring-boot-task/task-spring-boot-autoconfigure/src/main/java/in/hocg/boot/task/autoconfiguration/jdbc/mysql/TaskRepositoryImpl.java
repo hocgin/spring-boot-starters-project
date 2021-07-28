@@ -1,6 +1,5 @@
 package in.hocg.boot.task.autoconfiguration.jdbc.mysql;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
@@ -22,6 +21,7 @@ import javax.sql.DataSource;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -151,10 +151,11 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     private TaskInfo asTaskInfo(Entity entity) {
+        String readyAtStr = entity.getStr(TableTask.FIELD_READY_AT);
         return new TaskInfo().setId(entity.getLong(TableTask.FIELD_ID))
             .setType(entity.getStr(TableTask.FIELD_TYPE))
             .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN))
-            .setReadyAt(Convert.convert(LocalDateTime.class, entity.get(TableTask.FIELD_READY_AT)))
+            .setReadyAt(LangUtils.callIfNotNull(readyAtStr, s -> LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))).orElse(null))
             .setParams(entity.getStr(TableTask.FIELD_PARAMS));
     }
 
