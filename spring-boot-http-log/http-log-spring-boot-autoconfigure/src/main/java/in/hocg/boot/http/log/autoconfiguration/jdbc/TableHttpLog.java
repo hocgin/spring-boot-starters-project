@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author hocgin
  */
 public class TableHttpLog {
-    public static final String TABLE_NAME = "boot_task_info";
+    public static final String TABLE_NAME = "boot_http_log";
 
     public static final String FIELD_ID = "id";
     public static final String FIELD_URI = "uri";

@@ -70,7 +70,11 @@ public class HttpLogRepositoryImpl implements HttpLogRepository {
         entity.setCreator(creator);
         entity.setDirection(direction);
         entity.setUri(uri);
-        entity.setRequestHeaders(JSONUtil.toJsonStr(headers));
+        entity.setCreatedAt(LocalDateTime.now());
+
+        if (Objects.nonNull(headers)) {
+            entity.setRequestHeaders(JSONUtil.toJsonStr(headers));
+        }
 
         if (Objects.nonNull(body)) {
             String responseBody;
@@ -93,8 +97,7 @@ public class HttpLogRepositoryImpl implements HttpLogRepository {
             .set(TableHttpLog.FIELD_FAIL_REASON, failReason)
             .set(TableHttpLog.FIELD_RESPONSE_BODY, responseBody)
             .set(TableHttpLog.FIELD_RESPONSE_HEADERS, responseHeaders)
-            .set(TableHttpLog.FIELD_DONE_AT, LocalDateTime.now())
-            ;
+            .set(TableHttpLog.FIELD_DONE_AT, LocalDateTime.now());
 
         Entity where = Entity.create(TableHttpLog.TABLE_NAME)
             .set(TableHttpLog.FIELD_ID, logId)

@@ -5,7 +5,6 @@ import in.hocg.boot.utils.LogUtils;
 import in.hocg.boot.utils.function.SupplierThrow;
 import in.hocg.boot.utils.function.ThreeConsumerThrow;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
@@ -24,25 +23,28 @@ public class HttpLogBerviceImpl implements HttpLogBervice {
     @Lazy
     @Autowired(required = false)
     private HttpLogRepository repository;
+    @Lazy
+    @Autowired(required = false)
+    private HttpLogBervice self;
 
     @Override
-    public <T> void call(SupplierThrow<T> exec, ThreeConsumerThrow<Serializable, LogUtils.LogStatus, String> onComplete) {
-        LogUtils.log(exec, null, onComplete);
+    public <T> T call(SupplierThrow<T> exec, ThreeConsumerThrow<Serializable, LogUtils.LogStatus, String> onComplete) {
+        return LogUtils.log(exec, null, onComplete);
     }
 
     @Override
-    public <T> void call(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady, ThreeConsumerThrow<Serializable, LogUtils.LogStatus, String> onComplete) {
-        LogUtils.log(exec, onReady, onComplete);
+    public <T> T call(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady, ThreeConsumerThrow<Serializable, LogUtils.LogStatus, String> onComplete) {
+        return LogUtils.log(exec, onReady, onComplete);
     }
 
     @Override
-    public <T> void call(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady) {
-        LogUtils.log(exec, onReady, ((HttpLogBerviceImpl) AopContext.currentProxy())::asyncComplete);
+    public <T> T call(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady) {
+        return LogUtils.log(exec, onReady, self::asyncComplete);
     }
 
     @Override
-    public <T> void call(String title, String code, String caller, String beCaller, String uri, Map<String, String> headers, Object body, SupplierThrow<T> exec) {
-        this.call(exec, () -> this.syncReady(title, code, null, null, caller, beCaller, null, TableHttpLog.Direction.Out.getCodeStr(), uri, headers, body));
+    public <T> T call(String title, String code, String caller, String beCaller, String uri, Map<String, String> headers, Object body, SupplierThrow<T> exec) {
+        return this.call(exec, () -> this.syncReady(title, code, null, null, caller, beCaller, null, TableHttpLog.Direction.Out.getCodeStr(), uri, headers, body));
     }
 
     @Override
@@ -58,7 +60,8 @@ public class HttpLogBerviceImpl implements HttpLogBervice {
     }
 
     @Async
-    protected void asyncComplete(Serializable logId, LogUtils.LogStatus status, String result) {
+    @Override
+    public void asyncComplete(Serializable logId, LogUtils.LogStatus status, String result) {
         if (LogUtils.LogStatus.Success.equals(status)) {
             repository.updateById(((Long) logId), TableHttpLog.Status.Success.getCodeStr(), null, result, null);
         } else if (LogUtils.LogStatus.Fail.equals(status)) {
