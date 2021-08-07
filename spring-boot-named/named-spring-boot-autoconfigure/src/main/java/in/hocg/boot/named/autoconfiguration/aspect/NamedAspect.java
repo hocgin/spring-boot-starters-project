@@ -77,7 +77,7 @@ public class NamedAspect implements InitializingBean {
         }
     }
 
-    private Object handleResult(Object result) {
+    public Object handleResult(Object result) {
         Stopwatch started = null;
         if (log.isDebugEnabled()) {
             started = Stopwatch.createStarted();

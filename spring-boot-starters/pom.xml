@@ -47,6 +47,7 @@
     <module>vars-spring-boot-starter</module>
     <module>youtube-spring-boot-starter</module>
     <module>sentinel-spring-boot-starter</module>
+    <module>http-log-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 
