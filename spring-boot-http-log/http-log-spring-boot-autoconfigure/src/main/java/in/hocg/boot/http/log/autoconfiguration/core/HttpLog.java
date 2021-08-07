@@ -62,6 +62,7 @@ public class HttpLog {
     private String failReason;
     private String status;
     private String creator;
+    private String creatorIp;
     private LocalDateTime createdAt;
     private LocalDateTime doneAt;
 }

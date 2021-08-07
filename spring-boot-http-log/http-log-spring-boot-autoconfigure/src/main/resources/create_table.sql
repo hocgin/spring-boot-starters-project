@@ -38,6 +38,8 @@ CREATE TABLE `boot_http_log`
         COMMENT '创建时间',
     creator          VARCHAR(32)
         COMMENT '创建人',
+    creator_ip       VARCHAR(32)
+        COMMENT '创建人',
     PRIMARY KEY (id)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

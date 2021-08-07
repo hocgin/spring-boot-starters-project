@@ -34,6 +34,7 @@ public class TableHttpLog {
     public static final String FIELD_CREATED_AT = "created_at";
     public static final String FIELD_DONE_AT = "done_at";
     public static final String FIELD_CREATOR = "creator";
+    public static final String FIELD_CREATOR_IP = "creator_ip";
 
 
     @Getter

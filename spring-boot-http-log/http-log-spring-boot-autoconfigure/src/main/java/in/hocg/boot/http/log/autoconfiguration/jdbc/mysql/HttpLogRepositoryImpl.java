@@ -49,6 +49,7 @@ public class HttpLogRepositoryImpl implements HttpLogRepository {
             .setIgnoreNull(TableHttpLog.FIELD_DONE_AT, entity.getDoneAt())
             .setIgnoreNull(TableHttpLog.FIELD_CREATED_AT, entity.getCreatedAt())
             .setIgnoreNull(TableHttpLog.FIELD_CREATOR, entity.getCreator())
+            .setIgnoreNull(TableHttpLog.FIELD_CREATOR_IP, entity.getCreatorIp())
             .setIgnoreNull(TableHttpLog.FIELD_STATUS, entity.getStatus())
             .setIgnoreNull(TableHttpLog.FIELD_DIRECTION, entity.getDirection());
         Long id = Db.use(dataSource).insertForGeneratedKey(newEntity);
@@ -124,6 +125,7 @@ public class HttpLogRepositoryImpl implements HttpLogRepository {
         result.setFailReason(entity.getStr(TableHttpLog.FIELD_FAIL_REASON));
         result.setStatus(entity.getStr(TableHttpLog.FIELD_STATUS));
         result.setCreator(entity.getStr(TableHttpLog.FIELD_CREATOR));
+        result.setCreatorIp(entity.getStr(TableHttpLog.FIELD_CREATOR_IP));
         result.setDoneAt(LangUtils.callIfNotNull(entity.getStr(TableHttpLog.FIELD_DONE_AT), DbUtils::asLocalDateTime).orElse(null));
         result.setCreatedAt(LangUtils.callIfNotNull(entity.getStr(TableHttpLog.FIELD_CREATED_AT), DbUtils::asLocalDateTime).orElse(null));
         return result;
