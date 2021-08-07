@@ -15,6 +15,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import javax.sql.DataSource;
 
@@ -24,6 +25,7 @@ import javax.sql.DataSource;
  *
  * @author hocgin
  */
+@EnableAsync
 @Configuration
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
 @ConditionalOnBean({DataSource.class})
