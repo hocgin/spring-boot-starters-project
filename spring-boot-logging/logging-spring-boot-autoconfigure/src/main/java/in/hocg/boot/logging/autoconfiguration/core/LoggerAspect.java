@@ -72,7 +72,7 @@ public class LoggerAspect {
 
     @Async
     @SneakyThrows
-    protected void handleLog(HttpServletRequest request, ProceedingJoinPoint point, UseLogger annotation, Stopwatch watch, Object ret, String errorMessage) {
+    protected void handleLog(Optional<HttpServletRequest> requestOpt, ProceedingJoinPoint point, UseLogger annotation, Stopwatch watch, Object ret, String errorMessage) {
         // 日志收集
         Object target = point.getTarget();
         MethodSignature signature = (MethodSignature) point.getSignature();
@@ -98,7 +98,8 @@ public class LoggerAspect {
         String source = StringPoolUtils.UNKNOWN;
         String username = null;
         String clientIp = "0.0.0.0";
-        if (Objects.nonNull(request)) {
+        if (requestOpt.isPresent()) {
+            HttpServletRequest request = requestOpt.get();
             uri = request.getRequestURI();
             requestMethod = request.getMethod();
             userAgent = LoggingUtils.getUserAgent(request);
@@ -124,11 +125,11 @@ public class LoggerAspect {
         publisher.publishEvent(logger);
     }
 
-    private HttpServletRequest getRequest() {
+    private Optional<HttpServletRequest> getRequest() {
         try {
-            return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            return Optional.ofNullable(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest());
         } catch (Exception e) {
-            return null;
+            return Optional.empty();
         }
     }
 
