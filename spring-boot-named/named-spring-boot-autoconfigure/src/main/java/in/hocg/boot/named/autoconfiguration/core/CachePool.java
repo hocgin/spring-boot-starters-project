@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * Created by hocgin on 2021/7/8
@@ -29,6 +31,7 @@ import java.util.WeakHashMap;
 @Slf4j
 public class CachePool {
     public static Map<Class<?>, Object> NAMED_SERVICE_CLASS_MAPS = new WeakHashMap<>();
+    public static Map<Class<?>, Boolean> IS_SUPPORT_NAMED_CLASS_MAPS = new ConcurrentHashMap<>();
 
     /**
      * 预热缓存
@@ -41,6 +44,7 @@ public class CachePool {
         Map<String, NamedService> namedServiceMaps = context.getBeansOfType(NamedService.class);
         Map<Class<?>, Object> namedMaps = Maps.newHashMap();
         for (NamedService namedService : namedServiceMaps.values()) {
+            namedMaps.put(namedService.getClass(), namedService);
             for (Class<?> aClass : AopProxyUtils.proxiedUserInterfaces(namedService)) {
                 namedMaps.put(aClass, namedService);
             }
@@ -61,6 +65,22 @@ public class CachePool {
         // 2. 扫描字段
         Reflections reflections = new Reflections(".*", new SubTypesScanner(), new TypeAnnotationsScanner());
         reflections.getTypesAnnotatedWith(InjectNamed.class).forEach(NamedUtils::getAllField);
+    }
+
+    /**
+     * 判断一个类是否需要被 @Named 处理
+     *
+     * @param clazz
+     * @param isSupportFunc
+     * @return
+     */
+    public static Boolean isSupportNamed(Class<?> clazz, Function<Class<?>, Boolean> isSupportFunc) {
+        Boolean result = IS_SUPPORT_NAMED_CLASS_MAPS.get(clazz);
+        if (Objects.isNull(result)) {
+            result = isSupportFunc.apply(clazz);
+            IS_SUPPORT_NAMED_CLASS_MAPS.put(clazz, result);
+        }
+        return result;
     }
 
 }

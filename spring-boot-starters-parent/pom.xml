@@ -65,6 +65,17 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- http-log -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>http-log-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>http-log-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Sentinel -->
       <dependency>
         <groupId>${project.groupId}</groupId>

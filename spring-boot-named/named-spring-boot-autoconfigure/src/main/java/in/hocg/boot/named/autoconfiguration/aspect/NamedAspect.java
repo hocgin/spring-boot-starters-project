@@ -30,7 +30,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -77,7 +76,7 @@ public class NamedAspect implements InitializingBean {
         }
     }
 
-    private Object handleResult(Object result) {
+    public Object handleResult(Object result) {
         Stopwatch started = null;
         if (log.isDebugEnabled()) {
             started = Stopwatch.createStarted();
@@ -105,10 +104,11 @@ public class NamedAspect implements InitializingBean {
     }
 
     private boolean isSupportClass(Class<?> aClass) {
-        return Arrays.class.isAssignableFrom(aClass)
-            || Collection.class.isAssignableFrom(aClass)
-            || aClass.isAnnotationPresent(InjectNamed.class)
-            || this.converts.stream().anyMatch(convert -> convert.isMatch(aClass));
+        return CachePool.isSupportNamed(aClass, clazz ->
+            Arrays.class.isAssignableFrom(clazz)
+                || Collection.class.isAssignableFrom(clazz)
+                || clazz.isAnnotationPresent(InjectNamed.class)
+                || this.converts.stream().anyMatch(convert -> convert.isMatch(clazz)));
     }
 
     protected List<NamedRow> getNamedRows(Object result) {
@@ -298,7 +298,7 @@ public class NamedAspect implements InitializingBean {
             } else {
                 return Collections.emptyMap();
             }
-        } catch (IllegalAccessException | InvocationTargetException e) {
+        } catch (Exception e) {
             log.warn("服务调用失败, 请检查参数 @Named 提供者[{}], 函数[{}], 参数[{}]", namedService, method, JSONUtil.toJsonStr(namedArgs), e);
             return Collections.emptyMap();
         }
@@ -311,6 +311,10 @@ public class NamedAspect implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         cacheService = context.getBean(NamedCacheService.class);
-        CachePool.load(context);
+        try {
+            CachePool.load(context);
+        } catch (Exception e) {
+            log.warn("@Named 预缓存发生错误", e);
+        }
     }
 }

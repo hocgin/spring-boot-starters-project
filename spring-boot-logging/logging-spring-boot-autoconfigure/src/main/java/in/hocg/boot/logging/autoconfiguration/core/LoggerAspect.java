@@ -56,7 +56,6 @@ public class LoggerAspect {
 
     @Around("@annotation(annotation)")
     public Object pointcut(ProceedingJoinPoint point, UseLogger annotation) throws Throwable {
-        // 耗时统计
         Stopwatch watch = Stopwatch.createStarted();
         Object ret = null;
         String errorMessage = null;
@@ -66,26 +65,14 @@ public class LoggerAspect {
             errorMessage = e.getMessage();
             throw e;
         } finally {
-            self.handleLog(point, annotation, watch.stop(), ret, errorMessage);
+            self.handleLog(this.getRequest(), point, annotation, watch.stop(), ret, errorMessage);
         }
-
         return ret;
-    }
-
-    private Optional<Object> getCurrentUser() {
-        if (LoggingUtils.hasSecurityContextHolders()) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            if (Objects.isNull(auth) || auth instanceof AnonymousAuthenticationToken) {
-                return Optional.empty();
-            }
-            return Optional.of(auth.getPrincipal());
-        }
-        return Optional.empty();
     }
 
     @Async
     @SneakyThrows
-    protected void handleLog(ProceedingJoinPoint point, UseLogger annotation, Stopwatch watch, Object ret, String errorMessage) {
+    protected void handleLog(Optional<HttpServletRequest> requestOpt, ProceedingJoinPoint point, UseLogger annotation, Stopwatch watch, Object ret, String errorMessage) {
         // 日志收集
         Object target = point.getTarget();
         MethodSignature signature = (MethodSignature) point.getSignature();
@@ -111,9 +98,8 @@ public class LoggerAspect {
         String source = StringPoolUtils.UNKNOWN;
         String username = null;
         String clientIp = "0.0.0.0";
-        Optional<HttpServletRequest> requestOpt = this.getRequest();
         if (requestOpt.isPresent()) {
-            final HttpServletRequest request = requestOpt.get();
+            HttpServletRequest request = requestOpt.get();
             uri = request.getRequestURI();
             requestMethod = request.getMethod();
             userAgent = LoggingUtils.getUserAgent(request);
@@ -141,10 +127,20 @@ public class LoggerAspect {
 
     private Optional<HttpServletRequest> getRequest() {
         try {
-            final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-            return Optional.of(request);
+            return Optional.ofNullable(((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest());
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    private Optional<Object> getCurrentUser() {
+        if (LoggingUtils.hasSecurityContextHolders()) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (Objects.isNull(auth) || auth instanceof AnonymousAuthenticationToken) {
+                return Optional.empty();
+            }
+            return Optional.of(auth.getPrincipal());
+        }
+        return Optional.empty();
     }
 }

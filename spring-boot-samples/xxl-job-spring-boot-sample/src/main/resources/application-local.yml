@@ -1,0 +1,8 @@
+debug: true
+spring:
+  profiles:
+    active: local
+boot:
+  xxljob:
+    admin-addresses: http://job-saas.dev.klxuexi.net/
+
