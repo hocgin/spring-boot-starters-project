@@ -1,8 +1,0 @@
-debug: true
-
-boot:
-  sms:
-    regionId: cn-hangzhou
-    secretKey: WTNAERBXO7DQOLXILIHjx8NZCzdRmw
-    accessKey: LTAIMo7TgRT1ZohX
-
