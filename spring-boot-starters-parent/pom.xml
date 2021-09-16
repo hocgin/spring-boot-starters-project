@@ -50,6 +50,7 @@
     <javassist.version>3.25.0-GA</javassist.version>
     <jol-core.version>0.16</jol-core.version>
     <sentinel.version>1.8.2</sentinel.version>
+    <arthas-spring-boot-starter.version>3.5.4</arthas-spring-boot-starter.version>
   </properties>
 
   <dependencyManagement>
@@ -206,6 +207,17 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>test-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- arthas -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>arthas-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>arthas-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- WX MP -->
@@ -659,6 +671,11 @@
         <groupId>com.alibaba.csp</groupId>
         <artifactId>sentinel-spring-webflux-adapter</artifactId>
         <version>${sentinel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.taobao.arthas</groupId>
+        <artifactId>arthas-spring-boot-starter</artifactId>
+        <version>${arthas-spring-boot-starter.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

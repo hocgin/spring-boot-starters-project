@@ -74,6 +74,14 @@ public class DefaultExceptionAdvice {
         return create(HttpStatus.BAD_REQUEST, message);
     }
 
+    @ExceptionHandler(value = {IllegalArgumentException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ExceptionResult<Void> handleIllegalArgumentException(IllegalArgumentException e) {
+        String message = StrUtil.emptyToDefault(e.getMessage(), "参数错误");
+        log.warn(message, e);
+        return create(HttpStatus.BAD_REQUEST, message);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ExceptionResult<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {

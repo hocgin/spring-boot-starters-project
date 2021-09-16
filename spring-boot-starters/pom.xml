@@ -48,6 +48,7 @@
     <module>youtube-spring-boot-starter</module>
     <module>sentinel-spring-boot-starter</module>
     <module>http-log-spring-boot-starter</module>
+    <module>arthas-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 
