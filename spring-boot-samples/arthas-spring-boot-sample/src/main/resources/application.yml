@@ -1,0 +1,9 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: arthasDemo
+
+boot:
+  arthas:
+    tunnel-server: ws://127.0.0.1:7777/ws

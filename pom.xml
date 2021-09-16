@@ -70,6 +70,7 @@
     <module>spring-boot-youtube</module>
     <module>spring-boot-sentinel</module>
     <module>spring-boot-http-log</module>
+    <module>spring-boot-arthas</module>
     <module>spring-boot-tpl</module>
   </modules>
 
