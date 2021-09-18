@@ -10,6 +10,7 @@ import in.hocg.boot.dynamic.datasource.autoconfiguration.properties.DynamicDataS
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -71,11 +72,13 @@ public class DynamicDatasourceAutoConfiguration implements EnvironmentAware {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public DynamicDatasourceAspect aspect() {
         return new DynamicDatasourceAspect();
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
