@@ -12,6 +12,10 @@ CREATE TABLE `boot_task_info`
         COMMENT '任务状态: [ready=>准备完成, executing=>执行中, done=>结束]',
     params            TEXT
         COMMENT '任务参数',
+    retry_id          BIGINT
+        comment '参考重建的任务',
+    retry_count       int(10)               default 1 not null
+        comment '第N次任务',
     ready_at          TIMESTAMP(6)
         COMMENT '准备完成时间',
     start_at          TIMESTAMP(6)

@@ -21,6 +21,8 @@ public class TaskInfo {
     private String taskSn;
     private String type;
     private String params;
+    private String title;
+    private Integer retryCount;
     private LocalDateTime readyAt;
 
     public <R> R resolveParams(Class<?> clazz) {

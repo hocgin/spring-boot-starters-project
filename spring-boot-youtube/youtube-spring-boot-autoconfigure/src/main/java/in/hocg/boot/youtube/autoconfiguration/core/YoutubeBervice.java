@@ -50,7 +50,9 @@ public interface YoutubeBervice {
         }
     }
 
-
+    default YouTube youtube(String clientId, List<String> scopes) {
+        return new YouTube.Builder(YoutubeUtils.HTTP_TRANSPORT, YoutubeUtils.JSON_FACTORY, getCredential(clientId, scopes)).build();
+    }
 
     void setMultiConfigStorages(java.util.Map<java.lang.String, YoutubeProperties.ClientConfig> map);
 
