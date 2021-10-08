@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by hocgin on 2021/6/9
@@ -27,8 +26,7 @@ public class NamedUtils {
     private static final Map<String, Method> SERVICE_NAMED_METHOD_MAPS = Maps.newConcurrentMap();
 
     public Map<String, Field> getAllField(Class<?> clazz) {
-        return Arrays.stream(ReflectUtil.getFields(clazz)).parallel()
-            .collect(Collectors.toMap(Field::getName, field -> field));
+        return ReflectUtil.getFieldMap(clazz);
     }
 
     public Object getFieldValue(Object target, Field field) {
