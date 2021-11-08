@@ -7,7 +7,18 @@ boot:
       - application-name: simple-app
         client-id: 854840501995-v67uhbkpipjdicve031ka4rdjqqojmf1.apps.googleusercontent.com
         client-secret: gV04XZx4G0TFyOsR0YC3jaRW
+      - application-name: hl.team.wechat
+        client-id: 354771266497-qc9jmt90p9sjv79ll7f490anc7dcs1ds.apps.googleusercontent.com
+        client-secret: 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
+  web:
+    hostname: http://127.0.0.1:8080
 spring:
   redis:
-    host: 39.100.87.79
-    port: 32079
+    host: redis.hocgin.top
+    port: 26379
+    database: 0
+    password: ENC(arDwqcHWrnCjhYGeGX8Pzg==)
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+    poolSize: 10

@@ -39,8 +39,9 @@
     <module>youtube-spring-boot-sample</module>
     <module>sentinel-spring-boot-sample</module>
     <module>http-log-spring-boot-sample</module>
-    <module>tpl-spring-boot-sample</module>
+    <module>ffmpeg-spring-boot-sample</module>
     <module>arthas-spring-boot-sample</module>
+    <module>tpl-spring-boot-sample</module>
   </modules>
 
 </project>

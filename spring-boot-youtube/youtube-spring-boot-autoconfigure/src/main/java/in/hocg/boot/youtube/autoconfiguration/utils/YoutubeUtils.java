@@ -9,6 +9,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.DataStoreFactory;
+import com.google.api.services.youtube.YouTube;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import lombok.SneakyThrows;
 
@@ -71,4 +72,13 @@ public class YoutubeUtils {
             .build();
     }
 
+    /**
+     * 创建 YouTube
+     *
+     * @return
+     */
+    public static YouTube create() {
+        return new YouTube.Builder(YoutubeUtils.HTTP_TRANSPORT, YoutubeUtils.JSON_FACTORY, request -> {
+        }).build();
+    }
 }
