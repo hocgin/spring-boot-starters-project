@@ -1,12 +1,14 @@
 package in.hocg.boot.sso.client.autoconfigure.properties;
 
 
+import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hocgin on 2019/6/12.
@@ -33,4 +35,16 @@ public class SsoClientProperties {
      * 需认证(支持表达式)
      */
     private List<String> authenticatedUrls = Collections.emptyList();
+    /**
+     * 需要任意角色(支持表达式)
+     */
+    private Map<String, List<String>> hasAnyRole = Maps.newHashMap();
+    /**
+     * 需要任意权限(支持表达式)
+     */
+    private Map<String, List<String>> hasAnyAuthority = Maps.newHashMap();
+    /**
+     * IP 白名单(支持表达式)
+     */
+    private Map<String, String> hasIpAddress = Maps.newHashMap();
 }

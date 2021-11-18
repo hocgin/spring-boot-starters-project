@@ -1,5 +1,8 @@
 package in.hocg.boot.sso.client.autoconfigure.core.servlet;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.AuthenticationResult;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
@@ -30,6 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -50,15 +55,45 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
         String[] ignoreUrls = properties.getIgnoreUrls().toArray(new String[]{});
         String[] denyUrls = properties.getDenyUrls().toArray(new String[]{});
         String[] authenticatedUrls = properties.getAuthenticatedUrls().toArray(new String[]{});
+        Map<String, List<String>> hasAnyRole = properties.getHasAnyRole();
+        Map<String, List<String>> hasAnyAuthority = properties.getHasAnyAuthority();
+        Map<String, String> hasIpAddress = properties.getHasIpAddress();
         {
             ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry =
                 http.authorizeRequests();
+
+            // 如果配置禁止访问
             if (denyUrls.length > 0) {
                 expressionInterceptUrlRegistry.antMatchers(denyUrls).denyAll();
             }
+
+            // 如果配置需登陆
             if (authenticatedUrls.length > 0) {
                 expressionInterceptUrlRegistry.antMatchers(authenticatedUrls).authenticated();
             }
+
+            // 如果配置角色
+            if (CollUtil.isNotEmpty(hasAnyRole)) {
+                hasAnyRole.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasAnyRole(ArrayUtil.toArray(entry.getValue(), String.class)));
+            }
+
+            // 如果配置权限
+            if (CollUtil.isNotEmpty(hasAnyAuthority)) {
+                hasAnyRole.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasAnyAuthority(ArrayUtil.toArray(entry.getValue(), String.class)));
+            }
+
+            // 如果配置IP白名单
+            if (CollUtil.isNotEmpty(hasIpAddress)) {
+                hasIpAddress.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && StrUtil.isNotBlank(entry.getValue()))
+                    .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasIpAddress(entry.getValue()));
+            }
+
+            // 如果配置忽略
             if (ignoreUrls.length > 0) {
                 expressionInterceptUrlRegistry.antMatchers(ignoreUrls).permitAll();
             }
