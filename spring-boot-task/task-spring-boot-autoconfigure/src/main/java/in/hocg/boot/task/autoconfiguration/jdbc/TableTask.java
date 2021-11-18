@@ -19,6 +19,8 @@ public class TableTask {
 
     public static final String FIELD_ID = "id";
     public static final String FIELD_TASK_SN = "task_sn";
+    public static final String FIELD_RETRY_COUNT = "retry_count";
+    public static final String FIELD_RETRY_ID = "retry_id";
     public static final String FIELD_STATUS = "status";
     public static final String FIELD_TITLE = "title";
     public static final String FIELD_TYPE = "type";

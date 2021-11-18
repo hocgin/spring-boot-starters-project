@@ -150,11 +150,49 @@ public class TaskRepositoryImpl implements TaskRepository {
         return Db.use(dataSource).del(where);
     }
 
+    @Override
+    @SneakyThrows(SQLException.class)
+    public void reCreateTask(String oldTaskSn, long delaySecond, long maxCount) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime readyAt = now.plusSeconds(delaySecond);
+        Optional<TaskInfo> taskOpt = getByTaskSn(oldTaskSn);
+        if (!taskOpt.isPresent()) {
+            return;
+        }
+        TaskInfo taskInfo = taskOpt.get();
+        String params = taskInfo.getParams();
+        String taskName = taskInfo.getTitle();
+        String taskType = taskInfo.getType();
+        Integer retryCount = taskInfo.getRetryCount();
+        Long createUser = 0L;
+        if (maxCount > 0 && retryCount > maxCount) {
+            return;
+        }
+
+        String taskSn = IdUtil.objectId();
+        String paramsStr = LangUtils.callIfNotNull(params, JSONUtil::toJsonStr).orElse(null);
+
+        Entity entity = Entity.create(TableTask.TABLE_NAME)
+            .setIgnoreNull(TableTask.FIELD_PARAMS, paramsStr)
+            .set(TableTask.FIELD_RETRY_ID, taskInfo.getId())
+            .set(TableTask.FIELD_TASK_SN, taskSn)
+            .set(TableTask.FIELD_TITLE, taskName)
+            .set(TableTask.FIELD_TYPE, taskType)
+            .set(TableTask.FIELD_CREATOR, createUser)
+            .set(TableTask.FIELD_CREATED_AT, now)
+            .set(TableTask.FIELD_RETRY_COUNT, retryCount + 1)
+            .set(TableTask.FIELD_READY_AT, readyAt);
+        Long id = Db.use(dataSource).insertForGeneratedKey(entity);
+        entity.set(TableTask.FIELD_ID, id);
+    }
+
     private TaskInfo asTaskInfo(Entity entity) {
         String readyAtStr = entity.getStr(TableTask.FIELD_READY_AT);
         return new TaskInfo().setId(entity.getLong(TableTask.FIELD_ID))
             .setType(entity.getStr(TableTask.FIELD_TYPE))
             .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN))
+            .setTitle(entity.getStr(TableTask.FIELD_TITLE))
+            .setRetryCount(entity.getInt(TableTask.FIELD_RETRY_COUNT))
             .setReadyAt(LangUtils.callIfNotNull(readyAtStr, s -> LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))).orElse(null))
             .setParams(entity.getStr(TableTask.FIELD_PARAMS));
     }

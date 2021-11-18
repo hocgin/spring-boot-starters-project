@@ -78,13 +78,13 @@ public class HttpLogRepositoryImpl implements HttpLogRepository {
         }
 
         if (Objects.nonNull(body)) {
-            String responseBody;
+            String requestBody;
             if (ClassUtil.isBasicType(body.getClass())) {
-                responseBody = String.valueOf(body);
+                requestBody = String.valueOf(body);
             } else {
-                responseBody = JSONUtil.toJsonStr(body);
+                requestBody = JSONUtil.toJsonStr(body);
             }
-            entity.setResponseBody(responseBody);
+            entity.setRequestBody(requestBody);
         }
 
         return create(entity);

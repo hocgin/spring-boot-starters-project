@@ -102,4 +102,13 @@ public interface TaskRepository {
      * @return
      */
     Integer deleteDays(@NonNull Long minusDays, List<Serializable> eqTypes, List<Serializable> eqStatus);
+
+    /**
+     * 重建定时任务
+     *
+     * @param taskSn
+     * @param delaySecond
+     * @param maxCount
+     */
+    void reCreateTask(String taskSn, long delaySecond, long maxCount);
 }

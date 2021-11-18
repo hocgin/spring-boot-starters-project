@@ -66,6 +66,17 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- FFMPEG -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>ffmpeg-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>ffmpeg-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- http-log -->
       <dependency>
         <groupId>${project.groupId}</groupId>

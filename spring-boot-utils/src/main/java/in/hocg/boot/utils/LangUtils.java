@@ -1,11 +1,19 @@
 package in.hocg.boot.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.file.FileMode;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
+import lombok.Cleanup;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
+import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
@@ -376,5 +384,32 @@ public class LangUtils {
             startIndex = toIndex;
         }
         return result;
+    }
+
+    /**
+     * 设置代理
+     *
+     * @param host
+     * @param port
+     */
+    public void proxy(String host, String port) {
+        host = StrUtil.nullToDefault(host, "127.0.0.1");
+        port = StrUtil.nullToDefault(port, "7890");
+
+        System.setProperty("http.proxyHost", host);
+        System.setProperty("http.proxyPort", port);
+        System.setProperty("https.proxyHost", host);
+        System.setProperty("https.proxyPort", port);
+    }
+
+
+    @SneakyThrows
+    public static Path modifyMD5(Path path) {
+        @Cleanup
+        RandomAccessFile file = FileUtil.createRandomAccessFile(path, FileMode.rw);
+        file.seek(file.length());
+        file.writeBytes(RandomUtil.randomString(5));
+        file.close();
+        return path;
     }
 }

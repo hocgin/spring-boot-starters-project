@@ -7,3 +7,13 @@ spring:
 boot:
   arthas:
     tunnel-server: ws://127.0.0.1:7777/ws
+#    tunnel-server: wss://arthas.hocgin.top/ws
+#    tunnel-server: ws://39.100.87.79:32426/ws
+    agent-id: test
+    telnet-port: -1
+    http-port: -1
+    disabledCommands: stop
+    session-timeout: 10000
+logging:
+  level:
+    root: DEBUG
