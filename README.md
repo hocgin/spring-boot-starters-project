@@ -1,6 +1,6 @@
 # spring-boot-starters-project
 
-> [![Deploy](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/deploy.yml/badge.svg?branch=v1.0.19)](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/deploy.yml)
+> [![Deploy](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/deploy.yml/badge.svg?branch=v1.0.20)](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/deploy.yml)
 > [![Maven Central](https://maven-badges.herokuapp.com/maven-central/in.hocg.boot/spring-boot-starters-project/badge.svg)](https://search.maven.org/search?q=in.hocg.boot)
 
 
