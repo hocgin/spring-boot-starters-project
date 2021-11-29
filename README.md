@@ -1,6 +1,8 @@
 # spring-boot-starters-project
 
-> [![Publish Package](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/publish.yml/badge.svg)](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/publish.yml)
+> [![Deploy](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/deploy.yml/badge.svg?branch=v1.0.19)](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/deploy.yml)
+> [![Maven Central](https://maven-badges.herokuapp.com/maven-central/in.hocg.boot/spring-boot-starters-project/badge.svg)](https://search.maven.org/search?q=in.hocg.boot)
+
 
 [Maven Center](https://search.maven.org/search?q=in.hocg.boot)
 
@@ -33,7 +35,6 @@
 |wx-ma-spring-boot-starter|微信公众号(配置化)|-|
 |wx-mp-spring-boot-starter|微信小程序(配置化)|-|
 |xxljob-spring-boot-starter|xxljob(薄封装)|-|
-
 |spring-boot-webmagic|挖坑|-|
 |spring-boot-excel|挖坑|-|
 |spring-boot-elasticsearch|挖坑|-|
