@@ -6,3 +6,7 @@
 - /oauth/token_key：提供公有密匙的端点，使用 JWT 令牌时会使用 , 涉及的类TokenKeyEndpoint
 
 ⚠️: 默认情况下/oauth/check_token和/oauth/token_key端点默认是denyAll()
+
+
+
+http://example2.hocgin.local:20002/user

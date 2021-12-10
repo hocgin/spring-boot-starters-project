@@ -22,3 +22,6 @@ boot:
     client:
       ignore-urls:
         - '/ignore'
+#      has-any-role:
+#        '[/**]':
+#          - 'ROLE_USERX2'
