@@ -2,7 +2,7 @@ package in.hocg.named.sample;
 
 import in.hocg.boot.named.annotation.InjectNamed;
 import in.hocg.boot.named.annotation.Named;
-import in.hocg.boot.named.annotation.UseNamedService;
+import in.hocg.named.sample.alias.AppNamed;
 import in.hocg.named.sample.basic.AppNamed2Service;
 import in.hocg.named.sample.basic.AppNamedService;
 import in.hocg.named.sample.basic.NamedConstants;
@@ -24,13 +24,13 @@ import java.util.List;
 @InjectNamed
 public class TestBean {
     private Serializable code;
-    @UseNamedService(AppNamedService.class)
-    @Named(idFor = "code", type = NamedConstants.Test)
-    private String codeName;
-    @UseNamedService(AppNamed2Service.class)
-    @Named(idFor = "code", type = NamedConstants.Test2)
+    @Named(idFor = "code", type = NamedConstants.Test, useService = AppNamedService.class)
+    private String code1Name;
+    @Named(idFor = "code", type = NamedConstants.Test2, useService = AppNamed2Service.class)
     private String code2Name;
     @Named(idFor = "code", type = NamedConstants.Test3)
     private String code3Name;
+    @AppNamed(idFor = "code", type = NamedConstants.Test)
+    private String code4Name;
     private List<TestBean> list = Collections.emptyList();
 }

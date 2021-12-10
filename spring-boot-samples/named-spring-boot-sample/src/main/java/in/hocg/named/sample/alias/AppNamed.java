@@ -1,17 +1,21 @@
-package in.hocg.boot.named.annotation;
+package in.hocg.named.sample.alias;
+
+import in.hocg.boot.named.annotation.Named;
+import in.hocg.named.sample.basic.AppNamedService;
 
 import java.lang.annotation.*;
 
 /**
- * Created by hocgin on 2020/2/13.
+ * Created by hocgin on 2021/12/10
  * email: hocgin@gmail.com
  *
  * @author hocgin
  */
-@Target({ElementType.TYPE, ElementType.FIELD})
+@Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Named {
+@Named(useService = AppNamedService.class)
+public @interface AppNamed {
 
     /**
      * 字典项标识
@@ -40,12 +44,4 @@ public @interface Named {
      * @return true
      */
     boolean useCache() default true;
-
-    /**
-     * 使用的 NamedService
-     *
-     * @return NamedService
-     */
-    Class<?> useService() default NamedService.class;
-
 }

@@ -8,8 +8,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import in.hocg.boot.named.annotation.InjectNamed;
 import in.hocg.boot.named.annotation.Named;
-import in.hocg.boot.named.annotation.NamedService;
-import in.hocg.boot.named.annotation.UseNamedService;
 import in.hocg.boot.named.autoconfiguration.core.CachePool;
 import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import in.hocg.boot.named.autoconfiguration.core.NamedRow;
@@ -27,6 +25,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Field;
@@ -147,7 +146,7 @@ public class NamedAspect implements InitializingBean {
         ConcurrentLinkedQueue<NamedRow> namedRows = new ConcurrentLinkedQueue<>();
         Map<String, Field> fieldMap = NamedUtils.getAllField(result.getClass());
         fieldMap.values().parallelStream().forEach(field -> {
-            if (field.isAnnotationPresent(Named.class)) {
+            if (AnnotatedElementUtils.hasAnnotation(field, Named.class)) {
                 getNamedRow(result, fieldMap, field).ifPresent(namedRows::add);
             } else if (isSupportClass(field.getType())) {
                 final Object value = NamedUtils.getFieldValue(result, field);
@@ -166,17 +165,13 @@ public class NamedAspect implements InitializingBean {
      * @return
      */
     private Optional<NamedRow> getNamedRow(Object target, Map<String, Field> fieldMap, Field targetField) {
-        final Named named = targetField.getAnnotation(Named.class);
+        final Named named = AnnotatedElementUtils.getMergedAnnotation(targetField, Named.class);
         final Field idField = fieldMap.get(named.idFor());
         if (Objects.isNull(idField)) {
             return Optional.empty();
         }
 
-        Class<?> nameServiceClass = NamedService.class;
-        Optional<Class<?>> namedServiceClass = LangUtils.callIfNotNull(targetField.getAnnotation(UseNamedService.class), UseNamedService::value);
-        if (namedServiceClass.isPresent()) {
-            nameServiceClass = namedServiceClass.get();
-        }
+        Class<?> nameServiceClass = named.useService();
         Object serviceBean = this.getNamedServiceClassMaps().get(nameServiceClass);
         return Optional.of(new NamedRow()
             .setUseCache(named.useCache())
