@@ -266,7 +266,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>spring-boot-utils</artifactId>
+        <artifactId>utils-annotation</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>utils-all</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -422,6 +427,11 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>sms-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>validation-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

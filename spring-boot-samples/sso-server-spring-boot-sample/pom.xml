@@ -23,7 +23,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>spring-boot-utils</artifactId>
+      <artifactId>utils-all</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
