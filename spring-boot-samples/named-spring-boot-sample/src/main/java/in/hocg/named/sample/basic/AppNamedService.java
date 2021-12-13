@@ -1,9 +1,10 @@
 package in.hocg.named.sample.basic;
 
 import com.google.common.collect.Maps;
+import in.hocg.boot.named.annotation.NamedService;
+import in.hocg.boot.named.autoconfiguration.core.AbsNamedServiceExpand;
 import in.hocg.boot.named.ifc.NamedArgs;
 import in.hocg.boot.named.ifc.NamedHandler;
-import in.hocg.boot.named.annotation.NamedService;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.Map;
  * @author hocgin
  */
 @Component
-public class AppNamedService implements NamedService {
+public class AppNamedService extends AbsNamedServiceExpand
+    implements NamedService {
 
     @NamedHandler(NamedConstants.Test)
     public Map<String, Object> loadTestData(NamedArgs args) throws InterruptedException {
@@ -43,7 +45,7 @@ public class AppNamedService implements NamedService {
     @NamedHandler(NamedConstants.Test3)
     public Map<String, Object> loadTest3Data(NamedArgs args) throws InterruptedException {
         Map<String, Object> result = Maps.newHashMap();
-        List<String> values = args.getValues();
+        List<String> values = getValues(args.getValues(), String.class);
         for (String value : values) {
             // Thread.sleep(100L);
             result.put(value, "xx-3#" + value);
