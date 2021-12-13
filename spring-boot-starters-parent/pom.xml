@@ -266,12 +266,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>utils-annotation</artifactId>
+        <artifactId>utils-spring-boot-annotation</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>utils-all</artifactId>
+        <artifactId>utils-spring-boot-all</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

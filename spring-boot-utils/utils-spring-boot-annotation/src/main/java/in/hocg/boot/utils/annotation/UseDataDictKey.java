@@ -16,4 +16,6 @@ import java.lang.annotation.Target;
 public @interface UseDataDictKey {
 
     String value() default "";
+
+    String description() default "";
 }

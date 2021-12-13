@@ -10,7 +10,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <name>Utils :: Annotation</name>
-  <artifactId>utils-annotation</artifactId>
+  <name>Utils :: Spring Boot :: Annotation</name>
+  <artifactId>utils-spring-boot-annotation</artifactId>
 
 </project>

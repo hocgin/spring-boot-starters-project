@@ -10,13 +10,13 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <name>Utils :: All</name>
-  <artifactId>utils-all</artifactId>
+  <name>Utils :: Spring Boot :: All</name>
+  <artifactId>utils-spring-boot-all</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>utils-annotation</artifactId>
+      <artifactId>utils-spring-boot-annotation</artifactId>
     </dependency>
     <dependency>
       <groupId>cn.hutool</groupId>

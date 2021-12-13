@@ -43,7 +43,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>utils-all</artifactId>
+      <artifactId>utils-spring-boot-all</artifactId>
     </dependency>
     <!-- Basic -->
     <dependency>

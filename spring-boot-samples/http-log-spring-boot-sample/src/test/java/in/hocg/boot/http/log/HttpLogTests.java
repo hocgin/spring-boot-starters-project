@@ -25,7 +25,7 @@ public class HttpLogTests extends AbstractSpringBootTest {
     @Test
     public void test() {
         String urlString = "http://www.baidu.com/w?w=sds";
-        String result = httpLogBervice.call(() -> HttpUtil.get(urlString), () -> httpLogBervice.syncReady(null, null, null, null, null, null, null, null, urlString, null, null));
+        String result = httpLogBervice.syncCall(() -> HttpUtil.get(urlString), () -> httpLogBervice.syncReady(null, null, null, null, null, null, null, null, urlString, null, null));
         Assert.notEmpty(result);
     }
 }
