@@ -15,6 +15,7 @@
   <artifactId>spring-boot-validation</artifactId>
 
   <modules>
+    <module>validation-core</module>
     <module>validation-spring-boot-autoconfigure</module>
   </modules>
 

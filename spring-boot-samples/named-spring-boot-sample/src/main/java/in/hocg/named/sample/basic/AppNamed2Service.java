@@ -2,6 +2,7 @@ package in.hocg.named.sample.basic;
 
 import com.google.common.collect.Maps;
 import in.hocg.boot.named.annotation.NamedService;
+import in.hocg.boot.named.autoconfiguration.core.AbsNamedServiceExpand;
 import in.hocg.boot.named.ifc.NamedArgs;
 import in.hocg.boot.named.ifc.NamedHandler;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,8 @@ import java.util.Map;
  * @author hocgin
  */
 @Component
-public class AppNamed2Service implements NamedService {
+public class AppNamed2Service extends AbsNamedServiceExpand
+    implements NamedService {
 
     @NamedHandler(NamedConstants.Test)
     public Map<String, Object> loadTestData(NamedArgs args) throws InterruptedException {
