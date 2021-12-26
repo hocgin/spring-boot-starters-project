@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -59,7 +60,7 @@ public class WebFluxSsoClientConfiguration {
         String[] authenticatedUrls = properties.getAuthenticatedUrls().toArray(new String[]{});
         Map<String, List<String>> hasAnyRole = properties.getHasAnyRole();
         Map<String, List<String>> hasAnyAuthority = properties.getHasAnyAuthority();
-        Map<String, String> hasIpAddress = properties.getHasIpAddress();
+        Map<String, List<String>> hasIpAddress = properties.getHasIpAddress();
         {
             ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchangeSpec =
                 http.authorizeExchange();
@@ -78,14 +79,20 @@ public class WebFluxSsoClientConfiguration {
 
             // 如果配置权限
             if (CollUtil.isNotEmpty(hasAnyAuthority)) {
-                hasAnyRole.entrySet().stream()
+                hasAnyAuthority.entrySet().stream()
                     .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
                     .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyAuthority(ArrayUtil.toArray(entry.getValue(), String.class)));
             }
 
             // 如果配置IP白名单
             if (CollUtil.isNotEmpty(hasIpAddress)) {
-                // TODO 暂不启用
+                hasIpAddress.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).access((mono, authorizationContext) -> {
+                        String ip = Objects.requireNonNull(authorizationContext.getExchange().getRequest().getRemoteAddress()).getAddress().toString().replace("/", "");
+                        return mono.map((a) -> new AuthorizationDecision(a.isAuthenticated()))
+                            .defaultIfEmpty(new AuthorizationDecision(entry.getValue().contains(ip)));
+                    }));
             }
 
             // 如果配置忽略

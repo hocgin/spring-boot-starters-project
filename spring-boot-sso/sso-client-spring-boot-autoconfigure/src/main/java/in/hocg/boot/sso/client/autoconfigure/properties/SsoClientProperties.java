@@ -46,5 +46,5 @@ public class SsoClientProperties {
     /**
      * IP 白名单(支持表达式)
      */
-    private Map<String, String> hasIpAddress = Maps.newHashMap();
+    private Map<String, List<String>> hasIpAddress = Maps.newHashMap();
 }

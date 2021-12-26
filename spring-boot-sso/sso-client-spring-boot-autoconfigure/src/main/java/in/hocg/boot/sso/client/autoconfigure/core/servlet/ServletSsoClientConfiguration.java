@@ -35,6 +35,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -57,7 +58,7 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
         String[] authenticatedUrls = properties.getAuthenticatedUrls().toArray(new String[]{});
         Map<String, List<String>> hasAnyRole = properties.getHasAnyRole();
         Map<String, List<String>> hasAnyAuthority = properties.getHasAnyAuthority();
-        Map<String, String> hasIpAddress = properties.getHasIpAddress();
+        Map<String, List<String>> hasIpAddress = properties.getHasIpAddress();
         {
             ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry =
                 http.authorizeRequests();
@@ -76,7 +77,7 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
 
             // 如果配置权限
             if (CollUtil.isNotEmpty(hasAnyAuthority)) {
-                hasAnyRole.entrySet().stream()
+                hasAnyAuthority.entrySet().stream()
                     .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
                     .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasAnyAuthority(ArrayUtil.toArray(entry.getValue(), String.class)));
             }
@@ -84,8 +85,13 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
             // 如果配置IP白名单
             if (CollUtil.isNotEmpty(hasIpAddress)) {
                 hasIpAddress.entrySet().stream()
-                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && StrUtil.isNotBlank(entry.getValue()))
-                    .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasIpAddress(entry.getValue()));
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> {
+                        Optional<String> ipOpt = entry.getValue().stream()
+                            .map(ip -> StrUtil.format("hasIpAddress('{}')", ip))
+                            .reduce((s, s2) -> StrUtil.format("{} or {}", s, s2));
+                        ipOpt.ifPresent(s -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).access(s));
+                    });
             }
 
             // 如果配置忽略
