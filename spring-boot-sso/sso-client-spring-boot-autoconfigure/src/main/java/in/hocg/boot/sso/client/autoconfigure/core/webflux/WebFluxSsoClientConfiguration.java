@@ -1,5 +1,8 @@
 package in.hocg.boot.sso.client.autoconfigure.core.webflux;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.AuthenticationResult;
 import in.hocg.boot.sso.client.autoconfigure.core.webflux.bearer.ServerBearerTokenAuthenticationConverter;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
@@ -32,10 +35,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -57,21 +57,48 @@ public class WebFluxSsoClientConfiguration {
         String[] ignoreUrls = properties.getIgnoreUrls().toArray(new String[]{});
         String[] denyUrls = properties.getDenyUrls().toArray(new String[]{});
         String[] authenticatedUrls = properties.getAuthenticatedUrls().toArray(new String[]{});
+        Map<String, List<String>> hasAnyRole = properties.getHasAnyRole();
+        Map<String, List<String>> hasAnyAuthority = properties.getHasAnyAuthority();
+        Map<String, String> hasIpAddress = properties.getHasIpAddress();
         {
             ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchangeSpec =
                 http.authorizeExchange();
-            if (denyUrls.length > 0) {
-                authorizeExchangeSpec.pathMatchers(denyUrls).denyAll();
-            }
+
+            // 如果配置需登陆
             if (authenticatedUrls.length > 0) {
                 authorizeExchangeSpec.pathMatchers(authenticatedUrls).authenticated();
             }
+
+            // 如果配置角色
+            if (CollUtil.isNotEmpty(hasAnyRole)) {
+                hasAnyRole.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyRole(ArrayUtil.toArray(entry.getValue(), String.class)));
+            }
+
+            // 如果配置权限
+            if (CollUtil.isNotEmpty(hasAnyAuthority)) {
+                hasAnyRole.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyAuthority(ArrayUtil.toArray(entry.getValue(), String.class)));
+            }
+
+            // 如果配置IP白名单
+            if (CollUtil.isNotEmpty(hasIpAddress)) {
+                // TODO 暂不启用
+            }
+
+            // 如果配置忽略
             if (ignoreUrls.length > 0) {
                 authorizeExchangeSpec.pathMatchers(ignoreUrls).permitAll();
             }
 
-            authorizeExchangeSpec
-                .anyExchange()
+            // 如果配置禁止访问
+            if (denyUrls.length > 0) {
+                authorizeExchangeSpec.pathMatchers(denyUrls).denyAll();
+            }
+
+            authorizeExchangeSpec.anyExchange()
                 .authenticated().and();
         }
         http.oauth2Login();

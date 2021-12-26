@@ -62,11 +62,6 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
             ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry =
                 http.authorizeRequests();
 
-            // 如果配置禁止访问
-            if (denyUrls.length > 0) {
-                expressionInterceptUrlRegistry.antMatchers(denyUrls).denyAll();
-            }
-
             // 如果配置需登陆
             if (authenticatedUrls.length > 0) {
                 expressionInterceptUrlRegistry.antMatchers(authenticatedUrls).authenticated();
@@ -98,8 +93,12 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
                 expressionInterceptUrlRegistry.antMatchers(ignoreUrls).permitAll();
             }
 
-            expressionInterceptUrlRegistry
-                .anyRequest()
+            // 如果配置禁止访问
+            if (denyUrls.length > 0) {
+                expressionInterceptUrlRegistry.antMatchers(denyUrls).denyAll();
+            }
+
+            expressionInterceptUrlRegistry.anyRequest()
                 .authenticated().and();
         }
         http.oauth2Login();
