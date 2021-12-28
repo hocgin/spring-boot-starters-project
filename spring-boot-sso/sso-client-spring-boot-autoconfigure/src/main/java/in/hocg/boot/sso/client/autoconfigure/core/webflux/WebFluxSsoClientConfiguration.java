@@ -9,6 +9,7 @@ import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,6 +54,7 @@ public class WebFluxSsoClientConfiguration {
     private ApplicationContext context;
 
     @Bean
+    @RefreshScope
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ApplicationContext context) {
         this.context = context;
         String[] ignoreUrls = properties.getIgnoreUrls().toArray(new String[]{});

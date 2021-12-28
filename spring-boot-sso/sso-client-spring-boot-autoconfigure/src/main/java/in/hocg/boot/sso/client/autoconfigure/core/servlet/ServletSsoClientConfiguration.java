@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +45,7 @@ import java.util.Optional;
  * @author hocgin
  */
 @Slf4j
+@RefreshScope
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @ConditionalOnMissingBean(WebSecurityConfigurerAdapter.class)
@@ -121,7 +123,6 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
     public ServletExpandAuthenticationManager authenticationManager(ApplicationContext applicationContext) {
         return new ServletExpandAuthenticationManager(applicationContext);
     }
-
 
     private final static RequestMatcher IS_AJAX = new RequestHeaderRequestMatcher(StringPoolUtils.HEADER_REQUESTED_WITH, StringPoolUtils.HEADER_VALUE_XMLHTTPREQUEST);
 
