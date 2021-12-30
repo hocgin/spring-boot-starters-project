@@ -20,4 +20,6 @@ public abstract class AbstractSpringBootTest {
     protected MockMvc mockMvc;
     @Autowired
     protected TestRestTemplate testRestTemplate;
+
+
 }

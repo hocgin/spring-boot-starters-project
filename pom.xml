@@ -16,7 +16,7 @@
   <version>${revision}</version>
 
   <properties>
-    <revision>1.0.22</revision>
+    <revision>1.0.23</revision>
 
     <java.version>1.8</java.version>
     <java.source.version>1.8</java.source.version>
@@ -33,7 +33,7 @@
   </properties>
 
   <modules>
-    <module>spring-boot-starters-parent</module>
+    <module>spring-boot-dependencies</module>
     <module>spring-boot-starters</module>
     <module>spring-boot-samples</module>
     <!-- 组件 -->

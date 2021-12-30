@@ -12,7 +12,7 @@
   <packaging>pom</packaging>
 
   <name>Spring Boot :: Starters :: Parent</name>
-  <artifactId>spring-boot-starters-parent</artifactId>
+  <artifactId>spring-boot-dependencies</artifactId>
 
   <properties>
     <spring-cloud.version>Hoxton.SR4</spring-cloud.version>

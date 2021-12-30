@@ -6,10 +6,7 @@ import lombok.experimental.UtilityClass;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by hocgin on 2021/1/5
@@ -126,4 +123,17 @@ public class ClassUtils {
             return false;
         }
     }
+    public Optional<Field> getField(Class<?> clazz, String fieldName) {
+        Field field = null;
+        try {
+            field = clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            Class<?> superclass = clazz.getSuperclass();
+            if (!Object.class.equals(superclass)) {
+                return ClassUtils.getField(clazz, fieldName);
+            }
+        }
+        return Optional.ofNullable(field);
+    }
+
 }

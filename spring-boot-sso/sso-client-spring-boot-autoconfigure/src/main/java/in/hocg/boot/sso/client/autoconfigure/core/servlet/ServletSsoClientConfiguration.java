@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -43,6 +45,7 @@ import java.util.Map;
  * @author hocgin
  */
 @Slf4j
+@RefreshScope
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @ConditionalOnMissingBean(WebSecurityConfigurerAdapter.class)
@@ -57,15 +60,10 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
         String[] authenticatedUrls = properties.getAuthenticatedUrls().toArray(new String[]{});
         Map<String, List<String>> hasAnyRole = properties.getHasAnyRole();
         Map<String, List<String>> hasAnyAuthority = properties.getHasAnyAuthority();
-        Map<String, String> hasIpAddress = properties.getHasIpAddress();
+        Map<String, List<String>> hasIpAddress = properties.getHasIpAddress();
         {
             ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry expressionInterceptUrlRegistry =
                 http.authorizeRequests();
-
-            // 如果配置禁止访问
-            if (denyUrls.length > 0) {
-                expressionInterceptUrlRegistry.antMatchers(denyUrls).denyAll();
-            }
 
             // 如果配置需登陆
             if (authenticatedUrls.length > 0) {
@@ -81,7 +79,7 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
 
             // 如果配置权限
             if (CollUtil.isNotEmpty(hasAnyAuthority)) {
-                hasAnyRole.entrySet().stream()
+                hasAnyAuthority.entrySet().stream()
                     .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
                     .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasAnyAuthority(ArrayUtil.toArray(entry.getValue(), String.class)));
             }
@@ -89,8 +87,13 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
             // 如果配置IP白名单
             if (CollUtil.isNotEmpty(hasIpAddress)) {
                 hasIpAddress.entrySet().stream()
-                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && StrUtil.isNotBlank(entry.getValue()))
-                    .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasIpAddress(entry.getValue()));
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> {
+                        Optional<String> ipOpt = entry.getValue().stream()
+                            .map(ip -> StrUtil.format("hasIpAddress('{}')", ip))
+                            .reduce((s, s2) -> StrUtil.format("{} or {}", s, s2));
+                        ipOpt.ifPresent(s -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).access(s));
+                    });
             }
 
             // 如果配置忽略
@@ -98,8 +101,12 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
                 expressionInterceptUrlRegistry.antMatchers(ignoreUrls).permitAll();
             }
 
-            expressionInterceptUrlRegistry
-                .anyRequest()
+            // 如果配置禁止访问
+            if (denyUrls.length > 0) {
+                expressionInterceptUrlRegistry.antMatchers(denyUrls).denyAll();
+            }
+
+            expressionInterceptUrlRegistry.anyRequest()
                 .authenticated().and();
         }
         http.oauth2Login();
@@ -116,7 +123,6 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
     public ServletExpandAuthenticationManager authenticationManager(ApplicationContext applicationContext) {
         return new ServletExpandAuthenticationManager(applicationContext);
     }
-
 
     private final static RequestMatcher IS_AJAX = new RequestHeaderRequestMatcher(StringPoolUtils.HEADER_REQUESTED_WITH, StringPoolUtils.HEADER_VALUE_XMLHTTPREQUEST);
 
