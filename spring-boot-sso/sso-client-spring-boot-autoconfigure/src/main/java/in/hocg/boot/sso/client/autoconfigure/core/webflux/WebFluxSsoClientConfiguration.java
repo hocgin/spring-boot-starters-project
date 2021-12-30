@@ -1,11 +1,15 @@
 package in.hocg.boot.sso.client.autoconfigure.core.webflux;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.AuthenticationResult;
 import in.hocg.boot.sso.client.autoconfigure.core.webflux.bearer.ServerBearerTokenAuthenticationConverter;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -32,10 +37,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -52,26 +54,60 @@ public class WebFluxSsoClientConfiguration {
     private ApplicationContext context;
 
     @Bean
+    @RefreshScope
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, ApplicationContext context) {
         this.context = context;
         String[] ignoreUrls = properties.getIgnoreUrls().toArray(new String[]{});
         String[] denyUrls = properties.getDenyUrls().toArray(new String[]{});
         String[] authenticatedUrls = properties.getAuthenticatedUrls().toArray(new String[]{});
+        Map<String, List<String>> hasAnyRole = properties.getHasAnyRole();
+        Map<String, List<String>> hasAnyAuthority = properties.getHasAnyAuthority();
+        Map<String, List<String>> hasIpAddress = properties.getHasIpAddress();
         {
             ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchangeSpec =
                 http.authorizeExchange();
-            if (denyUrls.length > 0) {
-                authorizeExchangeSpec.pathMatchers(denyUrls).denyAll();
-            }
+
+            // 如果配置需登陆
             if (authenticatedUrls.length > 0) {
                 authorizeExchangeSpec.pathMatchers(authenticatedUrls).authenticated();
             }
+
+            // 如果配置角色
+            if (CollUtil.isNotEmpty(hasAnyRole)) {
+                hasAnyRole.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyRole(ArrayUtil.toArray(entry.getValue(), String.class)));
+            }
+
+            // 如果配置权限
+            if (CollUtil.isNotEmpty(hasAnyAuthority)) {
+                hasAnyAuthority.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyAuthority(ArrayUtil.toArray(entry.getValue(), String.class)));
+            }
+
+            // 如果配置IP白名单
+            if (CollUtil.isNotEmpty(hasIpAddress)) {
+                hasIpAddress.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).access((mono, authorizationContext) -> {
+                        String ip = Objects.requireNonNull(authorizationContext.getExchange().getRequest().getRemoteAddress()).getAddress().toString().replace("/", "");
+                        return mono.map((a) -> new AuthorizationDecision(a.isAuthenticated()))
+                            .defaultIfEmpty(new AuthorizationDecision(entry.getValue().contains(ip)));
+                    }));
+            }
+
+            // 如果配置忽略
             if (ignoreUrls.length > 0) {
                 authorizeExchangeSpec.pathMatchers(ignoreUrls).permitAll();
             }
 
-            authorizeExchangeSpec
-                .anyExchange()
+            // 如果配置禁止访问
+            if (denyUrls.length > 0) {
+                authorizeExchangeSpec.pathMatchers(denyUrls).denyAll();
+            }
+
+            authorizeExchangeSpec.anyExchange()
                 .authenticated().and();
         }
         http.oauth2Login();
