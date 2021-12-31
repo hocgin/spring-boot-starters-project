@@ -1,8 +1,8 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.utils;
+package in.hocg.boot.mybatis.plus.autoconfiguration.core.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import in.hocg.boot.mybatis.plus.autoconfiguration.ro.PageRo;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro.PageRo;
 import lombok.experimental.UtilityClass;
 
 import java.util.Collections;

@@ -1,9 +1,9 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.tree;
+package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.tree;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import in.hocg.boot.mybatis.plus.autoconfiguration.AbstractEntity;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

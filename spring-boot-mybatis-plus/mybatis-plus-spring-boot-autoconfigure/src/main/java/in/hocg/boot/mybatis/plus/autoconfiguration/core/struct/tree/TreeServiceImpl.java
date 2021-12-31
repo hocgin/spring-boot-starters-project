@@ -1,9 +1,9 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.tree;
+package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.tree;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import in.hocg.boot.mybatis.plus.autoconfiguration.AbstractServiceImpl;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractServiceImpl;
 import in.hocg.boot.utils.ValidUtils;
 import in.hocg.boot.utils.LangUtils;
 import lombok.NonNull;

@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration;
+package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;

@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.ro;
+package in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro;
 
 import java.io.Serializable;
 

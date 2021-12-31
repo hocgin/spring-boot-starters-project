@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.vo;
+package in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
