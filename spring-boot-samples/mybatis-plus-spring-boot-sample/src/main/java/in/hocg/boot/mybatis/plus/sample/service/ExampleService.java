@@ -1,7 +1,7 @@
 package in.hocg.boot.mybatis.plus.sample.service;
 
 
-import in.hocg.boot.mybatis.plus.autoconfiguration.AbstractService;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractService;
 import in.hocg.boot.mybatis.plus.sample.entity.Example;
 
 /**

@@ -11,7 +11,7 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
 
-  <name>Spring Boot :: Starters :: Parent</name>
+  <name>Spring Boot :: Dependencies</name>
   <artifactId>spring-boot-dependencies</artifactId>
 
   <properties>

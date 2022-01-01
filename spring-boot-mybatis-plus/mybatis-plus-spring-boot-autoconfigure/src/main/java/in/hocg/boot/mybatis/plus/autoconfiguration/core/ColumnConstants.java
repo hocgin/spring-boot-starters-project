@@ -6,6 +6,6 @@ package in.hocg.boot.mybatis.plus.autoconfiguration.core;
  *
  * @author hocgin
  */
-public class Constants {
-
+public class ColumnConstants {
+    public static final String TENANT_ID = "tenant_id";
 }

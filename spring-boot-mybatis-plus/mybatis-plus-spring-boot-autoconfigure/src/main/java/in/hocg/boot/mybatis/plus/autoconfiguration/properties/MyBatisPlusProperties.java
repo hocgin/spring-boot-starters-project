@@ -1,6 +1,6 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.properties;
 
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractEntity;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -25,8 +25,8 @@ public class MyBatisPlusProperties {
 
     @Data
     public static class Tenant {
-        public static final String PREFIX = MyBatisPlusProperties.PREFIX + ".tenant";
         public static final Tenant DEFAULT = new Tenant();
+        public static final String PREFIX = MyBatisPlusProperties.PREFIX + ".tenant";
         /**
          * 是否开启租户功能
          */
@@ -34,7 +34,7 @@ public class MyBatisPlusProperties {
         /**
          * 租户字段
          */
-        private String column = AbstractEntity.TENANT_ID;
+        private String column = ColumnConstants.TENANT_ID;
         /**
          * 要忽略租户的表
          */

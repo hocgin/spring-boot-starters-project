@@ -1,7 +1,7 @@
 package in.hocg.boot.excel.autoconfiguration.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import in.hocg.boot.mybatis.plus.autoconfiguration.ro.PageRo;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro.PageRo;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
