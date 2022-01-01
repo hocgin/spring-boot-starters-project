@@ -9,6 +9,7 @@ import lombok.experimental.UtilityClass;
  * @author hocgin
  */
 @UtilityClass
+@Deprecated
 public class TenantContextHolder {
     private final ThreadLocal<Long> TENANT = ThreadLocal.withInitial(() -> null);
 

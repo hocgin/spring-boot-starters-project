@@ -1,7 +1,7 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.tenant;
 
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.TenantContextHolder;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.MybatisContextHolder;
 import in.hocg.boot.mybatis.plus.autoconfiguration.properties.MyBatisPlusProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +25,11 @@ import java.util.Objects;
 @EnableConfigurationProperties({MyBatisPlusProperties.class})
 public class BootTenantHandler implements TenantLineHandler {
     private final MyBatisPlusProperties properties;
+    private final MybatisContextHolder contextHolder;
 
     @Override
     public Expression getTenantId() {
-        Long tenantId = TenantContextHolder.getTenantId();
+        Long tenantId = contextHolder.getTenantId();
         if (Objects.isNull(tenantId)) {
             return new NullValue();
         }
@@ -42,7 +43,7 @@ public class BootTenantHandler implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
-        Long tenantId = TenantContextHolder.getTenantId();
+        Long tenantId = contextHolder.getTenantId();
         if (Objects.isNull(tenantId)) {
             return true;
         }

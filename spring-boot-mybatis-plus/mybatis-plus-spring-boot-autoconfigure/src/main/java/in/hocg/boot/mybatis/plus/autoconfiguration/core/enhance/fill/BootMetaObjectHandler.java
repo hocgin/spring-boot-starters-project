@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.UserContextHolder;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.MybatisContextHolder;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.EntityListeners;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.PreInsert;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.PreUpdate;
@@ -43,13 +43,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BootMetaObjectHandler implements MetaObjectHandler {
     private final ApplicationContext applicationContext;
+    private final MybatisContextHolder contextHolder;
 
     @Override
     public void insertFill(MetaObject metaObject) {
         hookEntityListeners(metaObject, true);
 
         this.strictInsertFill(metaObject, getFieldName(CommonEntity<CommonEntity<?>>::getCreatedAt), LocalDateTime::now, LocalDateTime.class);
-        this.strictInsertFill(metaObject, getFieldName(CommonEntity<CommonEntity<?>>::getCreator), UserContextHolder::getUserId, Long.class);
+        this.strictInsertFill(metaObject, getFieldName(CommonEntity<CommonEntity<?>>::getCreator), contextHolder::getUserId, Long.class);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class BootMetaObjectHandler implements MetaObjectHandler {
         hookEntityListeners(metaObject, false);
 
         this.strictUpdateFill(metaObject, getFieldName(CommonEntity<CommonEntity<?>>::getLastUpdatedAt), LocalDateTime::now, LocalDateTime.class);
-        this.strictUpdateFill(metaObject, getFieldName(CommonEntity<CommonEntity<?>>::getLastUpdater), UserContextHolder::getUserId, Long.class);
+        this.strictUpdateFill(metaObject, getFieldName(CommonEntity<CommonEntity<?>>::getLastUpdater), contextHolder::getUserId, Long.class);
     }
 
     private void hookEntityListeners(MetaObject metaObject, boolean isInsert) {

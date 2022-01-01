@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.baomidou.mybatisplus.extension.plugins.inner.TenantLineInnerInterceptor;
 import com.google.common.collect.Sets;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.DefaultMybatisContextHolder;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.MybatisContextHolder;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.fill.BootMetaObjectHandler;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.tenant.BootTenantHandler;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.interceptor.LogicDeleteInterceptor;
@@ -47,27 +49,33 @@ public class MyBatisPlusAutoConfiguration implements ApplicationContextAware {
 
     @Bean
     @ConditionalOnMissingBean
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+    public MybatisPlusInterceptor mybatisPlusInterceptor(MybatisContextHolder contextHolder) {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         if (properties.getTenant().getEnable()) {
-            interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(tenantLineHandler(properties)));
+            interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(tenantLineHandler(properties, contextHolder)));
         }
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
-        interceptor.addInnerInterceptor(new LogicDeleteInterceptor());
+        interceptor.addInnerInterceptor(new LogicDeleteInterceptor(contextHolder));
         return interceptor;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public TenantLineHandler tenantLineHandler(MyBatisPlusProperties properties) {
-        return new BootTenantHandler(properties);
+    public TenantLineHandler tenantLineHandler(MyBatisPlusProperties properties, MybatisContextHolder contextHolder) {
+        return new BootTenantHandler(properties, contextHolder);
     }
 
 
     @Bean
     @ConditionalOnMissingBean
-    public MetaObjectHandler metaObjectHandler() {
-        return new BootMetaObjectHandler(applicationContext);
+    public MetaObjectHandler metaObjectHandler(MybatisContextHolder contextHolder) {
+        return new BootMetaObjectHandler(applicationContext, contextHolder);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public MybatisContextHolder mybatisPlusContextHolder() {
+        return new DefaultMybatisContextHolder();
     }
 
     @Bean

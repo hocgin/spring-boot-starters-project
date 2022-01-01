@@ -10,7 +10,8 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.parser.JsqlParserSupport;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.UserContextHolder;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.MybatisContextHolder;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
@@ -35,7 +36,9 @@ import java.util.Objects;
  * @author hocgin
  */
 @Slf4j
+@RequiredArgsConstructor
 public class LogicDeleteInterceptor extends JsqlParserSupport implements InnerInterceptor {
+    private final MybatisContextHolder contextHolder;
 
     @Override
     public void beforePrepare(StatementHandler sh, Connection connection, Integer transactionTimeout) {
@@ -59,7 +62,7 @@ public class LogicDeleteInterceptor extends JsqlParserSupport implements InnerIn
             return;
         }
 
-        Long userId = UserContextHolder.getUserId();
+        Long userId = contextHolder.getUserId();
         if (hasColumnName(tableName, ColumnConstants.DELETER) && Objects.nonNull(userId)) {
             updateSets.add(new UpdateSet(new Column(ColumnConstants.DELETER), new LongValue(userId)));
         }
