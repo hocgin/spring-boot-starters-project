@@ -69,8 +69,8 @@ public class BootMetaObjectHandler implements MetaObjectHandler {
             return;
         }
 
-        Class<?>[] value = entityType.getAnnotation(EntityListeners.class).value();
-        for (Class<?> aClass : value) {
+        Class<?>[] classes = entityType.getAnnotation(EntityListeners.class).value();
+        for (Class<?> aClass : classes) {
             List<Method> methods = ClassUtil.getPublicMethods(aClass, method -> isInsert ? method.isAnnotationPresent(PreInsert.class) : method.isAnnotationPresent(PreUpdate.class));
             if (CollUtil.isEmpty(methods)) {
                 break;

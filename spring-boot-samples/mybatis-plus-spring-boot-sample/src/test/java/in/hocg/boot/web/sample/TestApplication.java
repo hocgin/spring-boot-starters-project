@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * @author hocgin
  */
-@SpringBootApplication(scanBasePackages = "in.hocg.boot.mybatis.plus")
+@SpringBootApplication(scanBasePackages = {"in.hocg.boot.mybatis.plus", "in.hocg.boot.web.sample.listeners"})
 public class TestApplication {
 
 }
