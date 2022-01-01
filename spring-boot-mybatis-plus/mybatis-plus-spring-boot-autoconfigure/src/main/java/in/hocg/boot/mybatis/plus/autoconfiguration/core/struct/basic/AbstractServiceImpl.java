@@ -53,11 +53,9 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
     }
 
     @Override
-    public boolean has(SFunction<T, ?> field, Object val,
-                       SFunction<T, ?> ignoreField, Serializable... ignoreVal) {
+    public boolean has(SFunction<T, ?> field, Object val, SFunction<T, ?> ignoreField, Serializable... ignoreVal) {
         List<Serializable> ignoreIds = Arrays.asList(ignoreVal).parallelStream()
             .filter(Objects::nonNull).collect(Collectors.toList());
-
         return !lambdaQuery().eq(field, val)
             .notIn(!ignoreIds.isEmpty(), ignoreField, Arrays.stream(ignoreVal).toArray())
             .page(new Page<>(1, 1, false)).getRecords().isEmpty();

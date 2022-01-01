@@ -14,6 +14,10 @@ CREATE TABLE `model_entity`
         COMMENT '更新时间',
     `last_updater`    BIGINT
         COMMENT '更新者',
+    `deleted_at`      DATETIME(6)          DEFAULT NULL
+        COMMENT '删除时间',
+    `deleter`         BIGINT               DEFAULT NULL
+        COMMENT '删除者',
 
     PRIMARY KEY (`id`)
 );

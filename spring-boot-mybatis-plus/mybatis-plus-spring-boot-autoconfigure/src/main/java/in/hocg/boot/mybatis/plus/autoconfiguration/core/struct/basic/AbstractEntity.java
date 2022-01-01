@@ -9,9 +9,4 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
  * @author hocgin
  */
 public abstract class AbstractEntity<T extends AbstractEntity<?>> extends Model<T> {
-
-    @Override
-    public java.io.Serializable pkVal() {
-        return super.pkVal();
-    }
 }

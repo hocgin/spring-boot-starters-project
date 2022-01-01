@@ -2,8 +2,8 @@ package in.hocg.boot.web.sample.data.none;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractEntity;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.beta.BetaAbstractEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @TableName("model_entity")
 public class NoneModelEntity extends AbstractEntity<NoneModelEntity> {
-    @TableId(value = BetaAbstractEntity.ID)
+    @TableId(value = ColumnConstants.ID)
     private Long id;
     private String title;
 }
