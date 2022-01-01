@@ -41,19 +41,32 @@ public class LogicDeleteTests extends BaseDbTest<ModelEntityMapper> {
         doTest(i -> {
             ModelEntity entity = i.byId(1L);
             assertNotNull(entity);
-//            assertNotNull(entity.getDeletedAt());
+            assertNotNull(entity.getDeletedAt());
 
             entity = i.byId(2L);
             assertNotNull(entity);
-//            assertNotNull(entity.getDeletedAt());
+            assertNotNull(entity.getDeletedAt());
         });
 
         doTest(mapper -> {
             ModelEntity entity = new ModelEntity();
             mapper.insert(entity);
 
-            // todo BUG
             assertEquals(mapper.deleteById(entity), 1);
+        });
+
+        doTest(mapper -> {
+            ModelEntity entity = new ModelEntity();
+            mapper.insert(entity);
+
+            assertEquals(mapper.deleteById(entity), 1);
+
+            Long id = entity.getId();
+
+            mapper.resetDelete(id);
+
+            ModelEntity modelEntity = mapper.byId(id);
+            assertNotNull(modelEntity);
         });
     }
 

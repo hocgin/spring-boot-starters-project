@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.common;
+package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;

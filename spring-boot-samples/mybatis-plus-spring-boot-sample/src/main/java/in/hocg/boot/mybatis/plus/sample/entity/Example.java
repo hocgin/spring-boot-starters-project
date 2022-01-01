@@ -2,7 +2,7 @@ package in.hocg.boot.mybatis.plus.sample.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.complex.ComplexEntity;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.LogicDeletedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName("t_example")
-public class Example extends ComplexEntity<Example> {
+public class Example extends LogicDeletedEntity<Example> {
     private static final long serialVersionUID = 1L;
 
     @TableField("name")

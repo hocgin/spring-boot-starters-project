@@ -2,7 +2,6 @@ package in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.fill;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
@@ -11,7 +10,7 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.UserContextHolde
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.EntityListeners;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.PreInsert;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.PreUpdate;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.common.CommonEntity;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
@@ -26,6 +25,17 @@ import java.util.List;
 /**
  * Created by hocgin on 2021/12/31
  * email: hocgin@gmail.com
+ * <br/>
+ * 职责:
+ * <br/>
+ * 1. 填充基础字段
+ * <br/>
+ * - 填充创建人、创建时间
+ * <br/>
+ * - 填充修改人、修改时间
+ * <br/>
+ * 2. 触发实体监听器
+ * <br/>
  *
  * @author hocgin
  */

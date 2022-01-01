@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS `model_entity`;
-CREATE TABLE `model_entity`
+DROP TABLE IF EXISTS `none_model_entity`;
+CREATE TABLE `none_model_entity`
 (
     `id`              BIGINT AUTO_INCREMENT
         COMMENT 'ID',

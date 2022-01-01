@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("model_entity")
+@TableName("none_model_entity")
 public class NoneModelEntity extends AbstractEntity<NoneModelEntity> {
     @TableId(value = ColumnConstants.ID)
     private Long id;

@@ -13,6 +13,7 @@ import com.google.common.collect.Sets;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.fill.BootMetaObjectHandler;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.tenant.BootTenantHandler;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.interceptor.LogicDeleteInterceptor;
 import in.hocg.boot.mybatis.plus.autoconfiguration.properties.MyBatisPlusProperties;
 import in.hocg.boot.utils.LangUtils;
 import lombok.RequiredArgsConstructor;
@@ -48,10 +49,11 @@ public class MyBatisPlusAutoConfiguration implements ApplicationContextAware {
     @ConditionalOnMissingBean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
         if (properties.getTenant().getEnable()) {
             interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(tenantLineHandler(properties)));
         }
+        interceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+        interceptor.addInnerInterceptor(new LogicDeleteInterceptor());
         return interceptor;
     }
 

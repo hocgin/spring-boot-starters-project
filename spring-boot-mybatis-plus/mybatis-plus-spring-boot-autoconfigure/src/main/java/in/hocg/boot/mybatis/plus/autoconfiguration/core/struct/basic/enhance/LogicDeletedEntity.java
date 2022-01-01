@@ -1,9 +1,8 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.complex;
+package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.common.CommonEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -19,9 +18,7 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public abstract class ComplexEntity<T extends ComplexEntity<?>> extends CommonEntity<T> {
-    @TableField(ColumnConstants.TENANT_ID)
-    private Long tenantId;
+public abstract class LogicDeletedEntity<T extends LogicDeletedEntity<?>> extends CommonEntity<T> {
 
     @TableLogic
     @TableField(value = ColumnConstants.DELETED_AT)

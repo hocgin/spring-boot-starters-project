@@ -1,7 +1,7 @@
 package in.hocg.boot.web.sample.data.basic;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.complex.ComplexEntity;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.LogicDeletedEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +14,6 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("model_entity")
-public class ModelEntity extends ComplexEntity<ModelEntity> {
+public class ModelEntity extends LogicDeletedEntity<ModelEntity> {
     private String title;
 }

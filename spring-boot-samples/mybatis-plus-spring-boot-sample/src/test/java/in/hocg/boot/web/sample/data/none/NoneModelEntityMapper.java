@@ -12,6 +12,6 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface NoneModelEntityMapper extends BaseMapper<NoneModelEntity> {
-    @Select("select * from model_entity where id = #{id}")
+    @Select("select * from none_model_entity where id = #{id}")
     NoneModelEntity byId(Long id);
 }
