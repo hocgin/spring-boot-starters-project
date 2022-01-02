@@ -40,7 +40,8 @@ jobs:
         run: |
           SNAPSHOT_REPO="\${env.MAVEN_SERVER_ID}::default::\${env.SNAPSHOT_URL}"
           RELEASE_REPO="\${env.MAVEN_SERVER_ID}::default::\${env.RELEASE_URL}"
-          mvn --batch-mode deploy -P release -Drevision="${env.VERSION}" -DaltDeploymentRepository="${RELEASE_REPO}" -DaltSnapshotDeploymentRepository="${SNAPSHOT_REPO}" -DskipTests
+          VERSION="\${env.VERSION}"
+          mvn --batch-mode deploy -P release -Drevision="${VERSION}" -DaltDeploymentRepository="${RELEASE_REPO}" -DaltSnapshotDeploymentRepository="${SNAPSHOT_REPO}" -DskipTests
         env:
           SNAPSHOT_URL: https://oss.sonatype.org/content/repositories/snapshots
           RELEASE_URL: https://oss.sonatype.org/service/local/staging/deploy/maven2
