@@ -2,8 +2,11 @@ package in.hocg.boot.excel.autoconfiguration.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro.PageRo;
+import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -34,5 +37,13 @@ public class ExcelUtils {
             consumer.accept(records);
             ro.setPage(ro.getPage() + 1);
         } while (records.size() < size);
+    }
+
+    @SneakyThrows
+    public static void filename(HttpServletResponse response, String fname) {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setCharacterEncoding("utf-8");
+        String fileName = URLEncoder.encode(fname, "UTF-8").replaceAll("\\+", "%20");
+        response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
     }
 }

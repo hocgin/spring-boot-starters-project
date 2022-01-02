@@ -39,7 +39,7 @@
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <webmagic.version>0.7.4</webmagic.version>
     <typetools.version>0.6.3</typetools.version>
-    <easyexcel.version>2.2.10</easyexcel.version>
+    <easyexcel.version>3.0.5</easyexcel.version>
     <jackson-mapper-asl.version>1.9.4</jackson-mapper-asl.version>
     <google-collections.version>1.0</google-collections.version>
     <google-api-services-youtube.version>v3-rev182-1.22.0</google-api-services-youtube.version>
