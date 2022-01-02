@@ -33,7 +33,7 @@ jobs:
         id: prep
         run: |
           VERSION=${GITHUB_REF#refs/tags/}
-          echo "${VERSION}" | sed 's/v//'
+          VERSION=$(echo "${VERSION}" | sed 's/v//')
           echo ::set-output name=version::${VERSION}
 
       - name: Publish Package Registry
