@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.core.context;
+package in.hocg.boot.utils.context;
 
 import lombok.experimental.UtilityClass;
 
@@ -9,7 +9,6 @@ import lombok.experimental.UtilityClass;
  * @author hocgin
  */
 @UtilityClass
-@Deprecated
 public class UserContextHolder {
     private final ThreadLocal<Long> USER_ID = ThreadLocal.withInitial(() -> null);
 

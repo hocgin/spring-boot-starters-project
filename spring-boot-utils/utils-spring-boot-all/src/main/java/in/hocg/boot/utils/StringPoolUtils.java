@@ -10,8 +10,7 @@ public final class StringPoolUtils {
     public static final String COLON = ":";
     public static final String UNKNOWN = "unknown";
 
-    // 请求头
-    public static final String HEADER_USERAGENT = "X-Useragent";
+    public static final String HEADER_USERAGENT = "X-User-Agent";
     public static final String HEADER_SOURCE = "X-Source";
     public static final String HEADER_USERNAME = "X-Username";
     public static final String HEADER_REQUESTED_WITH = "X-Requested-With";
@@ -23,5 +22,4 @@ public final class StringPoolUtils {
     public static final String HEADER_VALUE_BEARER = "Bearer";
     public static final String HEADER_VALUE_BASIC = "Basic";
 
-    //
 }
