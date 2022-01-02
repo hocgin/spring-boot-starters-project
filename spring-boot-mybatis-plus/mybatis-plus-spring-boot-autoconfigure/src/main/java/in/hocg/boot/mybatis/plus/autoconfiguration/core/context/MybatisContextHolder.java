@@ -1,5 +1,8 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.context;
 
+import in.hocg.boot.utils.context.TenantContextHolder;
+import in.hocg.boot.utils.context.UserContextHolder;
+
 /**
  * Created by hocgin on 2022/1/2
  * email: hocgin@gmail.com
@@ -14,7 +17,7 @@ public interface MybatisContextHolder {
      * @return id
      */
     default Long getUserId() {
-        return null;
+        return UserContextHolder.getUserId();
     }
 
 
@@ -24,6 +27,6 @@ public interface MybatisContextHolder {
      * @return id
      */
     default Long getTenantId() {
-        return null;
+        return TenantContextHolder.getTenantId();
     }
 }

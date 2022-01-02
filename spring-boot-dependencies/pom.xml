@@ -3,25 +3,28 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>spring-boot-starters-project</artifactId>
-    <groupId>in.hocg.boot</groupId>
-    <version>${revision}</version>
-    <relativePath>../pom.xml</relativePath>
+    <groupId>org.apache</groupId>
+    <artifactId>apache</artifactId>
+    <version>19</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
 
+  <groupId>in.hocg.boot</groupId>
   <name>Spring Boot :: Dependencies</name>
   <artifactId>spring-boot-dependencies</artifactId>
+  <version>${revision}</version>
 
   <properties>
+    <revision>1.0.25</revision>
+
     <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
     <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
     <mybatis-plus.version>3.5.0</mybatis-plus.version>
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
     <guava.version>28.1-jre</guava.version>
     <hutool-all.version>5.3.10</hutool-all.version>
-    <qiniu-java-sdk.version>[7.2.0, 7.2.99]</qiniu-java-sdk.version>
+    <qiniu-java-sdk.version>7.2.29</qiniu-java-sdk.version>
     <aliyun-oss.version>2.8.3</aliyun-oss.version>
     <swagger2.version>1.5.20</swagger2.version>
     <knife4j.version>2.0.4</knife4j.version>
@@ -39,7 +42,7 @@
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     <webmagic.version>0.7.4</webmagic.version>
     <typetools.version>0.6.3</typetools.version>
-    <easyexcel.version>2.2.10</easyexcel.version>
+    <easyexcel.version>3.0.5</easyexcel.version>
     <jackson-mapper-asl.version>1.9.4</jackson-mapper-asl.version>
     <google-collections.version>1.0</google-collections.version>
     <google-api-services-youtube.version>v3-rev182-1.22.0</google-api-services-youtube.version>
@@ -51,6 +54,8 @@
     <jol-core.version>0.16</jol-core.version>
     <sentinel.version>1.8.2</sentinel.version>
     <arthas-spring-boot-starter.version>3.5.4</arthas-spring-boot-starter.version>
+    <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
+    <lombok.version>1.18.12</lombok.version>
   </properties>
 
   <dependencyManagement>
@@ -701,11 +706,4 @@
     </dependencies>
   </dependencyManagement>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-    </dependency>
-  </dependencies>
 </project>

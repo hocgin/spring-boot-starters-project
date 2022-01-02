@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.autoconfiguration.core.context;
+package in.hocg.boot.utils.context;
 
 import lombok.experimental.UtilityClass;
 
@@ -9,19 +9,18 @@ import lombok.experimental.UtilityClass;
  * @author hocgin
  */
 @UtilityClass
-@Deprecated
 public class TenantContextHolder {
-    private final ThreadLocal<Long> TENANT = ThreadLocal.withInitial(() -> null);
+    private final ThreadLocal<Long> TENANT_ID = ThreadLocal.withInitial(() -> null);
 
     public void setTenantId(Long tenantId) {
-        TENANT.set(tenantId);
+        TENANT_ID.set(tenantId);
     }
 
     public Long getTenantId() {
-        return TENANT.get();
+        return TENANT_ID.get();
     }
 
     public void clear() {
-        TENANT.remove();
+        TENANT_ID.remove();
     }
 }

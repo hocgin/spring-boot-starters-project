@@ -16,7 +16,7 @@
   <version>${revision}</version>
 
   <properties>
-    <revision>1.0.24</revision>
+    <revision>1.0.25</revision>
 
     <java.version>1.8</java.version>
     <java.source.version>1.8</java.source.version>
@@ -74,6 +74,26 @@
     <module>spring-boot-ffmpeg</module>
     <module>spring-boot-tpl</module>
   </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>in.hocg.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${revision}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <licenses>
     <license>
