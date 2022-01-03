@@ -2,6 +2,7 @@ package in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.fill;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
@@ -17,7 +18,6 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.context.ApplicationContext;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -79,11 +79,7 @@ public class BootMetaObjectHandler implements MetaObjectHandler {
             Object bean = applicationContext.getBean(aClass);
             Object originalObject = metaObject.getOriginalObject();
             for (Method method : methods) {
-                try {
-                    method.invoke(bean, originalObject);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    log.warn("{} 的 @{} 扩展事件[@{}]调用失败", aClass.getName(), EntityListeners.class.getSimpleName(), isInsert ? PreInsert.class.getSimpleName() : PreUpdate.class.getSimpleName());
-                }
+                ReflectUtil.invoke(bean, method, originalObject);
             }
         }
     }
