@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("model_entity")
-@EntityListeners(TestEntityListener.class)
+@EntityListeners({TestEntityListener.class})
 public class ModelEntity extends LogicDeletedEntity<ModelEntity> {
     private String title;
 }

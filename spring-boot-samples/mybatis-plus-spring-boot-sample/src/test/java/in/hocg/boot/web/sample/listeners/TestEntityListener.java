@@ -1,7 +1,6 @@
 package in.hocg.boot.web.sample.listeners;
 
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.PreInsert;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.PreUpdate;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.EntityListener;
 import in.hocg.boot.web.sample.data.basic.ModelEntity;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +11,12 @@ import org.springframework.stereotype.Component;
  * @author hocgin
  */
 @Component
-public class TestEntityListener {
+public class TestEntityListener implements EntityListener<ModelEntity> {
 
-    @PreInsert
     public void onPreInsert(ModelEntity entity) {
         System.out.println("PreInsert");
     }
 
-    @PreUpdate
     public void onPreUpdate(ModelEntity entity) {
         System.out.println("PreUpdate");
     }
