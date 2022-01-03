@@ -1,5 +1,6 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.fill;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyNamer;
-import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDateTime;
 
@@ -36,7 +36,6 @@ import java.time.LocalDateTime;
 @Slf4j
 @RequiredArgsConstructor
 public class BootMetaObjectHandler implements MetaObjectHandler {
-    private final ApplicationContext applicationContext;
     private final MybatisContextHolder contextHolder;
 
     @Override
@@ -63,13 +62,15 @@ public class BootMetaObjectHandler implements MetaObjectHandler {
         if (!entityType.isAnnotationPresent(EntityListeners.class)) {
             return;
         }
-        Class<? extends EntityListener> clazz = entityType.getAnnotation(EntityListeners.class).value();
-        Object originalObject = metaObject.getOriginalObject();
-        EntityListener bean = applicationContext.getBean(clazz);
-        if (isInsert) {
-            bean.onPreInsert(originalObject);
-        } else {
-            bean.onPreUpdate(originalObject);
+        Class<? extends EntityListener>[] classes = entityType.getAnnotation(EntityListeners.class).value();
+        for (Class<? extends EntityListener> clazz : classes) {
+            Object originalObject = metaObject.getOriginalObject();
+            EntityListener bean = SpringUtil.getBean(clazz);
+            if (isInsert) {
+                bean.onPreInsert(originalObject);
+            } else {
+                bean.onPreUpdate(originalObject);
+            }
         }
     }
 

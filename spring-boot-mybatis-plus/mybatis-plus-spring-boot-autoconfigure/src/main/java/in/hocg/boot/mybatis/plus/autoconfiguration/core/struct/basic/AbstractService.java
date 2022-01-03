@@ -55,4 +55,25 @@ public interface AbstractService<T> extends IService<T> {
      */
     boolean has(SFunction<T, ?> field, Object fieldVal,
                 SFunction<T, ?> ignoreField, Serializable... ignoreVal);
+
+    /**
+     * 实体转换
+     *
+     * @param entity 实体
+     * @param clazz  转换目标
+     * @param <R>    实体
+     * @return 转换目标实体
+     */
+    <R> R as(T entity, Class<R> clazz);
+
+    /**
+     * 实体转换
+     *
+     * @param entity    实体
+     * @param clazz     转换目标
+     * @param beanClass 转换处理器
+     * @param <R>       转换目标
+     * @return 转换目标实体
+     */
+    <R> R as(T entity, Class<R> clazz, Class<?> beanClass);
 }

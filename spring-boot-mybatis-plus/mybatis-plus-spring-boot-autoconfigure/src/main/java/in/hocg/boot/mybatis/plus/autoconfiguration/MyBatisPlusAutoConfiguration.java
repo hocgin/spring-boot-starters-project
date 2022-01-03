@@ -1,5 +1,6 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration;
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
@@ -19,12 +20,9 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.interceptor.LogicDeleteI
 import in.hocg.boot.mybatis.plus.autoconfiguration.properties.MyBatisPlusProperties;
 import in.hocg.boot.utils.LangUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -42,10 +40,14 @@ import java.util.Set;
 @AutoConfigureAfter(MybatisPlusAutoConfiguration.class)
 @EnableConfigurationProperties(MyBatisPlusProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class MyBatisPlusAutoConfiguration implements ApplicationContextAware {
+public class MyBatisPlusAutoConfiguration {
     private final MyBatisPlusProperties properties;
-    @Setter
-    private ApplicationContext applicationContext;
+
+    @Bean
+    @ConditionalOnMissingBean
+    public SpringUtil springUtil() {
+        return new SpringUtil();
+    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -69,7 +71,7 @@ public class MyBatisPlusAutoConfiguration implements ApplicationContextAware {
     @Bean
     @ConditionalOnMissingBean
     public MetaObjectHandler metaObjectHandler(MybatisContextHolder contextHolder) {
-        return new BootMetaObjectHandler(applicationContext, contextHolder);
+        return new BootMetaObjectHandler(contextHolder);
     }
 
     @Bean
