@@ -1,16 +1,12 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.fill;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.context.MybatisContextHolder;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.EntityListener;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.EntityListeners;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.PreInsert;
-import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.listeners.PreUpdate;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +14,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 import org.springframework.context.ApplicationContext;
 
-import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * Created by hocgin on 2021/12/31
@@ -69,18 +63,13 @@ public class BootMetaObjectHandler implements MetaObjectHandler {
         if (!entityType.isAnnotationPresent(EntityListeners.class)) {
             return;
         }
-
-        Class<?>[] classes = entityType.getAnnotation(EntityListeners.class).value();
-        for (Class<?> aClass : classes) {
-            List<Method> methods = ClassUtil.getPublicMethods(aClass, method -> isInsert ? method.isAnnotationPresent(PreInsert.class) : method.isAnnotationPresent(PreUpdate.class));
-            if (CollUtil.isEmpty(methods)) {
-                break;
-            }
-            Object bean = applicationContext.getBean(aClass);
-            Object originalObject = metaObject.getOriginalObject();
-            for (Method method : methods) {
-                ReflectUtil.invoke(bean, method, originalObject);
-            }
+        Class<? extends EntityListener> clazz = entityType.getAnnotation(EntityListeners.class).value();
+        Object originalObject = metaObject.getOriginalObject();
+        EntityListener bean = applicationContext.getBean(clazz);
+        if (isInsert) {
+            bean.onPreInsert(originalObject);
+        } else {
+            bean.onPreUpdate(originalObject);
         }
     }
 
