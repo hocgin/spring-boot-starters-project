@@ -1,7 +1,6 @@
 package in.hocg.boot.ws.autoconfiguration;
 
 import cn.hutool.extra.spring.SpringUtil;
-import in.hocg.boot.ws.autoconfiguration.core.WebSocketDecoratorFactory;
 import in.hocg.boot.ws.autoconfiguration.core.handshake.AuthenticationHandshakeHandler;
 import in.hocg.boot.ws.autoconfiguration.core.interceptor.WsHandshakeInterceptor;
 import in.hocg.boot.ws.autoconfiguration.core.service.UserService;
@@ -85,7 +84,8 @@ public class WsAutoConfiguration implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-        registry.addDecoratorFactory(new WebSocketDecoratorFactory(tableService));
+        registry.setSendTimeLimit(15 * 1000).setSendBufferSizeLimit(512 * 1024);
+//        registry.addDecoratorFactory(new WebSocketDecoratorFactory(tableService));
     }
 
     @Bean

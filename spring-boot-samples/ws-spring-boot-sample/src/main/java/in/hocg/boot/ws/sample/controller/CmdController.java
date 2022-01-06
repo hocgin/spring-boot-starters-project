@@ -22,8 +22,8 @@ public class CmdController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/index")
-    public Result<Void> index() {
-        return Result.success();
+    public Result<TestCmd> index(TestCmd cmd) {
+        return Result.success(cmd);
     }
 
     @MessageMapping("/success")
