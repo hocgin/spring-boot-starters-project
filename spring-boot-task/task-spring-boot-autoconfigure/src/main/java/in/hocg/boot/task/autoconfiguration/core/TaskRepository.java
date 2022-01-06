@@ -1,12 +1,10 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
-import in.hocg.boot.task.autoconfiguration.core.dto.ExecTaskDTO;
+import in.hocg.boot.task.autoconfiguration.core.dto.TaskDTO;
 import in.hocg.boot.task.autoconfiguration.core.entity.TaskInfo;
 import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
 import lombok.NonNull;
-import lombok.SneakyThrows;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,14 +21,14 @@ public interface TaskRepository {
      * @param taskType _
      * @return _
      */
-    List<ExecTaskDTO> listByTypeAndReady(@NonNull String taskType);
+    List<TaskItem> listByTypeAndReady(@NonNull String taskType);
 
     /**
      * 查询所有准备状态的任务
      *
      * @return
      */
-    List<ExecTaskDTO> listByReady();
+    List<TaskItem> listByReady();
 
     /**
      * 创建任务
@@ -42,14 +40,17 @@ public interface TaskRepository {
      * @param delaySecond
      * @param executeNow
      */
-    ExecTaskDTO createTask(@NonNull String taskName, @NonNull String taskType, Object params, Long delaySecond);
+    TaskItem createTask(@NonNull String taskName, @NonNull String taskType, Object params, Long delaySecond);
 
-    default ExecTaskDTO createTask(@NonNull String taskName, @NonNull String taskType, Object params) {
+    default TaskItem createTask(@NonNull String taskName, @NonNull String taskType, Object params) {
         return this.createTask(taskName, taskType, params, 0L);
     }
 
-    @SneakyThrows(SQLException.class)
-    ExecTaskDTO createExecTaskByTask(TaskInfo taskInfo, Long delaySecond, Long maxCount);
+    Optional<TaskDTO> getLastTaskId(Long taskId);
+
+    Optional<TaskItem> getByTaskIdAndIdx(Long taskId, Integer idx);
+
+    TaskItem createExecTaskByTask(TaskInfo taskInfo, Long delaySecond, Long maxCount);
 
     /**
      * 任务过程日志
@@ -85,7 +86,9 @@ public interface TaskRepository {
      * @param taskSn
      * @return
      */
-    Optional<ExecTaskDTO> getByTaskItemId(Long taskItemId);
+    Optional<TaskItem> getByTaskItemId(Long taskItemId);
+
+    Optional<TaskInfo> getByTaskId(Long taskId);
 
     /**
      * 删除旧任务 <br/>

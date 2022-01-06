@@ -1,8 +1,8 @@
 package in.hocg.boot.task.autoconfiguration.core.entity;
 
 import cn.hutool.db.Entity;
-import in.hocg.boot.task.autoconfiguration.utils.TaskUtils;
 import in.hocg.boot.utils.LambdaUtils;
+import in.hocg.boot.utils.db.DbUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -37,9 +37,9 @@ public class TaskItemLog {
         return new TaskItemLog().setId(entity.getLong(LambdaUtils.getColumnName(TaskItemLog::getId)))
             .setTaskItemId(entity.getLong(LambdaUtils.getColumnName(TaskItemLog::getTaskItemId)))
             .setContent(entity.getStr(LambdaUtils.getColumnName(TaskItemLog::getContent)))
-            .setCreatedAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItemLog::getCreatedAt)))
+            .setCreatedAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItemLog::getCreatedAt)))
             .setCreator(entity.getLong(LambdaUtils.getColumnName(TaskItemLog::getCreator)))
-            .setLastUpdatedAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItemLog::getLastUpdatedAt)))
+            .setLastUpdatedAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItemLog::getLastUpdatedAt)))
             .setLastUpdater(entity.getLong(LambdaUtils.getColumnName(TaskItemLog::getLastUpdater)));
     }
 

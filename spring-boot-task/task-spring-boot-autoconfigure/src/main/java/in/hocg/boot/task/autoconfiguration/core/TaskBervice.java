@@ -1,7 +1,7 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
 import in.hocg.boot.task.autoconfiguration.TaskAutoConfiguration;
-import in.hocg.boot.task.autoconfiguration.core.dto.ExecTaskDTO;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.concurrent.Future;
@@ -25,7 +25,7 @@ public interface TaskBervice {
      * @return 执行结果
      */
     @Async(TaskAutoConfiguration.EXECUTOR_NAME)
-    <T, R> Future<TaskResult<R>> runAsync(Long taskItemId, Function<T, R> runnable, Consumer<ExecTaskDTO> failStrategy);
+    <T, R> Future<TaskResult<R>> runAsync(Long taskItemId, Function<T, R> runnable, Consumer<TaskItem> failStrategy);
 
     default <T, R> Future<TaskResult<R>> runAsync(Long taskItemId, Function<T, R> runnable) {
         return runAsync(taskItemId, runnable, FailStrategy.reCreate());
@@ -39,7 +39,7 @@ public interface TaskBervice {
      * @param <T>        执行结果
      * @return 执行结果
      */
-    <T, R> TaskResult<R> runSync(Long taskItemId, Function<T, R> runnable, Consumer<ExecTaskDTO> failStrategy);
+    <T, R> TaskResult<R> runSync(Long taskItemId, Function<T, R> runnable, Consumer<TaskItem> failStrategy);
 
     default <T, R> TaskResult<R> runSync(Long taskItemId, Function<T, R> runnable) {
         return runSync(taskItemId, runnable, FailStrategy.reCreate());

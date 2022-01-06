@@ -1,7 +1,6 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
 import com.google.common.base.Stopwatch;
-import in.hocg.boot.task.autoconfiguration.core.dto.ExecTaskDTO;
 import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,20 +31,20 @@ public class TaskBerviceImpl implements TaskBervice {
     private TaskRepository repository;
 
     @Override
-    public <T, R> Future<TaskResult<R>> runAsync(Long taskItemId, Function<T, R> runnable, Consumer<ExecTaskDTO> failStrategy) {
+    public <T, R> Future<TaskResult<R>> runAsync(Long taskItemId, Function<T, R> runnable, Consumer<TaskItem> failStrategy) {
         return AsyncResult.forValue(this.runSync(taskItemId, runnable, failStrategy));
     }
 
     @Override
-    public <T, R> TaskResult<R> runSync(Long taskItemId, Function<T, R> runnable, Consumer<ExecTaskDTO> failStrategy) {
+    public <T, R> TaskResult<R> runSync(Long taskItemId, Function<T, R> runnable, Consumer<TaskItem> failStrategy) {
         Stopwatch stopWatch = Stopwatch.createStarted();
 
-        Optional<ExecTaskDTO> taskOpt = getExecTask(taskItemId);
+        Optional<TaskItem> taskOpt = getByTaskItem(taskItemId);
         if (!taskOpt.isPresent()) {
             log.info("执行任务发生错误: 未找到任务项编号:[{}]", taskItemId);
             return TaskResult.fail("未找到任务");
         }
-        ExecTaskDTO taskInfo = taskOpt.get();
+        TaskItem taskInfo = taskOpt.get();
         Long taskId = taskInfo.getTaskId();
 
         LocalDateTime taskInfoReadyAt = taskInfo.getReadyAt();
@@ -54,34 +53,32 @@ public class TaskBerviceImpl implements TaskBervice {
             return TaskResult.fail("任务未到执行时间");
         }
 
-        if (!repository.startTask(taskItemId)) {
-            log.info("任务已经执行或执行完成, 任务项编号:[{}-{}]", taskId, taskItemId);
-            return TaskResult.fail("任务已经执行");
-        }
-
         boolean isOk = true;
         String errorMsg = "ok";
         R result = null;
         try {
+            if (!repository.startTask(taskItemId)) {
+                log.info("任务已经执行或执行完成, 任务项编号:[{}-{}]", taskId, taskItemId);
+                return TaskResult.fail("任务已经执行");
+            }
             Class<?>[] typeArgs = TypeResolver.resolveRawArguments(Function.class, runnable.getClass());
             result = this.run(runnable, taskInfo.resolveParams(typeArgs[0]));
             return TaskResult.success(result);
         } catch (Exception e) {
-            log.info("执行任务发生错误: 任务执行异常, 任务项编号:[{}-{}], 异常信息:[{}]", taskId, taskItemId, e);
+            log.info("执行任务发生错误: 任务执行异常, 任务项编号:[{}-{}], 异常信息:", taskId, taskItemId, e);
             isOk = false;
-            errorMsg = e.getMessage();
-            if (Objects.nonNull(failStrategy)) {
-                failStrategy.accept(taskInfo);
-            }
         } finally {
             long totalTimeMillis = stopWatch.stop().elapsed(TimeUnit.MILLISECONDS);
             TaskItem.DoneStatus doneStatus = isOk ? TaskItem.DoneStatus.Success : TaskItem.DoneStatus.Fail;
             repository.doneTask(taskItemId, doneStatus, totalTimeMillis, errorMsg, result);
+            if (!isOk && Objects.nonNull(failStrategy)) {
+                failStrategy.accept(taskInfo);
+            }
         }
         return TaskResult.fail();
     }
 
-    private Optional<ExecTaskDTO> getExecTask(Long taskItemId) {
+    private Optional<TaskItem> getByTaskItem(Long taskItemId) {
         return this.repository.getByTaskItemId(taskItemId);
     }
 

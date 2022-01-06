@@ -1,8 +1,8 @@
 package in.hocg.boot.task.autoconfiguration.core.entity;
 
 import cn.hutool.db.Entity;
-import in.hocg.boot.task.autoconfiguration.utils.TaskUtils;
 import in.hocg.boot.utils.LambdaUtils;
+import in.hocg.boot.utils.db.DbUtils;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -52,9 +52,10 @@ public class TaskInfo {
             .setTitle(entity.getStr(LambdaUtils.getColumnName(TaskInfo::getTitle)))
             .setParams(entity.getStr(LambdaUtils.getColumnName(TaskInfo::getParams)))
             .setRetryCount(entity.getInt(LambdaUtils.getColumnName(TaskInfo::getRetryCount)))
-            .setCreatedAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskInfo::getCreatedAt)))
+
+            .setCreatedAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskInfo::getCreatedAt)))
             .setCreator(entity.getLong(LambdaUtils.getColumnName(TaskInfo::getCreator)))
-            .setLastUpdatedAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskInfo::getLastUpdatedAt)))
+            .setLastUpdatedAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskInfo::getLastUpdatedAt)))
             .setLastUpdater(entity.getLong(LambdaUtils.getColumnName(TaskInfo::getLastUpdater)));
     }
 
@@ -66,6 +67,7 @@ public class TaskInfo {
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getTitle), getTitle())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getParams), getParams())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getRetryCount), getRetryCount())
+
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getCreator), getCreator())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getCreatedAt), getCreatedAt())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getLastUpdater), getLastUpdater())

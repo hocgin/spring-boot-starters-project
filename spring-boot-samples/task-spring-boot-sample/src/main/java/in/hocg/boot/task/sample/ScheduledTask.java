@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 public class ScheduledTask {
     private final TaskRepository taskRepository;
     private final TaskBervice taskService;
-    private final static String TASK_TYPE = "auto_task";
+    public final static String TASK_TYPE = "auto_task";
 
     @Scheduled(cron = "0/30 0/1 * * * ?  ")
     public void taskCenter() {

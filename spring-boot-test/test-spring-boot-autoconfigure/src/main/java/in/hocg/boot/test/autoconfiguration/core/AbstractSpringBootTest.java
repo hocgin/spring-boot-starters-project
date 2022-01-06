@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringJUnit4ClassRunner.class)
 public abstract class AbstractSpringBootTest {
     @LocalServerPort
-    protected int port;
+    protected Integer port;
     @Autowired
     protected MockMvc mockMvc;
     @Autowired

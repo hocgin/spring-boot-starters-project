@@ -2,7 +2,7 @@ package in.hocg.boot.task.autoconfiguration.core;
 
 
 import cn.hutool.extra.spring.SpringUtil;
-import in.hocg.boot.task.autoconfiguration.core.dto.ExecTaskDTO;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Consumer;
@@ -23,7 +23,7 @@ public class FailStrategy {
      * @param maxCount    最大创建数量
      * @return 策略
      */
-    public static Consumer<ExecTaskDTO> reCreate(Long delaySecond, Long maxCount) {
+    public static Consumer<TaskItem> reCreate(Long delaySecond, Long maxCount) {
         return task -> {
             SpringUtil.getBean(TaskRepository.class).reCreateExecTask(task.getTaskId(), delaySecond, maxCount);
         };
@@ -34,11 +34,11 @@ public class FailStrategy {
      *
      * @return 默认创建策略
      */
-    public static Consumer<ExecTaskDTO> reCreate() {
+    public static Consumer<TaskItem> reCreate() {
         return FailStrategy.reCreate(60L, 12L);
     }
 
-    public static Consumer<ExecTaskDTO> debug() {
+    public static Consumer<TaskItem> debug() {
         return FailStrategy.reCreate(5L, 100L);
     }
 
@@ -47,7 +47,7 @@ public class FailStrategy {
      *
      * @return 策略
      */
-    public static Consumer<ExecTaskDTO> skip() {
+    public static Consumer<TaskItem> skip() {
         return task -> {
         };
     }
@@ -57,7 +57,7 @@ public class FailStrategy {
      *
      * @return 策略
      */
-    public static Consumer<ExecTaskDTO> skipAndLog() {
+    public static Consumer<TaskItem> skipAndLog() {
         return task -> {
             log.error("任务执行失败, 任务ID: {}", task.getTaskId());
         };

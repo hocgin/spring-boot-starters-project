@@ -1,8 +1,10 @@
 package in.hocg.boot.task.autoconfiguration.core.entity;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.db.Entity;
-import in.hocg.boot.task.autoconfiguration.utils.TaskUtils;
+import cn.hutool.json.JSONUtil;
 import in.hocg.boot.utils.LambdaUtils;
+import in.hocg.boot.utils.db.DbUtils;
 import in.hocg.boot.utils.enums.ICode;
 import lombok.Data;
 import lombok.Getter;
@@ -79,24 +81,32 @@ public class TaskItem {
     private LocalDateTime lastUpdatedAt;
     private Long lastUpdater;
 
+
+    public <R> R resolveParams(Class<?> clazz) {
+        if (StrUtil.isBlank(params) || !JSONUtil.isJson(params)) {
+            return null;
+        }
+        return (R) JSONUtil.toBean(params, clazz);
+    }
+
     public static TaskItem as(Entity entity) {
         return new TaskItem().setId(entity.getLong(LambdaUtils.getColumnName(TaskItem::getId)))
             .setTaskId(entity.getLong(LambdaUtils.getColumnName(TaskItem::getTaskId)))
             .setType(entity.getStr(LambdaUtils.getColumnName(TaskItem::getType)))
             .setStatus(entity.getStr(LambdaUtils.getColumnName(TaskItem::getStatus)))
             .setParams(entity.getStr(LambdaUtils.getColumnName(TaskItem::getParams)))
-            .setIdx(entity.getInt(LambdaUtils.getColumnName(TaskItem::getParams)))
+            .setIdx(entity.getInt(LambdaUtils.getColumnName(TaskItem::getIdx)))
             .setDoneStatus(entity.getStr(LambdaUtils.getColumnName(TaskItem::getDoneStatus)))
             .setDoneMessage(entity.getStr(LambdaUtils.getColumnName(TaskItem::getDoneMessage)))
             .setDoneResult(entity.getStr(LambdaUtils.getColumnName(TaskItem::getDoneResult)))
             .setTotalTimeMillis(entity.getLong(LambdaUtils.getColumnName(TaskItem::getTotalTimeMillis)))
-            .setReadyAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getReadyAt)))
-            .setStartAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getStartAt)))
-            .setDoneAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getDoneAt)))
+            .setReadyAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getReadyAt)))
+            .setStartAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getStartAt)))
+            .setDoneAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getDoneAt)))
 
-            .setCreatedAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getCreatedAt)))
+            .setCreatedAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getCreatedAt)))
             .setCreator(entity.getLong(LambdaUtils.getColumnName(TaskItem::getCreator)))
-            .setLastUpdatedAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getLastUpdatedAt)))
+            .setLastUpdatedAt(DbUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskItem::getLastUpdatedAt)))
             .setLastUpdater(entity.getLong(LambdaUtils.getColumnName(TaskItem::getLastUpdater)));
     }
 

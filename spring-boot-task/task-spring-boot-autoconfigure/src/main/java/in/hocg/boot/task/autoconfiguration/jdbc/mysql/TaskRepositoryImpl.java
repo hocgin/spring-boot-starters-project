@@ -9,7 +9,7 @@ import cn.hutool.db.Entity;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
-import in.hocg.boot.task.autoconfiguration.core.dto.ExecTaskDTO;
+import in.hocg.boot.task.autoconfiguration.core.dto.TaskDTO;
 import in.hocg.boot.task.autoconfiguration.core.entity.TaskInfo;
 import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
 import in.hocg.boot.task.autoconfiguration.core.entity.TaskItemLog;
@@ -40,31 +40,30 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     @SneakyThrows(SQLException.class)
-    public List<ExecTaskDTO> listByTypeAndReady(@NonNull String taskType) {
+    public List<TaskItem> listByTypeAndReady(@NonNull String taskType) {
         Entity where = Entity.create(TaskItem.TABLE_NAME)
             .set(LambdaUtils.getColumnName(TaskItem::getType), taskType)
             .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Ready.getCode());
-        return Db.use(dataSource).find(where).stream().map(ExecTaskDTO::as).collect(Collectors.toList());
+        return Db.use(dataSource).find(where).stream().map(TaskItem::as).collect(Collectors.toList());
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public List<ExecTaskDTO> listByReady() {
+    public List<TaskItem> listByReady() {
         Entity where = Entity.create(TaskItem.TABLE_NAME)
             .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Ready.getCode());
-        return Db.use(dataSource).find(where).stream().map(ExecTaskDTO::as).collect(Collectors.toList());
+        return Db.use(dataSource).find(where).stream().map(TaskItem::as).collect(Collectors.toList());
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public ExecTaskDTO createTask(@NonNull String taskName, @NonNull String taskType, Object params, Long delaySecond) {
+    public TaskItem createTask(@NonNull String taskName, @NonNull String taskType, Object params, Long delaySecond) {
         LocalDateTime now = LocalDateTime.now();
         Long userId = UserContextHolder.getUserId();
 
         String taskSn = IdUtil.objectId();
         String paramsStr = LangUtils.callIfNotNull(params, JSONUtil::toJsonStr).orElse(null);
 
-        // 任务
         TaskInfo taskInfo = new TaskInfo()
             .setTitle(taskName)
             .setParams(paramsStr)
@@ -79,8 +78,36 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
+    public Optional<TaskDTO> getLastTaskId(Long taskId) {
+        return getByTaskId(taskId).flatMap(taskInfo -> {
+            Integer retryCount = taskInfo.getRetryCount();
+            if (retryCount == 0) {
+                return Optional.empty();
+            }
+            Optional<TaskItem> lastTaskItem = getByTaskIdAndIdx(taskId, taskInfo.getRetryCount());
+            if (!lastTaskItem.isPresent()) {
+                return Optional.empty();
+            }
+            TaskItem taskItem = lastTaskItem.get();
+            return Optional.of(TaskDTO.as(taskInfo, taskItem));
+        });
+    }
+
+    @Override
     @SneakyThrows(SQLException.class)
-    public ExecTaskDTO createExecTaskByTask(TaskInfo taskInfo, Long delaySecond, Long maxCount) {
+    public Optional<TaskItem> getByTaskIdAndIdx(Long taskId, Integer idx) {
+        Entity where = new TaskItem().setTaskId(taskId).setIdx(idx).setStatus(TaskItem.Status.Done.getCode()).asEntity();
+        Entity entity = Db.use(dataSource).get(where);
+        if (Objects.isNull(entity)) {
+            return Optional.empty();
+        }
+        return Optional.of(TaskItem.as(entity));
+    }
+
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public TaskItem createExecTaskByTask(TaskInfo taskInfo, Long delaySecond, Long maxCount) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime readyAt = now.plusSeconds(delaySecond);
         Long userId = UserContextHolder.getUserId();
@@ -104,7 +131,7 @@ public class TaskRepositoryImpl implements TaskRepository {
         Entity entity = taskItem.asEntity();
         Long taskItemId = Db.use(dataSource).insertForGeneratedKey(entity);
         taskItem.setId(taskItemId);
-        return ExecTaskDTO.as(entity);
+        return taskItem;
     }
 
     @Override
@@ -137,50 +164,54 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     @SneakyThrows(SQLException.class)
     public void doneTask(@NonNull Long taskItemId, @NonNull TaskItem.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data) {
-        Db.use(dataSource).tx(parameter -> {
-            LocalDateTime now = LocalDateTime.now();
-            Entity where = Entity.create(TaskItem.TABLE_NAME)
-                .set(LambdaUtils.getColumnName(TaskItem::getId), taskItemId)
-                .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Executing.getCode());
-            Entity update = Entity.create(TaskItem.TABLE_NAME)
-                .setIgnoreNull(LambdaUtils.getColumnName(TaskItem::getDoneMessage), message)
-                .setIgnoreNull(LambdaUtils.getColumnName(TaskItem::getDoneResult), LangUtils.callIfNotNull(data, JSONUtil::toJsonStr).orElse(null))
-                .set(LambdaUtils.getColumnName(TaskItem::getDoneStatus), doneStatus.getCode())
-                .set(LambdaUtils.getColumnName(TaskItem::getDoneAt), now)
-                .set(LambdaUtils.getColumnName(TaskItem::getTotalTimeMillis), totalTimeMillis)
-                .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Done.getCode());
-            boolean isUpdate = Db.use(dataSource).update(update, where) > 0;
+        Db.use(dataSource).tx(db -> {
+            Boolean isUpdate = getByTaskItemId(taskItemId).map(TaskItem::getTaskId).flatMap(this::getByTaskId).map(this::incrRetryCount).orElse(false);
             if (isUpdate) {
-                getByTaskItemId(taskItemId).map(ExecTaskDTO::getTaskId).flatMap(this::getByTaskId).ifPresent(this::incrRetryCount);
+                LocalDateTime now = LocalDateTime.now();
+                Entity where = Entity.create(TaskItem.TABLE_NAME)
+                    .set(LambdaUtils.getColumnName(TaskItem::getId), taskItemId)
+                    .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Executing.getCode());
+                Entity update = Entity.create(TaskItem.TABLE_NAME)
+                    .setIgnoreNull(LambdaUtils.getColumnName(TaskItem::getDoneMessage), message)
+                    .setIgnoreNull(LambdaUtils.getColumnName(TaskItem::getDoneResult), LangUtils.callIfNotNull(data, JSONUtil::toJsonStr).orElse(null))
+                    .set(LambdaUtils.getColumnName(TaskItem::getDoneStatus), doneStatus.getCode())
+                    .set(LambdaUtils.getColumnName(TaskItem::getDoneAt), now)
+                    .set(LambdaUtils.getColumnName(TaskItem::getTotalTimeMillis), totalTimeMillis)
+                    .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Done.getCode());
+                db.update(update, where);
             }
         });
     }
 
     @SneakyThrows(SQLException.class)
     public boolean incrRetryCount(TaskInfo taskInfo) {
-        int retryCount = taskInfo.getRetryCount() + 1;
+        Integer whereRetryCount = taskInfo.getRetryCount();
+        int targetRetryCount = whereRetryCount + 1;
         Entity update = new TaskInfo()
-            .setRetryCount(retryCount)
+            .setRetryCount(targetRetryCount)
             .setLastUpdater(UserContextHolder.getUserId())
             .setLastUpdatedAt(LocalDateTime.now())
             .asEntity();
-        Entity where = new TaskItemLog().setId(taskInfo.getId()).asEntity();
+        Entity where = new TaskInfo().setId(taskInfo.getId()).setRetryCount(whereRetryCount).asEntity();
         return Db.use(dataSource).update(update, where) > 0;
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public Optional<ExecTaskDTO> getByTaskItemId(@NonNull Long taskItemId) {
+    public Optional<TaskItem> getByTaskItemId(@NonNull Long taskItemId) {
         Entity entity = Db.use(dataSource).get(Entity.create(TaskItem.TABLE_NAME).set(LambdaUtils.getColumnName(TaskItem::getId), taskItemId));
         if (Objects.isNull(entity)) {
             return Optional.empty();
         }
-        return Optional.ofNullable(ExecTaskDTO.as(entity));
+        return Optional.ofNullable(TaskItem.as(entity));
     }
 
+    @Override
     @SneakyThrows(SQLException.class)
     public Optional<TaskInfo> getByTaskId(Long taskId) {
-        Entity entity = Db.use(dataSource).get(Entity.create(TaskInfo.TABLE_NAME).set(LambdaUtils.getColumnName(TaskInfo::getId), taskId));
+        Entity where = new TaskInfo().setId(taskId)
+            .asEntity();
+        Entity entity = Db.use(dataSource).get(where);
         if (Objects.isNull(entity)) {
             return Optional.empty();
         }
