@@ -1,9 +1,12 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
-import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
+import in.hocg.boot.task.autoconfiguration.core.dto.ExecTaskDTO;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskInfo;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
 import lombok.NonNull;
+import lombok.SneakyThrows;
 
-import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,14 +23,14 @@ public interface TaskRepository {
      * @param taskType _
      * @return _
      */
-    List<TaskInfo> listByTypeAndReady(@NonNull Serializable taskType);
+    List<ExecTaskDTO> listByTypeAndReady(@NonNull String taskType);
 
     /**
      * 查询所有准备状态的任务
      *
      * @return
      */
-    List<TaskInfo> listByReady();
+    List<ExecTaskDTO> listByReady();
 
     /**
      * 创建任务
@@ -39,13 +42,14 @@ public interface TaskRepository {
      * @param delaySecond
      * @param executeNow
      */
-    TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser,
-                        Object params, @NonNull Long delaySecond);
+    ExecTaskDTO createTask(@NonNull String taskName, @NonNull String taskType, Object params, Long delaySecond);
 
-
-    default TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser, Object params) {
-        return this.createTask(taskName, taskType, createUser, params, 0L);
+    default ExecTaskDTO createTask(@NonNull String taskName, @NonNull String taskType, Object params) {
+        return this.createTask(taskName, taskType, params, 0L);
     }
+
+    @SneakyThrows(SQLException.class)
+    ExecTaskDTO createExecTaskByTask(TaskInfo taskInfo, Long delaySecond, Long maxCount);
 
     /**
      * 任务过程日志
@@ -54,14 +58,14 @@ public interface TaskRepository {
      * @param message
      * @param data
      */
-    void execTaskLog(@NonNull Serializable taskSn, String message);
+    void log(@NonNull Long taskItemId, String message);
 
     /**
      * 任务开始
      *
      * @param taskSn
      */
-    boolean startTask(@NonNull Serializable taskSn);
+    boolean startTask(@NonNull Long taskItemId);
 
     /**
      * 任务完成
@@ -73,7 +77,7 @@ public interface TaskRepository {
      * @param message
      * @param data
      */
-    boolean doneTask(@NonNull Serializable taskSn, @NonNull TableTask.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data);
+    void doneTask(@NonNull Long taskItemId, @NonNull TaskItem.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data);
 
     /**
      * 获取唯一任务
@@ -81,15 +85,15 @@ public interface TaskRepository {
      * @param taskSn
      * @return
      */
-    Optional<TaskInfo> getByTaskSn(Serializable taskSn);
+    Optional<ExecTaskDTO> getByTaskItemId(Long taskItemId);
 
     /**
-     * 删除旧任务
-     * - 状态为 成功
-     * - 类型为 所有
+     * 删除旧任务 <br/>
+     * - 状态为 成功 <br/>
+     * - 类型为 所有 <br/>
      *
-     * @param minusDays
-     * @return
+     * @param minusDays 删除多少天前的任务
+     * @return 删除的数量
      */
     Integer deleteDays(@NonNull Long minusDays);
 
@@ -101,7 +105,7 @@ public interface TaskRepository {
      * @param eqStatus
      * @return
      */
-    Integer deleteDays(@NonNull Long minusDays, List<Serializable> eqTypes, List<Serializable> eqStatus);
+    Integer deleteDays(@NonNull Long minusDays, List<String> eqTypes, List<TaskItem.DoneStatus> eqStatus);
 
     /**
      * 重建定时任务
@@ -110,5 +114,6 @@ public interface TaskRepository {
      * @param delaySecond
      * @param maxCount
      */
-    void reCreateTask(String taskSn, long delaySecond, long maxCount);
+    void reCreateExecTask(Long taskId, Long delaySecond, Long maxCount);
+
 }

@@ -16,7 +16,7 @@
   <version>${revision}</version>
 
   <properties>
-    <revision>1.0.24</revision>
+    <revision>1.0.27</revision>
 
     <java.version>1.8</java.version>
     <java.source.version>1.8</java.source.version>
@@ -72,6 +72,7 @@
     <module>spring-boot-http-log</module>
     <module>spring-boot-arthas</module>
     <module>spring-boot-ffmpeg</module>
+    <module>spring-boot-ws</module>
     <module>spring-boot-tpl</module>
   </modules>
 

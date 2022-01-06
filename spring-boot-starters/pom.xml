@@ -50,6 +50,7 @@
     <module>http-log-spring-boot-starter</module>
     <module>arthas-spring-boot-starter</module>
     <module>ffmpeg-spring-boot-starter</module>
+    <module>ws-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

@@ -2,8 +2,10 @@ package in.hocg.boot.task.autoconfiguration.core;
 
 
 import cn.hutool.extra.spring.SpringUtil;
+import in.hocg.boot.task.autoconfiguration.core.dto.ExecTaskDTO;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 /**
  * Created by hocgin on 2021/10/12
@@ -11,35 +13,53 @@ import java.util.function.Function;
  *
  * @author hocgin
  */
-
-/**
- * 失败策略
- */
+@Slf4j
 public class FailStrategy {
 
     /**
-     * 重建任务
+     * 重新创建策略
      *
-     * @param taskSn
-     * @param runnable
-     * @param delaySecond
-     * @param maxCount
-     * @param <T>
-     * @param <R>
-     * @return
+     * @param delaySecond 下次执行时间
+     * @param maxCount    最大创建数量
+     * @return 策略
      */
-    public static <T, R> Function<T, R> reCreate(String taskSn, Function<T, R> runnable, long delaySecond, long maxCount) {
-        return t -> {
-            try {
-                return runnable.apply(t);
-            } catch (Exception e) {
-                SpringUtil.getBean(TaskRepository.class).reCreateTask(taskSn, delaySecond, maxCount);
-                throw e;
-            }
+    public static Consumer<ExecTaskDTO> reCreate(Long delaySecond, Long maxCount) {
+        return task -> {
+            SpringUtil.getBean(TaskRepository.class).reCreateExecTask(task.getTaskId(), delaySecond, maxCount);
         };
     }
 
-    public static <T, R> Function<T, R> reCreate(String taskSn, Function<T, R> runnable) {
-        return FailStrategy.reCreate(taskSn, runnable, 3, 12);
+    /**
+     * 失败重新创建
+     *
+     * @return 默认创建策略
+     */
+    public static Consumer<ExecTaskDTO> reCreate() {
+        return FailStrategy.reCreate(60L, 12L);
+    }
+
+    public static Consumer<ExecTaskDTO> debug() {
+        return FailStrategy.reCreate(5L, 100L);
+    }
+
+    /**
+     * 失败跳过
+     *
+     * @return 策略
+     */
+    public static Consumer<ExecTaskDTO> skip() {
+        return task -> {
+        };
+    }
+
+    /**
+     * 跳过并进行记录
+     *
+     * @return 策略
+     */
+    public static Consumer<ExecTaskDTO> skipAndLog() {
+        return task -> {
+            log.error("任务执行失败, 任务ID: {}", task.getTaskId());
+        };
     }
 }
