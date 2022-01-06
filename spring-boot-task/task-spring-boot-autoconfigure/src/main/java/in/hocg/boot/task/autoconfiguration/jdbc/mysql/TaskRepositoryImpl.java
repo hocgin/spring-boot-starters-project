@@ -12,7 +12,7 @@ import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
 import in.hocg.boot.task.autoconfiguration.core.dto.ExecTaskDTO;
 import in.hocg.boot.task.autoconfiguration.core.entity.TaskInfo;
 import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
-import in.hocg.boot.task.autoconfiguration.core.entity.TaskLog;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskItemLog;
 import in.hocg.boot.utils.LambdaUtils;
 import in.hocg.boot.utils.LangUtils;
 import in.hocg.boot.utils.context.UserContextHolder;
@@ -112,7 +112,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     public void log(@NonNull Long taskItemId, String message) {
         LocalDateTime now = LocalDateTime.now();
 
-        TaskLog taskLog = new TaskLog()
+        TaskItemLog taskLog = new TaskItemLog()
             .setContent(message)
             .setTaskItemId(taskItemId)
             .setCreatedAt(now)
@@ -164,7 +164,7 @@ public class TaskRepositoryImpl implements TaskRepository {
             .setLastUpdater(UserContextHolder.getUserId())
             .setLastUpdatedAt(LocalDateTime.now())
             .asEntity();
-        Entity where = new TaskLog().setId(taskInfo.getId()).asEntity();
+        Entity where = new TaskItemLog().setId(taskInfo.getId()).asEntity();
         return Db.use(dataSource).update(update, where) > 0;
     }
 

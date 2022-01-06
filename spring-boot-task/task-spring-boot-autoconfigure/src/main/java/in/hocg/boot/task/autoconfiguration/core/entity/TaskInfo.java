@@ -39,11 +39,6 @@ public class TaskInfo {
      * 当前执行次数
      */
     private Integer retryCount;
-    /**
-     * 计划执行次数
-     */
-    @Deprecated
-    private Integer plantRetryCount;
 
     private LocalDateTime createdAt;
     private Long creator;
@@ -57,7 +52,6 @@ public class TaskInfo {
             .setTitle(entity.getStr(LambdaUtils.getColumnName(TaskInfo::getTitle)))
             .setParams(entity.getStr(LambdaUtils.getColumnName(TaskInfo::getParams)))
             .setRetryCount(entity.getInt(LambdaUtils.getColumnName(TaskInfo::getRetryCount)))
-            .setPlantRetryCount(entity.getInt(LambdaUtils.getColumnName(TaskInfo::getPlantRetryCount)))
             .setCreatedAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskInfo::getCreatedAt)))
             .setCreator(entity.getLong(LambdaUtils.getColumnName(TaskInfo::getCreator)))
             .setLastUpdatedAt(TaskUtils.getLocalDateTime(entity, LambdaUtils.getColumnName(TaskInfo::getLastUpdatedAt)))
@@ -72,7 +66,6 @@ public class TaskInfo {
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getTitle), getTitle())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getParams), getParams())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getRetryCount), getRetryCount())
-            .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getPlantRetryCount), getPlantRetryCount())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getCreator), getCreator())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getCreatedAt), getCreatedAt())
             .setIgnoreNull(LambdaUtils.getColumnName(TaskInfo::getLastUpdater), getLastUpdater())

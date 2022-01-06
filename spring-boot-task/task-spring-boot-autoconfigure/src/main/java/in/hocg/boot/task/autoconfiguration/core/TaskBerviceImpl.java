@@ -54,7 +54,6 @@ public class TaskBerviceImpl implements TaskBervice {
             return TaskResult.fail("任务未到执行时间");
         }
 
-        TaskLogger.setTaskId(taskItemId);
         if (!repository.startTask(taskItemId)) {
             log.info("任务已经执行或执行完成, 任务项编号:[{}-{}]", taskId, taskItemId);
             return TaskResult.fail("任务已经执行");
@@ -78,7 +77,6 @@ public class TaskBerviceImpl implements TaskBervice {
             long totalTimeMillis = stopWatch.stop().elapsed(TimeUnit.MILLISECONDS);
             TaskItem.DoneStatus doneStatus = isOk ? TaskItem.DoneStatus.Success : TaskItem.DoneStatus.Fail;
             repository.doneTask(taskItemId, doneStatus, totalTimeMillis, errorMsg, result);
-            TaskLogger.clear();
         }
         return TaskResult.fail();
     }

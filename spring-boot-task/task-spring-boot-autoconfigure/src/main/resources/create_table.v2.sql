@@ -12,8 +12,6 @@ CREATE TABLE `boot_task_info`
         COMMENT '任务参数',
     retry_count       int(10)              DEFAULT 0 NOT NULL
         comment '已执行次数',
-    plant_retry_count int(10)              DEFAULT 1000 NOT NULL
-        comment '计划执行次数',
     # ---
     `created_at`      DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
         COMMENT '创建时间',
@@ -72,8 +70,8 @@ CREATE TABLE `boot_task_item`
   DEFAULT CHARSET = utf8mb4
     COMMENT '[BOOT] 任务项表';
 
-DROP TABLE IF EXISTS `boot_task_log`;
-CREATE TABLE `boot_task_log`
+DROP TABLE IF EXISTS `boot_task_item_log`;
+CREATE TABLE `boot_task_item_log`
 (
     id                BIGINT AUTO_INCREMENT,
     task_item_id      BIGINT      NOT NULL
