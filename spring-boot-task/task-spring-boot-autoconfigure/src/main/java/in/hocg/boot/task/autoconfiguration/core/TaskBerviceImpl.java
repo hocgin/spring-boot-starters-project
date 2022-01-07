@@ -1,18 +1,20 @@
 package in.hocg.boot.task.autoconfiguration.core;
 
 import com.google.common.base.Stopwatch;
-import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.jodah.typetools.TypeResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.AsyncResult;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -29,56 +31,57 @@ public class TaskBerviceImpl implements TaskBervice {
     private TaskRepository repository;
 
     @Override
-    public <T, R> TaskResult<R> runAsync(String taskSn, Function<T, R> runnable) {
-        return this.runSync(taskSn, runnable);
+    public <T, R> Future<TaskResult<R>> runAsync(Long taskItemId, Function<T, R> runnable, Consumer<TaskItem> failStrategy) {
+        return AsyncResult.forValue(this.runSync(taskItemId, runnable, failStrategy));
     }
 
     @Override
-    public <T, R> TaskResult<R> runSync(String taskSn, Function<T, R> runnable) {
+    public <T, R> TaskResult<R> runSync(Long taskItemId, Function<T, R> runnable, Consumer<TaskItem> failStrategy) {
         Stopwatch stopWatch = Stopwatch.createStarted();
 
-        Optional<TaskInfo> taskOpt = getTask(taskSn);
+        Optional<TaskItem> taskOpt = getByTaskItem(taskItemId);
         if (!taskOpt.isPresent()) {
-            log.info("执行任务发生错误: 未找到任务编号:[{}]", taskSn);
+            log.info("执行任务发生错误: 未找到任务项编号:[{}]", taskItemId);
             return TaskResult.fail("未找到任务");
         }
-        TaskInfo taskInfo = taskOpt.get();
+        TaskItem taskInfo = taskOpt.get();
+        Long taskId = taskInfo.getTaskId();
+
         LocalDateTime taskInfoReadyAt = taskInfo.getReadyAt();
         if (Objects.nonNull(taskInfoReadyAt) && LocalDateTime.now().isBefore(taskInfoReadyAt)) {
-            log.info("任务未到执行时间, 任务编号:[{}]", taskSn);
+            log.info("任务未到执行时间, 任务项编号:[{}-{}]", taskId, taskItemId);
             return TaskResult.fail("任务未到执行时间");
-        }
-
-        Serializable taskId = taskInfo.getId();
-        TaskLogger.setTaskId(taskId);
-        if (!repository.startTask(taskSn)) {
-            log.info("任务已经执行或执行完成, 任务编号:[{}]", taskSn);
-            return TaskResult.fail("任务已经执行");
         }
 
         boolean isOk = true;
         String errorMsg = "ok";
         R result = null;
         try {
+            if (!repository.startTask(taskItemId)) {
+                log.info("任务已经执行或执行完成, 任务项编号:[{}-{}]", taskId, taskItemId);
+                return TaskResult.fail("任务已经执行");
+            }
             Class<?>[] typeArgs = TypeResolver.resolveRawArguments(Function.class, runnable.getClass());
             result = this.run(runnable, taskInfo.resolveParams(typeArgs[0]));
             return TaskResult.success(result);
         } catch (Exception e) {
+            log.info("执行任务发生错误: 任务执行异常, 任务项编号:[{}-{}], 异常信息:", taskId, taskItemId, e);
             isOk = false;
-            errorMsg = e.getMessage();
-            log.info("执行任务发生错误: 任务执行异常, 任务编号:[{}], 异常信息:[{}]", taskSn, e);
         } finally {
             long totalTimeMillis = stopWatch.stop().elapsed(TimeUnit.MILLISECONDS);
-            TableTask.DoneStatus doneStatus = isOk ? TableTask.DoneStatus.Success : TableTask.DoneStatus.Fail;
-            repository.doneTask(taskSn, doneStatus, totalTimeMillis, errorMsg, result);
-            TaskLogger.clear();
+            TaskItem.DoneStatus doneStatus = isOk ? TaskItem.DoneStatus.Success : TaskItem.DoneStatus.Fail;
+            repository.doneTask(taskItemId, doneStatus, totalTimeMillis, errorMsg, result);
+            if (!isOk && Objects.nonNull(failStrategy)) {
+                failStrategy.accept(taskInfo);
+            }
         }
         return TaskResult.fail();
     }
 
-    private Optional<TaskInfo> getTask(String taskSn) {
-        return this.repository.getByTaskSn(taskSn);
+    private Optional<TaskItem> getByTaskItem(Long taskItemId) {
+        return this.repository.getByTaskItemId(taskItemId);
     }
+
 
     private <R, T> R run(Function<T, R> runnable, T params) {
         return runnable.apply(params);

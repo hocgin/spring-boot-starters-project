@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface EntityListeners {
-    Class<?>[] value() default {};
+    Class<? extends EntityListener>[] value() default {};
 }

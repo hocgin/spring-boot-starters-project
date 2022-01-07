@@ -8,20 +8,21 @@ import cn.hutool.db.Db;
 import cn.hutool.db.Entity;
 import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
-import in.hocg.boot.task.autoconfiguration.core.TaskInfo;
 import in.hocg.boot.task.autoconfiguration.core.TaskRepository;
-import in.hocg.boot.task.autoconfiguration.jdbc.TableTask;
-import in.hocg.boot.task.autoconfiguration.jdbc.TableTaskLog;
+import in.hocg.boot.task.autoconfiguration.core.dto.TaskDTO;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskInfo;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskItem;
+import in.hocg.boot.task.autoconfiguration.core.entity.TaskItemLog;
+import in.hocg.boot.utils.LambdaUtils;
 import in.hocg.boot.utils.LangUtils;
+import in.hocg.boot.utils.context.UserContextHolder;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import javax.sql.DataSource;
-import java.io.Serializable;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,162 +40,214 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     @SneakyThrows(SQLException.class)
-    public List<TaskInfo> listByTypeAndReady(@NonNull Serializable taskType) {
-        return Db.use(dataSource).find(Entity.create(
-            TableTask.TABLE_NAME).set(TableTask.FIELD_TYPE, taskType).set(TableTask.FIELD_STATUS, TableTask.Status.Ready.getCode())
-        ).stream().map(this::asTaskInfo).collect(Collectors.toList());
+    public List<TaskItem> listByTypeAndReady(@NonNull String taskType) {
+        Entity where = Entity.create(TaskItem.TABLE_NAME)
+            .set(LambdaUtils.getColumnName(TaskItem::getType), taskType)
+            .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Ready.getCode());
+        return Db.use(dataSource).find(where).stream().map(TaskItem::as).collect(Collectors.toList());
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public List<TaskInfo> listByReady() {
-        return Db.use(dataSource).find(Entity.create(
-            TableTask.TABLE_NAME).set(TableTask.FIELD_STATUS, TableTask.Status.Ready.getCode())
-        ).stream().map(this::asTaskInfo).collect(Collectors.toList());
+    public List<TaskItem> listByReady() {
+        Entity where = Entity.create(TaskItem.TABLE_NAME)
+            .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Ready.getCode());
+        return Db.use(dataSource).find(where).stream().map(TaskItem::as).collect(Collectors.toList());
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public TaskInfo createTask(@NonNull Serializable taskName, @NonNull Serializable taskType, @NonNull Serializable createUser, Object params, @NonNull Long delaySecond) {
+    public TaskItem createTask(@NonNull String taskName, @NonNull String taskType, Object params, Long delaySecond) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime readyAt = now.plusSeconds(delaySecond);
+        Long userId = UserContextHolder.getUserId();
 
         String taskSn = IdUtil.objectId();
         String paramsStr = LangUtils.callIfNotNull(params, JSONUtil::toJsonStr).orElse(null);
 
-        Entity entity = Entity.create(TableTask.TABLE_NAME)
-            .setIgnoreNull(TableTask.FIELD_PARAMS, paramsStr)
-            .set(TableTask.FIELD_TASK_SN, taskSn)
-            .set(TableTask.FIELD_TITLE, taskName)
-            .set(TableTask.FIELD_TYPE, taskType)
-            .set(TableTask.FIELD_CREATOR, createUser)
-            .set(TableTask.FIELD_CREATED_AT, now)
-            .set(TableTask.FIELD_READY_AT, readyAt);
-        Long id = Db.use(dataSource).insertForGeneratedKey(entity);
-        entity.set(TableTask.FIELD_ID, id);
+        TaskInfo taskInfo = new TaskInfo()
+            .setTitle(taskName)
+            .setParams(paramsStr)
+            .setType(taskType)
+            .setRetryCount(0)
+            .setCreator(userId)
+            .setCreatedAt(now)
+            .setTaskSn(taskSn);
+        Long taskId = Db.use(dataSource).insertForGeneratedKey(taskInfo.asEntity());
+        taskInfo.setId(taskId);
+        return createExecTaskByTask(taskInfo, LangUtils.getOrDefault(delaySecond, 10L), 5L);
+    }
 
-        return this.asTaskInfo(entity);
+    @Override
+    public Optional<TaskDTO> getLastTaskId(Long taskId) {
+        return getByTaskId(taskId).flatMap(taskInfo -> {
+            Integer retryCount = taskInfo.getRetryCount();
+            if (retryCount == 0) {
+                return Optional.empty();
+            }
+            Optional<TaskItem> lastTaskItem = getByTaskIdAndIdx(taskId, taskInfo.getRetryCount());
+            if (!lastTaskItem.isPresent()) {
+                return Optional.empty();
+            }
+            TaskItem taskItem = lastTaskItem.get();
+            return Optional.of(TaskDTO.as(taskInfo, taskItem));
+        });
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public void execTaskLog(@NonNull Serializable taskSn, String message) {
-        TaskInfo task = getByTaskSn(taskSn).orElseThrow(() -> new UnsupportedOperationException(StrUtil.format("未找到任务, 任务编号[{}]错误", taskSn)));
-        LocalDateTime now = LocalDateTime.now();
-        Db.use(dataSource).insert(
-            Entity.create(TableTaskLog.TABLE_NAME)
-                .setIgnoreNull(TableTaskLog.FIELD_CONTENT, message)
-                .set(TableTaskLog.FIELD_TASK_ID, task.getId())
-                .set(TableTaskLog.FIELD_CREATED_AT, now)
-        );
-    }
-
-    @Override
-    @SneakyThrows(SQLException.class)
-    public boolean startTask(@NonNull Serializable taskSn) {
-        LocalDateTime now = LocalDateTime.now();
-        Entity where = Entity.create(TableTask.TABLE_NAME)
-            .set(TableTask.FIELD_TASK_SN, taskSn)
-            .set(TableTask.FIELD_STATUS, TableTask.Status.Ready.getCode());
-        Entity update = Entity.create(TableTask.TABLE_NAME)
-            .set(TableTask.FIELD_START_AT, now)
-            .set(TableTask.FIELD_STATUS, TableTask.Status.Executing.getCode());
-        return Db.use(dataSource).update(update, where) > 0;
-    }
-
-    @Override
-    @SneakyThrows(SQLException.class)
-    public boolean doneTask(@NonNull Serializable taskSn, @NonNull TableTask.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data) {
-        LocalDateTime now = LocalDateTime.now();
-        Entity where = Entity.create(TableTask.TABLE_NAME)
-            .set(TableTask.FIELD_TASK_SN, taskSn)
-            .set(TableTask.FIELD_STATUS, TableTask.Status.Executing.getCode());
-        Entity update = Entity.create(TableTask.TABLE_NAME)
-            .setIgnoreNull(TableTask.FIELD_DONE_MESSAGE, message)
-            .setIgnoreNull(TableTask.FIELD_DONE_RESULT, LangUtils.callIfNotNull(data, JSONUtil::toJsonStr).orElse(null))
-            .set(TableTask.FIELD_DONE_STATUS, doneStatus.getCode())
-            .set(TableTask.FIELD_DONE_AT, now)
-            .set(TableTask.FIELD_TOTAL_TIME_MILLIS, totalTimeMillis)
-            .set(TableTask.FIELD_STATUS, TableTask.Status.Done.getCode());
-        return Db.use(dataSource).update(update, where) > 0;
-    }
-
-    @Override
-    @SneakyThrows(SQLException.class)
-    public Optional<TaskInfo> getByTaskSn(@NonNull Serializable taskSn) {
-        Entity entity = Db.use(dataSource).get(Entity.create(TableTask.TABLE_NAME).set(TableTask.FIELD_TASK_SN, taskSn));
+    public Optional<TaskItem> getByTaskIdAndIdx(Long taskId, Integer idx) {
+        Entity where = new TaskItem().setTaskId(taskId).setIdx(idx).setStatus(TaskItem.Status.Done.getCode()).asEntity();
+        Entity entity = Db.use(dataSource).get(where);
         if (Objects.isNull(entity)) {
             return Optional.empty();
         }
-        return Optional.ofNullable(this.asTaskInfo(entity));
+        return Optional.of(TaskItem.as(entity));
+    }
+
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public TaskItem createExecTaskByTask(TaskInfo taskInfo, Long delaySecond, Long maxCount) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime readyAt = now.plusSeconds(delaySecond);
+        Long userId = UserContextHolder.getUserId();
+        Long taskId = taskInfo.getId();
+
+        int idx = taskInfo.getRetryCount() + 1;
+
+        // 判断限制次数
+        if (idx > maxCount) {
+            return null;
+        }
+        TaskItem taskItem = new TaskItem()
+            .setIdx(idx)
+            .setType(taskInfo.getType())
+            .setParams(taskInfo.getParams())
+            .setStatus(TaskItem.Status.Ready.getCode())
+            .setCreator(userId)
+            .setCreatedAt(now)
+            .setReadyAt(readyAt)
+            .setTaskId(taskId);
+        Entity entity = taskItem.asEntity();
+        Long taskItemId = Db.use(dataSource).insertForGeneratedKey(entity);
+        taskItem.setId(taskItemId);
+        return taskItem;
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public void log(@NonNull Long taskItemId, String message) {
+        LocalDateTime now = LocalDateTime.now();
+
+        TaskItemLog taskLog = new TaskItemLog()
+            .setContent(message)
+            .setTaskItemId(taskItemId)
+            .setCreatedAt(now)
+            .setCreator(UserContextHolder.getUserId());
+
+        Db.use(dataSource).insert(taskLog.asEntity());
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public boolean startTask(@NonNull Long taskItemId) {
+        LocalDateTime now = LocalDateTime.now();
+        Entity where = Entity.create(TaskItem.TABLE_NAME)
+            .set(LambdaUtils.getColumnName(TaskItem::getId), taskItemId)
+            .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Ready.getCode());
+        Entity update = Entity.create(TaskItem.TABLE_NAME)
+            .set(LambdaUtils.getColumnName(TaskItem::getStartAt), now)
+            .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Executing.getCode());
+        return Db.use(dataSource).update(update, where) > 0;
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public void doneTask(@NonNull Long taskItemId, @NonNull TaskItem.DoneStatus doneStatus, @NonNull Long totalTimeMillis, String message, Object data) {
+        Db.use(dataSource).tx(db -> {
+            Boolean isUpdate = getByTaskItemId(taskItemId).map(TaskItem::getTaskId).flatMap(this::getByTaskId).map(this::incrRetryCount).orElse(false);
+            if (isUpdate) {
+                LocalDateTime now = LocalDateTime.now();
+                Entity where = Entity.create(TaskItem.TABLE_NAME)
+                    .set(LambdaUtils.getColumnName(TaskItem::getId), taskItemId)
+                    .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Executing.getCode());
+                Entity update = Entity.create(TaskItem.TABLE_NAME)
+                    .setIgnoreNull(LambdaUtils.getColumnName(TaskItem::getDoneMessage), message)
+                    .setIgnoreNull(LambdaUtils.getColumnName(TaskItem::getDoneResult), LangUtils.callIfNotNull(data, JSONUtil::toJsonStr).orElse(null))
+                    .set(LambdaUtils.getColumnName(TaskItem::getDoneStatus), doneStatus.getCode())
+                    .set(LambdaUtils.getColumnName(TaskItem::getDoneAt), now)
+                    .set(LambdaUtils.getColumnName(TaskItem::getTotalTimeMillis), totalTimeMillis)
+                    .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Done.getCode());
+                db.update(update, where);
+            }
+        });
+    }
+
+    @SneakyThrows(SQLException.class)
+    public boolean incrRetryCount(TaskInfo taskInfo) {
+        Integer whereRetryCount = taskInfo.getRetryCount();
+        int targetRetryCount = whereRetryCount + 1;
+        Entity update = new TaskInfo()
+            .setRetryCount(targetRetryCount)
+            .setLastUpdater(UserContextHolder.getUserId())
+            .setLastUpdatedAt(LocalDateTime.now())
+            .asEntity();
+        Entity where = new TaskInfo().setId(taskInfo.getId()).setRetryCount(whereRetryCount).asEntity();
+        return Db.use(dataSource).update(update, where) > 0;
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public Optional<TaskItem> getByTaskItemId(@NonNull Long taskItemId) {
+        Entity entity = Db.use(dataSource).get(Entity.create(TaskItem.TABLE_NAME).set(LambdaUtils.getColumnName(TaskItem::getId), taskItemId));
+        if (Objects.isNull(entity)) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(TaskItem.as(entity));
+    }
+
+    @Override
+    @SneakyThrows(SQLException.class)
+    public Optional<TaskInfo> getByTaskId(Long taskId) {
+        Entity where = new TaskInfo().setId(taskId)
+            .asEntity();
+        Entity entity = Db.use(dataSource).get(where);
+        if (Objects.isNull(entity)) {
+            return Optional.empty();
+        }
+        return Optional.of(TaskInfo.as(entity));
     }
 
     @Override
     public Integer deleteDays(@NonNull Long minusDays) {
-        return this.deleteDays(minusDays, null, Lists.newArrayList(TableTask.DoneStatus.Success.getCode()));
+        return this.deleteDays(minusDays, null, Lists.newArrayList(TaskItem.DoneStatus.Success));
     }
 
     @Override
     @SneakyThrows(SQLException.class)
-    public Integer deleteDays(@NonNull Long minusDays, List<Serializable> eqTypes, List<Serializable> eqDoneStatus) {
+    public Integer deleteDays(@NonNull Long minusDays, List<String> eqTypes, List<TaskItem.DoneStatus> eqDoneStatus) {
         LocalDateTime preDateTime = LocalDateTime.now().minusDays(minusDays);
-        Entity where = Entity.create(TableTask.TABLE_NAME)
-            .set(TableTask.FIELD_STATUS, TableTask.Status.Done.getCode())
-            .set(TableTask.FIELD_CREATED_AT, StrUtil.format("< {}", DateUtil.formatLocalDateTime(preDateTime)));
+        Entity where = Entity.create(TaskItem.TABLE_NAME)
+            .set(LambdaUtils.getColumnName(TaskItem::getStatus), TaskItem.Status.Done.getCode())
+            .set(LambdaUtils.getColumnName(TaskItem::getCreatedAt), StrUtil.format("< {}", DateUtil.formatLocalDateTime(preDateTime)));
         if (Objects.nonNull(eqTypes)) {
-            where = where.set(TableTask.FIELD_TYPE, StrUtil.format("in {}", ArrayUtil.join(eqTypes.toArray(), ",")));
+            where = where.set(LambdaUtils.getColumnName(TaskItem::getType), StrUtil.format("in {}", ArrayUtil.join(eqTypes.toArray(), ",")));
         }
         if (Objects.nonNull(eqDoneStatus)) {
-            where = where.set(TableTask.FIELD_DONE_RESULT, StrUtil.format("in {}", ArrayUtil.join(eqDoneStatus.toArray(), ",")));
+            where = where.set(LambdaUtils.getColumnName(TaskItem::getDoneStatus), StrUtil.format("in {}", ArrayUtil.join(eqDoneStatus.stream().map(TaskItem.DoneStatus::getCode).toArray(), ",")));
         }
         return Db.use(dataSource).del(where);
     }
 
     @Override
-    @SneakyThrows(SQLException.class)
-    public void reCreateTask(String oldTaskSn, long delaySecond, long maxCount) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime readyAt = now.plusSeconds(delaySecond);
-        Optional<TaskInfo> taskOpt = getByTaskSn(oldTaskSn);
+    public void reCreateExecTask(Long taskId, Long delaySecond, Long maxCount) {
+        Optional<TaskInfo> taskOpt = getByTaskId(taskId);
         if (!taskOpt.isPresent()) {
             return;
         }
         TaskInfo taskInfo = taskOpt.get();
-        String params = taskInfo.getParams();
-        String taskName = taskInfo.getTitle();
-        String taskType = taskInfo.getType();
-        Integer retryCount = taskInfo.getRetryCount();
-        Long createUser = 0L;
-        if (maxCount > 0 && retryCount > maxCount) {
-            return;
-        }
-
-        String taskSn = IdUtil.objectId();
-        String paramsStr = LangUtils.callIfNotNull(params, JSONUtil::toJsonStr).orElse(null);
-
-        Entity entity = Entity.create(TableTask.TABLE_NAME)
-            .setIgnoreNull(TableTask.FIELD_PARAMS, paramsStr)
-            .set(TableTask.FIELD_RETRY_ID, taskInfo.getId())
-            .set(TableTask.FIELD_TASK_SN, taskSn)
-            .set(TableTask.FIELD_TITLE, taskName)
-            .set(TableTask.FIELD_TYPE, taskType)
-            .set(TableTask.FIELD_CREATOR, createUser)
-            .set(TableTask.FIELD_CREATED_AT, now)
-            .set(TableTask.FIELD_RETRY_COUNT, retryCount + 1)
-            .set(TableTask.FIELD_READY_AT, readyAt);
-        Long id = Db.use(dataSource).insertForGeneratedKey(entity);
-        entity.set(TableTask.FIELD_ID, id);
+        createExecTaskByTask(taskInfo, delaySecond, maxCount);
     }
 
-    private TaskInfo asTaskInfo(Entity entity) {
-        String readyAtStr = entity.getStr(TableTask.FIELD_READY_AT);
-        return new TaskInfo().setId(entity.getLong(TableTask.FIELD_ID))
-            .setType(entity.getStr(TableTask.FIELD_TYPE))
-            .setTaskSn(entity.getStr(TableTask.FIELD_TASK_SN))
-            .setTitle(entity.getStr(TableTask.FIELD_TITLE))
-            .setRetryCount(entity.getInt(TableTask.FIELD_RETRY_COUNT))
-            .setReadyAt(LangUtils.callIfNotNull(readyAtStr, s -> LocalDateTime.parse(s, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"))).orElse(null))
-            .setParams(entity.getStr(TableTask.FIELD_PARAMS));
-    }
 
 }

@@ -42,6 +42,7 @@
     <module>ffmpeg-spring-boot-sample</module>
     <module>arthas-spring-boot-sample</module>
     <module>excel-spring-boot-sample</module>
+    <module>ws-spring-boot-sample</module>
     <module>tpl-spring-boot-sample</module>
   </modules>
 

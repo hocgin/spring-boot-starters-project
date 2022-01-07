@@ -1,5 +1,6 @@
 package in.hocg.boot.mybatis.plus.sample.controller;
 
+import in.hocg.boot.mybatis.plus.sample.dto.ExampleVo;
 import in.hocg.boot.mybatis.plus.sample.service.ExampleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,11 @@ public class ExampleController {
     @GetMapping
     public String index() {
         return service.index();
+    }
+
+    @GetMapping("/test")
+    public ExampleVo test() {
+        return service.testAs();
     }
 }
 
