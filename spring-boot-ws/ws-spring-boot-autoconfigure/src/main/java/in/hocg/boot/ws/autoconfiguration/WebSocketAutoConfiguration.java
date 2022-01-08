@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import in.hocg.boot.ws.autoconfiguration.core.handshake.AuthenticationHandshakeHandler;
 import in.hocg.boot.ws.autoconfiguration.core.interceptor.CommonHandshakeInterceptor;
-import in.hocg.boot.ws.autoconfiguration.core.service.UserService;
+import in.hocg.boot.ws.autoconfiguration.core.service.WebSocketUserService;
 import in.hocg.boot.ws.autoconfiguration.properties.WebSocketProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -36,7 +36,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
     private final WebSocketProperties properties;
-    private final UserService userService;
+    private final WebSocketUserService userService;
 
     @Bean
     @ConditionalOnMissingBean
@@ -48,7 +48,7 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(properties.getEndpoint().toArray(new String[]{}))
             .setHandshakeHandler(new AuthenticationHandshakeHandler(userService))
-            .addInterceptors(new CommonHandshakeInterceptor())
+            .addInterceptors(new CommonHandshakeInterceptor(properties))
             .setAllowedOrigins(properties.getAllowedOrigins().toArray(new String[]{}))
 //            .withSockJS()
         ;

@@ -8,7 +8,13 @@ import java.security.Principal;
  *
  * @author hocgin
  */
-public interface UserService {
+public interface WebSocketUserService {
 
+    /**
+     * 登录
+     *
+     * @param ticket
+     * @return
+     */
     Principal loadUserByTicket(String ticket);
 }
