@@ -29,6 +29,7 @@ import java.util.Optional;
  */
 @Slf4j
 @RequiredArgsConstructor
+@Deprecated
 public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFactory {
     private final TableService tableService;
 

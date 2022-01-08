@@ -15,12 +15,11 @@ import java.util.Map;
  * @author hocgin
  */
 @Slf4j
-public class WsHandshakeInterceptor implements HandshakeInterceptor {
+public class CommonHandshakeInterceptor implements HandshakeInterceptor {
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler handler, Map<String, Object> map) throws Exception {
         log.debug("握手前 Principal: {}", request.getPrincipal());
         // 用户鉴权
-
         return true;
     }
 

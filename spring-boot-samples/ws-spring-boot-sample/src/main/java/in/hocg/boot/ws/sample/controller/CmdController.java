@@ -9,6 +9,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
+
 /**
  * Created by hocgin on 2022/1/5
  * email: hocgin@gmail.com
@@ -22,7 +24,7 @@ public class CmdController {
     private final SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/index")
-    public Result<TestCmd> index(TestCmd cmd) {
+    public Result<TestCmd> index(TestCmd cmd, Principal principal) {
         return Result.success(cmd);
     }
 

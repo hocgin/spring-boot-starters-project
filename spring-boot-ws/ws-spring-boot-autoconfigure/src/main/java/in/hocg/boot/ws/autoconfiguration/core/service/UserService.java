@@ -10,5 +10,5 @@ import java.security.Principal;
  */
 public interface UserService {
 
-    Principal load(String ticket);
+    Principal loadUserByTicket(String ticket);
 }

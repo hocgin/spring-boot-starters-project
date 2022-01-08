@@ -15,7 +15,7 @@ import java.security.Principal;
 @Component
 public class UserServiceImpl implements UserService {
     @Override
-    public Principal load(String ticket) {
+    public Principal loadUserByTicket(String ticket) {
         return new CoyotePrincipal(ticket);
     }
 }

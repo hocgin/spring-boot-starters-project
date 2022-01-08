@@ -1,6 +1,7 @@
 package in.hocg.boot.ws.autoconfiguration.core.handshake;
 
 import cn.hutool.core.util.StrUtil;
+import in.hocg.boot.utils.StringPoolUtils;
 import in.hocg.boot.ws.autoconfiguration.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.server.ServerHttpRequest;
@@ -28,10 +29,9 @@ public class AuthenticationHandshakeHandler extends DefaultHandshakeHandler {
             ServletServerHttpRequest servletServerHttpRequest = (ServletServerHttpRequest) request;
             HttpServletRequest httpServletRequest = servletServerHttpRequest.getServletRequest();
 
-            // 登录逻辑
-            String ticket = httpServletRequest.getParameter("ticket");
-            if (StrUtil.isBlank(ticket)) {
-                return userService.load(ticket);
+            String ticket = httpServletRequest.getParameter(StringPoolUtils.PARAM_TICKET);
+            if (StrUtil.isNotBlank(ticket)) {
+                return userService.loadUserByTicket(ticket);
             }
         }
         return null;
