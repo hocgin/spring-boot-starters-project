@@ -1,4 +1,4 @@
-package in.hocg.boot.web.result;
+package in.hocg.boot.utils.struct.result;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

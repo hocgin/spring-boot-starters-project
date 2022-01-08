@@ -1,6 +1,6 @@
 package in.hocg.boot.youtube.sample.controller;
 
-import in.hocg.boot.web.result.Result;
+import in.hocg.boot.utils.struct.result.Result;
 import in.hocg.boot.youtube.sample.constants.Constants;
 import in.hocg.boot.youtube.sample.service.YoutubeService;
 import lombok.RequiredArgsConstructor;

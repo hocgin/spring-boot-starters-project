@@ -3,7 +3,7 @@ package in.hocg.boot.youtube.sample.controller;
 import cn.hutool.core.util.StrUtil;
 import com.google.api.client.util.Lists;
 import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
-import in.hocg.boot.web.result.Result;
+import in.hocg.boot.utils.struct.result.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;

@@ -1,13 +1,18 @@
 package in.hocg.boot.ws.sample.controller;
 
-import in.hocg.boot.web.result.Result;
-import in.hocg.boot.ws.sample.cmd.TestCmd;
+import in.hocg.boot.utils.exception.ServiceException;
+import in.hocg.boot.ws.autoconfiguration.core.WebSocketHelper;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+
+import java.security.Principal;
 
 /**
  * Created by hocgin on 2022/1/5
@@ -15,31 +20,26 @@ import org.springframework.stereotype.Controller;
  *
  * @author hocgin
  */
+@Slf4j
 @Controller
-//@MessageMapping("/cmd")
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class CmdController {
     private final SimpMessagingTemplate messagingTemplate;
 
+
+    @ApiOperation("异常测试")
     @MessageMapping("/index")
-    public Result<TestCmd> index(TestCmd cmd) {
-        return Result.success(cmd);
+    @SendToUser(destinations = WebSocketHelper.PREFIX_USER + "/errors")
+    public String index(Principal principal) {
+        log.debug("--> {}", principal.getName());
+        throw ServiceException.wrap("测试异常");
     }
 
-    @MessageMapping("/success")
-    public Result<Void> success() {
-        return Result.success();
+    @ApiOperation("广播指令")
+    @MessageMapping("/all")
+    @SendTo(WebSocketHelper.PREFIX_BROADCAST + "/all")
+    public String all(Principal principal) {
+        log.debug("--> {}", principal);
+        return "666 " + System.currentTimeMillis();
     }
-
-    @MessageMapping("/path/{id}")
-    public Result<String> path(@DestinationVariable String id) {
-        return Result.success(id);
-    }
-
-    @MessageMapping("/message")
-    public Result<Object> message(TestCmd cmd) {
-        return Result.success(cmd);
-    }
-
-
 }
