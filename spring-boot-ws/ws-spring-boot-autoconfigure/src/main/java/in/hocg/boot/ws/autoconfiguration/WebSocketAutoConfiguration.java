@@ -3,6 +3,8 @@ package in.hocg.boot.ws.autoconfiguration;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import in.hocg.boot.ws.autoconfiguration.core.WebSocketExceptionAdvice;
+import in.hocg.boot.ws.autoconfiguration.core.constant.StringConstants;
 import in.hocg.boot.ws.autoconfiguration.core.handshake.AuthenticationHandshakeHandler;
 import in.hocg.boot.ws.autoconfiguration.core.interceptor.CommonHandshakeInterceptor;
 import in.hocg.boot.ws.autoconfiguration.core.service.WebSocketUserService;
@@ -13,13 +15,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.socket.config.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ import java.util.List;
 @ConditionalOnProperty(prefix = WebSocketProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(WebSocketProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
+@Import(WebSocketExceptionAdvice.class)
 public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
     private final WebSocketProperties properties;
     private final WebSocketUserService userService;
@@ -46,17 +48,20 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(properties.getEndpoint().toArray(new String[]{}))
+        StompWebSocketEndpointRegistration registration = registry.addEndpoint(properties.getEndpoint().toArray(new String[]{}))
             .setHandshakeHandler(new AuthenticationHandshakeHandler(userService))
             .addInterceptors(new CommonHandshakeInterceptor(properties))
             .setAllowedOrigins(properties.getAllowedOrigins().toArray(new String[]{}))
-//            .withSockJS()
-        ;
+            ;
+        if (properties.getWithSockJS()) {
+            registration.withSockJS().setWebSocketEnabled(true);
+        }
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         List<String> destinationPrefix = properties.getDestinationPrefix();
+
         if (CollUtil.isNotEmpty(destinationPrefix)) {
             registry.enableSimpleBroker(destinationPrefix.toArray(new String[]{}));
         }
@@ -68,6 +73,7 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
         if (StrUtil.isNotBlank(appDestinationPrefix)) {
             registry.setApplicationDestinationPrefixes(appDestinationPrefix);
         }
+        registry.setPathMatcher(new AntPathMatcher(StringConstants.PATH_SEPARATOR));
 
         // 配置消息代理，哪种路径的消息会进行代理处理
         WebSocketMessageBrokerConfigurer.super.configureMessageBroker(registry);

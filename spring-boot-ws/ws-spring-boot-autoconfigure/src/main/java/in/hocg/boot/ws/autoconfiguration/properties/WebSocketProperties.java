@@ -1,5 +1,6 @@
 package in.hocg.boot.ws.autoconfiguration.properties;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -26,17 +27,21 @@ public class WebSocketProperties {
      */
     private List<String> allowedOrigins = Collections.singletonList("*");
     /**
-     * destination
+     * 广播前缀，即客户端要订阅的地址 @SendTo("/queue/all") -使用> client.subscribe("/queue/all", handler)
      */
-    private List<String> destinationPrefix = Collections.singletonList("/topic");
+    private List<String> destinationPrefix = Lists.newArrayList("/topic", "/queue");
     /**
-     * user destination
+     * 对点前缀, 即客户端要订阅的地址 @SendToUser(destinations = destinationPrefix + "/errors") -使用> client.subscribe('/user/{destinationPrefix}/errors', handler);
      */
     private String userDestinationPrefix = "/user";
     /**
-     * app destination
+     * 应用前缀，即客户端要发送到的目标地址 @MessageMapping("/index") -使用> client.send('/app/index', {});
      */
     private String appDestinationPrefix = "/app";
+    /**
+     * withSockJS
+     */
+    private Boolean withSockJS = true;
 
     /**
      * 忽略的路径(支持表达式) -- 暂未启用

@@ -1,7 +1,7 @@
 package in.hocg.boot.web.autoconfiguration.servlet;
 
 import in.hocg.boot.web.autoconfiguration.advice.DefaultExceptionAdvice;
-import in.hocg.boot.web.result.ExceptionResult;
+import in.hocg.boot.utils.struct.result.ExceptionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.ClientAbortException;
 import org.springframework.http.HttpStatus;

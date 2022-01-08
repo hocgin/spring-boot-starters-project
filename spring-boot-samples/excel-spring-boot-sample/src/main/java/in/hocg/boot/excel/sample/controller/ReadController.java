@@ -6,7 +6,7 @@ import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.read.listener.PageReadListener;
 import in.hocg.boot.excel.sample.IndexService;
 import in.hocg.boot.excel.sample.vo.ExcelDataVo;
-import in.hocg.boot.web.result.Result;
+import in.hocg.boot.utils.struct.result.Result;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.ResourceUtils;

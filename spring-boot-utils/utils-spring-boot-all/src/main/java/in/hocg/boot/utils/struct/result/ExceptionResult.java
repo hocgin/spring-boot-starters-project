@@ -1,7 +1,5 @@
-package in.hocg.boot.web.result;
+package in.hocg.boot.utils.struct.result;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -14,12 +12,9 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@ApiModel("异常响应")
 @EqualsAndHashCode(callSuper = true)
 public class ExceptionResult<T> extends Result<T> {
-    @ApiModelProperty(value = "状态码", example = "500")
     private Integer status;
-    @ApiModelProperty(value = "时间戳", example = "10000000")
     private Long timestamp;
 
     public static <T> ExceptionResult<T> fail(int status, String message) {

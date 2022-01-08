@@ -1,7 +1,7 @@
 package in.hocg.boot.web.autoconfiguration.advice;
 
 import cn.hutool.core.util.IdUtil;
-import in.hocg.boot.web.result.ExceptionResult;
+import in.hocg.boot.utils.struct.result.ExceptionResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.ErrorPageRegistrar;

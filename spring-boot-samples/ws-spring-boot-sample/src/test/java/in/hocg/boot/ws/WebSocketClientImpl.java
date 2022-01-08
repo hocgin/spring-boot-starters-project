@@ -1,7 +1,11 @@
 package in.hocg.boot.ws;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
+
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketHttpHeaders;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.client.WebSocketClient;
 
 import java.net.URI;
 
@@ -11,28 +15,14 @@ import java.net.URI;
  *
  * @author hocgin
  */
-public class WebSocketClientImpl extends WebSocketClient {
-    public WebSocketClientImpl(URI serverUri) {
-        super(serverUri);
+public class WebSocketClientImpl implements WebSocketClient {
+    @Override
+    public ListenableFuture<WebSocketSession> doHandshake(WebSocketHandler webSocketHandler, String uriTemplate, Object... uriVariables) {
+        return null;
     }
 
     @Override
-    public void onOpen(ServerHandshake serverHandshake) {
-
-    }
-
-    @Override
-    public void onMessage(String s) {
-
-    }
-
-    @Override
-    public void onClose(int i, String s, boolean b) {
-
-    }
-
-    @Override
-    public void onError(Exception e) {
-
+    public ListenableFuture<WebSocketSession> doHandshake(WebSocketHandler webSocketHandler, WebSocketHttpHeaders headers, URI uri) {
+        return null;
     }
 }
