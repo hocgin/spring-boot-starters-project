@@ -1,8 +1,8 @@
 package in.hocg.sso2.server.sample.config.security.user;
 
 import cn.hutool.json.JSONUtil;
-import in.hocg.boot.web.result.ExceptionResult;
-import in.hocg.boot.web.result.ResultCode;
+import in.hocg.boot.utils.struct.result.ExceptionResult;
+import in.hocg.boot.utils.struct.result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

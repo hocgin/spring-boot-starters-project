@@ -1,4 +1,4 @@
-package in.hocg.boot.web.exception;
+package in.hocg.boot.utils.exception;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;

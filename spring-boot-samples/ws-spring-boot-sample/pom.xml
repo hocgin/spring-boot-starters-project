@@ -37,6 +37,11 @@
       <groupId>${project.groupId}</groupId>
       <artifactId>test-spring-boot-starter</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.java-websocket</groupId>
+      <artifactId>Java-WebSocket</artifactId>
+      <version>1.5.2</version>
+    </dependency>
     <!-- Basic -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

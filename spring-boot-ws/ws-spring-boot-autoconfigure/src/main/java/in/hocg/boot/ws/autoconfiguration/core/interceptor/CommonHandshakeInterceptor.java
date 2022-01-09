@@ -1,11 +1,14 @@
 package in.hocg.boot.ws.autoconfiguration.core.interceptor;
 
+import in.hocg.boot.ws.autoconfiguration.properties.WebSocketProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import java.security.Principal;
 import java.util.Map;
 
 /**
@@ -15,12 +18,14 @@ import java.util.Map;
  * @author hocgin
  */
 @Slf4j
-public class WsHandshakeInterceptor implements HandshakeInterceptor {
+@RequiredArgsConstructor
+public class CommonHandshakeInterceptor implements HandshakeInterceptor {
+    private final WebSocketProperties properties;
+
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler handler, Map<String, Object> map) throws Exception {
-        log.debug("握手前 Principal: {}", request.getPrincipal());
-        // 用户鉴权
-
+        Principal principal = request.getPrincipal();
+        log.debug("握手前 Principal: {}", principal);
         return true;
     }
 

@@ -17,6 +17,7 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
  */
 @Slf4j
 @RequiredArgsConstructor
+@Deprecated
 public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFactory {
 
     @Override

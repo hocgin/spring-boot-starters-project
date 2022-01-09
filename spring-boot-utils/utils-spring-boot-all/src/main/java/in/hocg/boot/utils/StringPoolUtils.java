@@ -22,4 +22,7 @@ public final class StringPoolUtils {
     public static final String HEADER_VALUE_BEARER = "Bearer";
     public static final String HEADER_VALUE_BASIC = "Basic";
 
+    public static final String PARAM_TICKET = "ticket";
+
+
 }
