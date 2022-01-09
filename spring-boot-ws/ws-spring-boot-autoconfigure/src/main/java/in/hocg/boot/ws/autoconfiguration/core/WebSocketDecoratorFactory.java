@@ -47,7 +47,7 @@ public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFacto
             @Override
             public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
                 String sessionId = session.getId();
-                log.debug("关闭连接: {}", sessionId);
+                log.debug("关闭连接: {}, 关闭原因: {}", sessionId, closeStatus);
                 super.afterConnectionClosed(session, closeStatus);
             }
         };

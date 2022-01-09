@@ -1,13 +1,16 @@
 package in.hocg.boot.ws.autoconfiguration;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import in.hocg.boot.ws.autoconfiguration.core.WebSocketDecoratorFactory;
+import in.hocg.boot.ws.autoconfiguration.core.constant.StringConstants;
 import in.hocg.boot.ws.autoconfiguration.core.handshake.AuthenticationHandshakeHandler;
-import in.hocg.boot.ws.autoconfiguration.core.interceptor.WsHandshakeInterceptor;
-import in.hocg.boot.ws.autoconfiguration.core.service.UserService;
+import in.hocg.boot.ws.autoconfiguration.core.interceptor.CommonHandshakeInterceptor;
+import in.hocg.boot.ws.autoconfiguration.core.service.WebSocketUserService;
 import in.hocg.boot.ws.autoconfiguration.core.service.table.DefaultTableService;
 import in.hocg.boot.ws.autoconfiguration.core.service.table.TableService;
-import in.hocg.boot.ws.autoconfiguration.properties.WsProperties;
+import in.hocg.boot.ws.autoconfiguration.properties.WebSocketProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,10 +20,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.socket.config.annotation.*;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 import java.util.List;
 
@@ -46,12 +48,12 @@ import java.util.List;
  */
 @Configuration
 @EnableWebSocketMessageBroker
-@ConditionalOnProperty(prefix = WsProperties.PREFIX, name = "enabled", matchIfMissing = true)
-@EnableConfigurationProperties(WsProperties.class)
+@ConditionalOnProperty(prefix = WebSocketProperties.PREFIX, name = "enabled", matchIfMissing = true)
+@EnableConfigurationProperties(WebSocketProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
-    private final TableService tableService;
-    private final UserService userService;
+    private final WebSocketUserService userService;
+    private final WebSocketProperties properties;
 
     @Bean
     @ConditionalOnMissingBean
@@ -61,23 +63,31 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
+        StompWebSocketEndpointRegistration registration = registry.addEndpoint(properties.getEndpoint().toArray(new String[]{}))
             .setHandshakeHandler(new AuthenticationHandshakeHandler(userService))
-            .addInterceptors(new WsHandshakeInterceptor())
-            .setAllowedOrigins("*")
-//            .withSockJS()
-        ;
+            .addInterceptors(new CommonHandshakeInterceptor(properties))
+            .setAllowedOrigins(properties.getAllowedOrigins().toArray(new String[]{}));
+        if (properties.getWithSockJS()) {
+            registration.withSockJS().setWebSocketEnabled(true);
+        }
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
+        List<String> destinationPrefix = properties.getDestinationPrefix();
 
-        // 广播通道
-        registry.enableSimpleBroker("/queue", "/topic");
-        registry.setUserDestinationPrefix("/user");
-        registry.setApplicationDestinationPrefixes("/app");
-
-//        registry.enableStompBrokerRelay("/queue", "/topic");
+        if (CollUtil.isNotEmpty(destinationPrefix)) {
+            registry.enableSimpleBroker(destinationPrefix.toArray(new String[]{}));
+        }
+        String userDestinationPrefix = properties.getUserDestinationPrefix();
+        if (StrUtil.isNotBlank(userDestinationPrefix)) {
+            registry.setUserDestinationPrefix(userDestinationPrefix);
+        }
+        String appDestinationPrefix = properties.getAppDestinationPrefix();
+        if (StrUtil.isNotBlank(appDestinationPrefix)) {
+            registry.setApplicationDestinationPrefixes(appDestinationPrefix);
+        }
+        registry.setPathMatcher(new AntPathMatcher(StringConstants.PATH_SEPARATOR));
 
         // 配置消息代理，哪种路径的消息会进行代理处理
         WebSocketMessageBrokerConfigurer.super.configureMessageBroker(registry);
@@ -85,7 +95,21 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-        registry.addDecoratorFactory(new WebSocketDecoratorFactory());
+        registry.addDecoratorFactory(new WebSocketDecoratorFactory())
+            .setMessageSizeLimit(properties.getBufferSizeLimit())
+            .setSendBufferSizeLimit(properties.getBufferSizeLimit())
+            .setSendTimeLimit(10 * 10000);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        // ws 传输数据的时候，数据过大有时候会接收不到，所以在此处设置bufferSize
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(properties.getBufferSize());
+        container.setMaxBinaryMessageBufferSize(properties.getBufferSize());
+        container.setMaxSessionIdleTimeout(15 * 60000L);
+        return container;
     }
 
     @Bean
