@@ -1,6 +1,7 @@
 package in.hocg.boot.ws.autoconfiguration;
 
 import cn.hutool.extra.spring.SpringUtil;
+import in.hocg.boot.ws.autoconfiguration.core.WebSocketDecoratorFactory;
 import in.hocg.boot.ws.autoconfiguration.core.handshake.AuthenticationHandshakeHandler;
 import in.hocg.boot.ws.autoconfiguration.core.interceptor.WsHandshakeInterceptor;
 import in.hocg.boot.ws.autoconfiguration.core.service.UserService;
@@ -48,7 +49,7 @@ import java.util.List;
 @ConditionalOnProperty(prefix = WsProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(WsProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class WsAutoConfiguration implements WebSocketMessageBrokerConfigurer {
+public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
     private final TableService tableService;
     private final UserService userService;
 
@@ -84,8 +85,7 @@ public class WsAutoConfiguration implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-        registry.setSendTimeLimit(15 * 1000).setSendBufferSizeLimit(512 * 1024);
-//        registry.addDecoratorFactory(new WebSocketDecoratorFactory(tableService));
+        registry.addDecoratorFactory(new WebSocketDecoratorFactory());
     }
 
     @Bean
