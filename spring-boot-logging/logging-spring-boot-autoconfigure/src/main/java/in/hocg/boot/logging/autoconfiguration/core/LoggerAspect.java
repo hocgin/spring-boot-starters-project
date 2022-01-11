@@ -1,6 +1,7 @@
 package in.hocg.boot.logging.autoconfiguration.core;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.common.base.Stopwatch;
 import in.hocg.boot.logging.autoconfiguration.utils.LoggingUtils;
 import in.hocg.boot.utils.StringPoolUtils;
@@ -113,6 +114,7 @@ public class LoggerAspect {
             ApiOperation apiOperation = method.getAnnotation(ApiOperation.class);
             enterRemark = apiOperation.value();
         }
+        enterRemark = StrUtil.emptyToDefault(enterRemark, "未填写");
 
         LoggerEvent logger = new LoggerEvent().setMapping(mapping)
             .setCurrentUser(this.getCurrentUser().orElse(username))
