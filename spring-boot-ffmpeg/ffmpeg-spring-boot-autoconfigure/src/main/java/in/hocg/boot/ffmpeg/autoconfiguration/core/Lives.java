@@ -38,7 +38,7 @@ public class Lives {
         byte[] data = FileUtil.readBytes(file);
 
         FFmpegFrameRecorder recorder = recorder("rtmp://160107.livepush.myqcloud.com/live/sss?txSecret=c57c77436f7379d112680b6423a4e063&txTime=61DC304A", true);
-        BufferedImage image = ImageUtils.bytesToImage(data);
+        BufferedImage image = ImageUtils.bytesToBufferedImage(data);
         Java2DFrameConverter converter = new Java2DFrameConverter();
         recorder.start();
         while (true) {
