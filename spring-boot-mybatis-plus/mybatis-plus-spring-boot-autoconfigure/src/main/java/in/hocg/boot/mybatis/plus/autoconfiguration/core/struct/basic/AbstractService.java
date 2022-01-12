@@ -69,6 +69,16 @@ public interface AbstractService<T> extends IService<T> {
     /**
      * 实体转换
      *
+     * @param entity  实体
+     * @param convert 转换函数
+     * @param <R>     实体
+     * @return 转换目标实体
+     */
+    <R> R as(T entity, SFunction<T, R> convert);
+
+    /**
+     * 实体转换
+     *
      * @param entity    实体
      * @param clazz     转换目标
      * @param beanClass 转换处理器

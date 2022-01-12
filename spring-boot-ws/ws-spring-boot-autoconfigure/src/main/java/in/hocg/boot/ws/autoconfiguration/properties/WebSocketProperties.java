@@ -43,6 +43,10 @@ public class WebSocketProperties {
      */
     private Boolean withSockJS = true;
 
+    private Integer bufferSize = 1024 * 1024;
+
+    private Integer bufferSizeLimit = 1024 * 1024;
+
     /**
      * 忽略的路径(支持表达式) -- 暂未启用
      */

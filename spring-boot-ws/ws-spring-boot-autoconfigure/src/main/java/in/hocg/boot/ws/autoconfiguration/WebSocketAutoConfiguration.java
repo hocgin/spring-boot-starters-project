@@ -3,11 +3,13 @@ package in.hocg.boot.ws.autoconfiguration;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import in.hocg.boot.ws.autoconfiguration.core.WebSocketExceptionAdvice;
+import in.hocg.boot.ws.autoconfiguration.core.WebSocketDecoratorFactory;
 import in.hocg.boot.ws.autoconfiguration.core.constant.StringConstants;
 import in.hocg.boot.ws.autoconfiguration.core.handshake.AuthenticationHandshakeHandler;
 import in.hocg.boot.ws.autoconfiguration.core.interceptor.CommonHandshakeInterceptor;
 import in.hocg.boot.ws.autoconfiguration.core.service.WebSocketUserService;
+import in.hocg.boot.ws.autoconfiguration.core.service.table.DefaultTableService;
+import in.hocg.boot.ws.autoconfiguration.core.service.table.TableService;
 import in.hocg.boot.ws.autoconfiguration.properties.WebSocketProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -15,18 +17,32 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.config.annotation.*;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 import java.util.List;
 
 /**
  * Created by hocgin on 2020/8/15
  * email: hocgin@gmail.com
+ * 在线测试:
+ * http://www.easyswoole.com/wstool.html
+ * 鉴权方案:
+ * https://docs.spring.io/spring-security/site/docs/5.2.x/reference/html/integrations.html#websocket
+ * http://www.moye.me/2017/02/10/websocket-authentication-and-authorization/
+ * 开发方案:
+ * https://spring.io/guides/gs/messaging-stomp-websocket/
+ * https://www.cnblogs.com/dream-flying/articles/13019597.html
+ * https://docs.spring.io/spring-framework/docs/4.3.x/spring-framework-reference/html/websocket.html
+ * https://blog.csdn.net/weixin_33725270/article/details/88067111
+ * https://blog.csdn.net/hry2015/article/details/79829616
+ * <p>
+ * 集群方案:
+ * https://mp.weixin.qq.com/s/QeWb-9-j5EYeB7I37gZ50A
  *
  * @author hocgin
  */
@@ -35,10 +51,9 @@ import java.util.List;
 @ConditionalOnProperty(prefix = WebSocketProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(WebSocketProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-@Import(WebSocketExceptionAdvice.class)
 public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
-    private final WebSocketProperties properties;
     private final WebSocketUserService userService;
+    private final WebSocketProperties properties;
 
     @Bean
     @ConditionalOnMissingBean
@@ -51,8 +66,7 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
         StompWebSocketEndpointRegistration registration = registry.addEndpoint(properties.getEndpoint().toArray(new String[]{}))
             .setHandshakeHandler(new AuthenticationHandshakeHandler(userService))
             .addInterceptors(new CommonHandshakeInterceptor(properties))
-            .setAllowedOrigins(properties.getAllowedOrigins().toArray(new String[]{}))
-            ;
+            .setAllowedOrigins(properties.getAllowedOrigins().toArray(new String[]{}));
         if (properties.getWithSockJS()) {
             registration.withSockJS().setWebSocketEnabled(true);
         }
@@ -81,8 +95,27 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
 
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
-        registry.setSendTimeLimit(15 * 1000).setSendBufferSizeLimit(512 * 1024);
-//        registry.addDecoratorFactory(new WebSocketDecoratorFactory(tableService));
+        registry.addDecoratorFactory(new WebSocketDecoratorFactory())
+            .setMessageSizeLimit(properties.getBufferSizeLimit())
+            .setSendBufferSizeLimit(properties.getBufferSizeLimit())
+            .setSendTimeLimit(10 * 10000);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        // ws 传输数据的时候，数据过大有时候会接收不到，所以在此处设置bufferSize
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(properties.getBufferSize());
+        container.setMaxBinaryMessageBufferSize(properties.getBufferSize());
+        container.setMaxSessionIdleTimeout(15 * 60000L);
+        return container;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public TableService tableService() {
+        return new DefaultTableService();
     }
 
     @Override
