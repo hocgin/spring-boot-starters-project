@@ -77,27 +77,27 @@ public class PageUtils {
      */
     public static <T> IScroll<T> fillScroll(IPage<T> page, Function<T, ? extends Serializable> nextIdMapper) {
         boolean hasMore = true;
-        Serializable nextId = null;
         List<T> records = page.getRecords();
         if (page.searchCount()) {
             hasMore = page.getPages() > page.getCurrent();
         }
-        if (CollUtil.isNotEmpty(records)) {
-            nextId = LangUtils.callIfNotNull(records.get(records.size() - 1), nextIdMapper).orElse(null);
-        }
-        return new IScroll<T>().setHasMore(hasMore).setRecords(records).setNextId(nextId);
+        return fillScroll(hasMore, records, nextIdMapper);
     }
 
     /**
      * 填充滚动对象
      *
-     * @param hasMore 是否有更多
-     * @param records 当前页数据
-     * @param nextId  下一页的id
-     * @param <T>     对象
+     * @param hasMore      是否有更多
+     * @param records      当前页数据
+     * @param nextIdMapper 提取
+     * @param <T>          对象
      * @return 滚动对象
      */
-    public static <T> IScroll<T> fillScroll(Boolean hasMore, List<T> records, Serializable nextId) {
+    public static <T> IScroll<T> fillScroll(Boolean hasMore, List<T> records, Function<T, ? extends Serializable> nextIdMapper) {
+        Serializable nextId = null;
+        if (CollUtil.isNotEmpty(records)) {
+            nextId = LangUtils.callIfNotNull(records.get(records.size() - 1), nextIdMapper).orElse(null);
+        }
         return new IScroll<T>().setHasMore(hasMore).setRecords(records).setNextId(nextId);
     }
 
