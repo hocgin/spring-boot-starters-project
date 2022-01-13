@@ -6,6 +6,9 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Created by hocgin on 2021/11/29
@@ -28,4 +31,10 @@ public class IScroll<T> implements Serializable {
      * 数据
      */
     private List<T> records = Collections.emptyList();
+
+    @SuppressWarnings("unchecked")
+    public <R> IScroll<R> convert(Function<? super T, ? extends R> mapper) {
+        List<R> collect = this.getRecords().stream().map(mapper).collect(toList());
+        return ((IScroll<R>) this).setRecords(collect);
+    }
 }
