@@ -1,5 +1,7 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -19,4 +21,10 @@ import java.io.Serializable;
 public class ScrollRo extends BasicRo {
     private Serializable nextId;
     private Integer size = 20;
+
+    @JsonIgnore
+    public <T> Page<T> ofPage() {
+        return new Page<>(1, size, false);
+    }
+
 }
