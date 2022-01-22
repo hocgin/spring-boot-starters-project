@@ -23,13 +23,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface Json {
 
+    Type type() default Type.Any;
+
     String message() default "参数错误";
-
-    boolean isObject() default true;
-
-    boolean isArray() default true;
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+     enum Type {
+        Any,
+        Array,
+        Object
+    }
 }
