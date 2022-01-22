@@ -72,6 +72,11 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
     }
 
     @Override
+    public <R> R as(T entity, SFunction<T, R> convert) {
+        return convert.apply(entity);
+    }
+
+    @Override
     public <R> R as(T entity, Class<R> clazz, Class<?> beanClass) {
         if (clazz.isInstance(entity)) {
             return (R) entity;
@@ -83,6 +88,6 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
         }
         Method method = methods.get(0);
         Object bean = SpringUtil.getBean(beanClass);
-        return ReflectUtil.invoke(bean, method, entity);
+        return as(entity, (T t) -> ReflectUtil.invoke(bean, method, t));
     }
 }

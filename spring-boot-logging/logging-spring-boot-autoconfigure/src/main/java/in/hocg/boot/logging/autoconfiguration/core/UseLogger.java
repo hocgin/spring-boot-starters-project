@@ -20,5 +20,5 @@ public @interface UseLogger {
      *
      * @return
      */
-    String value() default "未填写";
+    String value() default "";
 }
