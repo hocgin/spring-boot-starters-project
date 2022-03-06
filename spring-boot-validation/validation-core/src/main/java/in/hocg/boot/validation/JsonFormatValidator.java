@@ -14,30 +14,24 @@ import java.util.Objects;
  * @author hocgin
  */
 public class JsonFormatValidator implements ConstraintValidator<Json, String> {
-    private boolean isObject = true;
-    private boolean isArray = true;
+    private Json.Type type;
 
     @Override
     public void initialize(Json constraintAnnotation) {
-        isObject = constraintAnnotation.isObject();
-        isArray = constraintAnnotation.isArray();
+        type = constraintAnnotation.type();
     }
 
     @Override
     public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
-        if (Objects.isNull(str)) {
+        if (Objects.isNull(str) || Json.Type.Any.equals(type)) {
             return true;
         }
 
-        if (isObject && isArray) {
-            return JSONUtil.isJson(str);
-        }
-
-        if (isObject) {
+        if (Json.Type.Object.equals(type)) {
             return JSONUtil.isJsonObj(str);
         }
 
-        if (isArray) {
+        if (Json.Type.Array.equals(type)) {
             return JSONUtil.isJsonArray(str);
         }
 
