@@ -21,6 +21,7 @@
     <module>sso-client-spring-boot-starter</module>
     <module>sso2-client-spring-boot-starter</module>
     <module>mybatis-plus-spring-boot-starter</module>
+    <module>mybatis-plus-extensions-javers-spring-boot-starter</module>
     <module>cache-spring-boot-starter</module>
     <module>web-spring-boot-starter</module>
     <module>knife-gateway-spring-boot-starter</module>

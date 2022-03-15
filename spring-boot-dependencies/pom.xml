@@ -51,6 +51,7 @@
     <jol-core.version>0.16</jol-core.version>
     <sentinel.version>1.8.2</sentinel.version>
     <arthas-spring-boot-starter.version>3.5.4</arthas-spring-boot-starter.version>
+    <javers.version>6.6.3</javers.version>
   </properties>
 
   <dependencyManagement>
@@ -64,6 +65,28 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>tpl-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- data-audit -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>data-audit-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>data-audit-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- data-audit -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-javers-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-javers-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- WS -->
@@ -673,6 +696,16 @@
         <groupId>com.google.collections</groupId>
         <artifactId>google-collections</artifactId>
         <version>${google-collections.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.javers</groupId>
+        <artifactId>javers-spring</artifactId>
+        <version>${javers.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.javers</groupId>
+        <artifactId>javers-persistence-sql</artifactId>
+        <version>${javers.version}</version>
       </dependency>
       <dependency>
         <groupId>org.javassist</groupId>

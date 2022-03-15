@@ -3,20 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>spring-boot-dependencies</artifactId>
+    <artifactId>spring-boot-mybatis-plus</artifactId>
     <groupId>in.hocg.boot</groupId>
     <version>${revision}</version>
-    <relativePath>../spring-boot-dependencies/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
 
-  <name>Spring Boot :: Mybatis Plus</name>
-  <artifactId>spring-boot-mybatis-plus</artifactId>
-
+  <name>Mybatis Plus :: Extensions</name>
   <modules>
-    <module>mybatis-plus-spring-boot-autoconfigure</module>
-    <module>mybatis-plus-extensions</module>
+    <module>mybatis-plus-extensions-javers-autoconfigure</module>
   </modules>
+  <artifactId>mybatis-plus-extensions</artifactId>
 
 </project>
