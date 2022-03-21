@@ -6,6 +6,7 @@ import in.hocg.boot.utils.function.ThreeConsumerThrow;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -27,18 +28,18 @@ public interface HttpLogBervice {
 
     <T> T syncCall(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady);
 
-    <T> T syncCall(String title, String code, String caller, String beCaller, String uri, Map<String, String> headers, Object body, SupplierThrow<T> exec);
+    <T> T syncCall(String title, String code, String caller, String beCaller, String uri, Map<String, List<String>> headers, Object body, SupplierThrow<T> exec);
 
     HttpLog create(HttpLog entity);
 
     Serializable syncReady(String title, String code, String remark, String attach,
                            String caller, String beCaller, String creator, String direction,
-                           String uri, Map<String, String> headers, Object body);
+                           String uri, Map<String, List<String>> headers, Object body);
 
     @Async
     Future<Serializable> asyncReady(String title, String code, String remark, String attach,
                                     String caller, String beCaller, String creator, String direction,
-                                    String uri, Map<String, String> headers, Object body);
+                                    String uri, Map<String, List<String>> headers, Object body);
 
     @Async
     void asyncComplete(Serializable logId, LogUtils.LogStatus status, String result);

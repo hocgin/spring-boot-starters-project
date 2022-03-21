@@ -3,6 +3,7 @@ package in.hocg.boot.utils;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileMode;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
@@ -73,6 +74,15 @@ public class LangUtils {
         }
 
         return s1.equals(s2);
+    }
+
+    public boolean equal(Object v1, Object v2) {
+        if (v1 instanceof String) {
+            return LangUtils.equals(v1, v2);
+        } else if (v1 instanceof Integer) {
+            return LangUtils.equals(v1, v2);
+        }
+        return ObjectUtil.equal(v1, v2);
     }
 
     /**

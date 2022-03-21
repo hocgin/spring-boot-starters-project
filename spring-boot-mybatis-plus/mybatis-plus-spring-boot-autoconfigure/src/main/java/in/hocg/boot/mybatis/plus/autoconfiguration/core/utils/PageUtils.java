@@ -76,10 +76,12 @@ public class PageUtils {
      * @return 滚动对象
      */
     public static <T> IScroll<T> fillScroll(IPage<T> page, Function<T, ? extends Serializable> nextIdMapper) {
-        boolean hasMore = true;
+        boolean hasMore;
         List<T> records = page.getRecords();
         if (page.searchCount()) {
             hasMore = page.getPages() > page.getCurrent();
+        } else {
+            hasMore = page.getSize() == records.size();
         }
         return fillScroll(hasMore, records, nextIdMapper);
     }

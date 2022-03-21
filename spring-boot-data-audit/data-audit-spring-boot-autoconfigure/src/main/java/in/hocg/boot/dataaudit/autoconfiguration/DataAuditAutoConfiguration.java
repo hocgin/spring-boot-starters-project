@@ -2,7 +2,6 @@ package in.hocg.boot.dataaudit.autoconfiguration;
 
 import in.hocg.boot.dataaudit.autoconfiguration.properties.DataAuditProperties;
 import lombok.RequiredArgsConstructor;
-import org.javers.core.Javers;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,7 +26,7 @@ import javax.sql.DataSource;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class DataAuditAutoConfiguration {
     public static void main(String[] args) {
-        Javers.class.getInterfaces()
+//        Javers.class.getInterfaces()
     }
 
 }

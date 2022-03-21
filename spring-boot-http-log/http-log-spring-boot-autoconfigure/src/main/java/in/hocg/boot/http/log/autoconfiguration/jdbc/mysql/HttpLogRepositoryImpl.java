@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -60,7 +61,7 @@ public class HttpLogRepositoryImpl implements HttpLogRepository {
     @Override
     public HttpLog create(String title, String code, String remark, String attach,
                           String caller, String beCaller, String creator,
-                          String direction, String uri, Map<String, String> headers, Object body) {
+                          String direction, String uri, Map<String, List<String>> headers, Object body) {
         HttpLog entity = new HttpLog();
         entity.setTitle(title);
         entity.setCode(code);

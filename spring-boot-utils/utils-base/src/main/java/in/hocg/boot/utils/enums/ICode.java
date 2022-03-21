@@ -1,6 +1,8 @@
 package in.hocg.boot.utils.enums;
 
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ArrayUtil;
 import in.hocg.boot.utils.LangUtils;
 
 import java.io.Serializable;
@@ -17,21 +19,29 @@ public interface ICode {
     Serializable getCode();
 
     default String getCodeStr() {
-        return String.valueOf(getCode());
+        return Convert.toStr(getCode());
     }
 
     default Integer getCodeInt() {
-        return Integer.valueOf(getCodeStr());
+        return Convert.toInt(getCode());
     }
 
     default boolean eq(Serializable val) {
-        final Serializable code = this.getCode();
-        if (code instanceof String) {
-            return LangUtils.equals((String) code, (String) val);
-        } else if (code instanceof Integer) {
-            return LangUtils.equals((Integer) code, (Integer) val);
+        return LangUtils.equal(this.getCode(), val);
+    }
+
+    default boolean anyMatch(ICode... codes) {
+        if (ArrayUtil.isEmpty(codes)) {
+            return false;
         }
-        return false;
+        return ArrayUtil.contains(codes, this);
+    }
+
+    default boolean anyMatch(Serializable... codes) {
+        if (ArrayUtil.isEmpty(codes)) {
+            return false;
+        }
+        return ArrayUtil.contains(codes, this.getCode());
     }
 
     static <T extends ICode> T ofThrow(Serializable code, Class<T> enumClass) {

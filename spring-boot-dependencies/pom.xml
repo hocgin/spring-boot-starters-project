@@ -52,6 +52,7 @@
     <sentinel.version>1.8.2</sentinel.version>
     <arthas-spring-boot-starter.version>3.5.4</arthas-spring-boot-starter.version>
     <javers.version>6.6.3</javers.version>
+    <polyjdbc.version>0.7.6</polyjdbc.version>
   </properties>
 
   <dependencyManagement>
@@ -300,12 +301,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>utils-spring-boot-annotation</artifactId>
+        <artifactId>utils-annotation</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>utils-spring-boot-all</artifactId>
+        <artifactId>utils-base</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -741,6 +742,11 @@
         <groupId>com.taobao.arthas</groupId>
         <artifactId>arthas-spring-boot-starter</artifactId>
         <version>${arthas-spring-boot-starter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.polyjdbc</groupId>
+        <artifactId>polyjdbc</artifactId>
+        <version>${polyjdbc.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

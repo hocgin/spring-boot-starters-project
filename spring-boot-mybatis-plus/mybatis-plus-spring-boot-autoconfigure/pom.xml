@@ -16,7 +16,7 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>utils-spring-boot-all</artifactId>
+      <artifactId>utils-base</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>

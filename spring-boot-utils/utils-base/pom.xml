@@ -10,13 +10,13 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <name>Utils :: Spring Boot :: All</name>
-  <artifactId>utils-spring-boot-all</artifactId>
+  <name>Utils :: Base</name>
+  <artifactId>utils-base</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>utils-spring-boot-annotation</artifactId>
+      <artifactId>utils-annotation</artifactId>
     </dependency>
     <dependency>
       <groupId>cn.hutool</groupId>
@@ -33,6 +33,10 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.polyjdbc</groupId>
+      <artifactId>polyjdbc</artifactId>
     </dependency>
   </dependencies>
 </project>

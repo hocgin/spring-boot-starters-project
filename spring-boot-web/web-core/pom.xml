@@ -20,7 +20,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>utils-spring-boot-all</artifactId>
+      <artifactId>utils-base</artifactId>
     </dependency>
     <dependency>
       <groupId>io.swagger</groupId>
