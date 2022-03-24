@@ -83,12 +83,17 @@
       <!-- data-audit -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mybatis-plus-extensions-javers-autoconfigure</artifactId>
+        <artifactId>mybatis-plus-extensions-context</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mybatis-plus-extensions-javers-spring-boot-starter</artifactId>
+        <artifactId>mybatis-plus-extensions-data-audit-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-config-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- WS -->

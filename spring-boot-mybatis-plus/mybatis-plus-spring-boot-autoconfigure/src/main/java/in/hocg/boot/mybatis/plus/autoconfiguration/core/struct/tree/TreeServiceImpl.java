@@ -3,9 +3,10 @@ package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.tree;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractServiceImpl;
-import in.hocg.boot.utils.ValidUtils;
 import in.hocg.boot.utils.LangUtils;
+import in.hocg.boot.utils.ValidUtils;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -134,7 +135,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
         }
         final String treePath = entity.getTreePath();
         final UpdateWrapper<T> deleteWrapper = new UpdateWrapper<>();
-        deleteWrapper.likeRight(TreeEntity.TREE_PATH, treePath);
+        deleteWrapper.likeRight(ColumnConstants.TREE_PATH, treePath);
         remove(deleteWrapper);
     }
 
@@ -142,11 +143,11 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
     public List<T> listByParentId(Serializable parentId, Boolean enabled) {
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
         if (Objects.isNull(parentId)) {
-            queryWrapper.isNull(TreeEntity.PARENT_ID);
+            queryWrapper.isNull(ColumnConstants.PARENT_ID);
         } else {
-            queryWrapper.eq(TreeEntity.PARENT_ID, parentId);
+            queryWrapper.eq(ColumnConstants.PARENT_ID, parentId);
         }
-        queryWrapper.eq(Objects.nonNull(enabled), TreeEntity.ENABLED, enabled);
+        queryWrapper.eq(Objects.nonNull(enabled), ColumnConstants.ENABLED, enabled);
         return list(queryWrapper);
     }
 
@@ -161,8 +162,8 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
                                                    @NonNull String oldTreePath,
                                                    @NonNull String newTreePath) {
         final UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.likeRight(TreeEntity.TREE_PATH, rightRightTreePath);
-        updateWrapper.setSql(String.format("%s = REPLACE(tree_path, '%s', '%s')", TreeEntity.TREE_PATH, oldTreePath, newTreePath));
+        updateWrapper.likeRight(ColumnConstants.TREE_PATH, rightRightTreePath);
+        updateWrapper.setSql(String.format("%s = REPLACE(tree_path, '%s', '%s')", ColumnConstants.TREE_PATH, oldTreePath, newTreePath));
         update(updateWrapper);
     }
 
@@ -173,8 +174,8 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
      */
     private void updateOffStatusByRightLikeTreePath(@NonNull String rightRightTreePath) {
         final UpdateWrapper<T> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.likeRight(TreeEntity.TREE_PATH, rightRightTreePath);
-        updateWrapper.set(TreeEntity.ENABLED, false);
+        updateWrapper.likeRight(ColumnConstants.TREE_PATH, rightRightTreePath);
+        updateWrapper.set(ColumnConstants.ENABLED, false);
         update(updateWrapper);
     }
 }

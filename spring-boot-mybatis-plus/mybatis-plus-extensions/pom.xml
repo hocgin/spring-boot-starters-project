@@ -11,9 +11,13 @@
   <packaging>pom</packaging>
 
   <name>Mybatis Plus :: Extensions</name>
-  <modules>
-    <module>mybatis-plus-extensions-javers-autoconfigure</module>
-  </modules>
   <artifactId>mybatis-plus-extensions</artifactId>
+
+  <modules>
+    <module>mybatis-plus-extensions-context</module>
+    <module>mybatis-plus-extensions-data-audit-autoconfigure</module>
+    <module>mybatis-plus-extensions-config-autoconfigure</module>
+    <module>mybatis-plus-extensions-tpl-autoconfigure</module>
+  </modules>
 
 </project>

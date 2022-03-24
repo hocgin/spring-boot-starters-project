@@ -15,4 +15,8 @@ public class ColumnConstants {
     public static final String LAST_UPDATER = "last_updater";
     public static final String DELETED_AT = "deleted_at";
     public static final String DELETER = "deleter";
+
+    public static final String PARENT_ID = "parent_id";
+    public static final String TREE_PATH = "tree_path";
+    public static final String ENABLED = "enabled";
 }
