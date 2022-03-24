@@ -17,7 +17,7 @@
   <properties>
     <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
     <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
-    <mybatis-plus.version>3.5.0</mybatis-plus.version>
+    <mybatis-plus.version>3.5.1</mybatis-plus.version>
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
     <guava.version>28.1-jre</guava.version>
     <hutool-all.version>5.3.10</hutool-all.version>
@@ -53,6 +53,7 @@
     <arthas-spring-boot-starter.version>3.5.4</arthas-spring-boot-starter.version>
     <javers.version>6.6.3</javers.version>
     <polyjdbc.version>0.7.6</polyjdbc.version>
+    <jmockdata.version>4.3.0</jmockdata.version>
   </properties>
 
   <dependencyManagement>
@@ -624,6 +625,11 @@
         <version>${mybatis-plus.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-boot-starter-test</artifactId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+      <dependency>
         <groupId>io.swagger</groupId>
         <artifactId>swagger-annotations</artifactId>
         <version>${swagger2.version}</version>
@@ -747,6 +753,11 @@
         <groupId>org.polyjdbc</groupId>
         <artifactId>polyjdbc</artifactId>
         <version>${polyjdbc.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.jsonzou</groupId>
+        <artifactId>jmockdata</artifactId>
+        <version>${jmockdata.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

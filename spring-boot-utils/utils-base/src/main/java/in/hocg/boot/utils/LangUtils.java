@@ -78,9 +78,9 @@ public class LangUtils {
 
     public boolean equal(Object v1, Object v2) {
         if (v1 instanceof String) {
-            return LangUtils.equals(v1, v2);
+            return LangUtils.equals((String) v1, (String) v2);
         } else if (v1 instanceof Integer) {
-            return LangUtils.equals(v1, v2);
+            return LangUtils.equals((Integer) v1, (Integer) v2);
         }
         return ObjectUtil.equal(v1, v2);
     }

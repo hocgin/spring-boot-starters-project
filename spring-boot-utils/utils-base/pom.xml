@@ -38,5 +38,9 @@
       <groupId>org.polyjdbc</groupId>
       <artifactId>polyjdbc</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.github.jsonzou</groupId>
+      <artifactId>jmockdata</artifactId>
+    </dependency>
   </dependencies>
 </project>
