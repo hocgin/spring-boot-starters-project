@@ -5,7 +5,6 @@ import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigItem;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,7 +15,6 @@ import java.util.Optional;
  */
 @Mapper
 public interface ConfigItemMpeMapper extends BaseMapper<ConfigItem> {
-    List<ConfigItem> listByScope(@Param("scope") String scope);
 
     Optional<ConfigItem> getByScopeAndName(@Param("scope") String scope, @Param("name") String name);
 

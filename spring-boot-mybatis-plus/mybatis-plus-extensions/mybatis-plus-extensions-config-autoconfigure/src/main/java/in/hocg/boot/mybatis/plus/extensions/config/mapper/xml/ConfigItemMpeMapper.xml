@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="in.hocg.boot.mybatis.plus.extensions.config.mapper.ConfigItemMpeMapper">
-  <select id="listByScope" resultType="in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigItem">
-    SELECT bci.*
-    FROM boot_config_item bci
-           LEFT JOIN boot_config_scope bcs on bcs.id = bci.scope_id
-    <where>
-      <if test="scope != null">
-        AND bcs.scope = #{scope}
-      </if>
-    </where>
-  </select>
-
   <select id="getByScopeAndName" resultType="in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigItem">
     SELECT bci.*
     FROM boot_config_item bci

@@ -3,7 +3,6 @@ package in.hocg.boot.mybatis.plus.extensions.config.service;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractService;
 import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigItem;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,6 +13,4 @@ import java.util.Optional;
  */
 public interface ConfigItemMpeService extends AbstractService<ConfigItem> {
     Optional<ConfigItem> getByScopeAndName(String scope, String name);
-
-    List<ConfigItem> listByScope(String scope);
 }

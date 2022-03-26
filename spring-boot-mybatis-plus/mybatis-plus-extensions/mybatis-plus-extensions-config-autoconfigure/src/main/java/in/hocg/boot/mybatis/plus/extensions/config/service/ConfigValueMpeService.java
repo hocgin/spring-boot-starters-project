@@ -15,9 +15,9 @@ import java.util.Optional;
  */
 public interface ConfigValueMpeService extends AbstractService<ConfigValue> {
 
-    List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefId(String scope, Long refId);
+    List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefIdAndReadable(List<String> scope, Long refId, Boolean readable);
 
-    List<ConfigValue> listByScopeAndRefId(String scope, Long refId);
+    Optional<ConfigValue> getByItemIdAndRefId(Long itemId, Long refId);
 
-    Optional<ConfigValue> listByScopeAndRefId(String scope, Long refId, String name);
+    Optional<ConfigScopeItemVo> getConfigScopeItemVoByScopeAndRefIdAndName(String scope, Long refId, String name);
 }

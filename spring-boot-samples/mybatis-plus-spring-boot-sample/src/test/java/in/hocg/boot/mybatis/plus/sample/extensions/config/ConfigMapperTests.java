@@ -24,7 +24,7 @@ class ConfigMapperTests {
 
     @Test
     void ping() {
-        List<ConfigItem> configItems = mapper.listByScope("test");
-        log.info("ping: {}", configItems);
+//        List<ConfigItem> configItems = mapper.listByScope("test");
+//        log.info("ping: {}", configItems);
     }
 }

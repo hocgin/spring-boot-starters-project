@@ -30,6 +30,6 @@ class ConfigValueMapperTests {
         configValue.setItemId(1L);
         mapper.insert(configValue);
 
-        Optional<ConfigValue> value = mapper.getByScopeAndRefIdAndName("system", 1L, "test");
+//        Optional<ConfigValue> value = mapper.getByScopeAndRefIdAndName("system", 1L, "test");
     }
 }

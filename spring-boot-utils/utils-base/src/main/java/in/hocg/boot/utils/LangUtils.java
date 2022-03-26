@@ -396,6 +396,10 @@ public class LangUtils {
         return result;
     }
 
+    public <K, T> Map<K, List<T>> toGroup(List<T> list, Function<? super T, ? extends K> keyFunction) {
+        return list.parallelStream().collect(Collectors.groupingBy(keyFunction));
+    }
+
     /**
      * 设置代理
      *

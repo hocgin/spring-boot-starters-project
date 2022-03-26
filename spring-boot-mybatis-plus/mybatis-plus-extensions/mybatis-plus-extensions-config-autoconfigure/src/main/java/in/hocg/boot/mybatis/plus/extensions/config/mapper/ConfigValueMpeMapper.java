@@ -17,10 +17,8 @@ import java.util.Optional;
  */
 @Mapper
 public interface ConfigValueMpeMapper extends BaseMapper<ConfigValue> {
-    List<ConfigValue> listByScopeAndRefId(@Param("scope") String scope, @Param("refId") Long refId);
 
-    List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefId(@Param("scope") String scope, @Param("refId") Long refId);
+    List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefIdAndReadable(@Param("scope") List<String> scope, @Param("refId") Long refId, @Param("readable") Boolean readable);
 
-    Optional<ConfigValue> getByScopeAndRefIdAndName(@Param("scope") String scope, @Param("refId") Long refId, @Param("name") String name);
-
+    Optional<ConfigScopeItemVo> getConfigScopeItemVoByScopeAndRefIdAndName(@Param("scope") String scope, @Param("refId") Long refId, @Param("name") String name);
 }

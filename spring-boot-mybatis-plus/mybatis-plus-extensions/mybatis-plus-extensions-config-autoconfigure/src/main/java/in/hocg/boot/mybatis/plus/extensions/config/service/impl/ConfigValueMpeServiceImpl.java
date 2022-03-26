@@ -26,17 +26,17 @@ public class ConfigValueMpeServiceImpl extends AbstractServiceImpl<ConfigValueMp
     implements ConfigValueMpeService {
 
     @Override
-    public List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefId(String scope, Long refId) {
-        return baseMapper.listConfigScopeItemVoByScopeAndRefId(scope, refId);
+    public List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefIdAndReadable(List<String> scope, Long refId, Boolean readable) {
+        return baseMapper.listConfigScopeItemVoByScopeAndRefIdAndReadable(scope, refId, readable);
     }
 
     @Override
-    public List<ConfigValue> listByScopeAndRefId(String scope, Long refId) {
-        return baseMapper.listByScopeAndRefId(scope, refId);
+    public Optional<ConfigValue> getByItemIdAndRefId(Long itemId, Long refId) {
+        return lambdaQuery().eq(ConfigValue::getItemId, itemId).eq(ConfigValue::getRefId, refId).oneOpt();
     }
 
     @Override
-    public Optional<ConfigValue> listByScopeAndRefId(String scope, Long refId, String name) {
-        return baseMapper.getByScopeAndRefIdAndName(scope, refId, name);
+    public Optional<ConfigScopeItemVo> getConfigScopeItemVoByScopeAndRefIdAndName(String scope, Long refId, String name) {
+        return baseMapper.getConfigScopeItemVoByScopeAndRefIdAndName(scope, refId, name);
     }
 }
