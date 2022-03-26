@@ -18,15 +18,14 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.fill.BootMetaObj
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.tenant.BootTenantHandler;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.interceptor.LogicDeleteInterceptor;
 import in.hocg.boot.mybatis.plus.autoconfiguration.properties.MyBatisPlusProperties;
+import in.hocg.boot.mybatis.plus.extensions.MyBatisPlusExtensionsAutoConfiguration;
 import in.hocg.boot.utils.LangUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 
 import java.util.Set;
 
@@ -36,8 +35,10 @@ import java.util.Set;
  *
  * @author hocgin
  */
+@Slf4j
 @Configuration
-@AutoConfigureAfter(MybatisPlusAutoConfiguration.class)
+@Import(MyBatisPlusExtensionsAutoConfiguration.class)
+@AutoConfigureBefore(MybatisPlusAutoConfiguration.class)
 @EnableConfigurationProperties(MyBatisPlusProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class MyBatisPlusAutoConfiguration {
@@ -82,8 +83,7 @@ public class MyBatisPlusAutoConfiguration {
 
     @Bean
     @Primary
-    public MybatisPlusProperties myBatisPlusProperties(MybatisPlusProperties properties,
-                                                       MetaObjectHandler metaObjectHandler) {
+    public MybatisPlusProperties myBatisPlusProperties(MybatisPlusProperties properties, MetaObjectHandler metaObjectHandler) {
         GlobalConfig globalConfig = LangUtils.getOrDefault(properties.getGlobalConfig(), new GlobalConfig());
         globalConfig.setBanner(false);
 
@@ -102,4 +102,5 @@ public class MyBatisPlusAutoConfiguration {
         properties.setMapperLocations(locations.toArray(new String[]{}));
         return properties;
     }
+
 }

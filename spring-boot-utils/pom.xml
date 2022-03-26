@@ -15,9 +15,8 @@
   <artifactId>spring-boot-utils</artifactId>
 
   <modules>
-    <module>utils-spring-boot-annotation</module>
-    <module>utils-spring-boot-all</module>
+    <module>utils-annotation</module>
+    <module>utils-base</module>
   </modules>
-
 
 </project>

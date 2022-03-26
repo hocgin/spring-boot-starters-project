@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.AsyncResult;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -55,7 +56,7 @@ public class HttpLogBerviceImpl implements HttpLogBervice {
     }
 
     @Override
-    public <T> T syncCall(String title, String code, String caller, String beCaller, String uri, Map<String, String> headers, Object body, SupplierThrow<T> exec) {
+    public <T> T syncCall(String title, String code, String caller, String beCaller, String uri, Map<String, List<String>> headers, Object body, SupplierThrow<T> exec) {
         return this.syncCall(exec, () -> this.syncReady(title, code, null, null, caller, beCaller, null, TableHttpLog.Direction.Out.getCodeStr(), uri, headers, body));
     }
 
@@ -66,12 +67,12 @@ public class HttpLogBerviceImpl implements HttpLogBervice {
 
     @Override
     @SneakyThrows
-    public Serializable syncReady(String title, String code, String remark, String attach, String caller, String beCaller, String creator, String direction, String uri, Map<String, String> headers, Object body) {
+    public Serializable syncReady(String title, String code, String remark, String attach, String caller, String beCaller, String creator, String direction, String uri, Map<String, List<String>> headers, Object body) {
         return asyncReady(title, code, remark, attach, caller, beCaller, creator, direction, uri, headers, body).get();
     }
 
     @Override
-    public Future<Serializable> asyncReady(String title, String code, String remark, String attach, String caller, String beCaller, String creator, String direction, String uri, Map<String, String> headers, Object body) {
+    public Future<Serializable> asyncReady(String title, String code, String remark, String attach, String caller, String beCaller, String creator, String direction, String uri, Map<String, List<String>> headers, Object body) {
         return AsyncResult.forValue(repository.create(title, code, remark, attach, caller, beCaller, creator, direction, uri, headers, body).getId());
     }
 

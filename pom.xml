@@ -18,9 +18,9 @@
   <properties>
     <revision>1.0.30</revision>
 
-    <java.version>1.8</java.version>
-    <java.source.version>1.8</java.source.version>
-    <java.target.version>1.8</java.target.version>
+    <java.version>11</java.version>
+    <java.source.version>11</java.source.version>
+    <java.target.version>11</java.target.version>
     <!-- Maven plugins -->
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
     <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
@@ -66,7 +66,6 @@
     <module>spring-boot-flyway</module>
     <module>spring-boot-task</module>
     <module>spring-boot-dynamic-datasource</module>
-    <module>spring-boot-vars</module>
     <module>spring-boot-youtube</module>
     <module>spring-boot-sentinel</module>
     <module>spring-boot-http-log</module>

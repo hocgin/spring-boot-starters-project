@@ -17,7 +17,7 @@
   <properties>
     <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
     <spring-cloud-alibaba.version>2.2.1.RELEASE</spring-cloud-alibaba.version>
-    <mybatis-plus.version>3.5.0</mybatis-plus.version>
+    <mybatis-plus.version>3.5.1</mybatis-plus.version>
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
     <guava.version>28.1-jre</guava.version>
     <hutool-all.version>5.3.10</hutool-all.version>
@@ -51,6 +51,9 @@
     <jol-core.version>0.16</jol-core.version>
     <sentinel.version>1.8.2</sentinel.version>
     <arthas-spring-boot-starter.version>3.5.4</arthas-spring-boot-starter.version>
+    <javers.version>6.6.3</javers.version>
+    <polyjdbc.version>0.7.6</polyjdbc.version>
+    <jmockdata.version>4.3.0</jmockdata.version>
   </properties>
 
   <dependencyManagement>
@@ -64,6 +67,33 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>tpl-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- data-audit -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>data-audit-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>data-audit-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <!-- data-audit -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-context</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-data-audit-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-config-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- WS -->
@@ -277,12 +307,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>utils-spring-boot-annotation</artifactId>
+        <artifactId>utils-annotation</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>utils-spring-boot-all</artifactId>
+        <artifactId>utils-base</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -600,6 +630,11 @@
         <version>${mybatis-plus.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-boot-starter-test</artifactId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+      <dependency>
         <groupId>io.swagger</groupId>
         <artifactId>swagger-annotations</artifactId>
         <version>${swagger2.version}</version>
@@ -675,6 +710,16 @@
         <version>${google-collections.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.javers</groupId>
+        <artifactId>javers-spring</artifactId>
+        <version>${javers.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.javers</groupId>
+        <artifactId>javers-persistence-sql</artifactId>
+        <version>${javers.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.javassist</groupId>
         <artifactId>javassist</artifactId>
         <version>${javassist.version}</version>
@@ -708,6 +753,16 @@
         <groupId>com.taobao.arthas</groupId>
         <artifactId>arthas-spring-boot-starter</artifactId>
         <version>${arthas-spring-boot-starter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.polyjdbc</groupId>
+        <artifactId>polyjdbc</artifactId>
+        <version>${polyjdbc.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.jsonzou</groupId>
+        <artifactId>jmockdata</artifactId>
+        <version>${jmockdata.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

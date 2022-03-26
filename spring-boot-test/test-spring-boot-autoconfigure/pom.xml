@@ -15,6 +15,16 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-boot-starter-test</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>mybatis-plus-spring-boot-starter</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <optional>true</optional>
@@ -44,7 +54,7 @@
     <!-- Basic -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>utils-spring-boot-all</artifactId>
+      <artifactId>utils-base</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

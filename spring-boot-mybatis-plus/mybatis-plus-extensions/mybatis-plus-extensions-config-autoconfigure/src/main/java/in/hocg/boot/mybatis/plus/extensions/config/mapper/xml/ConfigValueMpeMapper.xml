@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="in.hocg.boot.mybatis.plus.extensions.config.mapper.ConfigValueMpeMapper">
+  <select id="listConfigScopeItemVoByScopeAndRefIdAndReadable"
+          resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
+    SELECT DISTINCT bci.*,
+                    bcv.value AS value
+    FROM boot_config_item bci
+           LEFT JOIN boot_config_value bcv on bcv.item_id = bci.id
+           LEFT JOIN boot_config_scope bcs on bcs.id = bci.scope_id
+    <where>
+      <if test="scope != null">
+        <foreach collection="scope" item="item" separator="," open="AND bcs.scope IN(" close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="refId != null">
+        AND bcv.ref_id = #{refId}
+      </if>
+      <if test="readable != null">
+        AND bci.readable = #{readable}
+      </if>
+    </where>
+  </select>
+
+  <select id="getConfigScopeItemVoByScopeAndRefIdAndName"
+          resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
+    SELECT DISTINCT bci.*,
+                    bcv.value AS value
+    FROM boot_config_item bci
+           LEFT JOIN boot_config_value bcv on bcv.item_id = bci.id
+           LEFT JOIN boot_config_scope bcs on bcs.id = bci.scope_id
+    <where>
+      <if test="scope != null">
+        AND bcs.scope = #{scope}
+      </if>
+      <if test="refId != null">
+        AND bcv.ref_id = #{refId}
+      </if>
+      <if test="name != null">
+        AND bci.name = #{name}
+      </if>
+    </where>
+  </select>
+</mapper>

@@ -84,6 +84,10 @@ public class LoggerEvent {
      */
     private static final ThreadLocal<List<String>> LOGS_REMARK = new ThreadLocal<>();
 
+    public List<String> getLogs() {
+        return LOGS_REMARK.get();
+    }
+
 
     public static void log(String message) {
         getOrCreateLogPool().add(message);
