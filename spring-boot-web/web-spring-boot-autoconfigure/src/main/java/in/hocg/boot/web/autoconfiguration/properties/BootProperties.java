@@ -1,5 +1,6 @@
 package in.hocg.boot.web.autoconfiguration.properties;
 
+import in.hocg.boot.web.autoconfiguration.SpringContext;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -21,4 +22,9 @@ public class BootProperties {
      * 是否调试模式
      */
     private Boolean isDebug = Boolean.FALSE;
+
+    public String getSpringApplicationName() {
+        return SpringContext.getApplicationContext().getEnvironment().getProperty("${spring.application.name:'unknown'}");
+    }
+
 }

@@ -17,6 +17,7 @@
     <module>mybatis-plus-extensions-context</module>
     <module>mybatis-plus-extensions-data-audit-autoconfigure</module>
     <module>mybatis-plus-extensions-config-autoconfigure</module>
+    <module>mybatis-plus-extensions-http-log-autoconfigure</module>
     <module>mybatis-plus-extensions-tpl-autoconfigure</module>
   </modules>
 

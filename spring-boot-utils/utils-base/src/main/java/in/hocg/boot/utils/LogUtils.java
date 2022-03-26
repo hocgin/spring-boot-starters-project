@@ -21,21 +21,40 @@ import java.util.concurrent.TimeUnit;
 @UtilityClass
 public class LogUtils {
 
+    /**
+     * 同步记录日志
+     *
+     * @param exec       执行操作
+     * @param onComplete 完成日志状态补充
+     * @param <T>
+     * @return 执行结果
+     */
     public <T> T logSync(SupplierThrow<T> exec, ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
         return logSync(exec, null, onComplete);
     }
 
     /**
-     * @param exec
-     * @param onReady
-     * @param onComplete logId, logStatus, ResponseBody or Error
+     * 同步记录日志
+     *
+     * @param exec       执行操作
+     * @param onReady    准备日志
+     * @param onComplete 完成日志状态补充
      * @param <T>
-     * @return
+     * @return 执行结果
      */
     public <T> T logSync(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady, ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
         return logAsync(exec, () -> Objects.nonNull(onReady) ? new FutureTask<>(onReady::get) : null, onComplete);
     }
 
+    /**
+     * 异步记录日志
+     *
+     * @param exec       执行操作
+     * @param onReady    准备日志
+     * @param onComplete 完成日志状态补充
+     * @param <T>
+     * @return 执行结果
+     */
     public <T> T logAsync(SupplierThrow<T> exec, SupplierThrow<Future<Serializable>> onReady,
                           ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
         LogStatus status = LogStatus.Process;

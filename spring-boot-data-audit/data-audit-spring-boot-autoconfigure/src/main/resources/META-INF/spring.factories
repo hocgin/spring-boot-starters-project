@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.dataaudit.autoconfiguration.DataAuditAutoConfiguration
