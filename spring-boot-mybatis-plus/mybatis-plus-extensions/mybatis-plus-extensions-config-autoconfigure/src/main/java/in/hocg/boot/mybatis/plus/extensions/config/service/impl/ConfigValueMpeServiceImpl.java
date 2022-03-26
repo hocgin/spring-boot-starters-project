@@ -3,6 +3,7 @@ package in.hocg.boot.mybatis.plus.extensions.config.service.impl;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractServiceImpl;
 import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigValue;
 import in.hocg.boot.mybatis.plus.extensions.config.mapper.ConfigValueMpeMapper;
+import in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo;
 import in.hocg.boot.mybatis.plus.extensions.config.service.ConfigValueMpeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,11 @@ import java.util.Optional;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class ConfigValueMpeServiceImpl extends AbstractServiceImpl<ConfigValueMpeMapper, ConfigValue>
     implements ConfigValueMpeService {
+
+    @Override
+    public List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefId(String scope, Long refId) {
+        return baseMapper.listConfigScopeItemVoByScopeAndRefId(scope, refId);
+    }
 
     @Override
     public List<ConfigValue> listByScopeAndRefId(String scope, Long refId) {

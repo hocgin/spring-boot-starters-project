@@ -1,6 +1,7 @@
 package in.hocg.boot.mybatis.plus.extensions.config.pojo.ro;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @author hocgin
  */
 @Data
+@Accessors(chain = true)
 public class QueryScopeRo implements Serializable {
     private String scope;
     private Long refId;

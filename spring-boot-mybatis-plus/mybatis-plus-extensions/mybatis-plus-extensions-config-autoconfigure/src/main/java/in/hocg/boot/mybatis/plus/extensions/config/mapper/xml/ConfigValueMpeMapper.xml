@@ -16,6 +16,23 @@
     </where>
   </select>
 
+  <select id="listConfigScopeItemVoByScopeAndRefId"
+          resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
+    SELECT bcv.*,
+           bci.value AS value
+    FROM boot_config_value bcv
+           LEFT JOIN boot_config_item bci on bcv.item_id = bci.id
+           LEFT JOIN boot_config_scope bcs on bcs.id = bci.scope_id
+    <where>
+      <if test="scope != null">
+        AND bcs.scope = #{scope}
+      </if>
+      <if test="refId != null">
+        AND bcv.ref_id = #{refId}
+      </if>
+    </where>
+  </select>
+
   <select id="getByScopeAndRefIdAndName" resultType="in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigValue">
     SELECT bcv.*
     FROM boot_config_value bcv

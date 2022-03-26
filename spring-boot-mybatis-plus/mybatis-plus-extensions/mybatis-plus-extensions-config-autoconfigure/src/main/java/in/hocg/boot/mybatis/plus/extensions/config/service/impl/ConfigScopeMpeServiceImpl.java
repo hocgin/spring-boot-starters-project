@@ -8,14 +8,18 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractSer
 import in.hocg.boot.mybatis.plus.extensions.config.convert.ConfigMpeConvert;
 import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigScope;
 import in.hocg.boot.mybatis.plus.extensions.config.mapper.ConfigScopeMpeMapper;
+import in.hocg.boot.mybatis.plus.extensions.config.pojo.ro.QueryScopeRo;
 import in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeStructVo;
+import in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeValueVo;
 import in.hocg.boot.mybatis.plus.extensions.config.service.ConfigScopeMpeService;
+import in.hocg.boot.mybatis.plus.extensions.config.service.ConfigValueMpeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,6 +35,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class ConfigScopeMpeServiceImpl extends AbstractServiceImpl<ConfigScopeMpeMapper, ConfigScope>
     implements ConfigScopeMpeService {
+    private final ConfigMpeConvert convert;
 
     @Override
     public Optional<ConfigScope> getByScope(String scope) {
@@ -55,7 +60,20 @@ public class ConfigScopeMpeServiceImpl extends AbstractServiceImpl<ConfigScopeMp
         if (ArrayUtil.isEmpty(scopes)) {
             return CollUtil.newArrayList();
         }
-
         return this.listByScope(scopes).stream().map(entity -> as(entity, ConfigScopeStructVo.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<ConfigScopeValueVo> getConfig(QueryScopeRo ro) {
+        if (Objects.isNull(ro)) {
+            return Optional.empty();
+        }
+        String scope = ro.getScope();
+        return getByScope(scope).map(entity -> convert.asConfigScopeValueVo(entity, ro.getRefId()));
+    }
+
+    @Override
+    public List<ConfigScopeValueVo> listConfig(List<QueryScopeRo> ro) {
+        return ro.stream().flatMap(queryScopeRo -> getConfig(queryScopeRo).stream()).collect(Collectors.toList());
     }
 }

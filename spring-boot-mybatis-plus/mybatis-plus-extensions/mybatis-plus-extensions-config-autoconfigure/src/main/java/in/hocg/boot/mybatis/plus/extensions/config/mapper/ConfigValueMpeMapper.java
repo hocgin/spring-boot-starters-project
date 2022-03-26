@@ -2,6 +2,7 @@ package in.hocg.boot.mybatis.plus.extensions.config.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigValue;
+import in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,5 +19,8 @@ import java.util.Optional;
 public interface ConfigValueMpeMapper extends BaseMapper<ConfigValue> {
     List<ConfigValue> listByScopeAndRefId(@Param("scope") String scope, @Param("refId") Long refId);
 
+    List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefId(@Param("scope") String scope, @Param("refId") Long refId);
+
     Optional<ConfigValue> getByScopeAndRefIdAndName(@Param("scope") String scope, @Param("refId") Long refId, @Param("name") String name);
+
 }
