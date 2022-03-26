@@ -38,4 +38,7 @@ public interface HttpLogMpeService extends AbstractService<HttpLog> {
 
     @Async
     void asyncDone(Serializable id, LogUtils.LogStatus logStatus, String body);
+
+    @Async
+    void asyncFail(Serializable id, Object result);
 }

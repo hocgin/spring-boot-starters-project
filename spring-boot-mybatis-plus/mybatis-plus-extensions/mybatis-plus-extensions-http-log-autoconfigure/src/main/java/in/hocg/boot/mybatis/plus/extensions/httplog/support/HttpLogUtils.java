@@ -38,7 +38,9 @@ public class HttpLogUtils {
 
     public <T> ThreeConsumerThrow<Serializable, LogUtils.LogStatus, T> getDefaultComplete() {
         return (Serializable id, LogUtils.LogStatus status, T result) -> {
-            if (Objects.isNull(result) || result instanceof String) {
+            if (LogUtils.LogStatus.Fail.equals(status)) {
+                getHttpLogMpeService().asyncFail(id, result);
+            } else if (Objects.isNull(result) || result instanceof String) {
                 getHttpLogMpeService().asyncDone(id, status, StrUtil.toString(result));
             } else if (result instanceof HttpResponse) {
                 getHttpLogMpeService().asyncDone(response((HttpResponse) result).setId(Convert.toLong(id)));

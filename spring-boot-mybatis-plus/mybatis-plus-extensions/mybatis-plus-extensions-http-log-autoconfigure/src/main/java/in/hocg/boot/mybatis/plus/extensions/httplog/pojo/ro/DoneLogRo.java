@@ -20,7 +20,5 @@ public class DoneLogRo implements Serializable {
     private String responseBody;
     private String status;
     private LocalDateTime doneAt;
-    @Deprecated
-    private Long timeMillis;
     private String failReason;
 }

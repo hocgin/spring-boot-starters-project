@@ -1,6 +1,7 @@
 package in.hocg.boot.mybatis.plus.extensions.httplog.service.impl;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractServiceImpl;
 import in.hocg.boot.mybatis.plus.extensions.httplog.convert.HttpLogMpeConvert;
 import in.hocg.boot.mybatis.plus.extensions.httplog.entity.HttpLog;
@@ -62,6 +63,15 @@ public class HttpLogMpeServiceImpl extends AbstractServiceImpl<HttpLogMpeMapper,
         } else {
             doneLogRo.setResponseBody(body);
         }
+        asyncDone(doneLogRo);
+    }
+
+    @Override
+    public void asyncFail(Serializable id, Object result) {
+        DoneLogRo doneLogRo = new DoneLogRo().setId(Convert.toLong(id))
+            .setStatus(Status.Fail.getCodeStr())
+            .setFailReason(StrUtil.toString(result))
+            .setDoneAt(LocalDateTime.now());
         asyncDone(doneLogRo);
     }
 }
