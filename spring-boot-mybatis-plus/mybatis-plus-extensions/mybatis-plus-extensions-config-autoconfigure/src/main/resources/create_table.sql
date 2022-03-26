@@ -24,7 +24,7 @@ CREATE TABLE `boot_config_scope`
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    COMMENT = '[mbp|配置] 配置域表';
+    COMMENT = '[BOOT] 配置域表';
 
 DROP TABLE IF EXISTS `boot_config_item`;
 CREATE TABLE `boot_config_item`
@@ -60,7 +60,7 @@ CREATE TABLE `boot_config_item`
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    COMMENT = '[mbp|配置] 域的配置项表';
+    COMMENT = '[BOOT] 域的配置项表';
 
 DROP TABLE IF EXISTS `boot_config_value`;
 CREATE TABLE `boot_config_value`
@@ -88,4 +88,4 @@ CREATE TABLE `boot_config_value`
 )
     ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
-    COMMENT = '[mbp|配置] 配置项的值表';
+    COMMENT = '[BOOT] 配置项的值表';
