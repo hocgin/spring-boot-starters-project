@@ -1,8 +1,13 @@
 package in.hocg.boot.mybatis.plus.extensions.config.pojo.vo;
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjectUtil;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 /**
  * Created by hocgin on 2022/3/26
@@ -41,4 +46,20 @@ public class ConfigScopeItemVo implements Serializable {
      * 是否可空
      */
     private Boolean nullable;
+
+    @SneakyThrows
+    public <T> Optional<T> getValue() {
+        Class<?> clazz = Class.forName(type);
+        boolean isBasicType = ClassUtil.isBasicType(clazz);
+        String valueStr = null;
+        if (ObjectUtil.isNull(value)) {
+            valueStr = defaultValue;
+        }
+
+        Object value = null;
+        if (isBasicType) {
+            value = Convert.convert(clazz, valueStr);
+        }
+        return Optional.ofNullable((T) value);
+    }
 }
