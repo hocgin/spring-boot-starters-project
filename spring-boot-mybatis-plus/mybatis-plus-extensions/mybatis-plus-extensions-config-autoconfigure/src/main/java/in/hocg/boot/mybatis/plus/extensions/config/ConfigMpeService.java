@@ -27,6 +27,8 @@ public interface ConfigMpeService {
      */
     void setValue(String scope, Long refId, String name, Object value);
 
+    void setValue(Long valueId, Object value);
+
     /**
      * 获取值
      *

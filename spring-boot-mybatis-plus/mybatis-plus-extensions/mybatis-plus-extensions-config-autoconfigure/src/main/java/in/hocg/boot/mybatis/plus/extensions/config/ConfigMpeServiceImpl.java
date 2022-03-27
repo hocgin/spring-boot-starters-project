@@ -56,6 +56,18 @@ public class ConfigMpeServiceImpl implements ConfigMpeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void setValue(Long valueId, Object value) {
+        Optional.ofNullable(configValueMpeService.getById(valueId)).map(configValue -> {
+            Long itemId = configValue.getItemId();
+            ConfigItem item = configItemMpeService.getById(itemId);
+            String inValue = ConfigHelper.toValue(ObjectUtil.defaultIfNull(value, item.getDefaultValue()));
+            Assert.isTrue(!item.getNullable() && Objects.isNull(inValue), "配置项不允许为空");
+            return configValue.setValue(inValue);
+        }).ifPresent(configValueMpeService::save);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public void setScopeStruct(String scope, String name, ScopeStructRo ro) {
         ConfigItem entity = configScopeMpeService.getByScope(scope).map(configScope -> {
             ConfigItem configItem = convert.asConfigItem(ro);
