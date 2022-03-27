@@ -4,6 +4,8 @@
   <select id="listConfigScopeItemVoByScopeAndRefIdAndReadable"
           resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
     SELECT DISTINCT bci.*,
+                    bci.id    AS itemId,
+                    bcv.id    AS valueId,
                     bcv.value AS value
     FROM boot_config_item bci
            LEFT JOIN boot_config_value bcv on bcv.item_id = bci.id
@@ -26,6 +28,8 @@
   <select id="getConfigScopeItemVoByScopeAndRefIdAndName"
           resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
     SELECT DISTINCT bci.*,
+                    bci.id    AS itemId,
+                    bcv.id    AS valueId,
                     bcv.value AS value
     FROM boot_config_item bci
            LEFT JOIN boot_config_value bcv on bcv.item_id = bci.id

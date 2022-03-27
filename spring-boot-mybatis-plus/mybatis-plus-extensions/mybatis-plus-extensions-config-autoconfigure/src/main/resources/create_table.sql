@@ -37,6 +37,8 @@ CREATE TABLE `boot_config_item`
         COMMENT '标题',
     `name`            VARCHAR(64) NOT NULL
         COMMENT '键',
+    `remark`          VARCHAR(512)
+        COMMENT '描述',
     `type`            VARCHAR(128)
         COMMENT '类型',
     `default_value`   VARCHAR(1024)

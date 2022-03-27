@@ -13,6 +13,10 @@ import java.io.Serializable;
 @Data
 public class ConfigScopeItemVo implements Serializable {
     /**
+     * 配置项
+     */
+    private Long valueId;
+    /**
      * 配置域
      */
     private Long scopeId;
@@ -28,6 +32,10 @@ public class ConfigScopeItemVo implements Serializable {
      * 配置项标题
      */
     private String title;
+    /**
+     * 配置项描述
+     */
+    private String remark;
     /**
      * 配置项值(可能为空)
      */
