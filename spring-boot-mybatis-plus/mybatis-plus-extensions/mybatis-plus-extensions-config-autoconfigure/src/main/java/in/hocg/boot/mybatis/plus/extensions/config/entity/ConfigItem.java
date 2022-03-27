@@ -28,6 +28,9 @@ public class ConfigItem extends CommonEntity<ConfigItem> {
     @TableField("scope_id")
     private Long scopeId;
     @ApiModelProperty
+    @TableField("title")
+    private String title;
+    @ApiModelProperty
     @TableField("name")
     private String name;
     @ApiModelProperty

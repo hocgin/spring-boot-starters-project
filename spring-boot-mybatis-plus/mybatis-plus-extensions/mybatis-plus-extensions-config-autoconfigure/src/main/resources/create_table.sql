@@ -33,6 +33,8 @@ CREATE TABLE `boot_config_item`
         COMMENT 'ID',
     `scope_id`        BIGINT      NOT NULL
         COMMENT '域',
+    `title`           VARCHAR(64) NOT NULL
+        COMMENT '标题',
     `name`            VARCHAR(64) NOT NULL
         COMMENT '键',
     `type`            VARCHAR(128)

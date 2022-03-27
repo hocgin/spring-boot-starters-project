@@ -23,6 +23,7 @@ public class ConfigMpeConvert {
     public ConfigItem asConfigItem(ScopeStructRo ro) {
         return new ConfigItem()
             .setType(ro.getType())
+            .setTitle(ro.getTitle())
             .setDefaultValue(ro.getDefaultValue())
             .setNullable(ro.getNullable())
             .setReadable(ro.getReadable())

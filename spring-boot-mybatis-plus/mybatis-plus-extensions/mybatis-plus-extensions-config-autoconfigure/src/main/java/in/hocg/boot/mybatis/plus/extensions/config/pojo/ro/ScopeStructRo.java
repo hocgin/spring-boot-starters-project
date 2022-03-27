@@ -17,6 +17,10 @@ public class ScopeStructRo implements Serializable {
      */
     private String type;
     /**
+     * 配置项标题
+     */
+    private String title;
+    /**
      * 配置项值, 默认值
      */
     private String defaultValue;

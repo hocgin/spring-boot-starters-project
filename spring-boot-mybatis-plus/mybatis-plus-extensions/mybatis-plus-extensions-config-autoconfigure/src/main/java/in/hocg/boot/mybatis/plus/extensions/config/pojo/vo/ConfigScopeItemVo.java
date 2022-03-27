@@ -25,6 +25,10 @@ public class ConfigScopeItemVo implements Serializable {
      */
     private String name;
     /**
+     * 配置项标题
+     */
+    private String title;
+    /**
      * 配置项值(可能为空)
      */
     private String value;
