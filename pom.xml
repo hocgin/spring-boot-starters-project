@@ -67,7 +67,7 @@
     <module>spring-boot-youtube</module>
     <module>spring-boot-sentinel</module>
     <module>spring-boot-arthas</module>
-    <module>spring-boot-ffmpeg</module>
+    <module>spring-boot-javacv</module>
     <module>spring-boot-ws</module>
     <module>spring-boot-tpl</module>
   </modules>

@@ -50,7 +50,7 @@
     <module>youtube-spring-boot-starter</module>
     <module>sentinel-spring-boot-starter</module>
     <module>arthas-spring-boot-starter</module>
-    <module>ffmpeg-spring-boot-starter</module>
+    <module>javacv-spring-boot-starter</module>
     <module>ws-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
