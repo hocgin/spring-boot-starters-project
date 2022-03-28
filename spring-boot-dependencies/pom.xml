@@ -72,17 +72,6 @@
       <!-- data-audit -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>data-audit-spring-boot-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>data-audit-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <!-- data-audit -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
         <artifactId>mybatis-plus-extensions-context</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -153,17 +142,6 @@
         <artifactId>ffmpeg-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <!-- http-log -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>http-log-spring-boot-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>http-log-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <!-- Sentinel -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -197,17 +175,6 @@
         <artifactId>youtube-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <!-- Vars -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>vars-spring-boot-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>vars-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <!-- dynamic datasource -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -228,17 +195,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>flyway-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <!-- Task -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>task-spring-boot-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>task-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- WebMagic -->
@@ -330,16 +286,6 @@
         <version>${project.version}</version>
       </dependency>
       <!--      -->
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>change-log-spring-boot-autoconfigure</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>change-log-spring-boot-starter</artifactId>
-        <version>${project.version}</version>
-      </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>utils-annotation</artifactId>
