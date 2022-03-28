@@ -27,6 +27,9 @@ public interface ICode {
     }
 
     default boolean eq(Serializable val) {
+        if (val instanceof Enum) {
+            return this.equals(val);
+        }
         return LangUtils.equal(this.getCode(), val);
     }
 

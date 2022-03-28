@@ -23,7 +23,9 @@
     <module>mybatis-plus-spring-boot-starter</module>
     <module>mybatis-plus-extensions-data-audit-spring-boot-starter</module>
     <module>mybatis-plus-extensions-config-spring-boot-starter</module>
+    <module>mybatis-plus-extensions-task-spring-boot-starter</module>
     <module>mybatis-plus-extensions-http-log-spring-boot-starter</module>
+    <module>mybatis-plus-extensions-change-log-spring-boot-starter</module>
     <module>cache-spring-boot-starter</module>
     <module>web-spring-boot-starter</module>
     <module>knife-gateway-spring-boot-starter</module>
@@ -43,7 +45,6 @@
     <module>schedulerx-spring-boot-starter</module>
     <module>monitor-spring-boot-starter</module>
     <module>excel-spring-boot-starter</module>
-    <module>task-spring-boot-starter</module>
     <module>webmagic-spring-boot-starter</module>
     <module>flyway-spring-boot-starter</module>
     <module>dynamic-datasource-spring-boot-starter</module>

@@ -9,4 +9,5 @@ package in.hocg.boot.mybatis.plus.extensions.context.constants;
 public class GlobalConstants {
     public static final String PACKAGE_PREFIX = "in.hocg.boot.mybatis.plus.extensions";
     public static final String TABLE_PREFIX = "boot_";
+    public static final String PROP_PREFIX = "boot.mybatis-plus.extensions";
 }
