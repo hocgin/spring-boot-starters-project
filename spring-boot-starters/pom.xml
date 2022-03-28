@@ -36,7 +36,6 @@
     <module>openfeign-spring-boot-starter</module>
     <module>mail-spring-boot-starter</module>
     <module>validation-spring-boot-starter</module>
-    <module>change-log-spring-boot-starter</module>
     <module>xxl-job-spring-boot-starter</module>
     <module>wx-ma-spring-boot-starter</module>
     <module>wx-mp-spring-boot-starter</module>

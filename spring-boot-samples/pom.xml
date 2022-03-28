@@ -31,12 +31,10 @@
     <module>sso2-client-gateway-sample</module>
     <module>sso2-server-spring-boot-sample</module>
     <module>mail-spring-boot-sample</module>
-    <module>change-log-spring-boot-sample</module>
     <module>xxl-job-spring-boot-sample</module>
     <module>test-spring-boot-sample</module>
     <module>schedulerx-spring-boot-sample</module>
     <module>cache-spring-boot-sample</module>
-    <module>task-spring-boot-sample</module>
     <module>youtube-spring-boot-sample</module>
     <module>sentinel-spring-boot-sample</module>
     <module>ffmpeg-spring-boot-sample</module>
