@@ -68,7 +68,6 @@
     <module>spring-boot-dynamic-datasource</module>
     <module>spring-boot-youtube</module>
     <module>spring-boot-sentinel</module>
-    <module>spring-boot-http-log</module>
     <module>spring-boot-arthas</module>
     <module>spring-boot-ffmpeg</module>
     <module>spring-boot-ws</module>

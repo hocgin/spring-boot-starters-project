@@ -21,6 +21,7 @@
     <module>web-spring-boot-sample</module>
     <module>knife-gateway-sample</module>
     <module>mybatis-plus-spring-boot-sample</module>
+    <module>mybatis-plus-extensions-spring-boot-sample</module>
     <module>message-spring-boot-sample</module>
     <module>logging-spring-boot-sample</module>
     <module>sso-client-spring-boot-sample</module>
@@ -38,7 +39,6 @@
     <module>task-spring-boot-sample</module>
     <module>youtube-spring-boot-sample</module>
     <module>sentinel-spring-boot-sample</module>
-    <module>http-log-spring-boot-sample</module>
     <module>ffmpeg-spring-boot-sample</module>
     <module>arthas-spring-boot-sample</module>
     <module>excel-spring-boot-sample</module>

@@ -96,6 +96,21 @@
         <artifactId>mybatis-plus-extensions-config-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-config-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-http-log-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-http-log-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- WS -->
       <dependency>
         <groupId>${project.groupId}</groupId>

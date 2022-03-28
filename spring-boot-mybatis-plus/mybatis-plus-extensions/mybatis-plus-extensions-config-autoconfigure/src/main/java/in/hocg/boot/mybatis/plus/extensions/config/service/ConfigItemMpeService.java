@@ -13,4 +13,6 @@ import java.util.Optional;
  */
 public interface ConfigItemMpeService extends AbstractService<ConfigItem> {
     Optional<ConfigItem> getByScopeAndName(String scope, String name);
+
+    Optional<ConfigItem> getByScopeIdAndName(Long scopeId, String name);
 }

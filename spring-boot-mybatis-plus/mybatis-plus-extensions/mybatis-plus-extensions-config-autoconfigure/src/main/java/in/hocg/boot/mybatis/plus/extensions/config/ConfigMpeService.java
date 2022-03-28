@@ -6,6 +6,7 @@ import in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo;
 import in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeStructVo;
 import in.hocg.boot.mybatis.plus.extensions.config.utils.ConfigHelper;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +25,11 @@ public interface ConfigMpeService {
      * @param refId
      * @param name
      * @param value
+     * @return 值ID
      */
-    void setValue(String scope, Long refId, String name, Object value);
+    Optional<Long> setValue(String scope, Long refId, String name, Object value);
+
+    Optional<Long> setValue(Long itemId, Long refId, Object value);
 
     void setValue(Long valueId, Object value);
 
@@ -44,8 +48,26 @@ public interface ConfigMpeService {
             return Optional.empty();
         }
         ConfigScopeItemVo item = opt.get();
-        return Optional.of(ConfigHelper.asValue(ObjectUtil.defaultIfNull(item.getValue(), item.getDefaultValue()), item.getType()));
+        return Optional.ofNullable(ConfigHelper.asValue(ObjectUtil.defaultIfNull(item.getValue(), item.getDefaultValue()), item.getType()));
     }
+
+    /**
+     * 获取域配置项
+     *
+     * @param scope
+     * @return
+     */
+    Long getOrCreateScope(@NotNull String scope);
+
+    /**
+     * 更新域配置
+     *
+     * @param scopeId
+     * @param scope
+     * @param title
+     * @param remark
+     */
+    void setScope(Long scopeId, String scope, String title, String remark);
 
     /**
      * 设置域结构
@@ -53,8 +75,9 @@ public interface ConfigMpeService {
      * @param scope
      * @param name
      * @param ro
+     * @return 配置项ID
      */
-    void setScopeStruct(String scope, String name, ScopeStructRo ro);
+    Long setScopeStruct(String scope, String name, ScopeStructRo ro);
 
     /**
      * 获取域结构

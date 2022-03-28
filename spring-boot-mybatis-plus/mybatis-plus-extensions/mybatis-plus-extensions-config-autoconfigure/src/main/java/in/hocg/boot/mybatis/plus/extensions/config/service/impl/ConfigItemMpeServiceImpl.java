@@ -28,4 +28,9 @@ public class ConfigItemMpeServiceImpl extends AbstractServiceImpl<ConfigItemMpeM
         return baseMapper.getByScopeAndName(scope, name);
     }
 
+    @Override
+    public Optional<ConfigItem> getByScopeIdAndName(Long scopeId, String name) {
+        return lambdaQuery().eq(ConfigItem::getScopeId, scopeId).eq(ConfigItem::getName, name).oneOpt();
+    }
+
 }

@@ -4,8 +4,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import com.google.common.collect.Lists;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
 import in.hocg.boot.mybatis.plus.extensions.config.convert.ConfigMpeConvert;
 import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigItem;
+import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigScope;
 import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigValue;
 import in.hocg.boot.mybatis.plus.extensions.config.pojo.ro.ScopeStructRo;
 import in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo;
@@ -40,49 +42,87 @@ public class ConfigMpeServiceImpl implements ConfigMpeService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void setValue(String scope, Long refId, String name, Object value) {
+    public Optional<Long> setValue(String scope, Long refId, String name, Object value) {
         Optional<ConfigItem> configItemOpt = configItemMpeService.getByScopeAndName(scope, name);
         if (configItemOpt.isEmpty()) {
-            return;
+            return Optional.empty();
         }
-        ConfigItem item = configItemOpt.get();
-        String inValue = ConfigHelper.toValue(ObjectUtil.defaultIfNull(value, item.getDefaultValue()));
-        Assert.isTrue(!item.getNullable() && Objects.isNull(inValue), "配置项不允许为空");
-        ConfigValue newConfigValue = configValueMpeService.getByItemIdAndRefId(item.getId(), refId)
-            .map(configValue -> configValue.setValue(inValue))
-            .orElse(new ConfigValue().setValue(inValue).setItemId(item.getId()).setRefId(refId));
-        configValueMpeService.save(newConfigValue);
+        return setValue(configItemOpt.get(), refId, value);
+    }
+
+    @Override
+    public Optional<Long> setValue(Long itemId, Long refId, Object value) {
+        ConfigItem item = configItemMpeService.getById(itemId);
+        if (Objects.isNull(item)) {
+            return Optional.empty();
+        }
+        return setValue(item, refId, value);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void setValue(Long valueId, Object value) {
-        Optional.ofNullable(configValueMpeService.getById(valueId)).map(configValue -> {
-            Long itemId = configValue.getItemId();
-            ConfigItem item = configItemMpeService.getById(itemId);
-            String inValue = ConfigHelper.toValue(ObjectUtil.defaultIfNull(value, item.getDefaultValue()));
-            Assert.isTrue(!item.getNullable() && Objects.isNull(inValue), "配置项不允许为空");
-            return configValue.setValue(inValue);
-        }).ifPresent(configValueMpeService::save);
+        ConfigValue configValue = configValueMpeService.getById(valueId);
+        if (Objects.isNull(configValue)) {
+            return;
+        }
+        Long itemId = configValue.getItemId();
+        ConfigItem item = configItemMpeService.getById(itemId);
+        setValue(item, configValue.getRefId(), value);
+    }
+
+    private Optional<Long> setValue(ConfigItem item, Long refId, Object value) {
+        Long itemId = item.getId();
+        String inValue = ConfigHelper.toValue(ObjectUtil.defaultIfNull(value, item.getDefaultValue()));
+        if (!item.getNullable()) {
+            Assert.notNull(inValue, "配置项不允许为空");
+        }
+
+        ConfigValue newConfigValue = configValueMpeService.getByItemIdAndRefId(itemId, refId)
+            .map(configValue -> configValue.setValue(inValue))
+            .orElse(new ConfigValue().setValue(inValue).setItemId(item.getId()).setRefId(refId));
+        configValueMpeService.saveOrUpdate(newConfigValue);
+        return Optional.of(newConfigValue.getId());
+    }
+
+    @Override
+    public Long getOrCreateScope(@NotNull String scope) {
+        return configScopeMpeService.getByScope(scope).map(CommonEntity::getId)
+            .orElseGet(() -> {
+                ConfigScope entity = new ConfigScope();
+                configScopeMpeService.saveOrUpdate(entity.setScope(scope));
+                return entity.getId();
+            });
+    }
+
+    @Override
+    public void setScope(Long scopeId, String scope, String title, String remark) {
+        ConfigScope entity = new ConfigScope();
+        entity.setId(scopeId);
+        entity.setScope(scope);
+        entity.setTitle(title);
+        entity.setRemark(remark);
+        configScopeMpeService.saveOrUpdate(entity);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void setScopeStruct(String scope, String name, ScopeStructRo ro) {
-        ConfigItem entity = configScopeMpeService.getByScope(scope).map(configScope -> {
-            ConfigItem configItem = convert.asConfigItem(ro);
-            configItem.setScopeId(configScope.getId());
-            configItem.setName(name);
-            return configItem;
-        }).orElseGet(() -> configItemMpeService.getByScopeAndName(scope, name)
-            .map(ci -> {
-                ConfigItem configItem = convert.asConfigItem(ro);
-                configItem.setId(ci.getId());
-                configItem.setScopeId(ci.getScopeId());
-                configItem.setName(ci.getName());
-                return configItem;
-            }).orElseThrow());
-        configItemMpeService.save(entity);
+    public Long setScopeStruct(String scope, String name, ScopeStructRo ro) {
+        Long scopeId = getOrCreateScope(scope);
+        ConfigItem entity = configItemMpeService.getByScopeIdAndName(scopeId, name)
+            .map(configItem -> {
+                ConfigItem result = ro.asConfigItem();
+                result.setScopeId(scopeId);
+                result.setName(name);
+                result.setId(configItem.getId());
+                return result;
+            }).orElseGet(() -> {
+                ConfigItem result = ro.asConfigItem();
+                result.setScopeId(scopeId);
+                return result.setName(name);
+            });
+        configItemMpeService.saveOrUpdate(entity);
+        return entity.getId();
     }
 
     @Override
@@ -97,12 +137,12 @@ public class ConfigMpeServiceImpl implements ConfigMpeService {
         }
 
         Map<Long, List<ConfigScopeItemVo>> maps = LangUtils.toGroup(items, ConfigScopeItemVo::getScopeId);
-        return configScopeMpeService.listByIds(maps.keySet()).stream().map(configScope ->
-                new ConfigScopeStructVo()
-                    .setTitle(configScope.getTitle())
-                    .setRemark(configScope.getRemark())
-                    .setItems(maps.getOrDefault(configScope.getId(), Collections.emptyList()))
-                    .setScope(configScope.getScope()))
+        return configScopeMpeService.listByIds(maps.keySet()).stream()
+            .map(configScope -> new ConfigScopeStructVo()
+                .setTitle(configScope.getTitle())
+                .setRemark(configScope.getRemark())
+                .setItems(maps.getOrDefault(configScope.getId(), Collections.emptyList()))
+                .setScope(configScope.getScope()))
             .collect(Collectors.toList());
     }
 

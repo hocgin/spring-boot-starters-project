@@ -34,9 +34,7 @@ public class HttpLogMpeServiceImpl extends AbstractServiceImpl<HttpLogMpeMapper,
 
     @Override
     public Future<Serializable> asyncCreate(CreateLogRo ro) {
-        HttpLog entity = convert.asHttpLog(ro);
-        save(entity);
-        return AsyncResult.forValue(entity.getId());
+        return AsyncResult.forValue(create(ro));
     }
 
     @Override

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -27,6 +28,9 @@ public class ConfigValueMpeServiceImpl extends AbstractServiceImpl<ConfigValueMp
 
     @Override
     public List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefIdAndReadable(List<String> scope, Long refId, Boolean readable) {
+        if (Objects.isNull(refId)) {
+            return baseMapper.listConfigScopeItemVoByScopeAndReadable(scope, readable);
+        }
         return baseMapper.listConfigScopeItemVoByScopeAndRefIdAndReadable(scope, refId, readable);
     }
 
@@ -37,6 +41,9 @@ public class ConfigValueMpeServiceImpl extends AbstractServiceImpl<ConfigValueMp
 
     @Override
     public Optional<ConfigScopeItemVo> getConfigScopeItemVoByScopeAndRefIdAndName(String scope, Long refId, String name) {
+        if (Objects.isNull(refId)) {
+            return baseMapper.getConfigScopeItemVoByScopeAndName(scope, name);
+        }
         return baseMapper.getConfigScopeItemVoByScopeAndRefIdAndName(scope, refId, name);
     }
 }

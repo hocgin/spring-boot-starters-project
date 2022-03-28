@@ -5,9 +5,9 @@ CREATE TABLE `boot_config_scope`
         COMMENT 'ID',
     `scope`           VARCHAR(64)  NOT NULL
         COMMENT '域',
-    `title`           VARCHAR(128) NOT NULL
+    `title`           VARCHAR(128) NOT NULL DEFAULT 'unknown'
         COMMENT '标题',
-    `remark`          VARCHAR(255) NOT NULL
+    `remark`          VARCHAR(255)
         COMMENT '备注',
     --
     `created_at`      DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6)
@@ -33,7 +33,7 @@ CREATE TABLE `boot_config_item`
         COMMENT 'ID',
     `scope_id`        BIGINT      NOT NULL
         COMMENT '域',
-    `title`           VARCHAR(64) NOT NULL
+    `title`           VARCHAR(64) NOT NULL DEFAULT 'unknown'
         COMMENT '标题',
     `name`            VARCHAR(64) NOT NULL
         COMMENT '键',

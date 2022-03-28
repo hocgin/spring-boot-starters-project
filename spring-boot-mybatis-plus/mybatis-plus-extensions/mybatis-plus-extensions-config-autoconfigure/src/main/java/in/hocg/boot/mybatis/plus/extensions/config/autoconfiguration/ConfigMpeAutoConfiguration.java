@@ -1,6 +1,8 @@
 package in.hocg.boot.mybatis.plus.extensions.config.autoconfiguration;
 
+import in.hocg.boot.mybatis.plus.extensions.config.ConfigMpe;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
+@ComponentScan(ConfigMpe.PACKAGE)
 public class ConfigMpeAutoConfiguration {
 
 }
