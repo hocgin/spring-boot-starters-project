@@ -47,7 +47,6 @@
     <module>webmagic-spring-boot-starter</module>
     <module>flyway-spring-boot-starter</module>
     <module>dynamic-datasource-spring-boot-starter</module>
-    <module>vars-spring-boot-starter</module>
     <module>youtube-spring-boot-starter</module>
     <module>sentinel-spring-boot-starter</module>
     <module>arthas-spring-boot-starter</module>
