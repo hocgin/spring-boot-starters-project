@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+in.hocg.boot.mybatis.plus.extensions.task.autoconfiguration.TaskMybatisPlusExtAutoConfiguration

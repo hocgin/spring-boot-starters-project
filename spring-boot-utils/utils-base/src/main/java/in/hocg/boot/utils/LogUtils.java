@@ -66,6 +66,9 @@ public class LogUtils {
         if (Objects.nonNull(onReady)) {
             try {
                 onFuture = onReady.get();
+                if (onFuture instanceof FutureTask) {
+                    ((FutureTask<Serializable>) onFuture).run();
+                }
             } catch (Exception e) {
                 log.warn("请求系统日志记录(1)发生异常", e);
                 throw new RuntimeException(e);
@@ -90,8 +93,7 @@ public class LogUtils {
             // 3. 完成日志
             if (Objects.nonNull(onFuture) && Objects.nonNull(onComplete)) {
                 try {
-                    Serializable logId = onFuture.get(2, TimeUnit.SECONDS);
-                    onComplete.accept(logId, status, resultBody);
+                    onComplete.accept(onFuture.get(5, TimeUnit.SECONDS), status, resultBody);
                 } catch (Exception e) {
                     log.warn("请求系统日志记录(3)发生异常", e);
                 }
@@ -102,7 +104,5 @@ public class LogUtils {
     }
 
 
-    public enum LogStatus {
-        Process, Fail, Success;
-    }
+    public enum LogStatus {Process, Fail, Success,}
 }

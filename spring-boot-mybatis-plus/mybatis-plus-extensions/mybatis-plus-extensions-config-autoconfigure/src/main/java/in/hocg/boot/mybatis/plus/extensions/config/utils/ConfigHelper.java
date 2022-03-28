@@ -35,9 +35,9 @@ public class ConfigHelper {
     public <T> T asValue(String valueStr, String type) {
         Class<?> clazz = Class.forName(type);
         Object value = null;
-        if (ClassUtil.isBasicType(clazz)) {
+        if (ClassUtil.isSimpleValueType(clazz)) {
             value = Convert.convert(clazz, valueStr);
         }
-        return (T) value;
+        return (T) Convert.convert(clazz, valueStr, null);
     }
 }

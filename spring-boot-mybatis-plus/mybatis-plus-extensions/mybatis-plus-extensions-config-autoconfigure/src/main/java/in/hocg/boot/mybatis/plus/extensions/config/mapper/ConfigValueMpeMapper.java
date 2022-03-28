@@ -20,5 +20,9 @@ public interface ConfigValueMpeMapper extends BaseMapper<ConfigValue> {
 
     List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndRefIdAndReadable(@Param("scope") List<String> scope, @Param("refId") Long refId, @Param("readable") Boolean readable);
 
+    List<ConfigScopeItemVo> listConfigScopeItemVoByScopeAndReadable(@Param("scope") List<String> scope, @Param("readable") Boolean readable);
+
     Optional<ConfigScopeItemVo> getConfigScopeItemVoByScopeAndRefIdAndName(@Param("scope") String scope, @Param("refId") Long refId, @Param("name") String name);
+
+    Optional<ConfigScopeItemVo> getConfigScopeItemVoByScopeAndName(@Param("scope") String scope, @Param("name") String name);
 }

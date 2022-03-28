@@ -9,5 +9,6 @@ import in.hocg.boot.mybatis.plus.extensions.context.constants.GlobalConstants;
  * @author hocgin
  */
 public class HttpLogMpe {
-    public static final String MAPPER_PACKAGE = GlobalConstants.PACKAGE_PREFIX + ".httplog.mapper";
+    public static final String PACKAGE = GlobalConstants.PACKAGE_PREFIX + ".httplog";
+    public static final String MAPPER_PACKAGE = HttpLogMpe.PACKAGE + ".mapper";
 }

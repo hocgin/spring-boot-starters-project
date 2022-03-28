@@ -4,6 +4,8 @@
   <select id="listConfigScopeItemVoByScopeAndRefIdAndReadable"
           resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
     SELECT DISTINCT bci.*,
+                    bci.id    AS itemId,
+                    bcv.id    AS valueId,
                     bcv.value AS value
     FROM boot_config_item bci
            LEFT JOIN boot_config_value bcv on bcv.item_id = bci.id
@@ -23,9 +25,29 @@
     </where>
   </select>
 
+  <select id="listConfigScopeItemVoByScopeAndReadable"
+          resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
+    SELECT DISTINCT bci.*,
+                    bci.id AS itemId
+    FROM boot_config_item bci
+           LEFT JOIN boot_config_scope bcs on bcs.id = bci.scope_id
+    <where>
+      <if test="scope != null">
+        <foreach collection="scope" item="item" separator="," open="AND bcs.scope IN(" close=")">
+          #{item}
+        </foreach>
+      </if>
+      <if test="readable != null">
+        AND bci.readable = #{readable}
+      </if>
+    </where>
+  </select>
+
   <select id="getConfigScopeItemVoByScopeAndRefIdAndName"
           resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
     SELECT DISTINCT bci.*,
+                    bci.id    AS itemId,
+                    bcv.id    AS valueId,
                     bcv.value AS value
     FROM boot_config_item bci
            LEFT JOIN boot_config_value bcv on bcv.item_id = bci.id
@@ -36,6 +58,22 @@
       </if>
       <if test="refId != null">
         AND bcv.ref_id = #{refId}
+      </if>
+      <if test="name != null">
+        AND bci.name = #{name}
+      </if>
+    </where>
+  </select>
+
+  <select id="getConfigScopeItemVoByScopeAndName"
+          resultType="in.hocg.boot.mybatis.plus.extensions.config.pojo.vo.ConfigScopeItemVo">
+    SELECT DISTINCT bci.*,
+                    bci.id AS itemId
+    FROM boot_config_item bci
+           LEFT JOIN boot_config_scope bcs on bcs.id = bci.scope_id
+    <where>
+      <if test="scope != null">
+        AND bcs.scope = #{scope}
       </if>
       <if test="name != null">
         AND bci.name = #{name}

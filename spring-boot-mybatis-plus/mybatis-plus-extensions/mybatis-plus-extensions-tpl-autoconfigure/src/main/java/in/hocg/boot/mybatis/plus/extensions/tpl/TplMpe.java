@@ -9,5 +9,6 @@ import in.hocg.boot.mybatis.plus.extensions.context.constants.GlobalConstants;
  * @author hocgin
  */
 public class TplMpe {
-    public static final String MAPPER_PACKAGE = GlobalConstants.PACKAGE_PREFIX + ".tpl.mapper";
+    public static final String PACKAGE = GlobalConstants.PACKAGE_PREFIX + ".tpl";
+    public static final String MAPPER_PACKAGE = TplMpe.PACKAGE + ".mapper";
 }

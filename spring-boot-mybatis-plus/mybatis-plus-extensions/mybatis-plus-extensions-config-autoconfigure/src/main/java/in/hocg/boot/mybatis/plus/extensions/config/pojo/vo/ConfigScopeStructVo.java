@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,6 +29,6 @@ public class ConfigScopeStructVo implements Serializable {
      */
     private String remark;
 
-    private List<ConfigScopeItemVo> items;
+    private List<ConfigScopeItemVo> items = Collections.emptyList();
 
 }

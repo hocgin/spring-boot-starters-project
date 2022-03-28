@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="in.hocg.boot.mybatis.plus.extensions.changelog.mapper.ChangeMpeMapper">
+  <select id="scroll" resultType="in.hocg.boot.mybatis.plus.extensions.changelog.entity.Change">
+    SELECT DISTINCT bc.*
+    FROM boot_change bc
+           LEFT JOIN boot_change_field bcf on bc.id = bcf.change_id
+    <where>
+      <if test="ro.optUserId != null">
+        AND bc.creator >= #{ro.optUserId}
+      </if>
+      <if test="ro.refType != null">
+        AND bc.ref_type >= #{ro.refType}
+      </if>
+      <if test="ro.refId != null">
+        AND bc.ref_id >= #{ro.refId}
+      </if>
+      <if test="ro.endAt != null">
+        AND bc.created_at &lt;= #{ro.endAt}
+      </if>
+      <if test="ro.startAt != null">
+        AND bc.created_at >= #{ro.startAt}
+      </if>
+      <if test="ro.keyword != null">
+        <bind name="keyword" value="'%' + ro.keyword + '%'"/>
+        AND (bcf.change_remark LIKE #{keyword})
+      </if>
+      <if test="ro.orderDesc and ro.nextId != null">
+        AND bc.id &lt; #{ro.nextId}
+      </if>
+      <if test="!ro.orderDesc and ro.nextId != null">
+        AND bc.id > #{ro.nextId}
+      </if>
+    </where>
+    <if test="ro.orderDesc">
+      ORDER BY bc.id DESC
+    </if>
+  </select>
+</mapper>

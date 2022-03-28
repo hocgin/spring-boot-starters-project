@@ -1,5 +1,6 @@
 package in.hocg.boot.mybatis.plus.extensions.config.pojo.ro;
 
+import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigItem;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,7 +16,11 @@ public class ScopeStructRo implements Serializable {
     /**
      * 配置项值类型
      */
-    private String type;
+    private String type = String.class.getName();
+    /**
+     * 配置项标题
+     */
+    private String title;
     /**
      * 配置项值, 默认值
      */
@@ -32,4 +37,19 @@ public class ScopeStructRo implements Serializable {
      * 是否可空
      */
     private Boolean nullable;
+    /**
+     * 备注
+     */
+    private String remark;
+
+    public ConfigItem asConfigItem() {
+        return new ConfigItem()
+            .setType(this.getType())
+            .setTitle(this.getTitle())
+            .setRemark(this.getRemark())
+            .setDefaultValue(this.getDefaultValue())
+            .setWritable(this.getWritable())
+            .setNullable(this.getNullable())
+            .setReadable(this.getReadable());
+    }
 }

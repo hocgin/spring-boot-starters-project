@@ -1,6 +1,7 @@
 package in.hocg.boot.mybatis.plus.extensions.config.pojo.vo;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 
@@ -11,7 +12,12 @@ import java.io.Serializable;
  * @author hocgin
  */
 @Data
+@Accessors(chain = true)
 public class ConfigScopeItemVo implements Serializable {
+    /**
+     * 配置项
+     */
+    private Long valueId;
     /**
      * 配置域
      */
@@ -24,6 +30,14 @@ public class ConfigScopeItemVo implements Serializable {
      * 配置项编码
      */
     private String name;
+    /**
+     * 配置项标题
+     */
+    private String title;
+    /**
+     * 配置项描述
+     */
+    private String remark;
     /**
      * 配置项值(可能为空)
      */

@@ -1,12 +1,15 @@
 package in.hocg.boot.mybatis.plus.extensions.httplog.support;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.system.SystemUtil;
+import com.google.common.collect.Maps;
 import in.hocg.boot.mybatis.plus.extensions.httplog.enums.Direction;
 import in.hocg.boot.mybatis.plus.extensions.httplog.enums.Status;
 import in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro.CreateLogRo;
@@ -17,11 +20,15 @@ import in.hocg.boot.utils.context.UserContextHolder;
 import in.hocg.boot.utils.function.SupplierThrow;
 import in.hocg.boot.utils.function.ThreeConsumerThrow;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
+import in.hocg.boot.web.autoconfiguration.utils.SerializableUtils;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * Created by hocgin on 2022/3/26
@@ -29,6 +36,7 @@ import java.util.Objects;
  *
  * @author hocgin
  */
+@Slf4j
 @UtilityClass
 public class HttpLogUtils {
 
@@ -40,16 +48,22 @@ public class HttpLogUtils {
         return (Serializable id, LogUtils.LogStatus status, T result) -> {
             if (LogUtils.LogStatus.Fail.equals(status)) {
                 getHttpLogMpeService().asyncFail(id, result);
-            } else if (Objects.isNull(result) || result instanceof String) {
-                getHttpLogMpeService().asyncDone(id, status, StrUtil.toString(result));
             } else if (result instanceof HttpResponse) {
                 getHttpLogMpeService().asyncDone(response((HttpResponse) result).setId(Convert.toLong(id)));
+            }
+            // 兜底
+            else {
+                getHttpLogMpeService().asyncDone(id, status, StrUtil.toString(result));
             }
         };
     }
 
     public SupplierThrow<Serializable> getReady(CreateLogRo ro) {
         return () -> getHttpLogMpeService().create(ro);
+    }
+
+    public SupplierThrow<Future<Serializable>> getAsyncReady(CreateLogRo ro) {
+        return () -> getHttpLogMpeService().asyncCreate(ro);
     }
 
     public CreateLogRo request(HttpRequest request) {
@@ -66,6 +80,19 @@ public class HttpLogUtils {
         result.setCreatedAt(LocalDateTime.now());
         result.setCreator(UserContextHolder.getUserId());
         result.setCode(code);
+
+        // form 表单
+        Map<String, Object> form = ObjectUtil.defaultIfNull(request.form(), Collections.emptyMap());
+        if (!form.isEmpty()) {
+            Map<String, Object> params = Maps.newHashMap();
+            form.forEach((k, v) -> params.put(k, SerializableUtils.toStr(v)));
+            result.setRequestBody(JSONUtil.toJsonStr(params));
+        }
+        // body
+        else {
+            result.setRequestBody(StrUtil.str(ReflectUtil.getFieldValue(request, "bodyBytes"), request.charset()));
+        }
+
         result.setRequestIp(SystemUtil.getHostInfo().getAddress());
         result.setDirection(Direction.Out.getCodeStr());
         result.setStatus(Status.Executing.getCodeStr());
@@ -96,8 +123,13 @@ public class HttpLogUtils {
 
     public static void main(String[] args) {
         HttpRequest request = HttpUtil.createRequest(null, "");
-        HttpResponse execute = request.execute();
-        HttpResponse result = LogUtils.logSync(request::execute, HttpLogUtils.getReady(HttpLogUtils.request(request)), HttpLogUtils.getDefaultComplete());
+        HttpResponse result = LogUtils.logSync(request::execute,
+            HttpLogUtils.getReady(HttpLogUtils.request(request)),
+            HttpLogUtils.getDefaultComplete());
+
+        HttpResponse result2 = LogUtils.logAsync(request::execute,
+            HttpLogUtils.getAsyncReady(HttpLogUtils.request(request)),
+            HttpLogUtils.getDefaultComplete());
     }
 
 }

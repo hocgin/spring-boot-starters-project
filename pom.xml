@@ -51,7 +51,6 @@
     <module>spring-boot-sms</module>
     <module>spring-boot-mail</module>
     <module>spring-boot-validation</module>
-    <module>spring-boot-change-log</module>
     <module>spring-boot-xxl-job</module>
     <module>spring-boot-utils</module>
     <module>spring-boot-wx-mp</module>
@@ -64,11 +63,9 @@
     <module>spring-boot-webmagic</module>
     <module>spring-boot-elasticsearch</module>
     <module>spring-boot-flyway</module>
-    <module>spring-boot-task</module>
     <module>spring-boot-dynamic-datasource</module>
     <module>spring-boot-youtube</module>
     <module>spring-boot-sentinel</module>
-    <module>spring-boot-http-log</module>
     <module>spring-boot-arthas</module>
     <module>spring-boot-ffmpeg</module>
     <module>spring-boot-ws</module>

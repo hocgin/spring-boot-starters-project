@@ -1,11 +1,13 @@
 package in.hocg.boot.mybatis.plus.extensions.httplog.autoconfiguration;
 
 import in.hocg.boot.logging.autoconfiguration.core.LoggerListener;
+import in.hocg.boot.mybatis.plus.extensions.httplog.HttpLogMpe;
 import in.hocg.boot.mybatis.plus.extensions.httplog.support.LoggerListenerImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -16,8 +18,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
+@ComponentScan(HttpLogMpe.PACKAGE)
 public class HttpLogMybatisPlusExtAutoConfiguration {
-
 
     @Bean
     @ConditionalOnMissingBean

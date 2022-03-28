@@ -9,6 +9,7 @@ import in.hocg.boot.mybatis.plus.extensions.context.constants.GlobalConstants;
  * @author hocgin
  */
 public class ConfigMpe {
-    public static final String MAPPER_PACKAGE = GlobalConstants.PACKAGE_PREFIX + ".config.mapper";
+    public static final String PACKAGE = GlobalConstants.PACKAGE_PREFIX + ".config";
+    public static final String MAPPER_PACKAGE = ConfigMpe.PACKAGE + ".mapper";
 
 }
