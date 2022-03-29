@@ -8,6 +8,7 @@ import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.DataStoreFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
  *
  * @author hocgin
  */
+@Slf4j
 @RequiredArgsConstructor
 public class RedisDataStoreFactory extends AbstractDataStoreFactory {
     private final StringRedisTemplate redisTemplate;
@@ -37,8 +39,8 @@ public class RedisDataStoreFactory extends AbstractDataStoreFactory {
     static class RedisDataStore<V extends Serializable> extends AbstractDataStore<V> {
         private StringRedisTemplate redisTemplate;
 
-        public RedisDataStore(DataStoreFactory dataStoreFactory, String id, StringRedisTemplate redisTemplate) {
-            super(dataStoreFactory, id);
+        public RedisDataStore(DataStoreFactory dataStoreFactory, String dbId, StringRedisTemplate redisTemplate) {
+            super(dataStoreFactory, dbId);
             this.redisTemplate = redisTemplate;
         }
 
@@ -78,10 +80,10 @@ public class RedisDataStoreFactory extends AbstractDataStoreFactory {
 
         /**
          * @param dataStoreFactory data store factory
-         * @param id               data store ID
+         * @param dbId             data store ID
          */
-        protected RedisDataStore(DataStoreFactory dataStoreFactory, String id) {
-            super(dataStoreFactory, id);
+        protected RedisDataStore(DataStoreFactory dataStoreFactory, String dbId) {
+            super(dataStoreFactory, dbId);
         }
 
         @Override
@@ -115,13 +117,24 @@ public class RedisDataStoreFactory extends AbstractDataStoreFactory {
         }
 
         @Override
-        public V get(String key) throws IOException {
-            return this.toValue(this.getMap().get(key));
+        public V get(String userId) throws IOException {
+            log.debug("获取 userId: {}", userId);
+            return this.toValue(this.getMap().get(userId));
         }
 
+        /**
+         * 存储数据
+         *
+         * @param userId     userid
+         * @param credential token
+         * @return
+         * @throws IOException
+         */
         @Override
-        public DataStore<V> set(String key, V value) throws IOException {
-            redisTemplate.opsForHash().put(this.getId(), key, this.toString(value));
+        public DataStore<V> set(String userId, V credential) throws IOException {
+            String credentialStr = this.toString(credential);
+            log.debug("存储 userId: {}, credential: {}", userId, credentialStr);
+            redisTemplate.opsForHash().put(this.getId(), userId, credentialStr);
             return this;
         }
 

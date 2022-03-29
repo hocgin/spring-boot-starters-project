@@ -49,7 +49,6 @@ public class YoutubeAutoConfiguration implements InitializingBean {
     }
 
     @Bean
-    @Order
     @ConditionalOnMissingBean
     public DataStoreFactory memoryDataStoreFactory() {
         return MemoryDataStoreFactory.getDefaultInstance();

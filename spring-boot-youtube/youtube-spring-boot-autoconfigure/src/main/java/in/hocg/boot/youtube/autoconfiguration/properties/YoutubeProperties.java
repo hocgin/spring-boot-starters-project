@@ -39,4 +39,5 @@ public class YoutubeProperties {
          */
         private String applicationName;
     }
+
 }

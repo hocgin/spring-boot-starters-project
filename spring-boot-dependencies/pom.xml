@@ -54,6 +54,8 @@
     <javers.version>6.6.3</javers.version>
     <polyjdbc.version>0.7.6</polyjdbc.version>
     <jmockdata.version>4.3.0</jmockdata.version>
+    <javacv.version>1.5.6</javacv.version>
+    <jasypt-spring-boot-starter.version>3.0.4</jasypt-spring-boot-starter.version>
   </properties>
 
   <dependencyManagement>
@@ -131,15 +133,15 @@
         <artifactId>ws-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <!-- FFMPEG -->
+      <!-- Java CV -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>ffmpeg-spring-boot-autoconfigure</artifactId>
+        <artifactId>javacv-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>ffmpeg-spring-boot-starter</artifactId>
+        <artifactId>javacv-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- Sentinel -->
@@ -744,6 +746,16 @@
         <groupId>com.github.jsonzou</groupId>
         <artifactId>jmockdata</artifactId>
         <version>${jmockdata.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bytedeco</groupId>
+        <artifactId>javacv-platform</artifactId>
+        <version>${javacv.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.ulisesbocchio</groupId>
+        <artifactId>jasypt-spring-boot-starter</artifactId>
+        <version>${jasypt-spring-boot-starter.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
