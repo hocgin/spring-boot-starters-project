@@ -37,7 +37,7 @@ public class YoutubeUtils {
      */
     public static String authorize(String clientId, String clientSecret, String redirectUri, List<String> scopes) {
         GoogleAuthorizationCodeFlow flow = getAuthorizationCodeFlow(clientId, clientSecret, scopes);
-        return flow.newAuthorizationUrl().setRedirectUri(redirectUri).build();
+        return flow.newAuthorizationUrl().setRedirectUri(redirectUri).setAccessType("offline").build();
     }
 
     /**

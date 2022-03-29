@@ -4,14 +4,13 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.services.youtube.YouTube;
 import in.hocg.boot.utils.function.BiConsumerThrow;
+import in.hocg.boot.youtube.autoconfiguration.core.datastore.DataCredential;
 import in.hocg.boot.youtube.autoconfiguration.exception.TokenUnusedException;
 import in.hocg.boot.youtube.autoconfiguration.properties.YoutubeProperties;
 import in.hocg.boot.youtube.autoconfiguration.utils.YoutubeUtils;
 import lombok.SneakyThrows;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by hocgin on 2021/6/14
@@ -26,6 +25,8 @@ public interface YoutubeBervice {
         return YoutubeUtils.getAuthorizationCodeFlow(clientConfig.getClientId(), clientConfig.getClientSecret(), scopes);
     }
 
+    List<DataCredential> listCredentials(String clientId);
+
     /**
      * 校验token
      *
@@ -33,7 +34,8 @@ public interface YoutubeBervice {
      * @return
      */
     default boolean verifyToken(Credential credential) {
-        return Objects.isNull(credential.getExpiresInSeconds()) || credential.getExpiresInSeconds() > 0;
+        return Objects.isNull(credential.getExpiresInSeconds())
+            || new Date(credential.getExpiresInSeconds()).after(new Date());
     }
 
     @SneakyThrows
@@ -107,4 +109,11 @@ public interface YoutubeBervice {
      * @return
      */
     YoutubeProperties.ClientConfig getClientConfig(String clientId);
+
+    /**
+     * 获取所有的服务提供商配置
+     *
+     * @return
+     */
+    Map<String, YoutubeProperties.ClientConfig> getClientConfigs();
 }

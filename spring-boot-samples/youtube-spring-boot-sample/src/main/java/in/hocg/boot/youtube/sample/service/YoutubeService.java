@@ -187,10 +187,17 @@ public class YoutubeService {
         log.debug("credential: {}", credential);
     }
 
-    @SneakyThrows
     public Boolean refresh(String clientId) {
-        Credential credential = youtubeBervice.refreshToken(youtubeBervice.loadCredential(clientId, YouTubeController.getUserId()).orElseThrow());
+        Credential credential = youtubeBervice.loadCredential(clientId, YouTubeController.getUserId()).orElseThrow();
+        boolean verifyToken = youtubeBervice.verifyToken(credential);
+        if (!verifyToken) {
+            credential = youtubeBervice.refreshToken(credential);
+        }
         log.debug("credential: {}", credential);
         return true;
+    }
+
+    public List<?> listCredentials(String clientId) {
+        return youtubeBervice.listCredentials(clientId);
     }
 }

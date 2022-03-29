@@ -50,6 +50,12 @@ public class YouTubeController {
         return Result.success(youtubeService.refresh(clientId));
     }
 
+    @ResponseBody
+    @GetMapping("/listCredentials")
+    public Result<?> listCredentials(@RequestParam(value = "clientId", required = false, defaultValue = Constants.DEFAULT_CLIENT_ID) String clientId) {
+        return Result.success(youtubeService.listCredentials(clientId));
+    }
+
     public static String getUserId() {
         return SecureUtil.md5("hocgin");
     }
