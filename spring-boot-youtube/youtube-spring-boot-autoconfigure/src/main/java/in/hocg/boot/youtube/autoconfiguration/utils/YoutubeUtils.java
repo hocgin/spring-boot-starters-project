@@ -1,6 +1,5 @@
 package in.hocg.boot.youtube.autoconfiguration.utils;
 
-import cn.hutool.crypto.SecureUtil;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -25,6 +24,8 @@ import java.util.List;
 public class YoutubeUtils {
     public static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     public static final JsonFactory JSON_FACTORY = new JacksonFactory();
+    public static final String DB_NAME = "DB";
+    public static final List<String> DEFAULT_SCOPES = List.of("https://www.googleapis.com/auth/youtube");
 
     /**
      * 发起授权
@@ -50,25 +51,21 @@ public class YoutubeUtils {
      * @throws IOException
      */
     @SneakyThrows(IOException.class)
-    public static Credential getCredential(String clientId, String clientSecret, String redirectUri, List<String> scopes, String code) {
+    public static Credential getCredential(String clientId, String userId, String clientSecret, String redirectUri, List<String> scopes, String code) {
         GoogleAuthorizationCodeFlow flow = getAuthorizationCodeFlow(clientId, clientSecret, scopes);
         TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
-        return flow.createAndStoreCredential(response, getUserId(clientId));
+        return flow.createAndStoreCredential(response, userId);
     }
 
     @SneakyThrows
-    public static Credential loadCredential(String clientId, String clientSecret, List<String> scopes) {
-        return getAuthorizationCodeFlow(clientId, clientSecret, scopes).loadCredential(YoutubeUtils.getUserId(clientId));
-    }
-
-    public static String getUserId(String clientId) {
-        return SecureUtil.md5(clientId);
+    public static Credential loadCredential(String clientId, String userId, String clientSecret, List<String> scopes) {
+        return getAuthorizationCodeFlow(clientId, clientSecret, scopes).loadCredential(userId);
     }
 
     @SneakyThrows
     public static GoogleAuthorizationCodeFlow getAuthorizationCodeFlow(String clientId, String clientSecret, List<String> scopes) {
         return new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY, clientId, clientSecret, scopes)
-            .setCredentialDataStore(SpringContext.getBean(DataStoreFactory.class).getDataStore("boot_ytb_datastore"))
+            .setCredentialDataStore(SpringContext.getBean(DataStoreFactory.class).getDataStore(DB_NAME))
             .build();
     }
 

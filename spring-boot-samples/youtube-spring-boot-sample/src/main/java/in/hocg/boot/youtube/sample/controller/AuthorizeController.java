@@ -34,7 +34,7 @@ public class AuthorizeController {
     @ResponseBody
     @GetMapping("/{clientId}/callback")
     public Result<Void> callback(@PathVariable String clientId, @RequestParam("code") String code, @RequestParam("scope") List<String> scopes) {
-        service.authorizeCallback(clientId, scopes, code);
+        service.authorizeCallback(clientId, YouTubeController.getUserId(), scopes, code);
         return Result.success();
     }
 

@@ -1,5 +1,6 @@
 package in.hocg.boot.youtube.sample.controller;
 
+import cn.hutool.crypto.SecureUtil;
 import in.hocg.boot.utils.struct.result.Result;
 import in.hocg.boot.youtube.sample.constants.Constants;
 import in.hocg.boot.youtube.sample.service.YoutubeService;
@@ -43,4 +44,13 @@ public class YouTubeController {
         return Result.success(youtubeService.playlists(clientId));
     }
 
+    @ResponseBody
+    @GetMapping("/refresh")
+    public Result<?> refresh(@RequestParam(value = "clientId", required = false, defaultValue = Constants.DEFAULT_CLIENT_ID) String clientId) {
+        return Result.success(youtubeService.refresh(clientId));
+    }
+
+    public static String getUserId() {
+        return SecureUtil.md5("hocgin");
+    }
 }

@@ -2,6 +2,7 @@ package in.hocg.boot.youtube.sample.service;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.http.InputStreamContent;
 import com.google.api.services.youtube.YouTube;
@@ -12,6 +13,7 @@ import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBervice;
 import in.hocg.boot.youtube.autoconfiguration.core.YoutubeHelper;
 import in.hocg.boot.youtube.autoconfiguration.utils.YoutubeUtils;
 import in.hocg.boot.youtube.sample.constants.Constants;
+import in.hocg.boot.youtube.sample.controller.YouTubeController;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -73,7 +75,7 @@ public class YoutubeService {
         String playlistId = "PLCEcFGOrM-f83PBJrLUbqtRz7m3WgDkOy";
 
         File videoDir = Paths.get(dir).toFile();
-        YouTube youtube = youtubeBervice.youtube(clientId, Constants.DEFAULT_SCOPES);
+        YouTube youtube = youtubeBervice.youtube(clientId, YouTubeController.getUserId(), Constants.DEFAULT_SCOPES);
         for (File file : Objects.requireNonNull(videoDir.listFiles())) {
             String name = FileUtil.getPrefix(file);
 
@@ -114,7 +116,7 @@ public class YoutubeService {
      */
     @SneakyThrows
     private void addPlaylistItem(String clientId, String playlistId, String videoId) {
-        YouTube youtube = youtubeBervice.youtube(clientId, Constants.DEFAULT_SCOPES);
+        YouTube youtube = youtubeBervice.youtube(clientId, YouTubeController.getUserId(), Constants.DEFAULT_SCOPES);
         ResourceId resourceId = new ResourceId();
         resourceId.setKind("youtube#video");
         resourceId.setVideoId(videoId);
@@ -145,7 +147,7 @@ public class YoutubeService {
      */
     @SneakyThrows
     private void setThumbnail(String clientId, String videoId, File imageFile) {
-        YouTube youtube = youtubeBervice.youtube(clientId, Constants.DEFAULT_SCOPES);
+        YouTube youtube = youtubeBervice.youtube(clientId, YouTubeController.getUserId(), Constants.DEFAULT_SCOPES);
         InputStreamContent mediaContent = new InputStreamContent("image/png", new BufferedInputStream(new FileInputStream(imageFile)));
         mediaContent.setLength(imageFile.length());
         mediaContent.setLength(imageFile.length());
@@ -160,14 +162,14 @@ public class YoutubeService {
 
     @SneakyThrows
     public List<?> channels(String clientId) {
-        YouTube youtube = youtubeBervice.youtube(clientId, Constants.DEFAULT_SCOPES);
+        YouTube youtube = youtubeBervice.youtube(clientId, YouTubeController.getUserId(), Constants.DEFAULT_SCOPES);
         String part = StrUtil.join(",", "id", "contentDetails");
         return youtube.channels().list(part).setMine(true).execute().getItems();
     }
 
     @SneakyThrows
     public List<?> playlists(String clientId) {
-        YouTube youtube = youtubeBervice.youtube(clientId, Constants.DEFAULT_SCOPES);
+        YouTube youtube = youtubeBervice.youtube(clientId, YouTubeController.getUserId(), Constants.DEFAULT_SCOPES);
         String part = StrUtil.join(",", "id", "contentDetails");
         return youtube.playlists().list(part).setMine(true).execute().getItems();
     }
@@ -178,9 +180,17 @@ public class YoutubeService {
         return youtubeBervice.authorize(clientId, re, scopes);
     }
 
-    public void authorizeCallback(String clientId, List<String> scopes, String code) {
+    public void authorizeCallback(String clientId, String userId, List<String> scopes, String code) {
         String hostname = bootProperties.getHostname();
         String re = StrUtil.format("{}/youtube/{}/callback", hostname, clientId);
-        youtubeBervice.getCredential(clientId, re, scopes, code);
+        Credential credential = youtubeBervice.getCredential(clientId, userId, re, scopes, code);
+        log.debug("credential: {}", credential);
+    }
+
+    @SneakyThrows
+    public Boolean refresh(String clientId) {
+        Credential credential = youtubeBervice.refreshToken(youtubeBervice.loadCredential(clientId, YouTubeController.getUserId()).orElseThrow());
+        log.debug("credential: {}", credential);
+        return true;
     }
 }
