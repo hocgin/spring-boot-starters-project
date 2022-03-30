@@ -1,5 +1,6 @@
 package in.hocg.boot.youtube.autoconfiguration.utils;
 
+import cn.hutool.core.util.StrUtil;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -9,7 +10,10 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.*;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
+import in.hocg.boot.youtube.autoconfiguration.utils.data.CredentialChannel;
+import in.hocg.boot.youtube.autoconfiguration.utils.data.YouTubeChannel;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -51,10 +55,56 @@ public class YoutubeUtils {
      * @throws IOException
      */
     @SneakyThrows(IOException.class)
-    public static Credential getCredential(String clientId, String userId, String clientSecret, String redirectUri, List<String> scopes, String code) {
+    public static CredentialChannel getCredential(String clientId, String clientSecret, String redirectUri, List<String> scopes, String code) {
         GoogleAuthorizationCodeFlow flow = getAuthorizationCodeFlow(clientId, clientSecret, scopes);
-        TokenResponse response = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
-        return flow.createAndStoreCredential(response, userId);
+        TokenResponse tokenResponse = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
+        YouTubeChannel channel = getChannelIdByFlow(flow, tokenResponse);
+
+        Credential storeCredential = flow.createAndStoreCredential(tokenResponse, channel.getChannelId());
+
+        CredentialChannel result = new CredentialChannel();
+        return result.setCredential(storeCredential)
+            .setChannel(channel);
+    }
+
+    @SneakyThrows
+    private static YouTubeChannel getChannelIdByFlow(GoogleAuthorizationCodeFlow flow, TokenResponse tokenResponse) {
+        Credential credential = (new Credential.Builder(flow.getMethod()))
+            .setTransport(flow.getTransport())
+            .setJsonFactory(flow.getJsonFactory())
+            .setTokenServerEncodedUrl(flow.getTokenServerEncodedUrl())
+            .setClientAuthentication(flow.getClientAuthentication())
+            .setRequestInitializer(flow.getRequestInitializer())
+            .setClock(flow.getClock()).build();
+        credential.setFromTokenResponse(tokenResponse);
+        YouTube youtube = new YouTube.Builder(YoutubeUtils.HTTP_TRANSPORT, YoutubeUtils.JSON_FACTORY, credential).build();
+        ChannelListResponse response = youtube.channels()
+            .list("id,status,snippet,statistics")
+            .setMine(true).execute();
+
+        Channel channel = response.getItems().get(0);
+        ChannelSnippet snippet = channel.getSnippet();
+        Thumbnail thumbnail = snippet.getThumbnails().getDefault();
+        ChannelStatus status = channel.getStatus();
+        ChannelStatistics statistics = channel.getStatistics();
+
+        String customUrl = StrUtil.blankToDefault(snippet.getCustomUrl(),
+            StrUtil.format("https://www.youtube.com/channel/{}", channel.getId()));
+
+        return new YouTubeChannel()
+            .setChannelId(channel.getId())
+            .setIsLinked(status.getIsLinked())
+            .setLongUploadsStatus(status.getLongUploadsStatus())
+            .setPrivacyStatus(status.getPrivacyStatus())
+            .setVideoCount(statistics.getVideoCount())
+            .setSubscriberCount(statistics.getSubscriberCount())
+            .setViewCount(statistics.getViewCount())
+            .setHiddenSubscriberCount(statistics.getHiddenSubscriberCount())
+            .setPrivacyStatus(status.getPrivacyStatus())
+            .setPublishedAt(snippet.getPublishedAt())
+            .setImageUrl(thumbnail.getUrl())
+            .setUrl(customUrl)
+            .setTitle(snippet.getTitle());
     }
 
     @SneakyThrows

@@ -32,6 +32,7 @@ public class IndexController {
 
         List<String> result = Lists.newArrayList();
         result.add(StrUtil.format("{}/youtube/authorize", hostname));
+        // id,status,topicDetails,snippet,contentDetails,statistics
         result.add(StrUtil.format("{}/channels", hostname));
         result.add(StrUtil.format("{}/upload/local", hostname));
         // 清除已授权应用
