@@ -16,7 +16,6 @@ import in.hocg.boot.youtube.autoconfiguration.utils.data.CredentialChannel;
 import in.hocg.boot.youtube.autoconfiguration.utils.data.YouTubeChannel;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -50,20 +49,40 @@ public class YoutubeUtils {
      * @param clientId
      * @param clientSecret
      * @param redirectUri
+     * @param scopes
      * @param code
      * @return
-     * @throws IOException
      */
-    @SneakyThrows(IOException.class)
     public static CredentialChannel getCredential(String clientId, String clientSecret, String redirectUri, List<String> scopes, String code) {
+        return getCredential(clientId, null, clientSecret, redirectUri, scopes, code);
+    }
+
+    /**
+     * 获取凭证
+     *
+     * @param clientId
+     * @param userId
+     * @param clientSecret
+     * @param redirectUri
+     * @param scopes
+     * @param code
+     * @return
+     */
+    @SneakyThrows
+    public static CredentialChannel getCredential(String clientId, String userId, String clientSecret, String redirectUri, List<String> scopes, String code) {
         GoogleAuthorizationCodeFlow flow = getAuthorizationCodeFlow(clientId, clientSecret, scopes);
         TokenResponse tokenResponse = flow.newTokenRequest(code).setRedirectUri(redirectUri).execute();
-        YouTubeChannel channel = getChannelIdByFlow(flow, tokenResponse);
 
-        Credential storeCredential = flow.createAndStoreCredential(tokenResponse, channel.getChannelId());
+        YouTubeChannel channel = null;
+        if (StrUtil.isBlank(userId)) {
+            channel = getChannelIdByFlow(flow, tokenResponse);
+            userId = channel.getChannelId();
+        }
 
+        Credential storeCredential = flow.createAndStoreCredential(tokenResponse, userId);
         CredentialChannel result = new CredentialChannel();
         return result.setCredential(storeCredential)
+            .setUserId(userId)
             .setChannel(channel);
     }
 

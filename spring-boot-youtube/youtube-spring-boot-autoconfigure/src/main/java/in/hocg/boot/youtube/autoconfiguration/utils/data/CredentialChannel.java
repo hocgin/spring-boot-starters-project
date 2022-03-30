@@ -14,6 +14,8 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class CredentialChannel {
+    @ApiModelProperty("用户标记")
+    private String userId;
     @ApiModelProperty("频道信息")
     private YouTubeChannel channel;
     @ApiModelProperty("凭据")
