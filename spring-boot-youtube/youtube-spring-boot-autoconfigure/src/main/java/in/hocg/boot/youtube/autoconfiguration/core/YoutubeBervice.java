@@ -33,7 +33,7 @@ public interface YoutubeBervice {
      * @param credential
      * @return
      */
-    default boolean verifyToken(Credential credential) {
+    default boolean validToken(Credential credential) {
         return Objects.isNull(credential.getExpiresInSeconds())
             || new Date(credential.getExpiresInSeconds()).after(new Date());
     }

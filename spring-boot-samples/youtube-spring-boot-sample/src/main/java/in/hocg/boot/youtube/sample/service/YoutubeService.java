@@ -189,7 +189,7 @@ public class YoutubeService {
 
     public Boolean refresh(String clientId) {
         Credential credential = youtubeBervice.loadCredential(clientId, YouTubeController.getUserId()).orElseThrow();
-        boolean verifyToken = youtubeBervice.verifyToken(credential);
+        boolean verifyToken = youtubeBervice.validToken(credential);
         if (!verifyToken) {
             credential = youtubeBervice.refreshToken(credential);
         }
