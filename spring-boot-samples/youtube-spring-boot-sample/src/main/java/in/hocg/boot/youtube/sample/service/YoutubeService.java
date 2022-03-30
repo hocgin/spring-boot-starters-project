@@ -184,7 +184,7 @@ public class YoutubeService {
     public void authorizeCallback(String clientId, List<String> scopes, String code) {
         String hostname = bootProperties.getHostname();
         String re = StrUtil.format("{}/youtube/{}/callback", hostname, clientId);
-        CredentialChannel credential = youtubeBervice.getCredential(clientId, re, scopes, code);
+        CredentialChannel credential = youtubeBervice.getCredential(clientId, YouTubeController.getUserId(), re, scopes, code);
         log.debug("credential: {}", credential);
     }
 

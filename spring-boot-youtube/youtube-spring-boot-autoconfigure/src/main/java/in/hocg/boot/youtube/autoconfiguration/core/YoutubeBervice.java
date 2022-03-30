@@ -12,6 +12,7 @@ import in.hocg.boot.youtube.autoconfiguration.utils.data.CredentialChannel;
 import lombok.SneakyThrows;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Created by hocgin on 2021/6/14
@@ -58,6 +59,17 @@ public interface YoutubeBervice {
     default CredentialChannel getCredential(String clientId, String redirectUri, List<String> scopes, String code) {
         YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
         return YoutubeUtils.getCredential(clientConfig.getClientId(), clientConfig.getClientSecret(), redirectUri, scopes, code);
+    }
+
+    default CredentialChannel getCredential(String clientId, String userId, String redirectUri, List<String> scopes, String code) {
+        YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
+        return YoutubeUtils.getCredential(clientConfig.getClientId(), userId, clientConfig.getClientSecret(), redirectUri, scopes, code);
+    }
+
+    default Credential getCredential(String clientId, String redirectUri, List<String> scopes, String code,
+                                     Function<Credential, String> getUserIdFunction) {
+        YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
+        return YoutubeUtils.getCredential(clientConfig.getClientId(), clientConfig.getClientSecret(), redirectUri, scopes, code, getUserIdFunction);
     }
 
     /**
