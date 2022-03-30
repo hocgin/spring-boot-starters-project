@@ -12,6 +12,7 @@ import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
 import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBervice;
 import in.hocg.boot.youtube.autoconfiguration.core.YoutubeHelper;
 import in.hocg.boot.youtube.autoconfiguration.utils.YoutubeUtils;
+import in.hocg.boot.youtube.autoconfiguration.utils.data.CredentialChannel;
 import in.hocg.boot.youtube.sample.constants.Constants;
 import in.hocg.boot.youtube.sample.controller.YouTubeController;
 import lombok.RequiredArgsConstructor;
@@ -180,10 +181,10 @@ public class YoutubeService {
         return youtubeBervice.authorize(clientId, re, scopes);
     }
 
-    public void authorizeCallback(String clientId, String userId, List<String> scopes, String code) {
+    public void authorizeCallback(String clientId, List<String> scopes, String code) {
         String hostname = bootProperties.getHostname();
         String re = StrUtil.format("{}/youtube/{}/callback", hostname, clientId);
-        Credential credential = youtubeBervice.getCredential(clientId, userId, re, scopes, code);
+        CredentialChannel credential = youtubeBervice.getCredential(clientId, re, scopes, code);
         log.debug("credential: {}", credential);
     }
 

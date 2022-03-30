@@ -8,6 +8,7 @@ import in.hocg.boot.youtube.autoconfiguration.core.datastore.DataCredential;
 import in.hocg.boot.youtube.autoconfiguration.exception.TokenUnusedException;
 import in.hocg.boot.youtube.autoconfiguration.properties.YoutubeProperties;
 import in.hocg.boot.youtube.autoconfiguration.utils.YoutubeUtils;
+import in.hocg.boot.youtube.autoconfiguration.utils.data.CredentialChannel;
 import lombok.SneakyThrows;
 
 import java.util.*;
@@ -19,6 +20,7 @@ import java.util.*;
  * @author hocgin
  */
 public interface YoutubeBervice {
+
 
     default GoogleAuthorizationCodeFlow getAuthorizationCodeFlow(String clientId, List<String> scopes) {
         YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
@@ -53,9 +55,9 @@ public interface YoutubeBervice {
         return Optional.ofNullable(YoutubeUtils.loadCredential(clientConfig.getClientId(), userId, clientConfig.getClientSecret(), scopes));
     }
 
-    default Credential getCredential(String clientId, String userId, String redirectUri, List<String> scopes, String code) {
+    default CredentialChannel getCredential(String clientId, String redirectUri, List<String> scopes, String code) {
         YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
-        return YoutubeUtils.getCredential(clientConfig.getClientId(), userId, clientConfig.getClientSecret(), redirectUri, scopes, code);
+        return YoutubeUtils.getCredential(clientConfig.getClientId(), clientConfig.getClientSecret(), redirectUri, scopes, code);
     }
 
     /**
@@ -73,7 +75,7 @@ public interface YoutubeBervice {
 
     default void youtube(String clientId, String userId, List<String> scopes, BiConsumerThrow<YoutubeProperties.ClientConfig, YouTube> consumer) {
         YoutubeProperties.ClientConfig clientConfig = getClientConfig(clientId);
-        Credential credential = loadCredential(clientId, userId, scopes).orElseThrow(() -> new TokenUnusedException("Token 失效"));
+        Credential credential = loadCredential(clientId, userId, scopes).orElseThrow(TokenUnusedException::new);
         YouTube youtube = new YouTube.Builder(YoutubeUtils.HTTP_TRANSPORT, YoutubeUtils.JSON_FACTORY, credential)
             .setApplicationName(clientConfig.getApplicationName()).build();
         try {
@@ -91,7 +93,7 @@ public interface YoutubeBervice {
      * @return
      */
     default YouTube youtube(String clientId, String userId, List<String> scopes) {
-        Credential credential = loadCredential(clientId, userId, scopes).orElseThrow(() -> new TokenUnusedException("Token 失效"));
+        Credential credential = loadCredential(clientId, userId, scopes).orElseThrow(TokenUnusedException::new);
         return new YouTube.Builder(YoutubeUtils.HTTP_TRANSPORT, YoutubeUtils.JSON_FACTORY, credential).build();
     }
 

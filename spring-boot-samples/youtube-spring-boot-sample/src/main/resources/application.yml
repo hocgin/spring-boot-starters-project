@@ -10,7 +10,6 @@ boot:
       - application-name: hl.team.wechat
         client-id: 354771266497-qc9jmt90p9sjv79ll7f490anc7dcs1ds.apps.googleusercontent.com
         client-secret: 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
-    data-store: redis
   web:
     hostname: http://127.0.0.1:8080
 spring:
