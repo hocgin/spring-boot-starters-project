@@ -5,15 +5,20 @@ import com.google.api.client.util.store.MemoryDataStoreFactory;
 import in.hocg.boot.utils.LangUtils;
 import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBervice;
 import in.hocg.boot.youtube.autoconfiguration.core.YoutubeBerviceImpl;
+import in.hocg.boot.youtube.autoconfiguration.core.datastore.RedisDataStoreFactory;
 import in.hocg.boot.youtube.autoconfiguration.properties.YoutubeProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.Map;
 
@@ -49,14 +54,14 @@ public class YoutubeAutoConfiguration implements InitializingBean {
         return MemoryDataStoreFactory.getDefaultInstance();
     }
 
-//    @Configuration(proxyBeanMethods = false)
-//    @ConditionalOnClass(StringRedisTemplate.class)
-//    public static class RedisDataStoreConfiguration {
-//        @Bean
-//        @Order(Ordered.HIGHEST_PRECEDENCE)
-//        @ConditionalOnMissingBean
-//        public DataStoreFactory redisDataStoreFactory(StringRedisTemplate redisTemplate) {
-//            return new RedisDataStoreFactory(redisTemplate);
-//        }
-//    }
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnClass(StringRedisTemplate.class)
+    public static class RedisDataStoreConfiguration {
+        @Bean
+        @Order(Ordered.HIGHEST_PRECEDENCE)
+        @ConditionalOnMissingBean
+        public DataStoreFactory redisDataStoreFactory(StringRedisTemplate redisTemplate) {
+            return new RedisDataStoreFactory(redisTemplate);
+        }
+    }
 }
