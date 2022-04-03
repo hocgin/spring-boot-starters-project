@@ -36,11 +36,6 @@ import static org.bytedeco.opencv.helper.opencv_imgcodecs.cvLoadImage;
 @UtilityClass
 public class FeatureHelper {
 
-    public File pngToVideo(File dir, File output) {
-        File[] files = FileUtil.ls(dir.getAbsolutePath());
-        return pngToVideo(List.of(files), output);
-    }
-
     /**
      * 图片转视频
      *
@@ -64,7 +59,6 @@ public class FeatureHelper {
         recorder.start();
 
         OpenCVFrameConverter.ToIplImage convert = new OpenCVFrameConverter.ToIplImage();
-
         for (File tFile : files) {
             IplImage image = cvLoadImage(tFile.getAbsolutePath());
             recorder.record(convert.convert(image));
@@ -73,6 +67,11 @@ public class FeatureHelper {
         recorder.stop();
         recorder.release();
         return output;
+    }
+
+    public File pngToVideo(File dir, File output) {
+        File[] files = FileUtil.ls(dir.getAbsolutePath());
+        return pngToVideo(List.of(files), output);
     }
 
     /**
@@ -113,7 +112,7 @@ public class FeatureHelper {
         firstGrabber.close();
 
         FFmpegFrameGrabber frameGrabber;
-        for (File file : files) {
+        for (File file : CollUtil.sub(files, 1, files.size())) {
             frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
             while ((frame = frameGrabber.grabFrame()) != null) {
@@ -154,7 +153,7 @@ public class FeatureHelper {
         while ((frame = firstGrabber.grabFrame()) != null) {
             recorder.record(frame);
         }
-        for (File file : files) {
+        for (File file : CollUtil.sub(files, 1, files.size())) {
             FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
             while ((frame = frameGrabber.grabFrame()) != null) {
@@ -297,7 +296,7 @@ public class FeatureHelper {
         }
         firstGrabber.close();
 
-        for (File file : videoFiles) {
+        for (File file : CollUtil.sub(videoFiles, 1, videoFiles.size())) {
             FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
             while ((frame = frameGrabber.grabFrame()) != null) {
@@ -312,6 +311,51 @@ public class FeatureHelper {
         recorder.stop();
         recorder.release();
         firstGrabber.stop();
+    }
+
+    /**
+     * 视频截取
+     *
+     * @param video
+     * @param start
+     * @param end
+     * @param output
+     * @return
+     */
+    @SneakyThrows
+    public File subVideo(String video, long start, long end, File output) {
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(video);
+        grabber.setOption("rtsp_transport", "tcp");
+        grabber.setTimestamp(start);
+        grabber.start();
+
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, grabber.getImageWidth(), grabber.getImageHeight(),
+            grabber.getAudioChannels());
+        recorder.setVideoCodec(grabber.getVideoCodec());
+        recorder.setFormat("mp4");
+        recorder.setFrameRate(grabber.getFrameRate());
+        recorder.setAudioCodec(grabber.getAudioCodec());
+        recorder.setAudioBitrate(grabber.getAudioBitrate());
+        recorder.setVideoBitrate(grabber.getVideoBitrate());
+        recorder.setSampleRate(grabber.getSampleRate());
+        recorder.start();
+
+        Frame frame;
+        while ((frame = grabber.grabFrame()) != null) {
+            if (grabber.getTimestamp() > end) {
+                recorder.close();
+                grabber.close();
+                return output;
+            }
+            recorder.record(frame);
+        }
+        recorder.close();
+        grabber.close();
+        return output;
+    }
+
+    public File subVideo(File videoFile, long start, long end, File output) {
+        return subVideo(videoFile.getAbsolutePath(), start, end, output);
     }
 
 
@@ -475,6 +519,8 @@ public class FeatureHelper {
         while ((frame = grabber.grabImage()) != null) {
             long nowTimestamp = grabber.getTimestamp();
             if (nowTimestamp > end) {
+                en.finish();
+                grabber.stop();
                 return output;
             }
             BufferedImage bufferedImage = converter.getBufferedImage(frame);

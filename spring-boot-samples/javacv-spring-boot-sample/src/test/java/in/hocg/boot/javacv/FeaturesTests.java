@@ -136,6 +136,15 @@ public class FeaturesTests {
     }
 
     @Test
+    public void subVideo() throws IOException {
+        String dir = ResourceUtil.getResource("erasure").getPath();
+        Path path = Files.createTempFile("subVideo", ".mp4");
+        FeatureHelper.subVideo(new File(dir, "v0.mp4"), 2 * (1000 * 1000), 6 * (1000 * 1000),
+            path.toFile());
+        log.info("转换完成，路径：{}", path);
+    }
+
+    @Test
     public void toGif() throws IOException {
         String dir = ResourceUtil.getResource("erasure").getPath();
         Path path = Files.createTempFile("toGif", ".gif");
@@ -143,4 +152,5 @@ public class FeaturesTests {
             path.toFile());
         log.info("转换完成，路径：{}", path);
     }
+
 }
