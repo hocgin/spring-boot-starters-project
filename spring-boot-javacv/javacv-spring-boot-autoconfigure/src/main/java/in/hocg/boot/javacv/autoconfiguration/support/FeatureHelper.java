@@ -8,7 +8,6 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bytedeco.ffmpeg.avcodec.AVPacket;
 import org.bytedeco.ffmpeg.global.avcodec;
-import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.*;
@@ -83,36 +82,41 @@ public class FeatureHelper {
             return null;
         }
         Path tempFile = Files.createTempFile("test", ".mp4");
+        File firstFile = files.get(0);
 
-        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(files.get(0));
-        grabber.start();
+        FFmpegFrameGrabber firstGrabber = new FFmpegFrameGrabber(firstFile);
+        firstGrabber.start();
 
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(tempFile.toString(), grabber.getImageWidth(), grabber.getImageHeight(), 0);
-        recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
-        recorder.setFormat("mp4");
-        recorder.setFrameRate(grabber.getFrameRate());
-        recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
-        int bitrate = grabber.getVideoBitrate();
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(tempFile.toString(),
+            firstGrabber.getImageWidth(), firstGrabber.getImageHeight(), firstGrabber.getAudioChannels());
+        recorder.setVideoCodec(firstGrabber.getVideoCodec());
+        recorder.setFormat(firstGrabber.getFormat());
+        recorder.setFrameRate(firstGrabber.getFrameRate());
+        recorder.setAudioCodec(firstGrabber.getAudioCodec());
+        recorder.setPixelFormat(firstGrabber.getPixelFormat());
+        int bitrate = firstGrabber.getVideoBitrate();
         if (bitrate == 0) {
-            bitrate = grabber.getAudioBitrate();
+            bitrate = firstGrabber.getAudioBitrate();
         }
         recorder.setVideoBitrate(bitrate);
         recorder.start();
 
         Frame frame;
-        while ((frame = grabber.grabImage()) != null) {
+        while ((frame = firstGrabber.grabFrame()) != null) {
             recorder.record(frame);
         }
+        firstGrabber.close();
+
+        FFmpegFrameGrabber frameGrabber;
         for (File file : files) {
-            FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(file);
+            frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
-            while ((frame = frameGrabber.grabImage()) != null) {
+            while ((frame = frameGrabber.grabFrame()) != null) {
                 recorder.record(frame);
             }
             frameGrabber.close();
         }
         recorder.close();
-        grabber.close();
         return tempFile;
     }
 
