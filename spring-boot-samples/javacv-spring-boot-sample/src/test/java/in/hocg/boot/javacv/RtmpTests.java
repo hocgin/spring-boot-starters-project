@@ -36,8 +36,6 @@ public class RtmpTests {
 
     @Test
     public void imageDataToRtmp() {
-        Path path = FeatureHelper.pngToVideo(Paths.get("/Users/hocgin/Projects/spring-boot-starters-project/spring-boot-samples/javacv-spring-boot-sample/src/test/resources/image2video").toFile());
-        log.info("转换完成，路径：{}", path);
     }
 
     @Test

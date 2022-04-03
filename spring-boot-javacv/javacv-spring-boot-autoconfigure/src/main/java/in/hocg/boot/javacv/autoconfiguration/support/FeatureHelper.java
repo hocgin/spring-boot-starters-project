@@ -20,7 +20,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -37,11 +36,6 @@ import static org.bytedeco.opencv.helper.opencv_imgcodecs.cvLoadImage;
 @UtilityClass
 public class FeatureHelper {
 
-    public Path pngToVideo(File dir) {
-        File[] files = FileUtil.ls(dir.getAbsolutePath());
-        return pngToVideo(List.of(files));
-    }
-
     /**
      * 图片转视频
      *
@@ -49,10 +43,15 @@ public class FeatureHelper {
      * @return
      */
     @SneakyThrows
-    public Path pngToVideo(List<File> files) {
-        Path file = Files.createTempFile("test", ".mp4");
+    public File pngToVideo(List<File> files, File output) {
+        if (CollUtil.isEmpty(files)) {
+            return null;
+        }
+        BufferedImage first = ImageIO.read(files.get(0));
+        int height = first.getHeight();
+        int width = first.getWidth();
 
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(file.toFile(), 1920, 1080, 1);
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, width, height, 1);
         recorder.setVideoCodec(avcodec.AV_CODEC_ID_FLV1);
         recorder.setFormat("flv");
         recorder.setFrameRate(25);
@@ -60,7 +59,6 @@ public class FeatureHelper {
         recorder.start();
 
         OpenCVFrameConverter.ToIplImage convert = new OpenCVFrameConverter.ToIplImage();
-
         for (File tFile : files) {
             IplImage image = cvLoadImage(tFile.getAbsolutePath());
             recorder.record(convert.convert(image));
@@ -68,7 +66,12 @@ public class FeatureHelper {
         }
         recorder.stop();
         recorder.release();
-        return file;
+        return output;
+    }
+
+    public File pngToVideo(File dir, File output) {
+        File[] files = FileUtil.ls(dir.getAbsolutePath());
+        return pngToVideo(List.of(files), output);
     }
 
     /**
@@ -78,46 +81,51 @@ public class FeatureHelper {
      * @return
      */
     @SneakyThrows
-    public Path mergeVideo(List<File> files) {
+    public File mergeVideo(List<File> files, File output) {
         if (CollUtil.isEmpty(files)) {
             return null;
         }
-        Path tempFile = Files.createTempFile("test", ".mp4");
+        Path tempFile = output.toPath();
+        File firstFile = files.get(0);
 
-        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(files.get(0));
-        grabber.start();
+        FFmpegFrameGrabber firstGrabber = new FFmpegFrameGrabber(firstFile);
+        firstGrabber.start();
 
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(tempFile.toString(), grabber.getImageWidth(), grabber.getImageHeight(), 0);
-        recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(tempFile.toString(),
+            firstGrabber.getImageWidth(), firstGrabber.getImageHeight(), firstGrabber.getAudioChannels());
+        recorder.setVideoCodec(firstGrabber.getVideoCodec());
         recorder.setFormat("mp4");
-        recorder.setFrameRate(grabber.getFrameRate());
+        recorder.setFrameRate(firstGrabber.getFrameRate());
+        recorder.setAudioCodec(firstGrabber.getAudioCodec());
         recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
-        int bitrate = grabber.getVideoBitrate();
+        int bitrate = firstGrabber.getVideoBitrate();
         if (bitrate == 0) {
-            bitrate = grabber.getAudioBitrate();
+            bitrate = firstGrabber.getAudioBitrate();
         }
         recorder.setVideoBitrate(bitrate);
         recorder.start();
 
         Frame frame;
-        while ((frame = grabber.grabImage()) != null) {
+        while ((frame = firstGrabber.grabFrame()) != null) {
             recorder.record(frame);
         }
-        for (File file : files) {
-            FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(file);
+        firstGrabber.close();
+
+        FFmpegFrameGrabber frameGrabber;
+        for (File file : CollUtil.sub(files, 1, files.size())) {
+            frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
-            while ((frame = frameGrabber.grabImage()) != null) {
+            while ((frame = frameGrabber.grabFrame()) != null) {
                 recorder.record(frame);
             }
             frameGrabber.close();
         }
         recorder.close();
-        grabber.close();
-        return tempFile;
+        return output;
     }
 
-    public Path mergeVideo(File dir) {
-        return mergeVideo(List.of(FileUtil.ls(dir.getAbsolutePath())));
+    public File mergeVideo(File dir, File output) {
+        return mergeVideo(List.of(FileUtil.ls(dir.getAbsolutePath())), output);
     }
 
     /**
@@ -127,18 +135,16 @@ public class FeatureHelper {
      * @return
      */
     @SneakyThrows
-    public Path mergeAudio(List<File> files) {
+    public File mergeAudio(List<File> files, File output) {
         if (CollUtil.isEmpty(files)) {
             return null;
         }
         File firstFile = files.get(0);
-        String suffix = FileUtil.getSuffix(firstFile);
-        Path result = Files.createTempFile("test", "." + suffix);
 
         FFmpegFrameGrabber firstGrabber = new FFmpegFrameGrabber(firstFile);
         firstGrabber.start();
 
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(result.toString(), firstGrabber.getAudioChannels());
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, firstGrabber.getAudioChannels());
         recorder.setAudioCodec(avcodec.AV_CODEC_ID_MP3);
         recorder.setFrameRate(firstGrabber.getFrameRate());
         recorder.start();
@@ -147,7 +153,7 @@ public class FeatureHelper {
         while ((frame = firstGrabber.grabFrame()) != null) {
             recorder.record(frame);
         }
-        for (File file : files) {
+        for (File file : CollUtil.sub(files, 1, files.size())) {
             FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
             while ((frame = frameGrabber.grabFrame()) != null) {
@@ -157,11 +163,11 @@ public class FeatureHelper {
         }
         recorder.close();
         firstGrabber.close();
-        return result;
+        return output;
     }
 
-    public Path mergeAudio(File dir) {
-        return mergeAudio(List.of(FileUtil.ls(dir.getAbsolutePath())));
+    public File mergeAudio(File dir, File output) {
+        return mergeAudio(List.of(FileUtil.ls(dir.getAbsolutePath())), output);
     }
 
 
@@ -173,15 +179,13 @@ public class FeatureHelper {
      * @return
      */
     @SneakyThrows
-    public Path addAudio(File video, File audio) {
+    public File addAudio(File video, File audio, File output) {
         FFmpegFrameGrabber videoGrabber = new FFmpegFrameGrabber(video);
         FFmpegFrameGrabber audioGrabber = new FFmpegFrameGrabber(audio);
         videoGrabber.start();
         audioGrabber.start();
 
-        Path tempFile = Files.createTempFile("test", ".mp4");
-
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(tempFile.toFile(), videoGrabber.getImageWidth(),
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, videoGrabber.getImageWidth(),
             videoGrabber.getImageHeight(), 1);
         recorder.setVideoCodec(avcodec.AV_CODEC_ID_H264);
         recorder.setFormat("mp4");
@@ -226,7 +230,7 @@ public class FeatureHelper {
         recorder.close();
         videoGrabber.close();
         audioGrabber.close();
-        return tempFile;
+        return output;
     }
 
 
@@ -292,7 +296,7 @@ public class FeatureHelper {
         }
         firstGrabber.close();
 
-        for (File file : videoFiles) {
+        for (File file : CollUtil.sub(videoFiles, 1, videoFiles.size())) {
             FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
             while ((frame = frameGrabber.grabFrame()) != null) {
@@ -309,6 +313,51 @@ public class FeatureHelper {
         firstGrabber.stop();
     }
 
+    /**
+     * 视频截取
+     *
+     * @param video
+     * @param start
+     * @param end
+     * @param output
+     * @return
+     */
+    @SneakyThrows
+    public File subVideo(String video, long start, long end, File output) {
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(video);
+        grabber.setOption("rtsp_transport", "tcp");
+        grabber.setTimestamp(start);
+        grabber.start();
+
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, grabber.getImageWidth(), grabber.getImageHeight(),
+            grabber.getAudioChannels());
+        recorder.setVideoCodec(grabber.getVideoCodec());
+        recorder.setFormat("mp4");
+        recorder.setFrameRate(grabber.getFrameRate());
+        recorder.setAudioCodec(grabber.getAudioCodec());
+        recorder.setAudioBitrate(grabber.getAudioBitrate());
+        recorder.setVideoBitrate(grabber.getVideoBitrate());
+        recorder.setSampleRate(grabber.getSampleRate());
+        recorder.start();
+
+        Frame frame;
+        while ((frame = grabber.grabFrame()) != null) {
+            if (grabber.getTimestamp() > end) {
+                recorder.close();
+                grabber.close();
+                return output;
+            }
+            recorder.record(frame);
+        }
+        recorder.close();
+        grabber.close();
+        return output;
+    }
+
+    public File subVideo(File videoFile, long start, long end, File output) {
+        return subVideo(videoFile.getAbsolutePath(), start, end, output);
+    }
+
 
     /**
      * 截图
@@ -318,7 +367,7 @@ public class FeatureHelper {
      * @return
      */
     @SneakyThrows
-    public Path snapshot(File videoFile, long timestamp) {
+    public File snapshot(File videoFile, long timestamp, File output) {
         FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(videoFile);
         grabber.start();
         grabber.setTimestamp(timestamp);
@@ -329,9 +378,6 @@ public class FeatureHelper {
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
 
-        Path result = Files.createTempFile("snapshot", ".jpg");
-        File output = result.toFile();
-
         BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         bi.getGraphics().drawImage(bufferedImage.getScaledInstance(width, height, Image.SCALE_SMOOTH), 0, 0, null);
         try {
@@ -341,16 +387,15 @@ public class FeatureHelper {
         } finally {
             grabber.stop();
         }
-        return result;
+        return output;
     }
 
     @SneakyThrows
-    public Path processing(File video, BiFunction<BufferedImage, Integer, BufferedImage> videoProcessor) {
-        Path result = Files.createTempFile("processing", ".mp4");
-
+    public File processing(File video, BiFunction<BufferedImage, Integer, BufferedImage> videoProcessor, File output) {
         FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(video);
         grabber.start();
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(result.toFile(), grabber.getImageWidth(), grabber.getImageHeight(), 1);
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, grabber.getImageWidth(), grabber.getImageHeight(),
+            grabber.getAudioChannels());
         // 视频相关配置，取原视频配置
         recorder.setFrameRate(grabber.getFrameRate());
         recorder.setVideoCodec(grabber.getVideoCodec());
@@ -383,7 +428,7 @@ public class FeatureHelper {
 
         recorder.close();
         grabber.close();
-        return result;
+        return output;
     }
 
     /**
@@ -393,12 +438,12 @@ public class FeatureHelper {
      * @return
      */
     @SneakyThrows
-    public Path erasure(File video) {
-        Path result = Files.createTempFile("erasure", ".mp4");
+    public File erasure(File video, File output) {
 
         FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(video);
         grabber.start();
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(result.toFile(), grabber.getImageWidth(), grabber.getImageHeight(), 1);
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, grabber.getImageWidth(), grabber.getImageHeight(),
+            grabber.getAudioChannels());
 
         // 视频相关配置，取原视频配置
         recorder.setFrameRate(grabber.getFrameRate());
@@ -416,7 +461,7 @@ public class FeatureHelper {
 
         recorder.close();
         grabber.close();
-        return result;
+        return output;
     }
 
     /**
@@ -426,12 +471,11 @@ public class FeatureHelper {
      * @return
      */
     @SneakyThrows
-    public Path toAudio(File video) {
-        Path result = Files.createTempFile("erasure", ".mp3");
+    public File toAudio(File video, File output) {
         FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(video);
         grabber.start();
 
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(result.toFile(), 1);
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, grabber.getAudioChannels());
 
         // 音频相关配置，取原音频配置
         recorder.setFormat("mp3");
@@ -441,7 +485,6 @@ public class FeatureHelper {
 
         Frame frame;
         while ((frame = grabber.grab()) != null) {
-
             // 音频帧写入输出流
             if (frame.samples != null) {
                 recorder.record(frame);
@@ -450,7 +493,7 @@ public class FeatureHelper {
 
         recorder.close();
         grabber.close();
-        return result;
+        return output;
     }
 
     /**
@@ -462,8 +505,7 @@ public class FeatureHelper {
      * @return
      */
     @SneakyThrows
-    public Path toGif(File video, long start, long end) {
-        Path result = Files.createTempFile("toGif", ".gif");
+    public File toGif(File video, long start, long end, File output) {
 
         FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(video);
         grabber.setTimestamp(start);
@@ -471,20 +513,22 @@ public class FeatureHelper {
 
         AnimatedGifEncoder en = new AnimatedGifEncoder();
         en.setFrameRate(Convert.toFloat(grabber.getFrameRate()));
-        en.start(result.toString());
+        en.start(output.getAbsolutePath());
         Java2DFrameConverter converter = new Java2DFrameConverter();
         Frame frame;
         while ((frame = grabber.grabImage()) != null) {
             long nowTimestamp = grabber.getTimestamp();
             if (nowTimestamp > end) {
-                return result;
+                en.finish();
+                grabber.stop();
+                return output;
             }
             BufferedImage bufferedImage = converter.getBufferedImage(frame);
             en.addFrame(bufferedImage);
         }
         en.finish();
         grabber.stop();
-        return result;
+        return output;
     }
 
 }
