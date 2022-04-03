@@ -1,5 +1,6 @@
 package in.hocg.boot.javacv;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import in.hocg.boot.javacv.autoconfiguration.support.FeatureHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +10,9 @@ import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,30 +28,36 @@ import java.util.List;
 public class FeaturesTests {
 
     @Test
-    public void png2Video() {
+    public void png2Video() throws IOException {
         URL dir = ResourceUtil.getResource("image2video");
-        Path path = FeatureHelper.pngToVideo(new File(dir.getPath()));
+        Path path = Files.createTempFile("test", ".mp4");
+        FeatureHelper.pngToVideo(new File(dir.getPath()), path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 
     @Test
-    public void mergeVideo() {
+    public void mergeVideo() throws IOException {
         URL dir = ResourceUtil.getResource("mergeVideo");
-        Path path = FeatureHelper.mergeVideo(new File(dir.getPath()));
+        Path path = Files.createTempFile("test", ".mp4");
+        FeatureHelper.mergeVideo(new File(dir.getPath()), path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 
     @Test
-    public void mergeAudio() {
+    public void mergeAudio() throws IOException {
         URL dir = ResourceUtil.getResource("mergeAudio");
-        Path path = FeatureHelper.mergeAudio(new File(dir.getPath()));
+        File firstFile = new File(dir.getPath());
+        String suffix = FileUtil.getSuffix(firstFile);
+        Path path = Files.createTempFile("test", "." + suffix);
+        FeatureHelper.mergeAudio(firstFile, path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 
     @Test
-    public void addAudio() {
+    public void addAudio() throws IOException {
         String dir = ResourceUtil.getResource("addAudio").getPath();
-        Path path = FeatureHelper.addAudio(new File(dir, "v0.mp4"), new File(dir, "b0.mp3"));
+        Path path = Files.createTempFile("test", ".mp4");
+        FeatureHelper.addAudio(new File(dir, "v0.mp4"), new File(dir, "b0.mp3"), path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 
@@ -60,23 +69,25 @@ public class FeaturesTests {
     }
 
     @Test
-    public void snapshot() {
+    public void snapshot() throws IOException {
         String dir = ResourceUtil.getResource("videoToRtmp").getPath();
         File video = new File(dir, "v0.mp4");
-        Path path = FeatureHelper.snapshot(video, 8 * (1000 * 1000));
+        Path path = Files.createTempFile("snapshot", ".jpg");
+        FeatureHelper.snapshot(video, 8 * (1000 * 1000), path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 
     @Test
-    public void processing() {
+    public void processing() throws IOException {
         String dir = ResourceUtil.getResource("videoToRtmp").getPath();
         File video = new File(dir, "v0.mp4");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         String text = "HELLO WORLD";
+        Path path = Files.createTempFile("erasure", ".mp4");
 
         // 处理每一帧
-        Path path = FeatureHelper.processing(video, (bufferedImage, integer) -> {
+        FeatureHelper.processing(video, (bufferedImage, integer) -> {
             // 添加字幕时的时间
             Font font = new Font("微软雅黑", Font.BOLD, 32);
             AffineTransform affinetransform = new AffineTransform();
@@ -104,28 +115,32 @@ public class FeaturesTests {
             graphics.drawString(text, widthX, bufferedImage.getHeight() - 100);
             graphics.dispose();
             return bufferedImage;
-        });
+        }, path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 
     @Test
-    public void toAudio() {
+    public void toAudio() throws IOException {
         String dir = ResourceUtil.getResource("erasure").getPath();
-        Path path = FeatureHelper.toAudio(new File(dir, "v0.mp4"));
+        Path path = Files.createTempFile("erasure", ".mp3");
+        FeatureHelper.toAudio(new File(dir, "v0.mp4"), path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 
     @Test
-    public void erasure() {
+    public void erasure() throws IOException {
         String dir = ResourceUtil.getResource("erasure").getPath();
-        Path path = FeatureHelper.erasure(new File(dir, "v0.mp4"));
+        Path path = Files.createTempFile("erasure", ".mp4");
+        FeatureHelper.erasure(new File(dir, "v0.mp4"), path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 
     @Test
-    public void toGif() {
+    public void toGif() throws IOException {
         String dir = ResourceUtil.getResource("erasure").getPath();
-        Path path = FeatureHelper.toGif(new File(dir, "v0.mp4"), 2 * (1000 * 1000), 6 * (1000 * 1000));
+        Path path = Files.createTempFile("toGif", ".gif");
+        FeatureHelper.toGif(new File(dir, "v0.mp4"), 2 * (1000 * 1000), 6 * (1000 * 1000),
+            path.toFile());
         log.info("转换完成，路径：{}", path);
     }
 }
