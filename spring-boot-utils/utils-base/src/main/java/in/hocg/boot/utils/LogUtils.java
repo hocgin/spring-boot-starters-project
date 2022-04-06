@@ -30,7 +30,7 @@ public class LogUtils {
      * @param <T>
      * @return 执行结果
      */
-    public <T> T logSync(SupplierThrow<T> exec, ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
+    public <T> T logSync(SupplierThrow<T> exec, ThreeConsumerThrow<Serializable, LogStatus, Object> onComplete) {
         return logSync(exec, null, onComplete);
     }
 
@@ -43,7 +43,7 @@ public class LogUtils {
      * @param <T>
      * @return 执行结果
      */
-    public <T> T logSync(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady, ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
+    public <T> T logSync(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady, ThreeConsumerThrow<Serializable, LogStatus, Object> onComplete) {
         return logAsync(exec, () -> Objects.nonNull(onReady) ? new FutureTask<>(onReady::get) : null, onComplete);
     }
 
@@ -57,7 +57,7 @@ public class LogUtils {
      * @return 执行结果
      */
     public <T> T logAsync(SupplierThrow<T> exec, SupplierThrow<Future<Serializable>> onReady,
-                          ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
+                          ThreeConsumerThrow<Serializable, LogStatus, Object> onComplete) {
         LogStatus status = LogStatus.Process;
         Object resultBody = null;
         T result;
