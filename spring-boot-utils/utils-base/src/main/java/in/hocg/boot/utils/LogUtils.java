@@ -2,6 +2,7 @@ package in.hocg.boot.utils;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.utils.function.SupplierThrow;
 import in.hocg.boot.utils.function.ThreeConsumerThrow;
@@ -58,7 +59,7 @@ public class LogUtils {
     public <T> T logAsync(SupplierThrow<T> exec, SupplierThrow<Future<Serializable>> onReady,
                           ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
         LogStatus status = LogStatus.Process;
-        String resultBody = null;
+        Object resultBody = null;
         T result;
 
         // 1. 准备日志
@@ -81,6 +82,8 @@ public class LogUtils {
             status = LogStatus.Success;
             if (Objects.isNull(result) || ClassUtil.isBasicType(result.getClass())) {
                 resultBody = String.valueOf(result);
+            } else if (result instanceof HttpResponse) {
+                resultBody = result;
             } else {
                 resultBody = JSONUtil.toJsonStr(result);
             }
