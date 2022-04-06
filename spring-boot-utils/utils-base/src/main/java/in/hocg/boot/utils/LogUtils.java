@@ -2,6 +2,7 @@ package in.hocg.boot.utils;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.utils.function.SupplierThrow;
 import in.hocg.boot.utils.function.ThreeConsumerThrow;
@@ -29,7 +30,7 @@ public class LogUtils {
      * @param <T>
      * @return 执行结果
      */
-    public <T> T logSync(SupplierThrow<T> exec, ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
+    public <T> T logSync(SupplierThrow<T> exec, ThreeConsumerThrow<Serializable, LogStatus, Object> onComplete) {
         return logSync(exec, null, onComplete);
     }
 
@@ -42,7 +43,7 @@ public class LogUtils {
      * @param <T>
      * @return 执行结果
      */
-    public <T> T logSync(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady, ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
+    public <T> T logSync(SupplierThrow<T> exec, SupplierThrow<Serializable> onReady, ThreeConsumerThrow<Serializable, LogStatus, Object> onComplete) {
         return logAsync(exec, () -> Objects.nonNull(onReady) ? new FutureTask<>(onReady::get) : null, onComplete);
     }
 
@@ -56,9 +57,9 @@ public class LogUtils {
      * @return 执行结果
      */
     public <T> T logAsync(SupplierThrow<T> exec, SupplierThrow<Future<Serializable>> onReady,
-                          ThreeConsumerThrow<Serializable, LogStatus, String> onComplete) {
+                          ThreeConsumerThrow<Serializable, LogStatus, Object> onComplete) {
         LogStatus status = LogStatus.Process;
-        String resultBody = null;
+        Object resultBody = null;
         T result;
 
         // 1. 准备日志
@@ -81,6 +82,8 @@ public class LogUtils {
             status = LogStatus.Success;
             if (Objects.isNull(result) || ClassUtil.isBasicType(result.getClass())) {
                 resultBody = String.valueOf(result);
+            } else if (result instanceof HttpResponse) {
+                resultBody = result;
             } else {
                 resultBody = JSONUtil.toJsonStr(result);
             }
