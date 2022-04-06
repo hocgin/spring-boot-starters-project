@@ -74,14 +74,21 @@ public class FeatureHelper {
         return pngToVideo(List.of(files), output);
     }
 
+    public File mergeVideo(List<File> files, File output) {
+        return mergeVideo(files, output, 0, 0);
+    }
+
     /**
-     * 多个视频转单个
+     * 多个视频转单个视频
      *
-     * @param files
+     * @param files     文件
+     * @param output    输出文件
+     * @param passStart 跳过开始时间
+     * @param passEnd   跳过结束时间
      * @return
      */
     @SneakyThrows
-    public File mergeVideo(List<File> files, File output) {
+    public File mergeVideo(List<File> files, File output, long passStart, long passEnd) {
         if (CollUtil.isEmpty(files)) {
             return null;
         }
@@ -90,7 +97,9 @@ public class FeatureHelper {
 
         FFmpegFrameGrabber firstGrabber = new FFmpegFrameGrabber(firstFile);
         firstGrabber.start();
-
+        if (passStart > 0) {
+            firstGrabber.setTimestamp(passStart);
+        }
         FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(tempFile.toString(),
             firstGrabber.getImageWidth(), firstGrabber.getImageHeight(), firstGrabber.getAudioChannels());
         recorder.setVideoCodec(firstGrabber.getVideoCodec());
@@ -106,7 +115,11 @@ public class FeatureHelper {
         recorder.start();
 
         Frame frame;
+        long endTimestamp = firstGrabber.getLengthInTime() - passEnd;
         while ((frame = firstGrabber.grabFrame()) != null) {
+            if (firstGrabber.getTimestamp() > endTimestamp) {
+                break;
+            }
             recorder.record(frame);
         }
         firstGrabber.close();
@@ -115,7 +128,14 @@ public class FeatureHelper {
         for (File file : CollUtil.sub(files, 1, files.size())) {
             frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
+            if (passStart > 0) {
+                frameGrabber.setTimestamp(passStart);
+            }
+            endTimestamp = frameGrabber.getLengthInTime() - passEnd;
             while ((frame = frameGrabber.grabFrame()) != null) {
+                if (frameGrabber.getTimestamp() > endTimestamp) {
+                    break;
+                }
                 recorder.record(frame);
             }
             frameGrabber.close();

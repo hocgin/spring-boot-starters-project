@@ -2,6 +2,7 @@ package in.hocg.boot.javacv;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import com.google.common.collect.Lists;
 import in.hocg.boot.javacv.autoconfiguration.support.FeatureHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -40,6 +41,16 @@ public class FeaturesTests {
         URL dir = ResourceUtil.getResource("mergeVideo");
         Path path = Files.createTempFile("test", ".mp4");
         FeatureHelper.mergeVideo(new File(dir.getPath()), path.toFile());
+        log.info("转换完成，路径：{}", path);
+    }
+
+    @Test
+    public void mergeVideo2() throws IOException {
+        URL dir = ResourceUtil.getResource("mergeVideo");
+        Path path = Files.createTempFile("test", ".mp4");
+        List<File> files = Lists.newArrayList(FileUtil.ls(dir.getPath()));
+
+        FeatureHelper.mergeVideo(files, path.toFile(), 4 * 1000 * 1000, 4 * 1000 * 1000);
         log.info("转换完成，路径：{}", path);
     }
 
