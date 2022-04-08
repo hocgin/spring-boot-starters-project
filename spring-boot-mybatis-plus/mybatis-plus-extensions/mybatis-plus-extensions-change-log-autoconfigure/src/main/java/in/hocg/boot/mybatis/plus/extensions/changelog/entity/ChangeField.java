@@ -3,7 +3,7 @@ package in.hocg.boot.mybatis.plus.extensions.changelog.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
-import in.hocg.boot.mybatis.plus.extensions.context.constants.GlobalConstants;
+import in.hocg.boot.mybatis.plus.extensions.context.constants.MyBatisPlusExtensionsConstants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class ChangeField extends CommonEntity<ChangeField> {
-    public static final String TABLE_NAME = GlobalConstants.TABLE_PREFIX + "change_field";
+    public static final String TABLE_NAME = MyBatisPlusExtensionsConstants.TABLE_PREFIX + "change_field";
 
     @TableField("change_id")
     private Long changeId;

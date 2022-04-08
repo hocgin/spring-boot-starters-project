@@ -3,7 +3,7 @@ package in.hocg.boot.mybatis.plus.extensions.httplog.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
-import in.hocg.boot.mybatis.plus.extensions.context.constants.GlobalConstants;
+import in.hocg.boot.mybatis.plus.extensions.context.constants.MyBatisPlusExtensionsConstants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @TableName(HttpLog.TABLE_NAME)
 public class HttpLog extends CommonEntity<HttpLog> {
-    public static final String TABLE_NAME = GlobalConstants.TABLE_PREFIX + "http_log";
+    public static final String TABLE_NAME = MyBatisPlusExtensionsConstants.TABLE_PREFIX + "http_log";
 
     @TableField("uri")
     private String uri;

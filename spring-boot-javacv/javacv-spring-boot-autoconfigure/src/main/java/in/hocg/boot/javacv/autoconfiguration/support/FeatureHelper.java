@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.img.gif.AnimatedGifEncoder;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Pair;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bytedeco.ffmpeg.avcodec.AVPacket;
@@ -20,6 +21,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.Buffer;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -135,6 +137,68 @@ public class FeatureHelper {
             while ((frame = frameGrabber.grabFrame()) != null) {
                 if (frameGrabber.getTimestamp() > endTimestamp) {
                     break;
+                }
+                recorder.record(frame);
+            }
+            frameGrabber.close();
+        }
+        recorder.close();
+        return output;
+    }
+
+    @SneakyThrows
+    public File mergeVideoStyle2(List<File> files, File output, long passStart, long passEnd) {
+        if (CollUtil.isEmpty(files)) {
+            return null;
+        }
+        Path tempFile = output.toPath();
+        File firstFile = files.get(0);
+
+        FFmpegFrameGrabber firstGrabber = new FFmpegFrameGrabber(firstFile);
+        firstGrabber.start();
+        int imageHeight = firstGrabber.getImageHeight();
+        int imageWidth = firstGrabber.getImageWidth();
+        Pair<BufferedImage, File> bgFiles = ImageUtils.getBlackBufferedImage(imageWidth, imageHeight);
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(tempFile.toString(),
+            imageWidth, imageHeight, firstGrabber.getAudioChannels());
+        recorder.setVideoCodec(firstGrabber.getVideoCodec());
+        recorder.setFormat("mp4");
+        recorder.setFrameRate(firstGrabber.getFrameRate());
+        recorder.setAudioCodec(firstGrabber.getAudioCodec());
+        recorder.setPixelFormat(avutil.AV_PIX_FMT_YUV420P);
+        int bitrate = firstGrabber.getVideoBitrate();
+        if (bitrate == 0) {
+            bitrate = firstGrabber.getAudioBitrate();
+        }
+        recorder.setVideoBitrate(bitrate);
+        recorder.start();
+
+        OpenCVFrameConverter.ToIplImage convert = new OpenCVFrameConverter.ToIplImage();
+        IplImage iplImage = cvLoadImage(bgFiles.getValue().getAbsolutePath());
+        Buffer[] image = convert.convert(iplImage).image;
+
+        Frame frame;
+        long endTimestamp = firstGrabber.getLengthInTime() - passEnd;
+        Java2DFrameConverter converter = new Java2DFrameConverter();
+        while ((frame = firstGrabber.grab()) != null) {
+            long timestamp = firstGrabber.getTimestamp();
+            if ((timestamp < passStart || timestamp > endTimestamp) && frame.image != null) {
+                frame.image = image;
+            }
+            recorder.record(frame);
+        }
+        firstGrabber.close();
+
+
+        FFmpegFrameGrabber frameGrabber;
+        for (File file : CollUtil.sub(files, 1, files.size())) {
+            frameGrabber = new FFmpegFrameGrabber(file);
+            frameGrabber.start();
+            endTimestamp = frameGrabber.getLengthInTime() - passEnd;
+            while ((frame = frameGrabber.grab()) != null) {
+                long timestamp = frameGrabber.getTimestamp();
+                if ((timestamp < passStart || timestamp > endTimestamp) && frame.image != null) {
+                    frame.image = image;
                 }
                 recorder.record(frame);
             }

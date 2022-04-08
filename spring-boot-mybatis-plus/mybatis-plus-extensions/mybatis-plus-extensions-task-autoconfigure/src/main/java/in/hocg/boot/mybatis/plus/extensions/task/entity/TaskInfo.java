@@ -3,7 +3,7 @@ package in.hocg.boot.mybatis.plus.extensions.task.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
-import in.hocg.boot.mybatis.plus.extensions.context.constants.GlobalConstants;
+import in.hocg.boot.mybatis.plus.extensions.context.constants.MyBatisPlusExtensionsConstants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName(TaskInfo.TABLE_NAME)
 public class TaskInfo extends CommonEntity<TaskInfo> {
-    public static final String TABLE_NAME = GlobalConstants.TABLE_PREFIX + "task_info";
+    public static final String TABLE_NAME = MyBatisPlusExtensionsConstants.TABLE_PREFIX + "task_info";
 
     @TableField("task_sn")
     private String taskSn;

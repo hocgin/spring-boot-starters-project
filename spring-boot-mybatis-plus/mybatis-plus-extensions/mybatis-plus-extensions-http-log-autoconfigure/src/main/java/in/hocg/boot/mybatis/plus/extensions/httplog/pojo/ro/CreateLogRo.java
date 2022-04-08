@@ -30,4 +30,5 @@ public class CreateLogRo extends DoneLogRo {
 
     private LocalDateTime createdAt;
     private Long creator;
+
 }

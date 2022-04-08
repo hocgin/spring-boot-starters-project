@@ -1,23 +1,29 @@
 package in.hocg.boot.javacv;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Pair;
 import com.google.common.collect.Lists;
 import in.hocg.boot.javacv.autoconfiguration.support.FeatureHelper;
+import in.hocg.boot.javacv.autoconfiguration.support.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by hocgin on 2022/3/28
@@ -27,6 +33,12 @@ import java.util.List;
  */
 @Slf4j
 public class FeaturesTests {
+
+    @Test
+    public void test() throws IOException {
+        Pair<BufferedImage, File> filePair = ImageUtils.getBlackBufferedImage(300, 300);
+        System.out.println(filePair.getValue().getPath());
+    }
 
     @Test
     public void png2Video() throws IOException {
@@ -51,6 +63,18 @@ public class FeaturesTests {
         List<File> files = Lists.newArrayList(FileUtil.ls(dir.getPath()));
 
         FeatureHelper.mergeVideo(files, path.toFile(), 4 * 1000 * 1000, 4 * 1000 * 1000);
+        log.info("转换完成，路径：{}", path);
+    }
+
+    @Test
+    public void mergeVideo3() throws IOException {
+        Path dir = Paths.get("/Users/hocgin/Downloads/test");
+        Path path = new File(dir.toString(), "test.mp4").toPath();
+
+        List<File> files = Lists.newArrayList(FileUtil.ls(dir.toString())).stream()
+            .filter(file -> file.getName().contains("0.mp4")).collect(Collectors.toList());
+
+        FeatureHelper.mergeVideoStyle2(files, path.toFile(), 0, Convert.toLong(3.5 * 1000 * 1000));
         log.info("转换完成，路径：{}", path);
     }
 
