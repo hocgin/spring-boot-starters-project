@@ -190,12 +190,9 @@ public class FeatureHelper {
                 long grabberTimestamp = grabber.getTimestamp();
                 if ((grabberTimestamp < passStart || grabberTimestamp > endTimestamp) && frame.image != null) {
                     frame.image = bgImage;
-                    recorder.setTimestamp(timestamp.get() + grabberTimestamp);
-                    recorder.record(frame);
-                } else {
-                    recorder.setTimestamp(timestamp.get() + grabberTimestamp);
-                    recorder.record(frame);
                 }
+                recorder.setTimestamp(timestamp.get() + grabberTimestamp);
+                recorder.record(frame);
             }
             timestamp.addAndGet(lengthInTime);
             grabber.close();
