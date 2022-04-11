@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.Buffer;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -176,6 +177,9 @@ public class FeatureHelper {
         recorder.start();
 
         OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
+        IplImage iplImage = cvLoadImage(bgFiles.getValue().getAbsolutePath());
+        Buffer[] bgImage = converter.convert(iplImage).image;
+        opencv_core.cvReleaseImage(iplImage);
 
         AtomicLong timestamp = new AtomicLong();
         ConsumerThrow<FFmpegFrameGrabber> appendRecord = (FFmpegFrameGrabber grabber) -> {
@@ -185,11 +189,9 @@ public class FeatureHelper {
             while ((frame = grabber.grabFrame()) != null) {
                 long grabberTimestamp = grabber.getTimestamp();
                 if ((grabberTimestamp < passStart || grabberTimestamp > endTimestamp) && frame.image != null) {
-                    IplImage iplImage = cvLoadImage(bgFiles.getValue().getAbsolutePath());
-                    frame.image = converter.convert(iplImage).image;
+                    frame.image = bgImage;
                     recorder.setTimestamp(timestamp.get() + grabberTimestamp);
                     recorder.record(frame);
-                    opencv_core.cvReleaseImage(iplImage);
                 } else {
                     recorder.setTimestamp(timestamp.get() + grabberTimestamp);
                     recorder.record(frame);
@@ -627,6 +629,11 @@ public class FeatureHelper {
         en.finish();
         grabber.stop();
         return output;
+    }
+
+    public static void main(String[] args) {
+
+
     }
 
 }
