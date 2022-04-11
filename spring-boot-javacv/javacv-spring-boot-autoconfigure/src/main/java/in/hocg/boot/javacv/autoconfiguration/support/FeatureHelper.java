@@ -176,10 +176,10 @@ public class FeatureHelper {
         OpenCVFrameConverter.ToIplImage convert = new OpenCVFrameConverter.ToIplImage();
         IplImage iplImage = cvLoadImage(bgFiles.getValue().getAbsolutePath());
         Buffer[] image = convert.convert(iplImage).image;
+        opencv_core.cvReleaseImage(iplImage);
 
         Frame frame;
         long endTimestamp = firstGrabber.getLengthInTime() - passEnd;
-        Java2DFrameConverter converter = new Java2DFrameConverter();
         while ((frame = firstGrabber.grab()) != null) {
             long timestamp = firstGrabber.getTimestamp();
             if ((timestamp < passStart || timestamp > endTimestamp) && frame.image != null) {
