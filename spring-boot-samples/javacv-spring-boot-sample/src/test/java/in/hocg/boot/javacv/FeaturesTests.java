@@ -67,14 +67,28 @@ public class FeaturesTests {
     }
 
     @Test
-    public void mergeVideo3() throws IOException {
+    public void mergeVideoStyle2() throws IOException {
         Path dir = Paths.get("/Users/hocgin/Downloads/test");
-        Path path = new File(dir.toString(), "test.mp4").toPath();
+        Path path = new File(dir.toString(), "mergeVideoStyle2.test.mp4").toPath();
 
         List<File> files = Lists.newArrayList(FileUtil.ls(dir.toString())).stream()
-            .filter(file -> file.getName().contains("0.mp4")).collect(Collectors.toList());
+            .filter(file -> file.getName().endsWith(".mp4"))
+            .filter(file -> !file.getName().contains("test.mp4")).collect(Collectors.toList());
 
-        FeatureHelper.mergeVideoStyle2(files, path.toFile(), 0, Convert.toLong(3.5 * 1000 * 1000));
+        FeatureHelper.mergeVideoStyle2(files, path.toFile(), 0, Convert.toLong(60 * 1000 * 1000));
+        log.info("转换完成，路径：{}", path);
+    }
+
+    @Test
+    public void mergeVideo4() throws IOException {
+        Path dir = Paths.get("/Users/hocgin/Downloads/test");
+        Path path = new File(dir.toString(), "mergeVideo4.test.mp4").toPath();
+
+        List<File> files = Lists.newArrayList(FileUtil.ls(dir.toString())).stream()
+            .filter(file -> file.getName().endsWith(".mp4"))
+            .filter(file -> !file.getName().contains("test.mp4")).collect(Collectors.toList());
+
+        FeatureHelper.mergeVideo(files, path.toFile(), 0, Convert.toLong(60 * 1000 * 1000));
         log.info("转换完成，路径：{}", path);
     }
 
@@ -82,7 +96,7 @@ public class FeaturesTests {
     public void mergeAudio() throws IOException {
         URL dir = ResourceUtil.getResource("mergeAudio");
         File firstFile = new File(dir.getPath());
-        String suffix = FileUtil.getSuffix(firstFile);
+        String suffix = "mp3";
         Path path = Files.createTempFile("test", "." + suffix);
         FeatureHelper.mergeAudio(firstFile, path.toFile());
         log.info("转换完成，路径：{}", path);

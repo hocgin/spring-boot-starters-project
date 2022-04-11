@@ -5,6 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.img.gif.AnimatedGifEncoder;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
+import in.hocg.boot.utils.function.ConsumerThrow;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.bytedeco.ffmpeg.avcodec.AVPacket;
@@ -21,10 +22,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.Buffer;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiFunction;
 
 import static org.bytedeco.opencv.helper.opencv_imgcodecs.cvLoadImage;
@@ -100,7 +101,7 @@ public class FeatureHelper {
         FFmpegFrameGrabber firstGrabber = new FFmpegFrameGrabber(firstFile);
         firstGrabber.start();
         if (passStart > 0) {
-            firstGrabber.setTimestamp(passStart);
+            firstGrabber.setTimestamp(passStart, true);
         }
         FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(tempFile.toString(),
             firstGrabber.getImageWidth(), firstGrabber.getImageHeight(), firstGrabber.getAudioChannels());
@@ -116,31 +117,32 @@ public class FeatureHelper {
         recorder.setVideoBitrate(bitrate);
         recorder.start();
 
-        Frame frame;
-        long endTimestamp = firstGrabber.getLengthInTime() - passEnd;
-        while ((frame = firstGrabber.grabFrame()) != null) {
-            if (firstGrabber.getTimestamp() > endTimestamp) {
-                break;
+        AtomicLong timestamp = new AtomicLong();
+        ConsumerThrow<FFmpegFrameGrabber> appendRecord = (FFmpegFrameGrabber grabber) -> {
+            long endTimestamp = grabber.getLengthInTime() - passEnd;
+            Frame frame;
+            if (passStart > 0) {
+                grabber.setTimestamp(passStart);
             }
-            recorder.record(frame);
-        }
-        firstGrabber.close();
+            while ((frame = grabber.grabFrame()) != null) {
+                long grabberTimestamp = grabber.getTimestamp();
+                if (grabberTimestamp > endTimestamp) {
+                    grabber.setTimestamp(grabber.getLengthInTime(), true);
+                    break;
+                }
+                recorder.setTimestamp(timestamp.get() + grabberTimestamp);
+                recorder.record(frame);
+            }
+            timestamp.addAndGet(endTimestamp);
+            grabber.close();
+        };
+        appendRecord.accept(firstGrabber);
 
         FFmpegFrameGrabber frameGrabber;
         for (File file : CollUtil.sub(files, 1, files.size())) {
             frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
-            if (passStart > 0) {
-                frameGrabber.setTimestamp(passStart);
-            }
-            endTimestamp = frameGrabber.getLengthInTime() - passEnd;
-            while ((frame = frameGrabber.grabFrame()) != null) {
-                if (frameGrabber.getTimestamp() > endTimestamp) {
-                    break;
-                }
-                recorder.record(frame);
-            }
-            frameGrabber.close();
+            appendRecord.accept(frameGrabber);
         }
         recorder.close();
         return output;
@@ -173,42 +175,37 @@ public class FeatureHelper {
         recorder.setVideoBitrate(bitrate);
         recorder.start();
 
-        OpenCVFrameConverter.ToIplImage convert = new OpenCVFrameConverter.ToIplImage();
-        IplImage iplImage = cvLoadImage(bgFiles.getValue().getAbsolutePath());
-        Buffer[] image = convert.convert(iplImage).image;
-        opencv_core.cvReleaseImage(iplImage);
+        OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();
 
-        Frame frame;
-        long endTimestamp = firstGrabber.getLengthInTime() - passEnd;
-        while ((frame = firstGrabber.grab()) != null) {
-            long timestamp = firstGrabber.getTimestamp();
-            if ((timestamp < passStart || timestamp > endTimestamp) && frame.image != null) {
-                frame.image = image;
+        AtomicLong timestamp = new AtomicLong();
+        ConsumerThrow<FFmpegFrameGrabber> appendRecord = (FFmpegFrameGrabber grabber) -> {
+            long lengthInTime = grabber.getLengthInTime();
+            long endTimestamp = lengthInTime - passEnd;
+            Frame frame;
+            while ((frame = grabber.grabFrame()) != null) {
+                long grabberTimestamp = grabber.getTimestamp();
+                if ((grabberTimestamp < passStart || grabberTimestamp > endTimestamp) && frame.image != null) {
+                    IplImage iplImage = cvLoadImage(bgFiles.getValue().getAbsolutePath());
+                    frame.image = converter.convert(iplImage).image;
+                    recorder.setTimestamp(timestamp.get() + grabberTimestamp);
+                    recorder.record(frame);
+                    opencv_core.cvReleaseImage(iplImage);
+                } else {
+                    recorder.setTimestamp(timestamp.get() + grabberTimestamp);
+                    recorder.record(frame);
+                }
             }
+            timestamp.addAndGet(lengthInTime);
+            grabber.close();
+        };
 
-            if (frame.image != null || frame.samples != null) {
-                recorder.record(frame);
-            }
-        }
-        firstGrabber.close();
-
+        appendRecord.accept(firstGrabber);
 
         FFmpegFrameGrabber frameGrabber;
         for (File file : CollUtil.sub(files, 1, files.size())) {
             frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
-            endTimestamp = frameGrabber.getLengthInTime() - passEnd;
-            while ((frame = frameGrabber.grab()) != null) {
-                long timestamp = frameGrabber.getTimestamp();
-                if ((timestamp < passStart || timestamp > endTimestamp) && frame.image != null) {
-                    frame.image = image;
-                }
-
-                if (frame.image != null || frame.samples != null) {
-                    recorder.record(frame);
-                }
-            }
-            frameGrabber.close();
+            appendRecord.accept(frameGrabber);
         }
         recorder.close();
         return output;
@@ -239,17 +236,25 @@ public class FeatureHelper {
         recorder.setFrameRate(firstGrabber.getFrameRate());
         recorder.start();
 
-        Frame frame;
-        while ((frame = firstGrabber.grabFrame()) != null) {
-            recorder.record(frame);
-        }
+
+        AtomicLong timestamp = new AtomicLong();
+        ConsumerThrow<FFmpegFrameGrabber> appendRecord = (FFmpegFrameGrabber grabber) -> {
+            long lengthInTime = grabber.getLengthInTime();
+            Frame frame;
+            long grabberTimestamp = grabber.getTimestamp();
+            while ((frame = grabber.grabFrame()) != null) {
+                recorder.setTimestamp(timestamp.get() + grabberTimestamp);
+                recorder.record(frame);
+            }
+            timestamp.addAndGet(lengthInTime);
+            grabber.close();
+        };
+
+        appendRecord.accept(firstGrabber);
         for (File file : CollUtil.sub(files, 1, files.size())) {
             FFmpegFrameGrabber frameGrabber = new FFmpegFrameGrabber(file);
             frameGrabber.start();
-            while ((frame = frameGrabber.grabFrame()) != null) {
-                recorder.record(frame);
-            }
-            frameGrabber.close();
+            appendRecord.accept(frameGrabber);
         }
         recorder.close();
         firstGrabber.close();
@@ -416,7 +421,8 @@ public class FeatureHelper {
     public File subVideo(String video, long start, long end, File output) {
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(video);
         grabber.setOption("rtsp_transport", "tcp");
-        grabber.setTimestamp(start);
+        grabber.setVideoTimestamp(start);
+        grabber.setAudioTimestamp(start);
         grabber.start();
 
         FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(output, grabber.getImageWidth(), grabber.getImageHeight(),
@@ -460,7 +466,8 @@ public class FeatureHelper {
     public File snapshot(File videoFile, long timestamp, File output) {
         FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(videoFile);
         grabber.start();
-        grabber.setTimestamp(timestamp);
+        grabber.setVideoTimestamp(timestamp);
+        grabber.setAudioTimestamp(timestamp);
         Frame frame = grabber.grabImage();
         Java2DFrameConverter converter = new Java2DFrameConverter();
         BufferedImage bufferedImage = converter.getBufferedImage(frame);
@@ -598,7 +605,8 @@ public class FeatureHelper {
     public File toGif(File video, long start, long end, File output) {
 
         FFmpegFrameGrabber grabber = FFmpegFrameGrabber.createDefault(video);
-        grabber.setTimestamp(start);
+        grabber.setVideoTimestamp(start);
+        grabber.setAudioTimestamp(start);
         grabber.start();
 
         AnimatedGifEncoder en = new AnimatedGifEncoder();
