@@ -185,7 +185,10 @@ public class FeatureHelper {
             if ((timestamp < passStart || timestamp > endTimestamp) && frame.image != null) {
                 frame.image = image;
             }
-            recorder.record(frame);
+
+            if (frame.image != null || frame.samples != null) {
+                recorder.record(frame);
+            }
         }
         firstGrabber.close();
 
@@ -200,7 +203,10 @@ public class FeatureHelper {
                 if ((timestamp < passStart || timestamp > endTimestamp) && frame.image != null) {
                     frame.image = image;
                 }
-                recorder.record(frame);
+
+                if (frame.image != null || frame.samples != null) {
+                    recorder.record(frame);
+                }
             }
             frameGrabber.close();
         }
