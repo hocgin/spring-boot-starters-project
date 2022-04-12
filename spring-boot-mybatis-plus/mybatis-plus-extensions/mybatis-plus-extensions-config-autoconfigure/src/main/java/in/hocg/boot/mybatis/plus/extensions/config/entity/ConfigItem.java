@@ -3,7 +3,7 @@ package in.hocg.boot.mybatis.plus.extensions.config.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
-import in.hocg.boot.mybatis.plus.extensions.context.constants.GlobalConstants;
+import in.hocg.boot.mybatis.plus.extensions.context.constants.MyBatisPlusExtensionsConstants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName(ConfigItem.TABLE_NAME)
 public class ConfigItem extends CommonEntity<ConfigItem> {
-    public static final String TABLE_NAME = GlobalConstants.TABLE_PREFIX + "config_item";
+    public static final String TABLE_NAME = MyBatisPlusExtensionsConstants.TABLE_PREFIX + "config_item";
 
     @ApiModelProperty
     @TableField("scope_id")

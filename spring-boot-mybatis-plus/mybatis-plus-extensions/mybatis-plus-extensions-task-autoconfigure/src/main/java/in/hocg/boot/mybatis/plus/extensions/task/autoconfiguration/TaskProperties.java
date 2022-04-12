@@ -1,6 +1,6 @@
 package in.hocg.boot.mybatis.plus.extensions.task.autoconfiguration;
 
-import in.hocg.boot.mybatis.plus.extensions.context.constants.GlobalConstants;
+import in.hocg.boot.mybatis.plus.extensions.context.constants.MyBatisPlusExtensionsConstants;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,7 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(TaskProperties.PREFIX)
 public class TaskProperties {
-    public static final String PREFIX = GlobalConstants.PROP_PREFIX + ".task";
+    public static final String PREFIX = MyBatisPlusExtensionsConstants.PROPERTIES_PREFIX + ".task";
 
     /**
      * 执行器配置

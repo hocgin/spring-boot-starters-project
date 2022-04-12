@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Future;
 
 /**
@@ -45,6 +46,10 @@ public class HttpLogUtils {
     }
 
     public <T> ThreeConsumerThrow<Serializable, LogUtils.LogStatus, T> getDefaultComplete() {
+        return getDefaultComplete(null);
+    }
+
+    public <T> ThreeConsumerThrow<Serializable, LogUtils.LogStatus, T> getDefaultComplete(ThreeConsumerThrow<Serializable, LogUtils.LogStatus, T> complete) {
         return (Serializable id, LogUtils.LogStatus status, T result) -> {
             if (LogUtils.LogStatus.Fail.equals(status)) {
                 getHttpLogMpeService().asyncFail(id, result);
@@ -54,6 +59,13 @@ public class HttpLogUtils {
             // 兜底
             else {
                 getHttpLogMpeService().asyncDone(id, status, StrUtil.toString(result));
+            }
+            if (Objects.nonNull(complete)) {
+                try {
+                    complete.accept(id, status, result);
+                } catch (Exception e) {
+                    log.error("执行补充操作失败", e);
+                }
             }
         };
     }
@@ -119,7 +131,6 @@ public class HttpLogUtils {
         result.setStatus((isSuccess ? Status.Success : Status.Fail).getCodeStr());
         return result;
     }
-
 
     public static void main(String[] args) {
         HttpRequest request = HttpUtil.createRequest(null, "");

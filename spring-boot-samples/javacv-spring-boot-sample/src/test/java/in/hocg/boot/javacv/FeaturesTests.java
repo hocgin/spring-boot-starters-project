@@ -1,23 +1,31 @@
 package in.hocg.boot.javacv;
 
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
 import com.google.common.collect.Lists;
 import in.hocg.boot.javacv.autoconfiguration.support.FeatureHelper;
+import in.hocg.boot.javacv.autoconfiguration.support.ImageUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.Java2DFrameUtils;
 import org.junit.Test;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by hocgin on 2022/3/28
@@ -27,6 +35,11 @@ import java.util.List;
  */
 @Slf4j
 public class FeaturesTests {
+
+    @Test
+    public void test() throws IOException {
+        BufferedImage filePair = ImageUtils.getBlackBufferedImage(300, 300);
+    }
 
     @Test
     public void png2Video() throws IOException {
@@ -55,10 +68,50 @@ public class FeaturesTests {
     }
 
     @Test
+    public void mergeVideoStyle2() throws IOException {
+        Path dir = Paths.get("/Users/hocgin/Downloads/test");
+        Path path = new File(dir.toString(), "mergeVideoStyle2.test.mp4").toPath();
+
+        List<File> files = Lists.newArrayList(FileUtil.ls(dir.toString())).stream()
+            .filter(file -> file.getName().endsWith(".mp4"))
+            .filter(file -> !file.getName().contains("test.mp4")).collect(Collectors.toList());
+
+        FeatureHelper.mergeVideoStyle2(files, path.toFile(), 0, Convert.toLong(10 * 1000 * 1000));
+        log.info("转换完成，路径：{}", path);
+    }
+
+    @Test
+    public void trimVideo() throws IOException {
+        File file = new File("/Users/hocgin/Downloads/test/trim_7049587948383260000.mp4");
+        FeatureHelper.trimVideo(new File("/Users/hocgin/Downloads/test/7049587948383260000.mp4"), 16.0 / 16, file);
+        log.info("转换完成，路径：{}", file.toPath());
+    }
+
+    @Test
+    public void fillVideo() throws IOException {
+        File file = new File("/Users/hocgin/Downloads/test/trim_7049587948383260000.mp4");
+        FeatureHelper.fillVideo(new File("/Users/hocgin/Downloads/test/7049587948383260000.mp4"), 1920, 1080, file);
+        log.info("转换完成，路径：{}", file.toPath());
+    }
+
+    @Test
+    public void mergeVideo4() throws IOException {
+        Path dir = Paths.get("/Users/hocgin/Downloads/test");
+        Path path = new File(dir.toString(), "mergeVideo4.test.mp4").toPath();
+
+        List<File> files = Lists.newArrayList(FileUtil.ls(dir.toString())).stream()
+            .filter(file -> file.getName().endsWith(".mp4"))
+            .filter(file -> !file.getName().contains("test.mp4")).collect(Collectors.toList());
+
+        FeatureHelper.mergeVideo(files, path.toFile(), 0, Convert.toLong(10 * 1000 * 1000));
+        log.info("转换完成，路径：{}", path);
+    }
+
+    @Test
     public void mergeAudio() throws IOException {
         URL dir = ResourceUtil.getResource("mergeAudio");
         File firstFile = new File(dir.getPath());
-        String suffix = FileUtil.getSuffix(firstFile);
+        String suffix = "mp3";
         Path path = Files.createTempFile("test", "." + suffix);
         FeatureHelper.mergeAudio(firstFile, path.toFile());
         log.info("转换完成，路径：{}", path);
@@ -162,6 +215,13 @@ public class FeaturesTests {
         FeatureHelper.toGif(new File(dir, "v0.mp4"), 2 * (1000 * 1000), 6 * (1000 * 1000),
             path.toFile());
         log.info("转换完成，路径：{}", path);
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedImage bf = ImageUtils.getBlackBufferedImage(400, 400);
+        Frame bgFrame = Java2DFrameUtils.toFrame(bf);
+        BufferedImage bufferedImage = Java2DFrameUtils.toBufferedImage(bgFrame);
+        ImageIO.write(bufferedImage, "png", new File("/Users/hocgin/Downloads/test.png"));
     }
 
 }
