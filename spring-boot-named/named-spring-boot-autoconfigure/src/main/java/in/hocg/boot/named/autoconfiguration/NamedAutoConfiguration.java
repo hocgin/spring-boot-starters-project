@@ -1,11 +1,13 @@
 package in.hocg.boot.named.autoconfiguration;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.vo.IScroll;
 import in.hocg.boot.named.autoconfiguration.aspect.NamedAspect;
+import in.hocg.boot.named.autoconfiguration.core.MemoryNamedCacheServiceImpl;
 import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import in.hocg.boot.named.autoconfiguration.core.RedisNamedCacheServiceImpl;
-import in.hocg.boot.named.autoconfiguration.core.MemoryNamedCacheServiceImpl;
 import in.hocg.boot.named.autoconfiguration.core.convert.IPageNamedRowsConvert;
+import in.hocg.boot.named.autoconfiguration.core.convert.IScrollNamedRowsConvert;
 import in.hocg.boot.named.autoconfiguration.core.convert.NamedRowsConvert;
 import in.hocg.boot.named.autoconfiguration.core.convert.OptionalNamedRowsConvert;
 import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
@@ -67,14 +69,24 @@ public class NamedAutoConfiguration {
         }
     }
 
-    @Configuration(proxyBeanMethods = false)
     @ConditionalOnClass(IPage.class)
+    @Configuration(proxyBeanMethods = false)
     public static class IPageNamedRowsLoading {
 
         @Bean
         @ConditionalOnMissingBean(IPageNamedRowsConvert.class)
         public IPageNamedRowsConvert iPageNamedRowsConvert() {
             return new IPageNamedRowsConvert();
+        }
+    }
+
+    @ConditionalOnClass(IScroll.class)
+    @Configuration(proxyBeanMethods = false)
+    public static class IScrollNamedRowsLoading {
+        @Bean
+        @ConditionalOnMissingBean(IPageNamedRowsConvert.class)
+        public IScrollNamedRowsConvert iScrollNamedRowsConvert() {
+            return new IScrollNamedRowsConvert();
         }
     }
 
