@@ -75,6 +75,11 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
     }
 
     @Override
+    public <R> List<R> as(List<T> collection, Class<R> clazz) {
+        return LangUtils.toList(collection, item -> as(item, clazz));
+    }
+
+    @Override
     public <R> IScroll<R> as(IScroll<T> scroll, Class<R> clazz) {
         return scroll.convert(item -> as(item, clazz));
     }
