@@ -2,6 +2,7 @@ package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
@@ -55,6 +56,20 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
             isOk = validInsert(entity);
         }
         return isOk;
+    }
+
+    @Override
+    public Optional<T> first(Wrapper<T> queryWrapper) {
+        List<T> records = limit(queryWrapper, 1);
+        if (records.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(records.get(0));
+    }
+
+    @Override
+    public List<T> limit(Wrapper<T> queryWrapper, Integer limit) {
+        return page(new Page<>(1, limit, false), queryWrapper).getRecords();
     }
 
     @Override

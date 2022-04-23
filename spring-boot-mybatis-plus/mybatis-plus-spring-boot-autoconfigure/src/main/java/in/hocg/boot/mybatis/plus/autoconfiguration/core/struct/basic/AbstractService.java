@@ -1,6 +1,7 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic;
 
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -48,6 +49,23 @@ public interface AbstractService<T> extends IService<T> {
      * @param entity
      */
     boolean validInsertOrUpdate(T entity);
+
+    /**
+     * 获取查询条件的第一条记录
+     *
+     * @param wrapper 查询条件
+     * @return 结果
+     */
+    Optional<T> first(Wrapper<T> wrapper);
+
+    /**
+     * 获取条件的前面几条数据
+     *
+     * @param queryWrapper 条件
+     * @param limit        条数
+     * @return
+     */
+    List<T> limit(Wrapper<T> queryWrapper, Integer limit);
 
     /**
      * 是否存在某个字段等于某个值的
