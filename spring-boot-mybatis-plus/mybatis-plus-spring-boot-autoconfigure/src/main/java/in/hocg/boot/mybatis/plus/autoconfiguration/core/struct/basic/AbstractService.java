@@ -1,6 +1,7 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic;
 
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -8,6 +9,8 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.vo.IScroll;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by hocgin on 2020/2/11.
@@ -48,6 +51,23 @@ public interface AbstractService<T> extends IService<T> {
     boolean validInsertOrUpdate(T entity);
 
     /**
+     * 获取查询条件的第一条记录
+     *
+     * @param wrapper 查询条件
+     * @return 结果
+     */
+    Optional<T> first(Wrapper<T> wrapper);
+
+    /**
+     * 获取条件的前面几条数据
+     *
+     * @param queryWrapper 条件
+     * @param limit        条数
+     * @return
+     */
+    List<T> limit(Wrapper<T> queryWrapper, Integer limit);
+
+    /**
      * 是否存在某个字段等于某个值的
      *
      * @param field
@@ -68,6 +88,26 @@ public interface AbstractService<T> extends IService<T> {
      * @return 转换目标实体
      */
     <R> Collection<R> as(Collection<T> collection, Class<R> clazz);
+
+    /**
+     * 实体转换
+     *
+     * @param collection 集合
+     * @param clazz      转换目标
+     * @param <R>        转换目标
+     * @return 转换目标实体
+     */
+    <R> List<R> as(List<T> collection, Class<R> clazz);
+
+    /**
+     * 实体转换
+     *
+     * @param opt   可选实体
+     * @param clazz 转换目标
+     * @param <R>   转换目标
+     * @return 转换目标实体
+     */
+    <R> Optional<R> as(Optional<T> opt, Class<R> clazz);
 
     /**
      * 实体转换

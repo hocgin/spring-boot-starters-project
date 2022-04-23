@@ -2,6 +2,7 @@ package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
@@ -14,10 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -61,6 +59,20 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
     }
 
     @Override
+    public Optional<T> first(Wrapper<T> queryWrapper) {
+        List<T> records = limit(queryWrapper, 1);
+        if (records.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(records.get(0));
+    }
+
+    @Override
+    public List<T> limit(Wrapper<T> queryWrapper, Integer limit) {
+        return page(new Page<>(1, limit, false), queryWrapper).getRecords();
+    }
+
+    @Override
     public boolean has(SFunction<T, ?> field, Object val, SFunction<T, ?> ignoreField, Serializable... ignoreVal) {
         List<Serializable> ignoreIds = Arrays.asList(ignoreVal).parallelStream()
             .filter(Objects::nonNull).collect(Collectors.toList());
@@ -72,6 +84,16 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
     @Override
     public <R> Collection<R> as(Collection<T> collection, Class<R> clazz) {
         return LangUtils.toList(collection, item -> as(item, clazz));
+    }
+
+    @Override
+    public <R> List<R> as(List<T> collection, Class<R> clazz) {
+        return LangUtils.toList(collection, item -> as(item, clazz));
+    }
+
+    @Override
+    public <R> Optional<R> as(Optional<T> opt, Class<R> clazz) {
+        return opt.map(item -> as(item, clazz));
     }
 
     @Override
