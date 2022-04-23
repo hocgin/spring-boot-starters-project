@@ -9,6 +9,7 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.vo.IScroll;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by hocgin on 2020/2/11.
@@ -79,6 +80,16 @@ public interface AbstractService<T> extends IService<T> {
      * @return 转换目标实体
      */
     <R> List<R> as(List<T> collection, Class<R> clazz);
+
+    /**
+     * 实体转换
+     *
+     * @param opt   可选实体
+     * @param clazz 转换目标
+     * @param <R>   转换目标
+     * @return 转换目标实体
+     */
+    <R> Optional<R> as(Optional<T> opt, Class<R> clazz);
 
     /**
      * 实体转换

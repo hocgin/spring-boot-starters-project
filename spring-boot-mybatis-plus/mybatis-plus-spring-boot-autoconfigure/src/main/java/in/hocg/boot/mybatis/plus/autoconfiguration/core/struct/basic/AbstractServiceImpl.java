@@ -14,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -77,6 +74,11 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
     @Override
     public <R> List<R> as(List<T> collection, Class<R> clazz) {
         return LangUtils.toList(collection, item -> as(item, clazz));
+    }
+
+    @Override
+    public <R> Optional<R> as(Optional<T> opt, Class<R> clazz) {
+        return opt.map(item -> as(item, clazz));
     }
 
     @Override
