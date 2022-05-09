@@ -84,7 +84,7 @@ public class NamedAutoConfiguration {
     @Configuration(proxyBeanMethods = false)
     public static class IScrollNamedRowsLoading {
         @Bean
-        @ConditionalOnMissingBean(IPageNamedRowsConvert.class)
+        @ConditionalOnMissingBean(IScrollNamedRowsConvert.class)
         public IScrollNamedRowsConvert iScrollNamedRowsConvert() {
             return new IScrollNamedRowsConvert();
         }
