@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.convert.UseConvert;
@@ -69,7 +70,12 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
 
     @Override
     public List<T> limit(Wrapper<T> queryWrapper, Integer limit) {
-        return page(new Page<>(1, limit, false), queryWrapper).getRecords();
+        Page<T> limitPage = new Page<>(1, limit, false);
+
+        if (queryWrapper instanceof QueryChainWrapper) {
+            return ((QueryChainWrapper<T>) queryWrapper).page(limitPage).getRecords();
+        }
+        return page(limitPage, queryWrapper).getRecords();
     }
 
     @Override
