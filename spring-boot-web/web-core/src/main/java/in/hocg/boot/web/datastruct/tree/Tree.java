@@ -1,10 +1,12 @@
 package in.hocg.boot.web.datastruct.tree;
 
 
+import cn.hutool.core.util.StrUtil;
+import in.hocg.boot.utils.LangUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by hocgin on 2020/2/15.
@@ -42,7 +44,7 @@ public final class Tree {
         for (T menu : rootMenu) {
             final Long parentId = menu.getParentId();
             // 遍历所有节点，将父菜单id与传过来的id比较
-            if (equals(id, parentId)) {
+            if (LangUtils.equals(id, parentId)) {
                 children.add(menu);
             }
         }
@@ -58,11 +60,4 @@ public final class Tree {
     }
 
 
-    private static boolean equals(Long s1, Long s2) {
-        if (s1 == null || s2 == null) {
-            return Objects.equals(s1, s2);
-        }
-
-        return s1.compareTo(s2) == 0;
-    }
 }

@@ -1,16 +1,21 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.utils;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
+import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro.PageRo;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.vo.IScroll;
 import in.hocg.boot.utils.LangUtils;
 import lombok.experimental.UtilityClass;
+import org.apache.ibatis.reflection.property.PropertyNamer;
 
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -68,6 +73,20 @@ public class PageUtils {
     }
 
     /**
+     * List 转为 IPage
+     *
+     * @param data 列表
+     * @param <T>
+     * @return
+     */
+    public static <T> IPage<T> fillPage(List<T> data) {
+        if (CollUtil.isEmpty(data)) {
+            return emptyPage(1L, 1L);
+        }
+        return new Page<T>(1L, data.size(), data.size()).setRecords(data);
+    }
+
+    /**
      * 填充滚动对象
      *
      * @param page         分页对象
@@ -106,10 +125,62 @@ public class PageUtils {
     /**
      * 填充滚动对象
      *
+     * @param data
+     * @param nextIdMapper
+     * @param <T>
+     * @return
+     */
+    public static <T> IScroll<T> fillScroll(List<T> data, Function<T, ? extends Serializable> nextIdMapper) {
+        return fillScroll(false, data, nextIdMapper);
+    }
+
+    /**
+     * 填充滚动对象
+     *
      * @param <T> 对象
      * @return 滚动对象
      */
     public static <T> IScroll<T> emptyScroll() {
         return fillScroll(false, Collections.emptyList(), null);
     }
+
+    /**
+     * 设置层级别
+     *
+     * @param pageSize
+     * @param currentPage
+     * @param totalSize
+     * @param desc
+     * @param data
+     * @param indexMapper
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> fillIndex(long pageSize, long currentPage, Long totalSize, List<T> data, boolean desc, SFunction<T, Long> indexMapper) {
+        if (CollUtil.isEmpty(data)) {
+            return data;
+        }
+
+        String indexFieldName = PropertyNamer.methodToProperty(LambdaUtils.extract(indexMapper).getImplMethodName());
+
+        int step = 1;
+        long baseSize = pageSize * currentPage;
+        long baseIndex = baseSize;
+        if (desc) {
+            step = -1;
+            baseIndex = totalSize - baseSize;
+        }
+
+        final int finalStep = step;
+        final long[] index = {baseIndex};
+        Consumer<T> setIndexConsumer = t -> ReflectUtil.setFieldValue(t, indexFieldName, index[0] += finalStep);
+        data.forEach(setIndexConsumer);
+        return data;
+    }
+
+    public static <T> IPage<T> fillIndex(IPage<T> page, boolean desc, SFunction<T, Long> indexMapper) {
+        fillIndex(page.getSize(), page.getCurrent(), page.getTotal(), page.getRecords(), desc, indexMapper);
+        return page;
+    }
+
 }

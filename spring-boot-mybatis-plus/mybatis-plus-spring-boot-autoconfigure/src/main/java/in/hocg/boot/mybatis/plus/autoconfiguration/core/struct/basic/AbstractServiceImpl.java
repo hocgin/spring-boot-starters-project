@@ -87,11 +87,7 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
             .page(new Page<>(1, 1, false)).getRecords().isEmpty();
     }
 
-    @Override
-    public <R> Collection<R> as(Collection<T> collection, Class<R> clazz) {
-        return LangUtils.toList(collection, item -> as(item, clazz));
-    }
-
+    //----------------------------------------------------------------------------------------------------------------------
     @Override
     public <R> List<R> as(List<T> collection, Class<R> clazz) {
         return LangUtils.toList(collection, item -> as(item, clazz));
@@ -118,9 +114,30 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
         return as(entity, clazz, useConvert.value());
     }
 
+    //----------------------------------------------------------------------------------------------------------------------
     @Override
     public <R> R as(T entity, SFunction<T, R> convert) {
         return convert.apply(entity);
+    }
+
+    @Override
+    public <R> List<R> as(List<T> list, SFunction<T, R> convert) {
+        return LangUtils.toList(list, convert);
+    }
+
+    @Override
+    public <R> IPage<R> as(IPage<T> page, SFunction<T, R> convert) {
+        return page.convert(convert);
+    }
+
+    @Override
+    public <R> IScroll<R> as(IScroll<T> scroll, SFunction<T, R> convert) {
+        return scroll.convert(convert);
+    }
+
+    @Override
+    public <R> Optional<R> as(Optional<T> opt, SFunction<T, R> convert) {
+        return opt.map(convert);
     }
 
     @Override
