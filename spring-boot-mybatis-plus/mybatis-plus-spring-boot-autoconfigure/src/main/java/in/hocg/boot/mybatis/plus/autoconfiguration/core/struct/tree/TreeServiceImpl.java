@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractServiceImpl;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.utils.TreeUtils;
 import in.hocg.boot.utils.LangUtils;
 import in.hocg.boot.utils.ValidUtils;
 import lombok.NonNull;
@@ -28,7 +29,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
     @Transactional(rollbackFor = Exception.class)
     public boolean validInsert(T entity) {
         validEntity(entity);
-        entity.setTreePath("/tmp");
+        entity.setTreePath(TreeUtils.PATH_SEPARATOR + "tmp");
         save(entity);
         final Long parentId = entity.getParentId();
         String treePath = "";
@@ -36,7 +37,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
             final T parent = getById(parentId);
             treePath = parent.getTreePath();
         }
-        entity.setTreePath(treePath + "/" + entity.getId());
+        entity.setTreePath(treePath + TreeUtils.PATH_SEPARATOR + entity.getId());
         return updateById(entity);
     }
 
@@ -51,7 +52,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
         final T fullEntity = getById(id);
         final Long oldParentId = fullEntity.getParentId();
         if (!LangUtils.equals(newParentId, oldParentId)) {
-            String newTreePath = "/" + id;
+            String newTreePath = TreeUtils.PATH_SEPARATOR + id;
             String oldTreePath = fullEntity.getTreePath();
             if (Objects.nonNull(newParentId)) {
                 final T parent = baseMapper.selectById(newParentId);
@@ -82,7 +83,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
             ValidUtils.isFalse(LangUtils.equals(parentId, id), "父级不能设置为自己");
             T parent = getById(parentId);
             ValidUtils.notNull(parent, "父级不存在");
-            ValidUtils.isFalse(parent.getTreePath().contains("/" + id + "/"), "父级不能为自己的子级");
+            ValidUtils.isFalse(parent.getTreePath().contains(TreeUtils.PATH_SEPARATOR + id + TreeUtils.PATH_SEPARATOR), "父级不能为自己的子级");
         }
 
         // 检查开启状态
@@ -97,8 +98,7 @@ public abstract class TreeServiceImpl<M extends BaseMapper<T>, T extends TreeEnt
 
             if (parentOpt.isPresent()) {
                 boolean parentIsOff = Boolean.FALSE.equals(parentOpt.get().getEnabled());
-                boolean nowIsOn = Boolean.TRUE.equals(enabled);
-                ValidUtils.isFalse(parentIsOff && nowIsOn, "父级为禁用状态，子级不能为开启状态");
+                ValidUtils.isFalse(parentIsOff, "父级为禁用状态，子级不能为开启状态");
             }
         }
     }

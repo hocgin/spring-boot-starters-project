@@ -5,6 +5,8 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractSer
 import in.hocg.boot.mybatis.plus.sample.dto.ExampleVo;
 import in.hocg.boot.mybatis.plus.sample.entity.Example;
 
+import java.util.Optional;
+
 /**
  * <p>
  * 服务类
@@ -18,4 +20,6 @@ public interface ExampleService extends AbstractService<Example> {
     String index();
 
     ExampleVo testAs();
+
+    Optional<Example> firstOne();
 }

@@ -26,7 +26,12 @@ public class Example extends LogicDeletedEntity<Example> {
 
     @TableField("name")
     private String name;
+    @TableField("idx")
+    private Long idx;
     @TableField("created_at")
     private LocalDateTime createdAt;
 
+    public void setIdx2(Long idx) {
+        this.idx = idx;
+    }
 }

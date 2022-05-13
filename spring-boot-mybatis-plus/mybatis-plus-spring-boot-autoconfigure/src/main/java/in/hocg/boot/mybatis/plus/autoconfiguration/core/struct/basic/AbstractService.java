@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.vo.IScroll;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,16 +86,6 @@ public interface AbstractService<T> extends IService<T> {
      * @param <R>        转换目标
      * @return 转换目标实体
      */
-    <R> Collection<R> as(Collection<T> collection, Class<R> clazz);
-
-    /**
-     * 实体转换
-     *
-     * @param collection 集合
-     * @param clazz      转换目标
-     * @param <R>        转换目标
-     * @return 转换目标实体
-     */
     <R> List<R> as(List<T> collection, Class<R> clazz);
 
     /**
@@ -148,6 +137,46 @@ public interface AbstractService<T> extends IService<T> {
      * @return 转换目标实体
      */
     <R> R as(T entity, SFunction<T, R> convert);
+
+    /**
+     * 实体转换
+     *
+     * @param list    实体
+     * @param convert 转换函数
+     * @param <R>     实体
+     * @return 转换目标实体
+     */
+    <R> List<R> as(List<T> list, SFunction<T, R> convert);
+
+    /**
+     * 实体转换
+     *
+     * @param page    实体
+     * @param convert 转换函数
+     * @param <R>     实体
+     * @return 转换目标实体
+     */
+    <R> IPage<R> as(IPage<T> page, SFunction<T, R> convert);
+
+    /**
+     * 实体转换
+     *
+     * @param scroll  实体
+     * @param convert 转换函数
+     * @param <R>     实体
+     * @return 转换目标实体
+     */
+    <R> IScroll<R> as(IScroll<T> scroll, SFunction<T, R> convert);
+
+    /**
+     * 实体转换
+     *
+     * @param opt     实体
+     * @param convert 转换函数
+     * @param <R>     实体
+     * @return 转换目标实体
+     */
+    <R> Optional<R> as(Optional<T> opt, SFunction<T, R> convert);
 
     /**
      * 实体转换

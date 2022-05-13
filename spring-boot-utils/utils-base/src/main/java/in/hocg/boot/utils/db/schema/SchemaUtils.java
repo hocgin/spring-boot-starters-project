@@ -63,25 +63,25 @@ public class SchemaUtils {
         Object defaultValue = null;
 
         AttributeBuilder attributeBuilder;
-        if (Lists.newArrayList(JdbcType.BIGINT).equals(typeEnum)) {
-             attributeBuilder = relationBuilder.withAttribute().longAttr(columnName).withIntegerPrecision(size);
-        } else if (Lists.newArrayList(JdbcType.VARBINARY).equals(typeEnum)) {
+        if (Lists.newArrayList(JdbcType.BIGINT).contains(typeEnum)) {
+            attributeBuilder = relationBuilder.withAttribute().longAttr(columnName).withIntegerPrecision(size);
+        } else if (Lists.newArrayList(JdbcType.VARBINARY).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().string(columnName).withMaxLength(size);
-        } else if (Lists.newArrayList(JdbcType.DATE).equals(typeEnum)) {
+        } else if (Lists.newArrayList(JdbcType.DATE).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().date(columnName);
-        } else if (Lists.newArrayList(JdbcType.TIMESTAMP).equals(typeEnum)) {
+        } else if (Lists.newArrayList(JdbcType.TIMESTAMP).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().timestamp(columnName);
-        } else if (Lists.newArrayList(JdbcType.BOOLEAN).equals(typeEnum)) {
+        } else if (Lists.newArrayList(JdbcType.BOOLEAN).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().booleanAttr(columnName);
-        } else if (Lists.newArrayList(JdbcType.INTEGER).equals(typeEnum)) {
+        } else if (Lists.newArrayList(JdbcType.INTEGER).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().integer(columnName).withIntegerPrecision(size);
-        } else if (Lists.newArrayList(JdbcType.CHAR).equals(typeEnum)) {
+        } else if (Lists.newArrayList(JdbcType.CHAR).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().character(columnName);
-        } else if (Lists.newArrayList(JdbcType.FLOAT).equals(typeEnum)) {
+        } else if (Lists.newArrayList(JdbcType.FLOAT).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().floatAttr(columnName);
-        } else if (Lists.newArrayList(JdbcType.LONGNVARCHAR).equals(typeEnum)) {
+        } else if (Lists.newArrayList(JdbcType.LONGNVARCHAR).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().text(columnName);
-        } else if (Lists.newArrayList(JdbcType.NUMERIC).equals(typeEnum)) {
+        } else if (Lists.newArrayList(JdbcType.NUMERIC).contains(typeEnum)) {
             attributeBuilder = relationBuilder.withAttribute().number(columnName).withDecimalPrecision(size);
         } else {
             throw new UnsupportedOperationException("不支持的类型");
@@ -125,7 +125,7 @@ public class SchemaUtils {
                         return false;
                     }
                     tableSchemaName = resultSet.getString("TABLE_SCHEM");
-                } while (tableSchemaName != null && !tableSchemaName.equalsIgnoreCase("public") && !tableSchemaName.equals("") && (!(this.dialect instanceof MsSqlDialect) || !tableSchemaName.equalsIgnoreCase("dbo")) && (!(this.dialect instanceof OracleDialect) || !tableSchemaName.equalsIgnoreCase("system")));
+                } while (tableSchemaName != null && !tableSchemaName.equalsIgnoreCase("public") && !tableSchemaName.contains("") && (!(this.dialect instanceof MsSqlDialect) || !tableSchemaName.equalsIgnoreCase("dbo")) && (!(this.dialect instanceof OracleDialect) || !tableSchemaName.equalsIgnoreCase("system")));
 
                 return true;
             }
