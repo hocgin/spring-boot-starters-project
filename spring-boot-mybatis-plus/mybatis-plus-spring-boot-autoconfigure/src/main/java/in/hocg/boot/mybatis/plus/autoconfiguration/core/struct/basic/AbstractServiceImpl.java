@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.ChainQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.convert.UseConvert;
@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -72,8 +75,8 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
     public List<T> limit(Wrapper<T> queryWrapper, Integer limit) {
         Page<T> limitPage = new Page<>(1, limit, false);
 
-        if (queryWrapper instanceof QueryChainWrapper) {
-            return ((QueryChainWrapper<T>) queryWrapper).page(limitPage).getRecords();
+        if (queryWrapper instanceof ChainQuery) {
+            return ((ChainQuery<T>) queryWrapper).page(limitPage).getRecords();
         }
         return page(limitPage, queryWrapper).getRecords();
     }
