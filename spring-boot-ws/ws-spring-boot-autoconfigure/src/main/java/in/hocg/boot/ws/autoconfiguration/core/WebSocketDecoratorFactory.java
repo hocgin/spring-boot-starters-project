@@ -34,7 +34,7 @@ public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFacto
             @Override
             public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
                 String sessionId = session.getId();
-                log.debug("连接: {}, 接收消息: {}", sessionId, message);
+                log.debug("连接: {}, 接收消息: {}", sessionId, message.getPayload());
                 super.handleMessage(session, message);
             }
 

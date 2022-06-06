@@ -4,3 +4,6 @@ debug: true
 logging:
   level:
     in.hocg.boot: debug
+boot:
+  websocket:
+    withSockJS: true

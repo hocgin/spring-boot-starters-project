@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,10 +23,10 @@ import java.security.Principal;
  */
 @Slf4j
 @Controller
+@MessageMapping
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class CmdController {
     private final SimpMessagingTemplate messagingTemplate;
-
 
     @ApiOperation("异常测试")
     @MessageMapping("/index")
@@ -40,6 +41,13 @@ public class CmdController {
     @SendTo(WebSocketHelper.PREFIX_BROADCAST + "/all")
     public String all(Principal principal) {
         log.debug("--> {}", principal);
+        return "666 " + System.currentTimeMillis();
+    }
+
+    @ApiOperation("接收消息")
+    @MessageMapping("/get")
+    public String get(@DestinationVariable Object body) {
+        log.debug("--> {}", body);
         return "666 " + System.currentTimeMillis();
     }
 }
