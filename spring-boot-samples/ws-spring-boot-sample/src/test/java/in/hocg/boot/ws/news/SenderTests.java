@@ -172,7 +172,8 @@ public class SenderTests {
         headers.set("X-Username", "hocgin");
         headers.setDestination(destination);
         headers.setContentType(MimeTypeUtils.APPLICATION_JSON);
-        String body = JSONUtil.toJsonStr(new TestCmd().setTest("测试").setOk("hi"));
+        TestCmd obj = new TestCmd().setTest("测试").setOk("hi").setBytes("Hi".getBytes());
+        String body = JSONUtil.toJsonStr(obj);
         session.send(headers, body.getBytes());
 
         String data = queue.poll(1, TimeUnit.SECONDS);
