@@ -25,6 +25,7 @@
     <dependency>
       <groupId>com.baomidou</groupId>
       <artifactId>mybatis-plus-boot-starter-test</artifactId>
+      <optional>true</optional>
     </dependency>
     <!-- Spring Boot dependencies -->
     <dependency>

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import in.hocg.boot.ws.autoconfiguration.core.WebSocketDecoratorFactory;
+import in.hocg.boot.ws.autoconfiguration.core.WebSocketExceptionAdvice;
 import in.hocg.boot.ws.autoconfiguration.core.constant.StringConstants;
 import in.hocg.boot.ws.autoconfiguration.core.handshake.AuthenticationHandshakeHandler;
 import in.hocg.boot.ws.autoconfiguration.core.interceptor.CommonHandshakeInterceptor;
@@ -17,6 +18,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -50,6 +52,7 @@ import java.util.List;
 @EnableWebSocketMessageBroker
 @ConditionalOnProperty(prefix = WebSocketProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(WebSocketProperties.class)
+@Import(WebSocketExceptionAdvice.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
     private final WebSocketUserService userService;
@@ -63,13 +66,23 @@ public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigu
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        StompWebSocketEndpointRegistration registration = registry.addEndpoint(properties.getEndpoint().toArray(new String[]{}))
-            .setHandshakeHandler(new AuthenticationHandshakeHandler(userService))
-            .addInterceptors(new CommonHandshakeInterceptor(properties))
-            .setAllowedOrigins(properties.getAllowedOrigins().toArray(new String[]{}));
+        String[] endpoints = properties.getEndpoint().toArray(new String[]{});
+        AuthenticationHandshakeHandler handshakeHandler = new AuthenticationHandshakeHandler(userService);
+        CommonHandshakeInterceptor commonHandshakeInterceptor = new CommonHandshakeInterceptor(properties);
+        String[] allowedOrigins = properties.getAllowedOrigins().toArray(new String[]{});
+
         if (properties.getWithSockJS()) {
-            registration.withSockJS().setWebSocketEnabled(true);
+            registry.addEndpoint(endpoints)
+                .setHandshakeHandler(handshakeHandler)
+                .addInterceptors(commonHandshakeInterceptor)
+                .setAllowedOrigins(allowedOrigins)
+                .withSockJS();
         }
+
+        registry.addEndpoint(endpoints)
+            .setHandshakeHandler(handshakeHandler)
+            .addInterceptors(commonHandshakeInterceptor)
+            .setAllowedOrigins(allowedOrigins);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package in.hocg.boot.ws.sample;
+package in.hocg.boot.ws.sample.basic;
 
 import in.hocg.boot.utils.context.security.UserPrincipal;
 import in.hocg.boot.ws.autoconfiguration.core.service.WebSocketUserService;
