@@ -4,3 +4,4 @@ target/
 *.iml
 *.ipr
 .flattened-pom.xml
+.DS_Store
