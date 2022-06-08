@@ -2,7 +2,7 @@ package in.hocg.boot.ws.sample.controller;
 
 import in.hocg.boot.utils.exception.ServiceException;
 import in.hocg.boot.utils.struct.result.Result;
-import in.hocg.boot.ws.autoconfiguration.core.WebSocketHelper;
+import in.hocg.boot.ws.autoconfiguration.core.MessageHelper;
 import in.hocg.boot.ws.sample.cmd.TestCmd;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class CmdController {
 
     @ApiOperation("广播指令")
     @MessageMapping("/all")
-    @SendTo(WebSocketHelper.PREFIX_BROADCAST + "/all")
+    @SendTo(MessageHelper.PREFIX_BROADCAST + "/all")
     public String all(Principal principal) {
         log.debug("--> {}", principal);
         return "666 " + System.currentTimeMillis();
@@ -46,14 +46,14 @@ public class CmdController {
 
     @ApiOperation("回执给发送人")
     @MessageMapping("/toUser")
-    @SendToUser(WebSocketHelper.PREFIX_USER + "/toUser")
+    @SendToUser(MessageHelper.PREFIX_USER + "/toUser")
     public String toUser() {
         return "hi";
     }
 
     @ApiOperation("消息路径变量")
     @MessageMapping("/path/{id}")
-    @SendTo(WebSocketHelper.PREFIX_BROADCAST + "/path/{id}")
+    @SendTo(MessageHelper.PREFIX_BROADCAST + "/path/{id}")
     public String pathVar(@DestinationVariable String id) {
         log.debug("--> {}", id);
         return id;
@@ -61,7 +61,7 @@ public class CmdController {
 
     @ApiOperation("接收消息")
     @MessageMapping("/get")
-    @SendTo(WebSocketHelper.PREFIX_BROADCAST + "/get/result")
+    @SendTo(MessageHelper.PREFIX_BROADCAST + "/get/result")
     public Object get(@Header("X-Username") String username, @Payload Object body) {
         log.debug("--> {} {}", username, body);
         if (body instanceof byte[]) {
@@ -72,7 +72,7 @@ public class CmdController {
 
     @ApiOperation("对象接收")
     @MessageMapping("/obj")
-    @SendTo(WebSocketHelper.PREFIX_BROADCAST + "/obj/result")
+    @SendTo(MessageHelper.PREFIX_BROADCAST + "/obj/result")
     public Result<String> roVo(@RequestBody TestCmd body) {
         log.debug("--> {}", body);
         return Result.success("ok");

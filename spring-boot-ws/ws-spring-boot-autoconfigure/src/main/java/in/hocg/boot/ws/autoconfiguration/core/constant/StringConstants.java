@@ -1,6 +1,6 @@
 package in.hocg.boot.ws.autoconfiguration.core.constant;
 
-import in.hocg.boot.ws.autoconfiguration.core.WebSocketHelper;
+import in.hocg.boot.ws.autoconfiguration.core.MessageHelper;
 
 /**
  * Created by hocgin on 2022/1/8
@@ -10,5 +10,5 @@ import in.hocg.boot.ws.autoconfiguration.core.WebSocketHelper;
  */
 public class StringConstants {
     public static final String PATH_SEPARATOR = "/";
-    public static final String ERROR_DEST = WebSocketHelper.PREFIX_USER + "/errors";
+    public static final String ERROR_DEST = MessageHelper.PREFIX_USER + "/errors";
 }

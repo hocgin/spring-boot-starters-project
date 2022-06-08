@@ -30,7 +30,7 @@ public class SenderTests {
 
     @BeforeAll
     public static void before() {
-        session = StompUtils.getStompSession("ws://127.0.0.1:8080/ws?ticket=hocgin");
+        session = StompUtils.getStompSession("ws://127.0.0.1:8080/.socket?ticket=hocgin");
     }
 
     /**
@@ -64,8 +64,8 @@ public class SenderTests {
      */
     @Test
     public void testToUser() throws InterruptedException {
-        StompSession user1 = StompUtils.getStompSession("ws://127.0.0.1:8080/ws?ticket=hocgin");
-        StompSession user2 = StompUtils.getStompSession("ws://127.0.0.1:8080/ws?ticket=hocgin2");
+        StompSession user1 = StompUtils.getStompSession("ws://127.0.0.1:8080/.socket?ticket=hocgin");
+        StompSession user2 = StompUtils.getStompSession("ws://127.0.0.1:8080/.socket?ticket=hocgin2");
 
         // 监听
         BlockingQueue<String> queue = new LinkedBlockingDeque<>();
@@ -91,8 +91,8 @@ public class SenderTests {
     @Test
     @SneakyThrows
     public void testBroadcast() {
-        StompSession user1 = StompUtils.getStompSession("ws://127.0.0.1:8080/ws?ticket=hocgin");
-        StompSession user2 = StompUtils.getStompSession("ws://127.0.0.1:8080/ws?ticket=hocgin2");
+        StompSession user1 = StompUtils.getStompSession("ws://127.0.0.1:8080/.socket?ticket=hocgin");
+        StompSession user2 = StompUtils.getStompSession("ws://127.0.0.1:8080/.socket?ticket=hocgin2");
 
         // 监听
         BlockingQueue<String> queue = new LinkedBlockingDeque<>();

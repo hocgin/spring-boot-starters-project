@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
  * @author hocgin
  */
 @UtilityClass
-public class WebSocketHelper {
+public class MessageHelper {
     public static final String PREFIX_BROADCAST = "/queue";
     public static final String PREFIX_USER = PREFIX_BROADCAST;
 
@@ -24,7 +24,7 @@ public class WebSocketHelper {
      */
     public String toBroadcast(String... paths) {
         String path = Joiner.on(StringConstants.PATH_SEPARATOR).skipNulls().join(paths);
-        return StrUtil.format("{}{}", WebSocketHelper.PREFIX_BROADCAST, path);
+        return StrUtil.format("{}{}", MessageHelper.PREFIX_BROADCAST, path);
     }
 
     /**
@@ -35,6 +35,6 @@ public class WebSocketHelper {
      */
     public String toUser(String... paths) {
         String path = Joiner.on(StringConstants.PATH_SEPARATOR).skipNulls().join(paths);
-        return StrUtil.format("{}{}", WebSocketHelper.PREFIX_USER, path);
+        return StrUtil.format("{}{}", MessageHelper.PREFIX_USER, path);
     }
 }

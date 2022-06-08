@@ -8,7 +8,7 @@ import java.security.Principal;
  *
  * @author hocgin
  */
-public interface WebSocketUserService {
+public interface SocketUserService {
 
     /**
      * 登录

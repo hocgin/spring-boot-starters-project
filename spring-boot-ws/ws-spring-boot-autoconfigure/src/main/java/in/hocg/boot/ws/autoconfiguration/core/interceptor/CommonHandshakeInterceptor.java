@@ -1,6 +1,6 @@
 package in.hocg.boot.ws.autoconfiguration.core.interceptor;
 
-import in.hocg.boot.ws.autoconfiguration.properties.WebSocketProperties;
+import in.hocg.boot.ws.autoconfiguration.properties.SocketProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.ServerHttpRequest;
@@ -20,7 +20,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class CommonHandshakeInterceptor implements HandshakeInterceptor {
-    private final WebSocketProperties properties;
+    private final SocketProperties properties;
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler handler, Map<String, Object> map) throws Exception {

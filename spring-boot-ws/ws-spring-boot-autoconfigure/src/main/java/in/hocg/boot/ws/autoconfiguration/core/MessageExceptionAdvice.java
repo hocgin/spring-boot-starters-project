@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 @Slf4j
 @RestControllerAdvice
-public class WebSocketExceptionAdvice {
+public class MessageExceptionAdvice {
 
     @SendToUser(destinations = StringConstants.ERROR_DEST, broadcast = false)
     @MessageExceptionHandler(UnAuthenticationException.class)

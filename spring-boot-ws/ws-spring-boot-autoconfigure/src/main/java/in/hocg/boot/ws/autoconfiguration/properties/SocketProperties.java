@@ -14,14 +14,14 @@ import java.util.List;
  * @author hocgin
  */
 @Data
-@ConfigurationProperties(WebSocketProperties.PREFIX)
-public class WebSocketProperties {
-    public static final String PREFIX = "boot.websocket";
+@ConfigurationProperties(SocketProperties.PREFIX)
+public class SocketProperties {
+    public static final String PREFIX = "boot.socket";
 
     /**
-     * websocket 地址: ws://127.0.0.1:8080/ws
+     * websocket 地址: ws://127.0.0.1:8080/.socket
      */
-    private List<String> endpoint = Collections.singletonList("/ws");
+    private List<String> endpoint = Collections.singletonList("/.socket");
     /**
      * 允许的源
      */
