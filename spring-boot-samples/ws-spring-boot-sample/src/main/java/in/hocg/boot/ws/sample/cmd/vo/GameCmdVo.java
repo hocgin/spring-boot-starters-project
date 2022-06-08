@@ -1,6 +1,6 @@
 package in.hocg.boot.ws.sample.cmd.vo;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -21,7 +21,7 @@ public class GameCmdVo implements Serializable {
     private String status;
     @ApiModelProperty(required = true)
     private String game;
-    @JsonAlias("this")
+    @JsonProperty("this")
     @ApiModelProperty(value = "玩家", required = true)
     private String thiz;
     @ApiModelProperty("对手")

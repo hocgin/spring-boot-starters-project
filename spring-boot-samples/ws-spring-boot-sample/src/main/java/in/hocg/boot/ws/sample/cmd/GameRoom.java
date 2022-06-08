@@ -1,5 +1,6 @@
 package in.hocg.boot.ws.sample.cmd;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -21,6 +22,7 @@ public class GameRoom extends Room {
     @ApiModelProperty("待机玩家")
     private String waiter;
     @ApiModelProperty("待机玩家是否转为主机")
+    @JsonProperty("asmaster")
     private Boolean asMaster = false;
 
     public GameRoom asGameRoom(String username) {

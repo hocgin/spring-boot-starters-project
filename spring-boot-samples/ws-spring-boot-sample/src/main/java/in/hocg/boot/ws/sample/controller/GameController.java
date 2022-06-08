@@ -27,7 +27,7 @@ import java.security.Principal;
 public class GameController {
     private final GameService service;
 
-    @MessageMapping("/room/{id}")
+    @MessageMapping("/game")
 //    @SendTo(WebSocketHelper.PREFIX_BROADCAST + "/room/{id}/rosult")
     public void room(@RequestBody MessageCmdDto dto, Principal principal) {
         switch (dto.getName()) {

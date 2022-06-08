@@ -6,6 +6,7 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import in.hocg.boot.utils.LangUtils;
+import in.hocg.boot.ws.autoconfiguration.core.MessageHelper;
 import in.hocg.boot.ws.autoconfiguration.core.event.SocketClosedEvent;
 import in.hocg.boot.ws.sample.cmd.MessageCmdDto;
 import in.hocg.boot.ws.sample.cmd.ro.GameCmdRo;
@@ -35,9 +36,18 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class GameServiceImpl implements GameService {
-    private final static Map<String, GameRoom> openRooms = Maps.newHashMap();
-    private final static Map<String, GameRoom> reconnectRooms = Maps.newHashMap();
-    private final static Map<String, GameRoom> connectedRooms = Maps.newHashMap();
+    /**
+     * 等待加入
+     */
+    private final static Map<String, GameRoom> openRooms = Maps.newConcurrentMap();
+    /**
+     * 重连状态
+     */
+    private final static Map<String, GameRoom> reconnectRooms = Maps.newConcurrentMap();
+    /**
+     * 双方都连接好了
+     */
+    private final static Map<String, GameRoom> connectedRooms = Maps.newConcurrentMap();
     private final SimpMessagingTemplate messagingTemplate;
 
     private GameRoom create(String gameName, String username, Boolean anyone) {
@@ -62,7 +72,7 @@ public class GameServiceImpl implements GameService {
             return Optional.empty();
         } else {
             room = openRooms.remove(passcode);
-            return startSession(room.getGame(), room.getMaster(), room.getMirror(), room.getId());
+            return startSession(room.getGame(), room.getMaster(), username, room.getId());
         }
     }
 
@@ -73,8 +83,10 @@ public class GameServiceImpl implements GameService {
                 return StrUtil.isBlank(room.getPasscode()) && StrUtil.equals(room.getGame(), gameName);
             }).findFirst();
         if (roomOpt.isPresent()) {
-            Map.Entry<String, GameRoom> room = roomOpt.get();
-            return join(room.getKey(), username).orElseThrow();
+            Map.Entry<String, GameRoom> entry = roomOpt.get();
+            String passcode = entry.getKey();
+            GameRoom room = openRooms.remove(passcode);
+            return startSession(room.getGame(), room.getMaster(), username, room.getId()).orElse(null);
         } else {
             return create(gameName, username, true);
         }
@@ -90,7 +102,8 @@ public class GameServiceImpl implements GameService {
                 .setId(roomId)
                 .setAsMaster(asMaster)
                 .setGame(gameName);
-            return Optional.ofNullable(reconnectRooms.put(roomId, room));
+            reconnectRooms.put(roomId, room);
+            return Optional.ofNullable(room);
         }
     }
 
@@ -154,7 +167,8 @@ public class GameServiceImpl implements GameService {
             .setMirror(mirror)
             .setType(GameRoom.Type.Connected)
             .setGame(gameName);
-        return Optional.ofNullable(connectedRooms.put(roomId, room));
+        connectedRooms.put(roomId, room);
+        return Optional.ofNullable(room);
     }
 
     private Optional<GameRoom> getConnectedRoom(String roomId) {
@@ -195,15 +209,15 @@ public class GameServiceImpl implements GameService {
                 Assert.notEmpty(ro.getId(), "id is empty");
                 Assert.notEmpty(ro.getGame(), "game is empty");
                 Assert.notEmpty(ro.getUsername(), "username is empty");
-                result = reconnect(ro.getId(), ro.getGame(), ro.getUsername(), "masterReconnect".equals(ro.getType())).orElse(null);
+                result = reconnect(ro.getId(), ro.getGame(), username, "masterReconnect".equals(ro.getType())).orElse(null);
                 break;
             }
             // 离开房间
             case "abandon": {
-                abandon(ro.getId(), ro.getGame(), ro.getUsername())
+                abandon(ro.getId(), ro.getGame(), username)
                     // 有人离开房间了，通知另外一个玩家
                     .ifPresent(abandonRoom -> {
-                        String sender = ro.getUsername();
+                        String sender = username;
                         String receiver = StrUtil.equals(abandonRoom.getMaster(), sender) ? abandonRoom.getMirror() : abandonRoom.getMaster();
 
                         if (StrUtil.isNotBlank(receiver)) {
@@ -243,15 +257,16 @@ public class GameServiceImpl implements GameService {
                     .setStatus("reconnect"));
                 break;
             }
+            // 都在房间了
             case Connected: {
-                sendRoomRequestToUser(username, new GameCmdVo()
+                sendRoomRequestToUser(result.getMaster(), new GameCmdVo()
                     .setStatus("masterJoined")
                     .setGame(result.getGame())
                     .setThat(result.getMirror())
                     .setThiz(result.getMaster())
                     .setId(result.getId()));
 
-                sendRoomRequestToUser(username, new GameCmdVo()
+                sendRoomRequestToUser(result.getMirror(), new GameCmdVo()
                     .setStatus("mirrorJoined")
                     .setGame(result.getGame())
                     .setThiz(result.getMirror())
@@ -271,9 +286,9 @@ public class GameServiceImpl implements GameService {
     @Override
     public void handleRoomSignal(RoomSignalRo ro, String username) {
         String roomId = ro.getId();
-        String signal = ro.getSignal();
+        Object signal = ro.getSignal();
         Assert.notEmpty(roomId, "id is empty");
-        Assert.notEmpty(signal, "signal is empty");
+        Assert.notNull(signal, "signal is empty");
         getConnectedRoom(roomId).ifPresent(room -> {
             String mirror = room.getMirror();
             String master = room.getMaster();
@@ -286,13 +301,13 @@ public class GameServiceImpl implements GameService {
     }
 
     private void sendRoomRequestToUser(String username, GameCmdVo vo) {
-        messagingTemplate.convertAndSendToUser(username, "", new MessageCmdDto()
+        messagingTemplate.convertAndSendToUser(username, MessageHelper.toUser("/game/result"), new MessageCmdDto()
             .setName("room")
             .setValue(vo));
     }
 
-    private void sendRoomSignalRequestToUser(String username, String signal) {
-        messagingTemplate.convertAndSendToUser(username, "", new MessageCmdDto()
+    private void sendRoomSignalRequestToUser(String username, Object signal) {
+        messagingTemplate.convertAndSendToUser(username, MessageHelper.toUser("/game/result"), new MessageCmdDto()
             .setName("room.signal")
             .setValue(signal));
     }
