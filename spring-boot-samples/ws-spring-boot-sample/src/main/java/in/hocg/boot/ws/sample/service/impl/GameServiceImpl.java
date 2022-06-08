@@ -94,16 +94,22 @@ public class GameServiceImpl implements GameService {
 
     private Optional<GameRoom> reconnect(String roomId, String gameName, String username, Boolean asMaster) {
         if (reconnectRooms.containsKey(roomId)) {
-            GameRoom room = reconnectRooms.remove(roomId).asGameRoom(username);
-            return startSession(room.getGame(), room.getMaster(), room.getMirror(), room.getId());
+            GameRoom reRoom = reconnectRooms.get(roomId);
+            if (!Objects.equals(reRoom.getAsMaster(), asMaster)) {
+                GameRoom room = reconnectRooms.remove(roomId).asGameRoom(username);
+                return startSession(room.getGame(), room.getMaster(), room.getMirror(), room.getId());
+            } else {
+                return Optional.empty();
+            }
         } else {
             GameRoom room = new GameRoom();
             room.setWaiter(username)
                 .setId(roomId)
                 .setAsMaster(asMaster)
-                .setGame(gameName);
+                .setGame(gameName)
+                .setType(GameRoom.Type.Reconnect);
             reconnectRooms.put(roomId, room);
-            return Optional.ofNullable(room);
+            return Optional.of(room);
         }
     }
 
@@ -168,7 +174,7 @@ public class GameServiceImpl implements GameService {
             .setType(GameRoom.Type.Connected)
             .setGame(gameName);
         connectedRooms.put(roomId, room);
-        return Optional.ofNullable(room);
+        return Optional.of(room);
     }
 
     private Optional<GameRoom> getConnectedRoom(String roomId) {
