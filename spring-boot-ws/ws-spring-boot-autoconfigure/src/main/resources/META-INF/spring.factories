@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.ws.autoconfiguration.SocketAutoConfiguration
+in.hocg.boot.ws.autoconfiguration.WebSocketAutoConfiguration

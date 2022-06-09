@@ -11,7 +11,7 @@ import in.hocg.boot.ws.autoconfiguration.core.interceptor.CommonHandshakeInterce
 import in.hocg.boot.ws.autoconfiguration.core.service.SocketUserService;
 import in.hocg.boot.ws.autoconfiguration.core.service.table.DefaultTableService;
 import in.hocg.boot.ws.autoconfiguration.core.service.table.TableService;
-import in.hocg.boot.ws.autoconfiguration.properties.SocketProperties;
+import in.hocg.boot.ws.autoconfiguration.properties.WebSocketProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -50,13 +50,13 @@ import java.util.List;
  */
 @Configuration
 @EnableWebSocketMessageBroker
-@ConditionalOnProperty(prefix = SocketProperties.PREFIX, name = "enabled", matchIfMissing = true)
-@EnableConfigurationProperties(SocketProperties.class)
+@ConditionalOnProperty(prefix = WebSocketProperties.PREFIX, name = "enabled", matchIfMissing = true)
+@EnableConfigurationProperties(WebSocketProperties.class)
 @Import(MessageExceptionAdvice.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class SocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
+public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
     private final SocketUserService userService;
-    private final SocketProperties properties;
+    private final WebSocketProperties properties;
 
     @Bean
     @ConditionalOnMissingBean

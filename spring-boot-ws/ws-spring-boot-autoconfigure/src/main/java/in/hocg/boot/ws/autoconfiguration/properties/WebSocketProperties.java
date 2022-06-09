@@ -14,9 +14,9 @@ import java.util.List;
  * @author hocgin
  */
 @Data
-@ConfigurationProperties(SocketProperties.PREFIX)
-public class SocketProperties {
-    public static final String PREFIX = "boot.socket";
+@ConfigurationProperties(WebSocketProperties.PREFIX)
+public class WebSocketProperties {
+    public static final String PREFIX = "boot.websocket";
 
     /**
      * websocket 地址: ws://127.0.0.1:8080/.socket
