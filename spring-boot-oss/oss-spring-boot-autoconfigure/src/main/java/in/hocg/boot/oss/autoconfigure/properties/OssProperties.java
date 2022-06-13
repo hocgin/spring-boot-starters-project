@@ -1,7 +1,8 @@
 package in.hocg.boot.oss.autoconfigure.properties;
 
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,7 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @ToString
 @ConfigurationProperties(prefix = OssProperties.PREFIX)

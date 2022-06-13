@@ -1,6 +1,7 @@
 package in.hocg.boot.openfeign.autoconfiguration.properties;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -9,7 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(OpenFeignProperties.PREFIX)
 public class OpenFeignProperties {
     public static final String PREFIX = "boot.openfeign";

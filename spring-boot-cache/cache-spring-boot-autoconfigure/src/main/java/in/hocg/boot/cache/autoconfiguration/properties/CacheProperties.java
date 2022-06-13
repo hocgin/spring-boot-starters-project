@@ -1,7 +1,8 @@
 package in.hocg.boot.cache.autoconfiguration.properties;
 
 import in.hocg.boot.utils.StringPoolUtils;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 
@@ -15,7 +16,8 @@ import java.util.List;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @RefreshScope
 @ConfigurationProperties(CacheProperties.PREFIX)
 public class CacheProperties {
@@ -27,7 +29,8 @@ public class CacheProperties {
      */
     private List<CacheName> names = Collections.emptyList();
 
-    @Data
+    @Getter
+    @Setter
     public static class CacheName {
         private String name;
         private Duration ttl;

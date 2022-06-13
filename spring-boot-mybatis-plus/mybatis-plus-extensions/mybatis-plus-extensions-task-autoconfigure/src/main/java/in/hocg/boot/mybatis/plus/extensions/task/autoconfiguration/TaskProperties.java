@@ -1,7 +1,8 @@
 package in.hocg.boot.mybatis.plus.extensions.task.autoconfiguration;
 
 import in.hocg.boot.mybatis.plus.extensions.context.constants.MyBatisPlusExtensionsConstants;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -11,7 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(TaskProperties.PREFIX)
 public class TaskProperties {
     public static final String PREFIX = MyBatisPlusExtensionsConstants.PROPERTIES_PREFIX + ".task";
@@ -21,7 +23,8 @@ public class TaskProperties {
      */
     private Executor executor = Executor.DEFAULT;
 
-    @Data
+    @Getter
+    @Setter
     @Accessors(chain = true)
     public static class Executor {
         public static final Executor DEFAULT = new Executor()

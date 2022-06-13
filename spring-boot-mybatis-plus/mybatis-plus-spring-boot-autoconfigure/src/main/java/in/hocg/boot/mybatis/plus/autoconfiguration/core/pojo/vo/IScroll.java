@@ -1,6 +1,7 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.vo;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -16,7 +17,8 @@ import static java.util.stream.Collectors.toList;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class IScroll<T> implements Serializable {
     /**

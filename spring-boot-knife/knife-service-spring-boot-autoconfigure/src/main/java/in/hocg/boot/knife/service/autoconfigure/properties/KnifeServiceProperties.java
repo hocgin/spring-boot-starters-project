@@ -1,6 +1,7 @@
 package in.hocg.boot.knife.service.autoconfigure.properties;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import springfox.documentation.service.Contact;
 
@@ -10,7 +11,8 @@ import springfox.documentation.service.Contact;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(prefix = KnifeServiceProperties.PREFIX)
 public class KnifeServiceProperties {
     public static final String PREFIX = "boot.knife.service";

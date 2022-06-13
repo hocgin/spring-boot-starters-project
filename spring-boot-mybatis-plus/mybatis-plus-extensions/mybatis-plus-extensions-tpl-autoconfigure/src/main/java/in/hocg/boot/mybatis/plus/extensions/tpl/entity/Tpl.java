@@ -1,8 +1,9 @@
 package in.hocg.boot.mybatis.plus.extensions.tpl.entity;
 
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -11,7 +12,8 @@ import lombok.experimental.Accessors;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class Tpl extends CommonEntity<Tpl> {
