@@ -1,4 +1,4 @@
-package in.hocg.boot.webmagic.autoconfiguration.processor;
+package in.hocg.boot.webmagic.autoconfiguration.core;
 
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
