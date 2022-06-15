@@ -21,6 +21,7 @@
     <module>mybatis-plus-extensions-change-log-autoconfigure</module>
     <module>mybatis-plus-extensions-task-autoconfigure</module>
     <module>mybatis-plus-extensions-create-table-autoconfigure</module>
+    <module>mybatis-plus-extensions-webmagic-autoconfigure</module>
     <module>mybatis-plus-extensions-tpl-autoconfigure</module>
   </modules>
 
