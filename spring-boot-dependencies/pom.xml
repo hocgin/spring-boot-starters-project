@@ -71,6 +71,16 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>notify-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>notify-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- data-audit -->
       <dependency>
         <groupId>${project.groupId}</groupId>

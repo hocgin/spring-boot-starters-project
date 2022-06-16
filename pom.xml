@@ -69,6 +69,7 @@
     <module>spring-boot-arthas</module>
     <module>spring-boot-javacv</module>
     <module>spring-boot-ws</module>
+    <module>spring-boot-notify</module>
     <module>spring-boot-tpl</module>
   </modules>
 

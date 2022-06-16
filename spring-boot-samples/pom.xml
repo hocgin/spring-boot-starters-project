@@ -42,6 +42,7 @@
     <module>excel-spring-boot-sample</module>
     <module>ws-spring-boot-sample</module>
     <module>webmagic-spring-boot-sample</module>
+    <module>notify-spring-boot-sample</module>
     <module>tpl-spring-boot-sample</module>
   </modules>
 

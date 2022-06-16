@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.webmagic.autoconfiguration.WebMagicAutoConfiguration
+in.hocg.boot.webmagic.autoconfiguration.WebmagicAutoConfiguration

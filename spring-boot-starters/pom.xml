@@ -53,6 +53,7 @@
     <module>arthas-spring-boot-starter</module>
     <module>javacv-spring-boot-starter</module>
     <module>ws-spring-boot-starter</module>
+    <module>notify-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

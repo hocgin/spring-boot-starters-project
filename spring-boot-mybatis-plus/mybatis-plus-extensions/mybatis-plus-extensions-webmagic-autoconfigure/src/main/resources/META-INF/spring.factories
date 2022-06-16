@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.mybatis.plus.extensions.webmagic.autoconfiguration.TplMybatisPlusExtAutoConfiguration
+in.hocg.boot.mybatis.plus.extensions.webmagic.autoconfiguration.WebmagicMybatisPlusExtAutoConfiguration
