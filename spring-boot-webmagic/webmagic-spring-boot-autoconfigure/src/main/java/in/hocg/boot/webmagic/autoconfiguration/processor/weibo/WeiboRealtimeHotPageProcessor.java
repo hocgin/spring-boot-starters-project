@@ -1,6 +1,6 @@
 package in.hocg.boot.webmagic.autoconfiguration.processor.weibo;
 
-import in.hocg.boot.webmagic.autoconfiguration.processor.AbsPageProcessor;
+import in.hocg.boot.webmagic.autoconfiguration.core.AbsPageProcessor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import us.codecraft.webmagic.Page;

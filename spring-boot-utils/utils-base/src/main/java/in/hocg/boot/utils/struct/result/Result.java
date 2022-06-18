@@ -1,7 +1,8 @@
 package in.hocg.boot.utils.struct.result;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -12,7 +13,8 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @NoArgsConstructor
 public class Result<T> implements Serializable {

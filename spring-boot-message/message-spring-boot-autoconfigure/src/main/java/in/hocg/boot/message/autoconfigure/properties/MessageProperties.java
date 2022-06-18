@@ -1,6 +1,7 @@
 package in.hocg.boot.message.autoconfigure.properties;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -9,7 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(MessageProperties.PREFIX)
 public class MessageProperties {
     public static final String PREFIX = "boot.message";

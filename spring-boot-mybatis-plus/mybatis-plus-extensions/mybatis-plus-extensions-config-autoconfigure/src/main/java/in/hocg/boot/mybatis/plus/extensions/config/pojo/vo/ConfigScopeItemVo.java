@@ -1,6 +1,7 @@
 package in.hocg.boot.mybatis.plus.extensions.config.pojo.vo;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -11,7 +12,8 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class ConfigScopeItemVo implements Serializable {
     /**

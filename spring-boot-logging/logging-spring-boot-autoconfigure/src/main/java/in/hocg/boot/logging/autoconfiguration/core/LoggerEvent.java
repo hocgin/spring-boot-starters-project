@@ -1,14 +1,14 @@
 package in.hocg.boot.logging.autoconfiguration.core;
 
 import cn.hutool.json.JSONUtil;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,8 @@ import java.util.Objects;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class LoggerEvent {
     /**

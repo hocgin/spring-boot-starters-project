@@ -1,7 +1,8 @@
 package in.hocg.boot.mybatis.plus.extensions.config.pojo.ro;
 
 import in.hocg.boot.mybatis.plus.extensions.config.entity.ConfigItem;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -11,7 +12,8 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 public class ScopeStructRo implements Serializable {
     /**
      * 配置项值类型

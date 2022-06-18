@@ -4,11 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import in.hocg.boot.ws.autoconfiguration.core.WebSocketDecoratorFactory;
-import in.hocg.boot.ws.autoconfiguration.core.WebSocketExceptionAdvice;
+import in.hocg.boot.ws.autoconfiguration.core.MessageExceptionAdvice;
 import in.hocg.boot.ws.autoconfiguration.core.constant.StringConstants;
 import in.hocg.boot.ws.autoconfiguration.core.handshake.AuthenticationHandshakeHandler;
 import in.hocg.boot.ws.autoconfiguration.core.interceptor.CommonHandshakeInterceptor;
-import in.hocg.boot.ws.autoconfiguration.core.service.WebSocketUserService;
+import in.hocg.boot.ws.autoconfiguration.core.service.SocketUserService;
 import in.hocg.boot.ws.autoconfiguration.core.service.table.DefaultTableService;
 import in.hocg.boot.ws.autoconfiguration.core.service.table.TableService;
 import in.hocg.boot.ws.autoconfiguration.properties.WebSocketProperties;
@@ -52,10 +52,10 @@ import java.util.List;
 @EnableWebSocketMessageBroker
 @ConditionalOnProperty(prefix = WebSocketProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(WebSocketProperties.class)
-@Import(WebSocketExceptionAdvice.class)
+@Import(MessageExceptionAdvice.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class WebSocketAutoConfiguration implements WebSocketMessageBrokerConfigurer {
-    private final WebSocketUserService userService;
+    private final SocketUserService userService;
     private final WebSocketProperties properties;
 
     @Bean

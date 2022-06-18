@@ -1,6 +1,6 @@
 package in.hocg.boot.ws.sample.basic;
 
-import in.hocg.boot.ws.autoconfiguration.core.WebSocketExceptionAdvice;
+import in.hocg.boot.ws.autoconfiguration.core.MessageExceptionAdvice;
 
 /**
  * Created by hocgin on 2022/1/8
@@ -8,5 +8,5 @@ import in.hocg.boot.ws.autoconfiguration.core.WebSocketExceptionAdvice;
  *
  * @author hocgin
  */
-public class IWebSocketExceptionAdvice extends WebSocketExceptionAdvice {
+public class IWebSocketExceptionAdvice extends MessageExceptionAdvice {
 }

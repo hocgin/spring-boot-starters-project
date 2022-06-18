@@ -1,6 +1,7 @@
 package in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
@@ -11,7 +12,8 @@ import java.time.LocalDateTime;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class CreateLogRo extends DoneLogRo {
     private String uri;

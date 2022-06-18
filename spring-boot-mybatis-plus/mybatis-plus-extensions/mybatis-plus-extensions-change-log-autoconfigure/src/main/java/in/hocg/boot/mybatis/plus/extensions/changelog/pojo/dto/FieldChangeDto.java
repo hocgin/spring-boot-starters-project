@@ -1,8 +1,8 @@
 package in.hocg.boot.mybatis.plus.extensions.changelog.pojo.dto;
 
-import in.hocg.boot.mybatis.plus.extensions.changelog.entity.ChangeField;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -13,7 +13,8 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class FieldChangeDto implements Serializable {
     @ApiModelProperty("字段名")

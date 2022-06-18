@@ -1,6 +1,7 @@
 package in.hocg.boot.named.autoconfiguration.core;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Field;
@@ -11,7 +12,8 @@ import java.lang.reflect.Field;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class NamedRow {
     /**

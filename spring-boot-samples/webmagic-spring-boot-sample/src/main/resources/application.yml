@@ -1,0 +1,13 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: local
+  datasource:
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://${MYSQL_HOSTNAME}/db_test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    druid:
+      validation-query: SELECT 1
+      test-while-idle: true

@@ -2,7 +2,8 @@ package in.hocg.boot.mybatis.plus.extensions.task.pojo.dto;
 
 import in.hocg.boot.mybatis.plus.extensions.task.entity.TaskInfo;
 import in.hocg.boot.mybatis.plus.extensions.task.entity.TaskItem;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -11,7 +12,8 @@ import lombok.experimental.Accessors;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class TaskInfoItemDTO {
     private Long id;

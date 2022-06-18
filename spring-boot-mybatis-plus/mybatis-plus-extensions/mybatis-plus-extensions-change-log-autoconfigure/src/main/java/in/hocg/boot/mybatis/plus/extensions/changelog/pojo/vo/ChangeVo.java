@@ -2,8 +2,9 @@ package in.hocg.boot.mybatis.plus.extensions.changelog.pojo.vo;
 
 import in.hocg.boot.mybatis.plus.extensions.changelog.pojo.dto.ChangeLogDto;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -12,7 +13,8 @@ import lombok.experimental.Accessors;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class ChangeVo extends ChangeLogDto {

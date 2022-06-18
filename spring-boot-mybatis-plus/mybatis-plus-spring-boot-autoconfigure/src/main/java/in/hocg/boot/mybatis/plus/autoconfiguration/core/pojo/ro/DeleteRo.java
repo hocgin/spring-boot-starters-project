@@ -1,7 +1,8 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.util.Collections;
@@ -13,7 +14,8 @@ import java.util.List;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class DeleteRo extends BasicRo {

@@ -17,6 +17,7 @@
   <modules>
     <module>mybatis-plus-spring-boot-autoconfigure</module>
     <module>mybatis-plus-extensions</module>
+    <module>mybatis-plus-generator</module>
   </modules>
 
 </project>

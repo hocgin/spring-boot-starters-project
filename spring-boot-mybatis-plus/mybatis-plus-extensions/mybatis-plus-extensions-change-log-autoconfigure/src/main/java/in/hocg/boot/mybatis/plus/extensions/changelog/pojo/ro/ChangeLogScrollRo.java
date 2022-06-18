@@ -2,7 +2,8 @@ package in.hocg.boot.mybatis.plus.extensions.changelog.pojo.ro;
 
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro.ScrollRo;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,8 @@ import java.time.LocalDateTime;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class ChangeLogScrollRo extends ScrollRo {
     @ApiModelProperty("关键词搜索")

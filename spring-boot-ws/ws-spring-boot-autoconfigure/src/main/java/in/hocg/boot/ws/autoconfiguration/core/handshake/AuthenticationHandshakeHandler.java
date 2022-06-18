@@ -2,7 +2,7 @@ package in.hocg.boot.ws.autoconfiguration.core.handshake;
 
 import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.utils.StringPoolUtils;
-import in.hocg.boot.ws.autoconfiguration.core.service.WebSocketUserService;
+import in.hocg.boot.ws.autoconfiguration.core.service.SocketUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @RequiredArgsConstructor
 public class AuthenticationHandshakeHandler extends DefaultHandshakeHandler {
-    private final WebSocketUserService userService;
+    private final SocketUserService userService;
 
     @Override
     protected Principal determineUser(ServerHttpRequest request, WebSocketHandler handler, Map<String, Object> attributes) {

@@ -2,8 +2,9 @@ package in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.ro;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -15,7 +16,8 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class ScrollRo extends BasicRo {

@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.CommonEntity;
 import in.hocg.boot.mybatis.plus.extensions.context.constants.MyBatisPlusExtensionsConstants;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,8 @@ import java.time.LocalDateTime;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @TableName(HttpLog.TABLE_NAME)

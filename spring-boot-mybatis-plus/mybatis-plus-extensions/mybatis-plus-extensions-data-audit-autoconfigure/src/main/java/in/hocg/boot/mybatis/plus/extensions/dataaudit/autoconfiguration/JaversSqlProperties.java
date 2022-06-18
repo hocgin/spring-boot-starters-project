@@ -1,7 +1,8 @@
 package in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration;
 
 import in.hocg.boot.mybatis.plus.autoconfiguration.properties.MyBatisPlusProperties;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.javers.repository.sql.DialectName;
 import org.javers.spring.JaversSpringProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,7 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(prefix = JaversSqlProperties.PREFIX)
 public class JaversSqlProperties extends JaversSpringProperties {
     public static final String PREFIX = MyBatisPlusProperties.PREFIX + ".extensions.javers";

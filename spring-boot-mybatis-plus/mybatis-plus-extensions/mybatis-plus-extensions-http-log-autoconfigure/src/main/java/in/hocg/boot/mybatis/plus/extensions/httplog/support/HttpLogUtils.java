@@ -6,7 +6,6 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.system.SystemUtil;
 import com.google.common.collect.Maps;
@@ -29,6 +28,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 /**
@@ -75,7 +75,11 @@ public class HttpLogUtils {
     }
 
     public SupplierThrow<Future<Serializable>> getAsyncReady(CreateLogRo ro) {
-        return () -> getHttpLogMpeService().asyncCreate(ro);
+        return getAsyncReady(() -> ro);
+    }
+
+    public SupplierThrow<Future<Serializable>> getAsyncReady(Callable<CreateLogRo> getCreateLogRo) {
+        return () -> getHttpLogMpeService().asyncCreate(getCreateLogRo.call());
     }
 
     public CreateLogRo request(HttpRequest request) {
@@ -130,17 +134,6 @@ public class HttpLogUtils {
         result.setResponseHeaders(JSONUtil.toJsonStr(response.headers()));
         result.setStatus((isSuccess ? Status.Success : Status.Fail).getCodeStr());
         return result;
-    }
-
-    public static void main(String[] args) {
-        HttpRequest request = HttpUtil.createRequest(null, "");
-        HttpResponse result = LogUtils.logSync(request::execute,
-            HttpLogUtils.getReady(HttpLogUtils.request(request)),
-            HttpLogUtils.getDefaultComplete());
-
-        HttpResponse result2 = LogUtils.logAsync(request::execute,
-            HttpLogUtils.getAsyncReady(HttpLogUtils.request(request)),
-            HttpLogUtils.getDefaultComplete());
     }
 
 }

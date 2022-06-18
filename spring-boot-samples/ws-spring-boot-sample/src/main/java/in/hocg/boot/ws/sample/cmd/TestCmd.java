@@ -14,4 +14,5 @@ import lombok.experimental.Accessors;
 public class TestCmd {
     private String test;
     private String ok;
+    private byte[] bytes;
 }

@@ -1,6 +1,7 @@
 package in.hocg.boot.arthas.autoconfiguration.properties;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -9,7 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(ArthasProperties.PREFIX)
 public class ArthasProperties extends com.alibaba.arthas.spring.ArthasProperties {
     public static final String PREFIX = "boot.arthas";

@@ -23,17 +23,17 @@ import java.util.concurrent.Executor;
 @Slf4j
 @EnableAsync
 @Configuration
-@ConditionalOnProperty(prefix = TaskProperties.PREFIX, name = "enabled", matchIfMissing = true)
-@EnableConfigurationProperties(TaskProperties.class)
+@ConditionalOnProperty(prefix = TaskMybatisPlusExtProperties.PREFIX, name = "enabled", matchIfMissing = true)
+@EnableConfigurationProperties(TaskMybatisPlusExtProperties.class)
 @ComponentScan(TaskMpe.PACKAGE)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class TaskMybatisPlusExtAutoConfiguration {
-    private final TaskProperties properties;
+    private final TaskMybatisPlusExtProperties properties;
     public static final String EXECUTOR_NAME = "bootAsyncTaskExecutor";
 
     @Bean(TaskMybatisPlusExtAutoConfiguration.EXECUTOR_NAME)
     public Executor bootAsyncTaskExecutor() {
-        TaskProperties.Executor executor = properties.getExecutor();
+        TaskMybatisPlusExtProperties.Executor executor = properties.getExecutor();
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(executor.getCorePoolSize());
         taskExecutor.setMaxPoolSize(executor.getMaxPoolSize());

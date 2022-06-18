@@ -2,7 +2,8 @@ package in.hocg.boot.mybatis.plus.extensions.changelog.pojo.dto;
 
 import in.hocg.boot.mybatis.plus.extensions.changelog.enums.ChangeType;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -15,7 +16,8 @@ import java.util.List;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 public class ChangeLogDto implements Serializable {
     @ApiModelProperty("日志类型:[订单]")

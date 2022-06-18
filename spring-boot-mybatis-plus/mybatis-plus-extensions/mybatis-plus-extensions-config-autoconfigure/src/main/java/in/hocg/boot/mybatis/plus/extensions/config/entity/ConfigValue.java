@@ -6,8 +6,9 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.enhance.Com
 import in.hocg.boot.mybatis.plus.extensions.context.constants.MyBatisPlusExtensionsConstants;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -16,7 +17,8 @@ import lombok.experimental.Accessors;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ApiModel
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)

@@ -1,6 +1,7 @@
 package in.hocg.boot.openfeign.autoconfiguration.decoder;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -10,7 +11,8 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 public class FeignExceptionInfo implements Serializable {
     private String timestamp;
     private Integer status;

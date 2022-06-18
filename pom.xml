@@ -18,11 +18,9 @@
   <properties>
     <revision>1.0.33</revision>
 
-    <java.version>17</java.version>
-    <java.source.version>17</java.source.version>
-    <java.target.version>17</java.target.version>
-    <maven.compiler.source>17</maven.compiler.source>
-    <maven.compiler.target>17</maven.compiler.target>
+    <java.version>11</java.version>
+    <java.source.version>11</java.source.version>
+    <java.target.version>11</java.target.version>
     <!-- Maven plugins -->
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
     <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
@@ -71,6 +69,7 @@
     <module>spring-boot-arthas</module>
     <module>spring-boot-javacv</module>
     <module>spring-boot-ws</module>
+    <module>spring-boot-notify</module>
     <module>spring-boot-tpl</module>
   </modules>
 

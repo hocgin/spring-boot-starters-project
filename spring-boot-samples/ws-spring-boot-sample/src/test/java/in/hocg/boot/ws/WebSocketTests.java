@@ -22,7 +22,7 @@ public class WebSocketTests {
     public static void main(String[] args) throws URISyntaxException, ExecutionException, InterruptedException {
         StandardWebSocketClient client = new StandardWebSocketClient();
         WebSocketStompClient stompClient = new WebSocketStompClient(client);
-        StompSession session = stompClient.connect("ws://127.0.0.1:21000/ws", new StompSessionHandler() {
+        StompSession session = stompClient.connect("ws://127.0.0.1:21000/.socket", new StompSessionHandler() {
             @Override
             public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
 

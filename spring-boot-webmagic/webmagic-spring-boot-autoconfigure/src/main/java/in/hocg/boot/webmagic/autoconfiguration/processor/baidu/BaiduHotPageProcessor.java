@@ -1,6 +1,6 @@
 package in.hocg.boot.webmagic.autoconfiguration.processor.baidu;
 
-import in.hocg.boot.webmagic.autoconfiguration.processor.AbsPageProcessor;
+import in.hocg.boot.webmagic.autoconfiguration.core.AbsPageProcessor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

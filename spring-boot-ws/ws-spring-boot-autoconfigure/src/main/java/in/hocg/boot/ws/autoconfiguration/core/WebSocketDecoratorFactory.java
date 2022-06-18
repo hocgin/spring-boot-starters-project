@@ -1,5 +1,8 @@
 package in.hocg.boot.ws.autoconfiguration.core;
 
+import cn.hutool.extra.spring.SpringUtil;
+import in.hocg.boot.ws.autoconfiguration.core.event.SocketClosedEvent;
+import in.hocg.boot.ws.autoconfiguration.core.event.SocketConnectedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.CloseStatus;
@@ -17,7 +20,6 @@ import org.springframework.web.socket.handler.WebSocketHandlerDecoratorFactory;
  */
 @Slf4j
 @RequiredArgsConstructor
-@Deprecated
 public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFactory {
 
     @Override
@@ -29,6 +31,7 @@ public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFacto
                 String sessionId = session.getId();
                 log.debug("建立连接: {}", sessionId);
                 super.afterConnectionEstablished(session);
+                SpringUtil.getApplicationContext().publishEvent(new SocketConnectedEvent(this, session));
             }
 
             @Override
@@ -49,6 +52,7 @@ public class WebSocketDecoratorFactory implements WebSocketHandlerDecoratorFacto
                 String sessionId = session.getId();
                 log.debug("关闭连接: {}, 关闭原因: {}", sessionId, closeStatus);
                 super.afterConnectionClosed(session, closeStatus);
+                SpringUtil.getApplicationContext().publishEvent(new SocketClosedEvent(this, session, closeStatus));
             }
         };
     }

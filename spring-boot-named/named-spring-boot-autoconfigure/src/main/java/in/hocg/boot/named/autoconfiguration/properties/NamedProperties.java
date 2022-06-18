@@ -1,6 +1,7 @@
 package in.hocg.boot.named.autoconfiguration.properties;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -12,7 +13,8 @@ import java.time.Duration;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @Accessors(chain = true)
 @ConfigurationProperties(prefix = NamedProperties.PREFIX)
 public class NamedProperties {
@@ -23,7 +25,8 @@ public class NamedProperties {
      */
     private CacheConfig cache = CacheConfig.DEFAULT;
 
-    @Data
+    @Getter
+    @Setter
     @Accessors(chain = true)
     public static class CacheConfig {
         public static final CacheConfig DEFAULT = new CacheConfig().setPrefix("v").setExpired(Duration.ofDays(1));

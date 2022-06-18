@@ -1,6 +1,7 @@
 package in.hocg.boot.excel.autoconfiguration.properties;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -9,7 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author hocgin
  */
-@Data
+@Getter
+@Setter
 @ConfigurationProperties(ExcelProperties.PREFIX)
 public class ExcelProperties {
     public static final String PREFIX = "boot.excel";
