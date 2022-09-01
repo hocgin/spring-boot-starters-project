@@ -5,6 +5,7 @@ import javax.validation.Validation;
 import javax.validation.ValidationException;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import javax.validation.groups.Default;
 import java.util.Set;
 
 /**
@@ -23,8 +24,16 @@ public class ValidatorUtils {
         return getValidatorFactory().getValidator();
     }
 
+    public static <T> Set<ConstraintViolation<T>> validate(T object) {
+        return ValidatorUtils.validate(object, Default.class);
+    }
+
     public static <T> Set<ConstraintViolation<T>> validate(T object, Class<?>... groups) {
         return getValidation().validate(object, groups);
+    }
+
+    public static <T> T validThrow(T object) {
+        return ValidatorUtils.validThrow(object, Default.class);
     }
 
     public static <T> T validThrow(T object, Class<?>... groups) {
