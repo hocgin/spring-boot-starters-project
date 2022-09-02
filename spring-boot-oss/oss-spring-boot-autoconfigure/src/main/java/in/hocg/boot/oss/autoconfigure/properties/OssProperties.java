@@ -43,6 +43,7 @@ public class OssProperties {
 
     public enum OssType {
         AliYun,
-        QiNiu
+        QiNiu,
+        Local
     }
 }
