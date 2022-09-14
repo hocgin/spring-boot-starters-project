@@ -2,7 +2,6 @@ name: Watch Workflow Status
 on:
   workflow_run:
     workflows: [ "Created", "Deploy::CDN", "Deploy::SSR", "Deploy::Static", "Deploy::Addone", "Deploy::Package" ]
-    branches: [ main, master ]
     types: [ completed ]
 env:
   WECHAT_WORK_BOT_WEBHOOK: ${{secrets.WECHAT_WORK_BOT_WEBHOOK}}
