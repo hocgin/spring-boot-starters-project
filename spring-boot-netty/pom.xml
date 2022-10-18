@@ -15,7 +15,11 @@
   <artifactId>spring-boot-netty</artifactId>
 
   <modules>
-    <module>netty-spring-boot-autoconfigure</module>
+    <module>netty-core</module>
+    <module>netty-client</module>
+    <module>netty-server</module>
+    <module>netty-server-spring-boot-autoconfigure</module>
+    <module>netty-client-spring-boot-autoconfigure</module>
   </modules>
 
 </project>

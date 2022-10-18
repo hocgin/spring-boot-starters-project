@@ -74,12 +74,37 @@
       <!-- netty -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>netty-spring-boot-autoconfigure</artifactId>
+        <artifactId>netty-core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>netty-spring-boot-starter</artifactId>
+        <artifactId>netty-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>netty-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>netty-server-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>netty-server-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>netty-client-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>netty-client-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
