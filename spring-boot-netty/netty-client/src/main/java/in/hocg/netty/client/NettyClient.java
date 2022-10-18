@@ -1,6 +1,5 @@
 package in.hocg.netty.client;
 
-import in.hocg.netty.core.body.request.TestRequest;
 import in.hocg.netty.core.protocol.Splitter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -72,16 +71,16 @@ public class NettyClient {
     private static void consoleWrite(Channel channel) throws InterruptedException {
         new Thread(() -> {
             for (; ; ) {
-                TestRequest testRequest = new TestRequest();
-                String body = "Hello World";
-                testRequest.setMessage(body);
-                channel.writeAndFlush(testRequest);
-                System.out.println(String.format("正在发送: %s", testRequest));
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                TestRequest testRequest = new TestRequest();
+//                String body = "Hello World";
+//                testRequest.setMessage(body);
+//                channel.writeAndFlush(testRequest);
+//                System.out.println(String.format("正在发送: %s", testRequest));
+//                try {
+//                    Thread.sleep(5000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             }
         }).start();
     }

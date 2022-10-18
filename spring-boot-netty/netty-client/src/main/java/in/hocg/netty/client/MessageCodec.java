@@ -1,6 +1,5 @@
 package in.hocg.netty.client;
 
-import in.hocg.netty.core.body.response.TestResponse;
 import in.hocg.netty.core.protocol.AbstractPacket;
 import in.hocg.netty.core.protocol.Codec;
 import in.hocg.netty.core.protocol.Packet;
@@ -64,9 +63,9 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, AbstractPacket>
         SerializerAlgorithm.getSerializer(algorithm)
             .ifPresent(serializer -> {
                 // todo 此处需自动适配转换的类型
-                TestResponse response = serializer.deserialize(TestResponse.class, packet.getData());
-                out.add(response);
-                log.debug("解码: {}, 响应内容: {}", packet, response);
+//                TestResponse response = serializer.deserialize(TestResponse.class, packet.getData());
+//                out.add(response);
+//                log.debug("解码: {}, 响应内容: {}", packet, response);
             });
     }
 }

@@ -1,4 +1,4 @@
-package in.hocg.netty.core.body.constant;
+package in.hocg.boot.netty.sample;
 
 /**
  * Created by hocgin on 2019/3/17.
@@ -8,12 +8,12 @@ package in.hocg.netty.core.body.constant;
  */
 @SuppressWarnings("all")
 public interface TestModule {
-    byte MODULE_VALUE = 1;
+    String MODULE_VALUE = "1";
 
     /**
      * 指令
      */
-    byte TEST_REQUEST = 1;
-    byte TEST_RESPONSE = 2;
+    String TEST_REQUEST = "1";
+    String TEST_RESPONSE = "2";
 }
 

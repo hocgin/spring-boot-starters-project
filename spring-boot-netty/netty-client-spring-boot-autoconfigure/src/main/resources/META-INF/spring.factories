@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.netty.server.autoconfiguration.NettyClientAutoConfiguration
+in.hocg.boot.netty.client.autoconfiguration.NettyClientAutoConfiguration

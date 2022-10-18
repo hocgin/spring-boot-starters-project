@@ -2,12 +2,10 @@ package in.hocg.boot.netty.client.autoconfiguration;
 
 import in.hocg.boot.netty.client.autoconfiguration.properties.NettyClientProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeansException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
@@ -17,18 +15,16 @@ import org.springframework.context.annotation.Lazy;
  *
  * @author hocgin
  */
+@Slf4j
 @Configuration
 @ConditionalOnProperty(prefix = NettyClientProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(NettyClientProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class NettyClientAutoConfiguration implements ApplicationContextAware {
+public class NettyClientAutoConfiguration implements InitializingBean {
     private final NettyClientProperties properties;
 
-    public static ConfigurableApplicationContext APPLICATION;
-
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        APPLICATION = (ConfigurableApplicationContext) applicationContext;
+    public void afterPropertiesSet() throws Exception {
+        log.info("{}.Port={}", this.getClass(), properties.getPort());
     }
-
 }
