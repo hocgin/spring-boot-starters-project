@@ -1,7 +1,7 @@
 package in.hocg.netty.core.body.request;
 
 
-import in.hocg.netty.core.body.constant.DefaultModule;
+import in.hocg.netty.core.constant.DefaultModule;
 import in.hocg.netty.core.protocol.AbstractPacket;
 
 public class HeartBeatRequest extends AbstractPacket {
@@ -12,7 +12,7 @@ public class HeartBeatRequest extends AbstractPacket {
 
     @Override
     public byte getModule() {
-        return DefaultModule.MODULE_VALUE;
+        return DefaultModule.SystemModule;
     }
 
 }

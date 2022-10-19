@@ -1,6 +1,6 @@
 package in.hocg.boot.netty.server.autoconfiguration.annotation;
 
-import in.hocg.boot.netty.server.autoconfiguration.bean.InvokerManager;
+import in.hocg.netty.core.invoker.InvokerManager;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

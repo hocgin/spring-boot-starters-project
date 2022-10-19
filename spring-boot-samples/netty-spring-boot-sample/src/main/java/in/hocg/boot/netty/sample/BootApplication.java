@@ -1,8 +1,8 @@
 package in.hocg.boot.netty.sample;
 
 import in.hocg.boot.netty.sample.module.TestModuleService;
-import in.hocg.boot.netty.server.autoconfiguration.bean.InvokerManager;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
+import in.hocg.netty.core.invoker.InvokerManager;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

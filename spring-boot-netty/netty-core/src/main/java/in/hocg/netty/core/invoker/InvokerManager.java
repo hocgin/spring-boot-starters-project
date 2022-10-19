@@ -1,4 +1,4 @@
-package in.hocg.boot.netty.server.autoconfiguration.bean;
+package in.hocg.netty.core.invoker;
 
 import io.netty.util.internal.PlatformDependent;
 import lombok.experimental.UtilityClass;
@@ -22,7 +22,7 @@ public final class InvokerManager {
      * @param command
      * @return
      */
-    public static String genKey(String module, String command) {
+    public static String ofKey(String module, String command) {
         return String.format("%s-%s", module, command);
     }
 
@@ -35,7 +35,7 @@ public final class InvokerManager {
      * @return
      */
     public static Optional<Invoker> getInvoker(String module, String command) {
-        return Optional.ofNullable(METHODS.get(genKey(module, command)));
+        return Optional.ofNullable(METHODS.get(ofKey(module, command)));
     }
 
     public static Optional<Invoker> getInvoker(String command) {
