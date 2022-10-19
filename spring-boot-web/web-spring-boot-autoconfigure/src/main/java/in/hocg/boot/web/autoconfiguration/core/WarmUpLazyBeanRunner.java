@@ -36,10 +36,10 @@ public class WarmUpLazyBeanRunner implements ApplicationRunner {
 
         for (String beanName : reloadBeans) {
             try {
-                context.getBean(beanName);
                 if (log.isDebugEnabled()) {
                     log.debug("Reload Lazy Bean beanName=[{}]", beanName);
                 }
+                context.getBean(beanName);
             } catch (Exception e) {
                 log.warn("Warm Up Bean=[{}] Error: {}", beanName, e.getMessage());
             }
