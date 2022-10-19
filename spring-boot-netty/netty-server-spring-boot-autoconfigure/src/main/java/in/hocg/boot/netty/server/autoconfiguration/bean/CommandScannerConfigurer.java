@@ -16,9 +16,9 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 
+@Slf4j
 @Getter
 @Setter
-@Slf4j
 public class CommandScannerConfigurer implements BeanDefinitionRegistryPostProcessor {
     private String basePackage;
     private Class<? extends Annotation> annotationClass;
@@ -26,7 +26,8 @@ public class CommandScannerConfigurer implements BeanDefinitionRegistryPostProce
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 //        StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS)
-        Set<Class<?>> classes = ClassUtil.scanPackage(this.basePackage, aClass -> Arrays.stream(ClassUtil.getPublicMethods(aClass)).anyMatch(method -> method.isAnnotationPresent(annotationClass)));
+        Set<Class<?>> classes = ClassUtil.scanPackage(this.basePackage, aClass ->
+            Arrays.stream(ClassUtil.getPublicMethods(aClass)).anyMatch(method -> method.isAnnotationPresent(annotationClass)));
         registerAllCommand(classes);
     }
 
