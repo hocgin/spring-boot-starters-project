@@ -1,6 +1,7 @@
-package in.hocg.boot.named.autoconfiguration.core;
+package in.hocg.boot.named.autoconfiguration.cache;
 
 import com.google.common.collect.Maps;
+import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
