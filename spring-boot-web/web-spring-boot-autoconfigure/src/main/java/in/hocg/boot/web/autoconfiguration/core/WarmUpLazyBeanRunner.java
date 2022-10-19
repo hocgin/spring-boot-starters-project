@@ -41,7 +41,7 @@ public class WarmUpLazyBeanRunner implements ApplicationRunner {
                 }
                 context.getBean(beanName);
             } catch (Exception e) {
-                log.warn("Warm Up Bean=[{}] Error: {}", beanName, e.getMessage());
+                log.warn("Warm Up Bean=[{}] Error", beanName);
             }
         }
         log.debug("Warm Up Bean Task End [{}]", WarmUpLazyBeanRunner.class);
