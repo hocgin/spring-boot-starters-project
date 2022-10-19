@@ -24,7 +24,7 @@ public class WarmUpLazyBeanRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         ApplicationContext context = SpringContext.getApplicationContext();
-        log.debug("Warm Up Bean Task Start [{}]", WarmUpLazyBeanRunner.class);
+        log.debug("Warm up bean task start [{}]", WarmUpLazyBeanRunner.class);
         String[] reloadBeans = context.getBeanDefinitionNames();
         if (context instanceof AnnotationConfigServletWebServerApplicationContext) {
             AnnotationConfigServletWebServerApplicationContext anContext = (AnnotationConfigServletWebServerApplicationContext) context;
@@ -32,18 +32,21 @@ public class WarmUpLazyBeanRunner implements ApplicationRunner {
                 BeanDefinition beanDefinition = anContext.getBeanDefinition(beanName);
                 return beanDefinition.isSingleton() && beanDefinition.isLazyInit();
             }).toArray(String[]::new);
+            log.info("Warm up bean use filter context=[{}]", context.getClass());
+        } else {
+            log.info("Warm up bean not filter context=[{}]", context.getClass());
         }
 
         for (String beanName : reloadBeans) {
             try {
                 if (log.isDebugEnabled()) {
-                    log.debug("Reload Lazy Bean beanName=[{}]", beanName);
+                    log.debug("Reload lazy bean beanName=[{}]", beanName);
                 }
                 context.getBean(beanName);
             } catch (Exception e) {
-                log.warn("Warm Up Bean=[{}] Error", beanName);
+                log.warn("Warm up bean=[{}] error", beanName);
             }
         }
-        log.debug("Warm Up Bean Task End [{}]", WarmUpLazyBeanRunner.class);
+        log.debug("Warm up bean task end [{}]", WarmUpLazyBeanRunner.class);
     }
 }
