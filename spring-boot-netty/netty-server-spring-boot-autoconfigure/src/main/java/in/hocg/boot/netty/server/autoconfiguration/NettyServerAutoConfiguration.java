@@ -1,6 +1,5 @@
 package in.hocg.boot.netty.server.autoconfiguration;
 
-import in.hocg.boot.netty.server.autoconfiguration.bean.CommandFactoryBean;
 import in.hocg.boot.netty.server.autoconfiguration.bean.CommandScannerConfigurer;
 import in.hocg.boot.netty.server.autoconfiguration.annotation.Command;
 import in.hocg.boot.netty.server.autoconfiguration.properties.NettyServerProperties;
@@ -79,7 +78,7 @@ public class NettyServerAutoConfiguration implements InitializingBean {
 
     @Configuration(proxyBeanMethods = false)
     @Import(AutoConfiguredCommandScannerRegistrar.class)
-    @ConditionalOnMissingBean({CommandFactoryBean.class, CommandScannerConfigurer.class})
+    @ConditionalOnMissingBean({CommandScannerConfigurer.class})
     public static class CommandScannerRegistrarNotFoundConfiguration implements InitializingBean {
 
         @Override
