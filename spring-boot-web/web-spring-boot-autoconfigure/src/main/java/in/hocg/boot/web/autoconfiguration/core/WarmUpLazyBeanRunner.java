@@ -2,10 +2,14 @@ package in.hocg.boot.web.autoconfiguration.core;
 
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.annotation.Async;
+
+import java.util.Arrays;
 
 /**
  * Created by hocgin on 2021/7/7
@@ -21,11 +25,23 @@ public class WarmUpLazyBeanRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         ApplicationContext context = SpringContext.getApplicationContext();
         log.debug("Warm Up Bean Task Start [{}]", WarmUpLazyBeanRunner.class);
-        for (String beanDefinitionName : context.getBeanDefinitionNames()) {
+        String[] reloadBeans = context.getBeanDefinitionNames();
+        if (context instanceof AnnotationConfigServletWebServerApplicationContext) {
+            AnnotationConfigServletWebServerApplicationContext anContext = (AnnotationConfigServletWebServerApplicationContext) context;
+            reloadBeans = Arrays.stream(reloadBeans).filter(beanName -> {
+                BeanDefinition beanDefinition = anContext.getBeanDefinition(beanName);
+                return beanDefinition.isSingleton() && beanDefinition.isLazyInit();
+            }).toArray(String[]::new);
+        }
+
+        for (String beanName : reloadBeans) {
             try {
-                context.getBeansOfType(context.getType(beanDefinitionName), false, true);
+                context.getBean(beanName);
+                if (log.isDebugEnabled()) {
+                    log.debug("Reload Lazy Bean beanName=[{}]", beanName);
+                }
             } catch (Exception e) {
-                log.warn("Warm Up Bean=[{}] Error: {}", beanDefinitionName, e.getMessage());
+                log.warn("Warm Up Bean=[{}] Error: {}", beanName, e.getMessage());
             }
         }
         log.debug("Warm Up Bean Task End [{}]", WarmUpLazyBeanRunner.class);

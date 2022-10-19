@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
  *
  * @author hocgin
  */
+@Lazy
 @Component
 public class Writer1 {
     private final Writer2 writer2;
