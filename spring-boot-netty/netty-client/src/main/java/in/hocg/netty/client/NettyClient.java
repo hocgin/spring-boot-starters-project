@@ -35,7 +35,7 @@ public class NettyClient {
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
             .option(ChannelOption.SO_KEEPALIVE, true)
             .option(ChannelOption.TCP_NODELAY, true)
-            .handler(new ChannelInitializer<Channel>() {
+            .handler(new ChannelInitializer<>() {
                 @Override
                 public void initChannel(Channel ch) {
                     ch.pipeline()

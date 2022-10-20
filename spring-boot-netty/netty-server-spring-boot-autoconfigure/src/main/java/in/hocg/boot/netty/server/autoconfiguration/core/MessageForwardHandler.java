@@ -2,8 +2,7 @@ package in.hocg.boot.netty.server.autoconfiguration.core;
 
 import in.hocg.boot.message.autoconfigure.MessageFactory;
 import in.hocg.netty.core.constant.MessageConstant;
-import in.hocg.netty.core.constant.MessageHeader;
-import in.hocg.netty.core.protocol.Packet;
+import in.hocg.netty.core.protocol.packet.Packet;
 import in.hocg.netty.server.netty.handler.AbsForwardHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -26,10 +25,10 @@ public class MessageForwardHandler extends AbsForwardHandler {
         byte[] data = packet.getData();
 
         Message message = MessageBuilder.withPayload(data)
-            .setHeader(MessageHeader.SOURCE, channelHandlerContext.channel().id().asLongText())
-            .setHeader(MessageHeader.ALGORITHM, algorithm)
-            .setHeader(MessageHeader.COMMAND, command)
-            .setHeader(MessageHeader.MODULE, module)
+            .setHeader(MessageConstant.SOURCE, channelHandlerContext.channel().id().asLongText())
+            .setHeader(MessageConstant.ALGORITHM, algorithm)
+            .setHeader(MessageConstant.COMMAND, command)
+            .setHeader(MessageConstant.MODULE, module)
             .build();
 
         MessageFactory.normal().asyncSend(MessageConstant.WORKER_TOPIC, message);

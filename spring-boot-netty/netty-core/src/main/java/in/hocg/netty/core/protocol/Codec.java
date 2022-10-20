@@ -1,5 +1,7 @@
 package in.hocg.netty.core.protocol;
 
+import in.hocg.netty.core.protocol.packet.AbstractPacket;
+import in.hocg.netty.core.protocol.packet.Packet;
 import in.hocg.netty.core.serializer.SerializerAlgorithm;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -9,20 +11,21 @@ public class Codec {
     /**
      * 编码
      *
-     * @param msg
+     * @param packet
      */
-    public static byte[] encode(AbstractPacket msg) {
-        SerializerAlgorithm defaultSerializerAlgorithm = SerializerAlgorithm.JSON;
+    public static byte[] encode(AbstractPacket packet) {
+        return Codec.encode(SerializerAlgorithm.JSON, packet);
+    }
 
+    public static byte[] encode(SerializerAlgorithm serializerAlgorithm, AbstractPacket packet) {
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
-        byte[] bytes = defaultSerializerAlgorithm.serializer()
-            .serialize(msg);
+        byte[] bytes = serializerAlgorithm.serialize(packet);
 
-        byteBuf.writeInt(WordConstant.Content.MAGIC_NUMBER_CONTENT);
-        byteBuf.writeByte(msg.getVersion());
-        byteBuf.writeByte(defaultSerializerAlgorithm.algorithm());
-        byteBuf.writeByte(msg.getCommand());
-        byteBuf.writeByte(msg.getModule());
+        byteBuf.writeByte(WordConstant.Content.MAGIC_NUMBER_CONTENT);
+        byteBuf.writeByte(packet.getVersion());
+        byteBuf.writeByte(serializerAlgorithm.algorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeByte(packet.getModule());
         byteBuf.writeInt(bytes.length);
         byteBuf.writeBytes(bytes);
         return ByteBufUtil.getBytes(byteBuf);
@@ -31,32 +34,32 @@ public class Codec {
     /**
      * 解码
      *
-     * @param msg
+     * @param bytedata
      */
-    public static Packet decode(ByteBuf msg) {
+    public static Packet decode(ByteBuf bytedata) {
 
         // 魔数(4)
-        msg.skipBytes(WordConstant.Width.MAGIC_NUMBER);
+        bytedata.skipBytes(WordConstant.Width.MAGIC_NUMBER);
 
         // 版本号(1)
-        byte version = msg.readByte();
+        byte version = bytedata.readByte();
 
         // 序列化算法(1)
-        byte algorithm = msg.readByte();
+        byte algorithm = bytedata.readByte();
 
         // 模块(1)
-        byte module = msg.readByte();
+        byte module = bytedata.readByte();
 
         // 指令(1)
-        byte command = msg.readByte();
+        byte command = bytedata.readByte();
 
         // 数据长度(4)
-        int length = msg.readInt();
+        int length = bytedata.readInt();
 
         // 数据(n)
         byte[] content = new byte[length];
 
-        msg.readBytes(content);
+        bytedata.readBytes(content);
 
         return new Packet(version, algorithm, module, command, content);
     }

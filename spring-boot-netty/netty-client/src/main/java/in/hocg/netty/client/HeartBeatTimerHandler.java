@@ -1,6 +1,6 @@
 package in.hocg.netty.client;
 
-import in.hocg.netty.core.body.request.HeartBeatRequest;
+import in.hocg.netty.core.pojo.ro.HeartBeatRequest;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 

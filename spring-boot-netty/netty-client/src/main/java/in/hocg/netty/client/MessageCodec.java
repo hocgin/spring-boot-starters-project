@@ -1,8 +1,7 @@
 package in.hocg.netty.client;
 
-import in.hocg.netty.core.protocol.AbstractPacket;
+import in.hocg.netty.core.protocol.packet.AbstractPacket;
 import in.hocg.netty.core.protocol.Codec;
-import in.hocg.netty.core.protocol.Packet;
 import in.hocg.netty.core.protocol.WordConstant;
 import in.hocg.netty.core.serializer.SerializerAlgorithm;
 import io.netty.buffer.ByteBuf;
@@ -53,19 +52,11 @@ public class MessageCodec extends MessageToMessageCodec<ByteBuf, AbstractPacket>
      * 解码
      *
      * @param ctx
-     * @param msg
+     * @param buf
      * @param out
      */
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) {
-        Packet packet = Codec.decode(msg);
-        byte algorithm = packet.getAlgorithm();
-        SerializerAlgorithm.getSerializer(algorithm)
-            .ifPresent(serializer -> {
-                // todo 此处需自动适配转换的类型
-//                TestResponse response = serializer.deserialize(TestResponse.class, packet.getData());
-//                out.add(response);
-//                log.debug("解码: {}, 响应内容: {}", packet, response);
-            });
+    protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) {
+        out.add(Codec.decode(buf));
     }
 }

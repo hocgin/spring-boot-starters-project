@@ -1,6 +1,6 @@
-package in.hocg.boot.netty.server.autoconfiguration.annotation;
+package in.hocg.netty.core.annotation;
 
-import in.hocg.netty.core.invoker.InvokerManager;
+import in.hocg.netty.core.constant.SystemPacketConstant;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,7 +13,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Command {
-    String value();
 
-    String module() default InvokerManager.DEFAULT_MODULE;
+    byte value();
+
+    byte version() default SystemPacketConstant.Version;
+
+    byte module() default SystemPacketConstant.DefaultModule;
 }

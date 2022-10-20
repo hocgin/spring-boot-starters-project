@@ -24,6 +24,6 @@ public interface WordConstant {
     }
 
     interface Content {
-        int MAGIC_NUMBER_CONTENT = 0x12345678;
+        int MAGIC_NUMBER_CONTENT = 0x1234;
     }
 }

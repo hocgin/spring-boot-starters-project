@@ -1,6 +1,6 @@
 package in.hocg.netty.server.netty.handler;
 
-import in.hocg.netty.core.protocol.Packet;
+import in.hocg.netty.core.protocol.packet.Packet;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 

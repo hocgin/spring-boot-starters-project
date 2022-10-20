@@ -1,7 +1,7 @@
 package in.hocg.netty.server.netty.handler;
 
-import in.hocg.netty.core.protocol.Packet;
-import in.hocg.netty.server.netty.session.SessionManager;
+import in.hocg.netty.core.protocol.packet.Packet;
+import in.hocg.netty.core.session.SessionManager;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

@@ -54,31 +54,4 @@ public class NettyServerAutoConfiguration implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         log.info("{}.Port={}", this.getClass(), properties.getPort());
     }
-
-
-//    public static class AutoConfiguredCommandScannerRegistrar implements BeanFactoryAware, ImportBeanDefinitionRegistrar {
-//        @Setter
-//        private BeanFactory beanFactory;
-//
-//        @Override
-//        public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-//            List<String> packages = AutoConfigurationPackages.get(this.beanFactory);
-//            BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(CommandScannerConfigurer.class);
-//            builder.addPropertyValue("annotationClass", Command.class);
-//            builder.addPropertyValue("basePackage", StringUtils.collectionToCommaDelimitedString(packages));
-//            registry.registerBeanDefinition(CommandScannerConfigurer.class.getName(), builder.getBeanDefinition());
-//        }
-//    }
-
-//    @Configuration(proxyBeanMethods = false)
-//    @Import(AutoConfiguredCommandScannerRegistrar.class)
-//    @ConditionalOnMissingBean({CommandScannerConfigurer.class})
-//    public static class CommandScannerRegistrarNotFoundConfiguration implements InitializingBean {
-//
-//        @Override
-//        public void afterPropertiesSet() {
-//            log.debug(
-//                "Not found configuration for registering mapper bean using @MapperScan, MapperFactoryBean and MapperScannerConfigurer.");
-//        }
-//    }
 }

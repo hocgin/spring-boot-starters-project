@@ -39,4 +39,8 @@ public enum SerializerAlgorithm {
         }
         return Optional.empty();
     }
+
+    public byte[] serialize(Object data) {
+        return this.serializer.serialize(data);
+    }
 }

@@ -7,9 +7,13 @@ package in.hocg.netty.core.constant;
  * @author hocgin
  */
 public interface MessageConstant {
+    String SOURCE = "source";
+    String DESTINATION = "destination";
+    String ALGORITHM = "algorithm";
+    String MODULE = "module";
+    String COMMAND = "command";
+
+
     String WORKER_TOPIC = "WORKER_TOPIC";
     String BOSSER_TOPIC = "BOSSER_TOPIC";
-
-    String WORKER_CONSUMER_GROUP = "WORKER_CONSUMER_GROUP";
-    String BOSSER_CONSUMER_GROUP = "BOSSER_CONSUMER_GROUP";
 }

@@ -1,7 +1,7 @@
-package in.hocg.boot.netty.sample.module;
+package in.hocg.boot.netty.sample.beinvoker;
 
 import in.hocg.boot.netty.sample.TestModule;
-import in.hocg.boot.netty.server.autoconfiguration.annotation.Command;
+import in.hocg.netty.core.annotation.Command;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

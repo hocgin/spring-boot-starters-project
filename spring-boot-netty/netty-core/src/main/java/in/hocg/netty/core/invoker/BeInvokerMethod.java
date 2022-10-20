@@ -10,12 +10,12 @@ import java.lang.reflect.Method;
  * @date 18-7-31
  **/
 @Data
-public class Invoker {
+public class BeInvokerMethod {
     private Object target;
     private Method method;
 
-    public static Invoker of(Object target, Method method) {
-        Invoker invoker = new Invoker();
+    public static BeInvokerMethod of(Object target, Method method) {
+        BeInvokerMethod invoker = new BeInvokerMethod();
         invoker.setTarget(target);
         invoker.setMethod(method);
         return invoker;

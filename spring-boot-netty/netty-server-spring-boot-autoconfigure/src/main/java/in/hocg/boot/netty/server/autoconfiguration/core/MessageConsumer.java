@@ -3,8 +3,7 @@ package in.hocg.boot.netty.server.autoconfiguration.core;
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.message.autoconfigure.service.normal.redis.RedisMessageListener;
 import in.hocg.netty.core.constant.MessageConstant;
-import in.hocg.netty.core.constant.MessageHeader;
-import in.hocg.netty.server.netty.session.SessionManager;
+import in.hocg.netty.core.session.SessionManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
@@ -30,7 +29,7 @@ public class MessageConsumer extends RedisMessageListener<Message<String>> {
     public void onMessage(Message<String> message) {
         MessageHeaders headers = message.getHeaders();
         String bodyStr = message.getPayload();
-        String destination = headers.get("USERS_" + MessageHeader.DESTINATION, String.class);
+        String destination = headers.get("USERS_" + MessageConstant.DESTINATION, String.class);
         Channel channel = SessionManager.get(destination);
         if (channel == null) {
             log.debug("查找不到用户 {} \n 消息内容: {}", destination, bodyStr);
