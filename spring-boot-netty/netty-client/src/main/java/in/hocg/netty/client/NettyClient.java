@@ -37,6 +37,7 @@ public class NettyClient {
     private Channel remoteChannel;
 
     public synchronized NettyClient setRemoteChannel(Channel channel) {
+        log.debug("Remote Channel.id={}", channel.id().asLongText());
         this.remoteChannel = channel;
         return this;
     }

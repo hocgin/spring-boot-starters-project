@@ -31,8 +31,8 @@ public abstract class DispatcherHandler extends SimpleChannelInboundHandler<Pack
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("channel 准备就绪：channelActive()");
         Channel channel = ctx.channel();
+        log.info("channel 准备就绪：channelActive({})", channel.id().asLongText());
         channel.writeAndFlush("Hi Login Ok");
         SessionManager.add(channel.id().asLongText(), channel);
         super.channelActive(ctx);
