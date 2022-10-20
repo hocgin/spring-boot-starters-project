@@ -1,7 +1,7 @@
 package in.hocg.netty.core.invoker;
 
 import in.hocg.netty.core.annotation.Command;
-import in.hocg.netty.core.constant.SystemPacketConstant;
+import in.hocg.netty.core.constant.SystemPacket;
 import io.netty.util.internal.PlatformDependent;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +41,7 @@ public final class BeInvokerManager {
     }
 
     public static Optional<BeInvokerMethod> getInvoker(byte command) {
-        return getInvoker(SystemPacketConstant.DefaultModule, command);
+        return getInvoker(SystemPacket.DefaultModule, command);
     }
 
     public static BeInvokerMethod getThrowInvoker(byte module, byte command) {

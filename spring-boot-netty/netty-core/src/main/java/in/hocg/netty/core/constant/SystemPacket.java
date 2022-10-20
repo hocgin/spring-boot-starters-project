@@ -5,10 +5,12 @@ package in.hocg.netty.core.constant;
  *
  * @author hocgin
  */
-public interface SystemPacketConstant {
+public interface SystemPacket {
     byte Version = 1;
     byte SystemModule = 0;
     byte DefaultModule = 1;
 
-    byte HEART_BEAT_REQUEST = 0;
+    byte HEARTBEAT_PACKET = 0;
+
+    byte[] EMPTY_DATA = {};
 }

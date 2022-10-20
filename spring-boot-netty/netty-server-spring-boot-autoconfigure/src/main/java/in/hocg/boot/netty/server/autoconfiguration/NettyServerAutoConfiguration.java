@@ -4,10 +4,11 @@ import in.hocg.boot.netty.server.autoconfiguration.bean.CommandScanner;
 import in.hocg.boot.netty.server.autoconfiguration.properties.NettyServerProperties;
 import in.hocg.netty.server.netty.DefaultNettyServer;
 import in.hocg.netty.server.netty.NettyServer;
-import in.hocg.netty.server.netty.handler.AbsForwardHandler;
-import in.hocg.netty.server.netty.handler.DefaultForwardHandler;
+import in.hocg.netty.server.netty.handler.DispatcherHandler;
+import in.hocg.netty.server.netty.handler.DefaultDispatcher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,13 +28,13 @@ import org.springframework.context.annotation.Lazy;
 @ConditionalOnProperty(prefix = NettyServerProperties.PREFIX, name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties(NettyServerProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class NettyServerAutoConfiguration implements InitializingBean {
+public class NettyServerAutoConfiguration implements InitializingBean, DisposableBean {
     private final NettyServerProperties properties;
 
     @Bean
     @ConditionalOnMissingBean(NettyServer.class)
-    public NettyServer nettyServer(AbsForwardHandler forwardHandler) {
-        NettyServer server = new DefaultNettyServer(properties.getPort(), forwardHandler);
+    public NettyServer nettyServer(DispatcherHandler dispatcher) {
+        NettyServer server = new DefaultNettyServer(properties.getPort(), dispatcher);
         server.start();
         return server;
     }
@@ -45,13 +46,18 @@ public class NettyServerAutoConfiguration implements InitializingBean {
     }
 
     @Bean
-    @ConditionalOnMissingBean(AbsForwardHandler.class)
-    public AbsForwardHandler forwardHandler() {
-        return new DefaultForwardHandler();
+    @ConditionalOnMissingBean(DispatcherHandler.class)
+    public DispatcherHandler dispatcher() {
+        return new DefaultDispatcher();
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         log.info("{}.Port={}", this.getClass(), properties.getPort());
+    }
+
+    @Override
+    public void destroy() throws Exception {
+
     }
 }

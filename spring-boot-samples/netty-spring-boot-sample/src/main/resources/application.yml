@@ -1,2 +1,7 @@
 server:
   port: 8080
+debug: true
+logging:
+  level:
+    root: debug
+    in.hocg.boot: debug

@@ -2,8 +2,8 @@ package in.hocg.netty.server.netty.initializer;
 
 import in.hocg.netty.core.protocol.IdleStateCheck;
 import in.hocg.netty.core.protocol.Splitter;
-import in.hocg.netty.server.netty.handler.AbsForwardHandler;
-import in.hocg.netty.server.netty.message.MessageDecoder;
+import in.hocg.netty.server.netty.handler.DispatcherHandler;
+import in.hocg.netty.core.protocol.codec.MessageDecoder;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.handler.logging.LogLevel;
@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class SocketInitializer extends ChannelInitializer<Channel> {
-    private final AbsForwardHandler forwardHandler;
+    private final DispatcherHandler dispatcherHandler;
 
     @Override
     protected void initChannel(Channel ch) {
@@ -28,7 +28,7 @@ public class SocketInitializer extends ChannelInitializer<Channel> {
             .addLast("SPLITTER", new Splitter())
             .addLast("MESSAGE-DECODE", new MessageDecoder())
             // 业务处理器
-            .addLast("FORWARD-HANDLER", forwardHandler)
+            .addLast("FORWARD-HANDLER", dispatcherHandler)
         ;
     }
 }

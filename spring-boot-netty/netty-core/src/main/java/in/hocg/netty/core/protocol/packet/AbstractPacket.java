@@ -1,6 +1,6 @@
 package in.hocg.netty.core.protocol.packet;
 
-import in.hocg.netty.core.constant.SystemPacketConstant;
+import in.hocg.netty.core.constant.SystemPacket;
 
 import java.io.Serializable;
 
@@ -11,8 +11,9 @@ import java.io.Serializable;
  * @author hocgin
  */
 public interface AbstractPacket extends Serializable {
+
     default byte getVersion() {
-        return SystemPacketConstant.Version;
+        return SystemPacket.Version;
     }
 
     /**
@@ -28,4 +29,5 @@ public interface AbstractPacket extends Serializable {
      * @return
      */
     byte getModule();
+
 }

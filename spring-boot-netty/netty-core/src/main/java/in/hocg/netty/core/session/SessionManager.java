@@ -1,6 +1,6 @@
 package in.hocg.netty.core.session;
 
-import in.hocg.netty.core.protocol.Codec;
+import in.hocg.netty.core.protocol.codec.Codec;
 import in.hocg.netty.core.protocol.packet.Packet;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;

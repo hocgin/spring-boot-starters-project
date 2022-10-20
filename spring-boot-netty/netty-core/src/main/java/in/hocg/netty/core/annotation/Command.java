@@ -1,6 +1,6 @@
 package in.hocg.netty.core.annotation;
 
-import in.hocg.netty.core.constant.SystemPacketConstant;
+import in.hocg.netty.core.constant.SystemPacket;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,7 +16,7 @@ public @interface Command {
 
     byte value();
 
-    byte version() default SystemPacketConstant.Version;
+    byte version() default SystemPacket.Version;
 
-    byte module() default SystemPacketConstant.DefaultModule;
+    byte module() default SystemPacket.DefaultModule;
 }

@@ -1,6 +1,9 @@
 package in.hocg.netty.client;
 
+import cn.hutool.core.date.DateUtil;
 import in.hocg.netty.core.protocol.Splitter;
+import in.hocg.netty.core.protocol.codec.MessageCodec;
+import in.hocg.netty.core.protocol.packet.Packet;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -10,9 +13,13 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * Created by hocgin on 2019/3/12.
@@ -20,16 +27,39 @@ import java.util.concurrent.TimeUnit;
  *
  * @author hocgin
  */
+@Slf4j
 public class NettyClient {
-    private static final int MAX_RETRY = 5;
-    private static final String HOST = "nginx.hocgin.dev";
-    private static final int PORT = 10801;
+    private static final int MAX_RETRY = 15;
+    private final Bootstrap bootstrap;
+    private Consumer<Channel> onSuccess;
+    private String host;
+    private int port;
+    private Channel remoteChannel;
 
+    public synchronized NettyClient setRemoteChannel(Channel channel) {
+        this.remoteChannel = channel;
+        return this;
+    }
 
-    public static void main(String[] args) {
+    public synchronized Optional<Channel> getRemoteChannel() {
+        return Optional.ofNullable(this.remoteChannel);
+    }
+
+    private NettyClient(Bootstrap bootstrap, Consumer<Channel> onSuccess) {
+        this.bootstrap = bootstrap;
+        this.onSuccess = onSuccess;
+    }
+
+    public static NettyClient create() {
+        return create((channel) -> {
+        });
+    }
+
+    public static NettyClient create(Consumer<Channel> onSuccess) {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
         Bootstrap bootstrap = new Bootstrap();
+        NettyClient client = new NettyClient(bootstrap, onSuccess);
         bootstrap.group(workerGroup)
             .channel(NioSocketChannel.class)
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
@@ -42,46 +72,64 @@ public class NettyClient {
                         .addLast(new LoggingHandler(LogLevel.DEBUG))
                         .addLast(new Splitter())
                         .addLast(new MessageCodec())
+                        .addLast(new ServerChannelClosedHandler(client))
                     ;
                 }
             });
-        connect(bootstrap, HOST, PORT, MAX_RETRY);
+        return client;
     }
 
-    private static void connect(Bootstrap bootstrap, String host, int port, int retry) {
-        bootstrap.connect(host, port).addListener(future -> {
+
+    public ChannelFuture start(String host, int port) {
+        return start(host, port, -1);
+    }
+
+    public ChannelFuture start(int retry) {
+        return start(this.host, this.port, retry);
+    }
+
+    public ChannelFuture start(String host, int port, int retry) {
+        this.host = host;
+        this.port = port;
+        return bootstrap.connect(host, port).addListener(future -> {
+            if (future.isCancellable()) {
+                log.warn("连接中断了");
+            }
             if (future.isSuccess()) {
-                System.out.println(new Date() + ": 连接成功，启动控制台线程……");
                 Channel channel = ((ChannelFuture) future).channel();
-                consoleWrite(channel);
+                this.setRemoteChannel(channel);
+                log.info(new Date() + ": 连接成功，启动控制台线程……");
+                if (Objects.nonNull(onSuccess)) {
+                    this.onSuccess.accept(channel);
+                }
             } else if (retry == 0) {
-                System.err.println("重试次数已用完，放弃连接！");
+                log.warn("重试次数已用完，放弃连接！");
             } else {
-                // 第几次重连
-                int order = (MAX_RETRY - retry) + 1;
-                // 本次重连的间隔
-                int delay = 1 << order;
-                System.err.println(new Date() + ": 连接失败，第" + order + "次重连……");
-                bootstrap.config().group().schedule(() -> connect(bootstrap, host, port, retry - 1), delay, TimeUnit
-                    .SECONDS);
+                this.reconnect(retry);
             }
         });
     }
 
-    private static void consoleWrite(Channel channel) throws InterruptedException {
-        new Thread(() -> {
-            for (; ; ) {
-//                TestRequest testRequest = new TestRequest();
-//                String body = "Hello World";
-//                testRequest.setMessage(body);
-//                channel.writeAndFlush(testRequest);
-//                System.out.println(String.format("正在发送: %s", testRequest));
-//                try {
-//                    Thread.sleep(5000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-            }
-        }).start();
+    public void reconnect() {
+        reconnect(-1);
     }
+
+    public void reconnect(int retry) {
+        int delay = 5;
+        // 第几次重连
+        int order = -1;
+        if (retry > 0) {
+            order = (MAX_RETRY - retry) + 1;
+            delay = 1 << order;
+        }
+        log.warn("{}: 连接失败，第{}次重连……", DateUtil.now(), order);
+        bootstrap.config().group().schedule(() -> start(this.host, this.port, retry - 1), delay, TimeUnit.SECONDS);
+    }
+
+    public NettyClient sendPacket(Packet packet) {
+        Channel channel = getRemoteChannel().orElseThrow();
+        channel.writeAndFlush(packet);
+        return this;
+    }
+
 }

@@ -4,12 +4,14 @@ import in.hocg.netty.core.serializer.SerializerAlgorithm;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author hocgin
  */
 @Getter
 @Setter
+@ToString
 @RequiredArgsConstructor
 public class Packet implements AbstractPacket {
     /**
@@ -33,7 +35,7 @@ public class Packet implements AbstractPacket {
      */
     private final byte[] data;
 
-    private <T> T getData(Class<T> clazz) {
+    public  <T> T getData(Class<T> clazz) {
         return SerializerAlgorithm.getSerializer(this.algorithm).orElseThrow().deserialize(clazz, data);
     }
 }

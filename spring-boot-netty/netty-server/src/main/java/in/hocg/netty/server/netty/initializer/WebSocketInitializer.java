@@ -1,7 +1,7 @@
 package in.hocg.netty.server.netty.initializer;
 
 import in.hocg.netty.core.protocol.IdleStateCheck;
-import in.hocg.netty.server.netty.handler.AbsForwardHandler;
+import in.hocg.netty.server.netty.handler.DispatcherHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RequiredArgsConstructor
 public class WebSocketInitializer extends ChannelInitializer<SocketChannel> {
-    private final AbsForwardHandler forwardHandler;
+    private final DispatcherHandler forwardHandler;
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {

@@ -1,6 +1,6 @@
 package in.hocg.netty.client;
 
-import in.hocg.netty.core.pojo.ro.HeartBeatRequest;
+import in.hocg.netty.core.pojo.ro.HeartBeatPacket;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -21,7 +21,7 @@ public class HeartBeatTimerHandler extends ChannelInboundHandlerAdapter {
     private void scheduleSendHeartBeat(ChannelHandlerContext ctx) {
         ctx.executor().schedule(() -> {
             if (ctx.channel().isActive()) {
-                ctx.writeAndFlush(new HeartBeatRequest());
+                ctx.writeAndFlush(new HeartBeatPacket());
                 scheduleSendHeartBeat(ctx);
             }
         }, HEARTBEAT_INTERVAL, TimeUnit.SECONDS);

@@ -4,10 +4,11 @@ import in.hocg.boot.netty.sample.invoker.TestInvoker;
 import in.hocg.boot.netty.sample.pojo.PacketRo;
 import in.hocg.boot.netty.sample.service.CommonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class CommonServiceImpl implements CommonService {
     private final TestInvoker invoker;
 

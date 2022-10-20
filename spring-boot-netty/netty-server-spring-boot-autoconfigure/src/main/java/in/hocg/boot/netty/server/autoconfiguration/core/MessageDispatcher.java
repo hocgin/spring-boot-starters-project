@@ -3,7 +3,7 @@ package in.hocg.boot.netty.server.autoconfiguration.core;
 import in.hocg.boot.message.autoconfigure.MessageFactory;
 import in.hocg.netty.core.constant.MessageConstant;
 import in.hocg.netty.core.protocol.packet.Packet;
-import in.hocg.netty.server.netty.handler.AbsForwardHandler;
+import in.hocg.netty.server.netty.handler.DispatcherHandler;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
@@ -15,17 +15,17 @@ import org.springframework.messaging.support.MessageBuilder;
  */
 @Slf4j
 @ChannelHandler.Sharable
-public class MessageForwardHandler extends AbsForwardHandler {
+public class MessageDispatcher extends DispatcherHandler {
 
     @Override
-    public void channelRead0(ChannelHandlerContext channelHandlerContext, Packet packet) {
+    public void channelRead0(ChannelHandlerContext context, Packet packet) {
         byte module = packet.getModule();
         byte command = packet.getCommand();
         byte algorithm = packet.getAlgorithm();
         byte[] data = packet.getData();
 
         Message message = MessageBuilder.withPayload(data)
-            .setHeader(MessageConstant.SOURCE, channelHandlerContext.channel().id().asLongText())
+            .setHeader(MessageConstant.SOURCE, context.channel().id().asLongText())
             .setHeader(MessageConstant.ALGORITHM, algorithm)
             .setHeader(MessageConstant.COMMAND, command)
             .setHeader(MessageConstant.MODULE, module)

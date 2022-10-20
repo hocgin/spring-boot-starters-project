@@ -14,6 +14,7 @@ public interface TestModule {
      * 指令
      */
     byte TEST_REQUEST = 1;
+    byte TEST_REQUEST_2 = 2;
     byte TEST_RESPONSE = 2;
 }
 

@@ -8,9 +8,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @author hocgin
+ */
 @Slf4j
 @ChannelHandler.Sharable
-public abstract class AbsForwardHandler extends SimpleChannelInboundHandler<Packet> {
+public abstract class DispatcherHandler extends SimpleChannelInboundHandler<Packet> {
     @Override
     public abstract void channelRead0(ChannelHandlerContext channelHandlerContext, Packet packet);
 

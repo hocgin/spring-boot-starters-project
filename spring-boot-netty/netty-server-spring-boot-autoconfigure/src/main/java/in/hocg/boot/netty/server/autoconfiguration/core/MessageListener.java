@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class MessageConsumer extends RedisMessageListener<Message<String>> {
+public class MessageListener extends RedisMessageListener<Message<String>> {
 
     @Override
     public void onMessage(Message<String> message) {

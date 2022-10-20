@@ -1,8 +1,7 @@
-package in.hocg.netty.core.protocol;
+package in.hocg.netty.core.protocol.codec;
 
-import in.hocg.netty.core.protocol.packet.AbstractPacket;
+import in.hocg.netty.core.protocol.WordConstant;
 import in.hocg.netty.core.protocol.packet.Packet;
-import in.hocg.netty.core.serializer.SerializerAlgorithm;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufUtil;
@@ -13,22 +12,21 @@ public class Codec {
      *
      * @param packet
      */
-    public static byte[] encode(AbstractPacket packet) {
-        return Codec.encode(SerializerAlgorithm.JSON, packet);
-    }
-
-    public static byte[] encode(SerializerAlgorithm serializerAlgorithm, AbstractPacket packet) {
+    public static ByteBuf encodeBuf(Packet packet) {
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
-        byte[] bytes = serializerAlgorithm.serialize(packet);
-
-        byteBuf.writeByte(WordConstant.Content.MAGIC_NUMBER_CONTENT);
+        byteBuf.writeInt(WordConstant.Content.MAGIC_NUMBER_CONTENT);
         byteBuf.writeByte(packet.getVersion());
-        byteBuf.writeByte(serializerAlgorithm.algorithm());
-        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeByte(packet.getAlgorithm());
         byteBuf.writeByte(packet.getModule());
+        byteBuf.writeByte(packet.getCommand());
+        byte[] bytes = packet.getData();
         byteBuf.writeInt(bytes.length);
         byteBuf.writeBytes(bytes);
-        return ByteBufUtil.getBytes(byteBuf);
+        return byteBuf;
+    }
+
+    public static byte[] encode(Packet packet) {
+        return ByteBufUtil.getBytes(encodeBuf(packet));
     }
 
     /**
@@ -57,10 +55,10 @@ public class Codec {
         int length = bytedata.readInt();
 
         // 数据(n)
-        byte[] content = new byte[length];
+        byte[] data = new byte[length];
 
-        bytedata.readBytes(content);
+        bytedata.readBytes(data);
 
-        return new Packet(version, algorithm, module, command, content);
+        return new Packet(version, algorithm, module, command, data);
     }
 }

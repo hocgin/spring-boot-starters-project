@@ -1,5 +1,6 @@
 package in.hocg.netty.core.invoker;
 
+import cn.hutool.core.util.ObjectUtil;
 import in.hocg.netty.core.annotation.ChannelId;
 import in.hocg.netty.core.annotation.Command;
 import in.hocg.netty.core.annotation.PacketData;
@@ -20,6 +21,7 @@ public class InvokerProxy implements InvocationHandler {
         // 目标channel / 消息包
         Command command = method.getAnnotation(Command.class);
         Serializable channelArg = null;
+        PacketData packetAnno = null;
         Object packetDataArg = null;
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
         for (int i = 0; i < parameterAnnotations.length; i++) {
@@ -29,13 +31,14 @@ public class InvokerProxy implements InvocationHandler {
                     channelArg = (Serializable) args[i];
                 }
                 if (annotation instanceof PacketData) {
+                    packetAnno = (PacketData) annotation;
                     packetDataArg = args[i];
                 }
             }
         }
 
-        SerializerAlgorithm json = SerializerAlgorithm.JSON;
-        Packet packet = new Packet(command.version(), json.algorithm(), command.module(), command.value(), json.serialize(packetDataArg));
+        SerializerAlgorithm algorithm = ObjectUtil.isNull(packetAnno) ? SerializerAlgorithm.JSON : packetAnno.algorithm();
+        Packet packet = new Packet(command.version(), algorithm.algorithm(), command.module(), command.value(), algorithm.serialize(packetDataArg));
 
         // 去发送消息 ForwardCenter
         ForwardCenter.sendAsync(channelArg, packet);
