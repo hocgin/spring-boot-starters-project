@@ -34,7 +34,7 @@ public abstract class DispatcherHandler extends SimpleChannelInboundHandler<Pack
         Channel channel = ctx.channel();
         log.info("channel 准备就绪：channelActive({})", channel.id().asLongText());
         channel.writeAndFlush("Hi Login Ok");
-        SessionManager.add(channel.id().asLongText(), channel);
+        SessionManager.add(SessionManager.ChanelType.Server, channel.id().asLongText(), channel);
         super.channelActive(ctx);
     }
 
@@ -55,7 +55,7 @@ public abstract class DispatcherHandler extends SimpleChannelInboundHandler<Pack
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("channel 被关闭：channelInactive()");
         Channel channel = ctx.channel();
-        SessionManager.remove(channel.id().asLongText());
+        SessionManager.remove(SessionManager.ChanelType.Server, channel.id().asLongText());
         super.channelInactive(ctx);
     }
 

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -19,39 +20,76 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class SessionManager {
-    private static final Map<Serializable, Channel> CHANNEL_MAP = new ConcurrentHashMap<>();
+    private static final Map<Serializable, Channel> SERVER_CHANNEL_MAP = new ConcurrentHashMap<>();
+    private static final Map<Serializable, Channel> CLIENT_CHANNEL_MAP = new ConcurrentHashMap<>();
+
+
+    public enum ChanelType {
+        Auto,
+        Server,
+        Client,
+    }
+
 
     /**
      * 登陆在线
      *
-     * @param key
+     * @param channelId
      * @param channel
      */
-    public static Channel add(Serializable key, Channel channel) {
-        return CHANNEL_MAP.put(key, channel);
+    public static Channel add(ChanelType chanelType, Serializable channelId, Channel channel) {
+        if (ChanelType.Server.equals(chanelType)) {
+            return SERVER_CHANNEL_MAP.put(channelId, channel);
+        } else {
+            return CLIENT_CHANNEL_MAP.put(channelId, channel);
+        }
     }
 
     /**
      * 移除在线
      *
-     * @param key
+     * @param channelId
      */
-    public static Channel remove(Serializable key) {
-        return CHANNEL_MAP.remove(key);
+    public static Channel remove(ChanelType chanelType, Serializable channelId) {
+        if (ChanelType.Server.equals(chanelType)) {
+            return SERVER_CHANNEL_MAP.remove(channelId);
+        } else {
+            return CLIENT_CHANNEL_MAP.remove(channelId);
+        }
     }
 
     /**
      * 获取 Channel
      *
-     * @param key
+     * @param channelId
      * @return
      */
-    public static Channel get(Serializable key) {
-        return CHANNEL_MAP.get(key);
+    public static Channel get(Serializable channelId) {
+        Channel channel = get(ChanelType.Server, channelId);
+        if (Objects.isNull(channel)) {
+            channel = get(ChanelType.Client, channelId);
+        }
+        return channel;
+    }
+
+    public static Channel get(ChanelType chanelType, Serializable channelId) {
+        if (ChanelType.Server.equals(chanelType)) {
+            return SERVER_CHANNEL_MAP.get(channelId);
+        } else {
+            return CLIENT_CHANNEL_MAP.get(channelId);
+        }
     }
 
     public static boolean send(Serializable channelId, Packet packet) {
-        Channel channel = SessionManager.get(channelId);
+        boolean isOk = send(ChanelType.Server, channelId, packet);
+        if (!isOk) {
+            isOk = send(ChanelType.Client, channelId, packet);
+        }
+        return isOk;
+    }
+
+    public static boolean send(ChanelType chanelType, Serializable channelId, Packet packet) {
+        Channel channel = SessionManager.get(chanelType, channelId);
         if (channel == null) {
             log.debug("查找不到用户 {} \n 消息内容: {}", channelId, packet);
             return false;

@@ -52,6 +52,7 @@ public class CommandInvokerRegistrar implements ImportBeanDefinitionRegistrar, B
         BeanDefinitionBuilder definition = BeanDefinitionBuilder.genericBeanDefinition(InvokerFactoryBean.class);
         String className = annotationMetadata.getClassName();
         definition.addPropertyValue("type", className);
+        definition.addPropertyValue("channelType", attributes.get("value"));
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         AbstractBeanDefinition beanDefinition = definition.getBeanDefinition();
         // String alias = className + "Invoker";

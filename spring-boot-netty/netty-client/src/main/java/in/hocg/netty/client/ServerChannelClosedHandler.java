@@ -1,6 +1,5 @@
 package in.hocg.netty.client;
 
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class ServerChannelClosedHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        client.setRemoteChannel(null);
+        client.unbindChannel();
         super.channelInactive(ctx);
         log.info("服务器掉线了, 正在尝试重连..");
         client.reconnect();

@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import in.hocg.netty.core.protocol.Splitter;
 import in.hocg.netty.core.protocol.codec.MessageCodec;
 import in.hocg.netty.core.protocol.packet.Packet;
+import in.hocg.netty.core.session.SessionManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -15,6 +16,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,19 +33,33 @@ import java.util.function.Consumer;
 public class NettyClient {
     private static final int MAX_RETRY = 15;
     private final Bootstrap bootstrap;
-    private Consumer<Channel> onSuccess;
+    private final Consumer<Channel> onSuccess;
     private String host;
     private int port;
-    private Channel remoteChannel;
+    private Serializable channelId;
 
-    public synchronized NettyClient setRemoteChannel(Channel channel) {
-        log.debug("Remote Channel.id={}", channel.id().asLongText());
-        this.remoteChannel = channel;
+    public synchronized NettyClient bindChannel(Channel channel) {
+        Serializable channelId = channel.id().asLongText();
+        SessionManager.add(SessionManager.ChanelType.Client, channelId, channel);
+        log.debug("Remote Channel.id={}", channelId);
+        this.channelId = channelId;
         return this;
     }
 
-    public synchronized Optional<Channel> getRemoteChannel() {
-        return Optional.ofNullable(this.remoteChannel);
+    public synchronized NettyClient unbindChannel() {
+        if (Objects.nonNull(this.channelId)) {
+            SessionManager.remove(SessionManager.ChanelType.Client, this.channelId);
+            this.channelId = null;
+        }
+        return this;
+    }
+
+    public synchronized Optional<Serializable> getChannelId() {
+        return Optional.ofNullable(this.channelId);
+    }
+
+    public synchronized Optional<Channel> getChannel() {
+        return getChannelId().map(channelId -> SessionManager.get(SessionManager.ChanelType.Client, channelId));
     }
 
     private NettyClient(Bootstrap bootstrap, Consumer<Channel> onSuccess) {
@@ -98,7 +114,7 @@ public class NettyClient {
             }
             if (future.isSuccess()) {
                 Channel channel = ((ChannelFuture) future).channel();
-                this.setRemoteChannel(channel);
+                this.bindChannel(channel);
                 log.info(new Date() + ": 连接成功，启动控制台线程……");
                 if (Objects.nonNull(onSuccess)) {
                     this.onSuccess.accept(channel);
@@ -128,7 +144,7 @@ public class NettyClient {
     }
 
     public NettyClient sendPacket(Packet packet) {
-        Channel channel = getRemoteChannel().orElseThrow();
+        Channel channel = getChannel().orElseThrow();
         channel.writeAndFlush(packet);
         return this;
     }

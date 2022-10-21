@@ -7,6 +7,8 @@ import in.hocg.netty.core.annotation.PacketData;
 import in.hocg.netty.core.protocol.packet.Packet;
 import in.hocg.netty.core.serializer.SerializerAlgorithm;
 import in.hocg.netty.core.session.ForwardCenter;
+import in.hocg.netty.core.session.SessionManager;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -14,8 +16,14 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+/**
+ * @author hocgin
+ */
 @Slf4j
+@RequiredArgsConstructor
 public class InvokerProxy implements InvocationHandler {
+    private final SessionManager.ChanelType chanelType;
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 目标channel / 消息包
@@ -41,7 +49,7 @@ public class InvokerProxy implements InvocationHandler {
         Packet packet = new Packet(command.version(), algorithm.algorithm(), command.module(), command.value(), algorithm.serialize(packetDataArg));
 
         // 去发送消息 ForwardCenter
-        ForwardCenter.sendAsync(channelArg, packet);
+        ForwardCenter.sendAsync(chanelType, channelArg, packet);
         log.info("==> 发送消息到转发器");
         return null;
     }
