@@ -24,7 +24,7 @@ public class SessionManager {
     private static final Map<Serializable, Channel> CLIENT_CHANNEL_MAP = new ConcurrentHashMap<>();
 
 
-    public enum ChanelType {
+    public enum ChannelType {
         Auto,
         Server,
         Client,
@@ -37,8 +37,8 @@ public class SessionManager {
      * @param channelId
      * @param channel
      */
-    public static Channel add(ChanelType chanelType, Serializable channelId, Channel channel) {
-        if (ChanelType.Server.equals(chanelType)) {
+    public static Channel add(ChannelType chanelType, Serializable channelId, Channel channel) {
+        if (ChannelType.Server.equals(chanelType)) {
             return SERVER_CHANNEL_MAP.put(channelId, channel);
         } else {
             return CLIENT_CHANNEL_MAP.put(channelId, channel);
@@ -50,8 +50,8 @@ public class SessionManager {
      *
      * @param channelId
      */
-    public static Channel remove(ChanelType chanelType, Serializable channelId) {
-        if (ChanelType.Server.equals(chanelType)) {
+    public static Channel remove(ChannelType chanelType, Serializable channelId) {
+        if (ChannelType.Server.equals(chanelType)) {
             return SERVER_CHANNEL_MAP.remove(channelId);
         } else {
             return CLIENT_CHANNEL_MAP.remove(channelId);
@@ -65,15 +65,15 @@ public class SessionManager {
      * @return
      */
     public static Channel get(Serializable channelId) {
-        Channel channel = get(ChanelType.Server, channelId);
+        Channel channel = get(ChannelType.Server, channelId);
         if (Objects.isNull(channel)) {
-            channel = get(ChanelType.Client, channelId);
+            channel = get(ChannelType.Client, channelId);
         }
         return channel;
     }
 
-    public static Channel get(ChanelType chanelType, Serializable channelId) {
-        if (ChanelType.Server.equals(chanelType)) {
+    public static Channel get(ChannelType chanelType, Serializable channelId) {
+        if (ChannelType.Server.equals(chanelType)) {
             return SERVER_CHANNEL_MAP.get(channelId);
         } else {
             return CLIENT_CHANNEL_MAP.get(channelId);
@@ -81,14 +81,14 @@ public class SessionManager {
     }
 
     public static boolean send(Serializable channelId, Packet packet) {
-        boolean isOk = send(ChanelType.Server, channelId, packet);
+        boolean isOk = send(ChannelType.Server, channelId, packet);
         if (!isOk) {
-            isOk = send(ChanelType.Client, channelId, packet);
+            isOk = send(ChannelType.Client, channelId, packet);
         }
         return isOk;
     }
 
-    public static boolean send(ChanelType chanelType, Serializable channelId, Packet packet) {
+    public static boolean send(ChannelType chanelType, Serializable channelId, Packet packet) {
         Channel channel = SessionManager.get(chanelType, channelId);
         if (channel == null) {
             log.debug("查找不到用户 {} \n 消息内容: {}", channelId, packet);

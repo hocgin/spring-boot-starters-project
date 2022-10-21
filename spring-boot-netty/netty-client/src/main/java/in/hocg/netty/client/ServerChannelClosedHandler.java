@@ -21,9 +21,9 @@ public class ServerChannelClosedHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        client.unbindChannel();
         super.channelInactive(ctx);
         log.info("服务器掉线了, 正在尝试重连..");
+        client.unbindChannel();
         client.reconnect();
     }
 }

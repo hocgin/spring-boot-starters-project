@@ -40,7 +40,7 @@ public class NettyClient {
 
     public synchronized NettyClient bindChannel(Channel channel) {
         Serializable channelId = channel.id().asLongText();
-        SessionManager.add(SessionManager.ChanelType.Client, channelId, channel);
+        SessionManager.add(SessionManager.ChannelType.Client, channelId, channel);
         log.debug("Remote Channel.id={}", channelId);
         this.channelId = channelId;
         return this;
@@ -48,7 +48,7 @@ public class NettyClient {
 
     public synchronized NettyClient unbindChannel() {
         if (Objects.nonNull(this.channelId)) {
-            SessionManager.remove(SessionManager.ChanelType.Client, this.channelId);
+            SessionManager.remove(SessionManager.ChannelType.Client, this.channelId);
             this.channelId = null;
         }
         return this;
@@ -59,7 +59,7 @@ public class NettyClient {
     }
 
     public synchronized Optional<Channel> getChannel() {
-        return getChannelId().map(channelId -> SessionManager.get(SessionManager.ChanelType.Client, channelId));
+        return getChannelId().map(channelId -> SessionManager.get(SessionManager.ChannelType.Client, channelId));
     }
 
     private NettyClient(Bootstrap bootstrap, Consumer<Channel> onSuccess) {

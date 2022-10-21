@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Invoker {
-    SessionManager.ChanelType value() default SessionManager.ChanelType.Auto;
+    SessionManager.ChannelType value() default SessionManager.ChannelType.Auto;
 }

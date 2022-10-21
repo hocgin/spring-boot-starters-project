@@ -8,8 +8,8 @@ import java.io.Serializable;
  * @author hocgin
  */
 public class ForwardCenter {
-    public static void sendAsync(SessionManager.ChanelType chanelType, Serializable channelId, Packet packet) {
-        if (SessionManager.ChanelType.Server.equals(chanelType) || SessionManager.ChanelType.Client.equals(chanelType)) {
+    public static void sendAsync(SessionManager.ChannelType chanelType, Serializable channelId, Packet packet) {
+        if (SessionManager.ChannelType.Server.equals(chanelType) || SessionManager.ChannelType.Client.equals(chanelType)) {
             SessionManager.send(chanelType, channelId, packet);
         } else {
             SessionManager.send(channelId, packet);

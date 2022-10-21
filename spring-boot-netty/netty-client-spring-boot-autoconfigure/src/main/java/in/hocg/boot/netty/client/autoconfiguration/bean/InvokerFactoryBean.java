@@ -1,6 +1,5 @@
 package in.hocg.boot.netty.client.autoconfiguration.bean;
 
-import in.hocg.netty.core.invoker.InvokerManager;
 import in.hocg.netty.core.invoker.InvokerProxy;
 import in.hocg.netty.core.session.SessionManager;
 import lombok.Getter;
@@ -13,11 +12,11 @@ import java.lang.reflect.Proxy;
 @Setter
 public class InvokerFactoryBean implements FactoryBean<Object> {
     private Class<?> type;
-    private SessionManager.ChanelType chanelType;
+    private SessionManager.ChannelType channelType;
 
     @Override
     public Object getObject() throws Exception {
-        return Proxy.newProxyInstance(InvokerManager.class.getClassLoader(), new Class[]{type}, new InvokerProxy(chanelType));
+        return Proxy.newProxyInstance(InvokerFactoryBean.class.getClassLoader(), new Class[]{type}, new InvokerProxy(channelType));
     }
 
     @Override

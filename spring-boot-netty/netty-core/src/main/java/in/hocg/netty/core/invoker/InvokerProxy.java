@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 @Slf4j
 @RequiredArgsConstructor
 public class InvokerProxy implements InvocationHandler {
-    private final SessionManager.ChanelType chanelType;
+    private final SessionManager.ChannelType channelType;
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -49,7 +49,7 @@ public class InvokerProxy implements InvocationHandler {
         Packet packet = new Packet(command.version(), algorithm.algorithm(), command.module(), command.value(), algorithm.serialize(packetDataArg));
 
         // 去发送消息 ForwardCenter
-        ForwardCenter.sendAsync(chanelType, channelArg, packet);
+        ForwardCenter.sendAsync(channelType, channelArg, packet);
         log.info("==> 发送消息到转发器");
         return null;
     }
