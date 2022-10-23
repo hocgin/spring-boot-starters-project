@@ -13,4 +13,5 @@ spring:
       enable-auto-commit: false
       auto-offset-reset: earliest # 当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费
     listener:
+      missing-topics-fatal: false
       ack-mode: manual_immediate
