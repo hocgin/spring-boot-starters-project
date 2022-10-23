@@ -1,6 +1,6 @@
-package in.hocg.boot.tpl.autoconfiguration;
+package in.hocg.boot.kafka.autoconfiguration;
 
-import in.hocg.boot.tpl.autoconfiguration.properties.TplProperties;
+import in.hocg.boot.kafka.autoconfiguration.properties.KafkaProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,11 +14,9 @@ import org.springframework.context.annotation.Lazy;
  * @author hocgin
  */
 @Configuration
-//@AutoConfigureAfter(DataSourceAutoConfiguration.class)
-//@ConditionalOnBean({DataSource.class})
-@ConditionalOnProperty(prefix = TplProperties.PREFIX, name = "enabled", matchIfMissing = true)
-@EnableConfigurationProperties(TplProperties.class)
+@ConditionalOnProperty(prefix = KafkaProperties.PREFIX, name = "enabled", matchIfMissing = true)
+@EnableConfigurationProperties(KafkaProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-public class TplAutoConfiguration {
+public class KafkaAutoConfiguration {
 
 }

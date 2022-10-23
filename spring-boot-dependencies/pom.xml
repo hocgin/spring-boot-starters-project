@@ -71,6 +71,17 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- Kafka -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>kafka-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>kafka-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- netty -->
       <dependency>
         <groupId>${project.groupId}</groupId>

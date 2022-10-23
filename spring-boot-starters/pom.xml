@@ -16,6 +16,7 @@
 
   <modules>
     <module>named-spring-boot-starter</module>
+    <module>kafka-spring-boot-starter</module>
     <module>oss-spring-boot-starter</module>
     <module>sms-spring-boot-starter</module>
     <module>sso-client-spring-boot-starter</module>
