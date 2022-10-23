@@ -1,7 +1,7 @@
 package in.hocg.boot.netty.sample;
 
-import in.hocg.boot.netty.sample.beinvoker.TestModuleService;
-import in.hocg.boot.netty.sample.service.CommonService;
+import in.hocg.boot.netty.sample.beinvoker.TestBeInvoker;
+import in.hocg.boot.netty.sample.constant.NettyConstant;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import in.hocg.netty.core.invoker.BeInvokerManager;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableAspectJAutoProxy(exposeProxy = true)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class BootApplication implements CommandLineRunner {
-    private final CommonService commonService;
 
     public static void main(String[] args) {
         SpringApplication.run(BootApplication.class, args);
@@ -31,8 +30,7 @@ public class BootApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        SpringContext.getBean(TestModuleService.class).testCommand("hi");
-        BeInvokerManager.getThrowInvoker(TestModule.TEST_REQUEST).invoke("hi2");
-        commonService.ping();
+        SpringContext.getBean(TestBeInvoker.class).testCommand("hi");
+        BeInvokerManager.getThrowInvoker(NettyConstant.CMD_TEST1).invoke("hi2");
     }
 }

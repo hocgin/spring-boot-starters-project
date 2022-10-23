@@ -16,4 +16,5 @@ import java.io.Serializable;
 @Accessors(chain = true)
 public class PacketRo implements Serializable {
     private String title;
+    private String remark;
 }

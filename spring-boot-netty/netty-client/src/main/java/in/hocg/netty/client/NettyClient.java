@@ -58,6 +58,10 @@ public class NettyClient {
         return Optional.ofNullable(this.channelId);
     }
 
+    public Serializable getChannelIdThrow() {
+        return getChannelId().orElseThrow();
+    }
+
     public synchronized Optional<Channel> getChannel() {
         return getChannelId().map(channelId -> SessionManager.get(SessionManager.ChannelType.Client, channelId));
     }
