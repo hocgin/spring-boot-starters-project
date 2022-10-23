@@ -1,10 +1,16 @@
 # spring-boot-starters-project
 
+> 引入即生效，约定大于配置，配置决定能力。
+>
 > [![Deploy](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/deploy.yml/badge.svg?branch=v1.0.20)](https://github.com/hocgin/spring-boot-starters-project/actions/workflows/deploy.yml)
 > [![Maven Central](https://maven-badges.herokuapp.com/maven-central/in.hocg.boot/spring-boot-starters-project/badge.svg)](https://search.maven.org/search?q=in.hocg.boot)
 
 
-[Maven Center](https://search.maven.org/search?q=in.hocg.boot)
+[查看 Maven 仓库](https://search.maven.org/search?q=in.hocg.boot)
+
+### 🧾 组件清单
+
+> Spring Cloud = Hoxton.SR4, Spring Boot=2.2.6, [查看更多版本](./spring-boot-dependencies/pom.xml)
 
 | 序号   | 组件                                     | 功能描述                         | 案例                                                                                                                                                                                                                                                                      |
 |------|----------------------------------------|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
