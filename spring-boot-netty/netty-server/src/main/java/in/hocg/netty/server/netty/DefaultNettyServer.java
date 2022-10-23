@@ -1,5 +1,6 @@
 package in.hocg.netty.server.netty;
 
+import cn.hutool.core.util.IdUtil;
 import in.hocg.netty.server.netty.handler.DispatcherHandler;
 import in.hocg.netty.server.netty.initializer.SocketInitializer;
 import io.netty.bootstrap.ServerBootstrap;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public final class DefaultNettyServer implements NettyServer {
+    public static final String ID = IdUtil.simpleUUID();
     private final Integer port;
     private final DispatcherHandler dispatcherHandler;
     private ServerBootstrap bootstrap;

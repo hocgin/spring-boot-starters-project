@@ -9,11 +9,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author hocgin
  */
 @Slf4j
-public class DefaultDispatcher extends DispatcherHandler {
+public class DefaultDispatcherHandler extends DispatcherHandler {
     @Override
     public void channelRead0(ChannelHandlerContext context, Packet packet) {
         String fromChannelId = context.channel().id().asLongText();
-        log.info("-----> DefaultDispatcher.channelRead0.channelId=[{}].[packet={}]", fromChannelId, packet);
+        log.debug("DefaultDispatcher.转发消息.channelId=[{}].[packet={}]", fromChannelId, packet);
         BeInvokerManager.getInvoker(packet.getModule(), packet.getCommand()).ifPresent(method -> method.invoke(packet));
     }
 }

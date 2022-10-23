@@ -1,6 +1,5 @@
 package in.hocg.boot.netty.server.autoconfiguration.core;
 
-import cn.hutool.json.JSONUtil;
 import in.hocg.boot.message.autoconfigure.service.normal.redis.RedisMessageListener;
 import in.hocg.netty.core.constant.MessageConstant;
 import in.hocg.netty.core.session.SessionManager;
@@ -28,22 +27,23 @@ public class MessageListener extends RedisMessageListener<Message<String>> {
     @Override
     public void onMessage(Message<String> message) {
         MessageHeaders headers = message.getHeaders();
-        String bodyStr = message.getPayload();
-        String destination = headers.get("USERS_" + MessageConstant.DESTINATION, String.class);
-        Channel channel = SessionManager.get(destination);
+        String channelId = headers.get(MessageConstant.CHANNEL_ID, String.class);
+        String serverId = headers.get(MessageConstant.SERVER_ID, String.class);
+
+        Channel channel = SessionManager.get(channelId);
         if (channel == null) {
-            log.debug("查找不到用户 {} \n 消息内容: {}", destination, bodyStr);
+            log.debug("查找不到 Channel.[ChannelId={}, Payload={}]", channelId, message.getPayload());
             return;
         }
-        byte[] body = JSONUtil.toJsonStr(bodyStr).getBytes(StandardCharsets.UTF_8);
+
+        byte[] bytes = message.getPayload().getBytes(StandardCharsets.UTF_8);
         ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
-        byteBuf.writeBytes(body);
+        byteBuf.writeBytes(bytes);
         channel.writeAndFlush(byteBuf);
-        log.debug("\n -> 消息体: {} \n -> 接收者: {}", body, destination);
     }
 
     @Override
     protected Topic getTopic() {
-        return new PatternTopic(MessageConstant.BOSSER_TOPIC);
+        return new PatternTopic(MessageConstant.MESSAGE_TOPIC);
     }
 }

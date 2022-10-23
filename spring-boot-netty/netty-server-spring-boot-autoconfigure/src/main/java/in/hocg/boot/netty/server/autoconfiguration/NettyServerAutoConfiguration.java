@@ -5,7 +5,7 @@ import in.hocg.boot.netty.server.autoconfiguration.properties.NettyServerPropert
 import in.hocg.netty.server.netty.DefaultNettyServer;
 import in.hocg.netty.server.netty.NettyServer;
 import in.hocg.netty.server.netty.handler.DispatcherHandler;
-import in.hocg.netty.server.netty.handler.DefaultDispatcher;
+import in.hocg.netty.server.netty.handler.DefaultDispatcherHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -48,7 +48,7 @@ public class NettyServerAutoConfiguration implements InitializingBean, Disposabl
     @Bean
     @ConditionalOnMissingBean(DispatcherHandler.class)
     public DispatcherHandler dispatcher() {
-        return new DefaultDispatcher();
+        return new DefaultDispatcherHandler();
     }
 
     @Override
