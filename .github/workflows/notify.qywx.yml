@@ -1,0 +1,30 @@
+name: Watch Workflow Status
+on:
+  workflow_run:
+    workflows: [ "Created", "Deploy::CDN", "Deploy::SSR", "Deploy::Static", "Deploy::Addone", "Deploy::Package" ]
+    types: [ completed ]
+env:
+  WECHAT_WORK_BOT_WEBHOOK: ${{secrets.WECHAT_WORK_BOT_WEBHOOK}}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - id: prep
+        uses: hocgin/action-env@main
+      - name: WeChat Work Notification
+        uses: chf007/action-wechat-work@master
+        env:
+          WECHAT_WORK_BOT_WEBHOOK: ${{env.WECHAT_WORK_BOT_WEBHOOK}}
+        with:
+          msgtype: markdown
+          content: "**【[${{ steps.prep.outputs.repo_full_name }}](${{ steps.prep.outputs.repo_html_url }})】** \n
+          📌 ${{ github.event.workflow_run.conclusion == 'success' && '☀️☀️☀️☀️☀️' || '🌧️🌧️🌧️🌧️🌧️' }} \n
+          🏃 [@${{ steps.prep.outputs.sender }}](${{ steps.prep.outputs.sender_html_url }})\n
+          🕐 <font color=\"comment\">${{ steps.prep.outputs.action_trigger_at }}</font> \n
+          🔧 <font color=\"warning\">${{ steps.prep.outputs.source_branch || '∅' }} -> ${{ steps.prep.outputs.target_branch || '∅' }}</font> \n
+          🏆 <font color=\"comment\">${{ steps.prep.outputs.env || '未知版本' }} / ${{ steps.prep.outputs.version || '未知版本' }}</font> \n
+          📝 [提交信息](${{ steps.prep.outputs.commit_html_url }}) \n
+          \n
+          [查看更多](${{ steps.prep.outputs.repo_homepage || steps.prep.outputs.repo_html_url }})
+          "

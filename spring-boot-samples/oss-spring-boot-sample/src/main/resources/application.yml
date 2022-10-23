@@ -1,8 +1,10 @@
 debug: true
 
-oss:
-  enabled: false
-  domain: http://endpoint.com
-  secretKey: <secret-access/>
-  accessKey: <access-key/>
-  space: <default-space/>
+boot:
+  oss:
+    enabled: true
+    domain: http://127.0.0.1:8080
+    type: local
+#    secretKey: <secret-access/>
+#    accessKey: <access-key/>
+#    space: <default-space/>

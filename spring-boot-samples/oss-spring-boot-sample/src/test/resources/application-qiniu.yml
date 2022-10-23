@@ -1,9 +1,10 @@
 debug: true
 
-oss:
-  enabled: true
-  domain: http://endpoint.com
-  secretKey: <secret-access/>
-  accessKey: <access-key/>
-  space: <default-space/>
-  type: qiniu
+boot:
+  oss:
+    enabled: true
+    domain: http://endpoint.com
+    secretKey: <secret-access/>
+    accessKey: <access-key/>
+    space: <default-space/>
+    type: qiniu

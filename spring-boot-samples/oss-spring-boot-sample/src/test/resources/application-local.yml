@@ -1,0 +1,7 @@
+debug: true
+
+boot:
+  oss:
+    enabled: true
+    domain: http://127.0.0.1:8080
+    type: local

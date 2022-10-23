@@ -29,9 +29,10 @@ public class TaskMybatisPlusExtProperties {
     public static class Executor {
         public static final Executor DEFAULT = new Executor()
             .setThreadNamePrefix("boot-async-task-")
-            .setQueueCapacity(1000)
-            .setCorePoolSize(2)
-            .setMaxPoolSize(5);
+            // size: 5k * 110, core: 5, max: 10, num: 105
+            .setQueueCapacity(100)
+            .setCorePoolSize(5)
+            .setMaxPoolSize(10);
 
         /**
          * 核心数量

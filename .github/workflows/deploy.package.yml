@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy::Package
 
 on:
   workflow_dispatch:
@@ -29,12 +29,8 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Get version from Tags
-        id: prep
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          VERSION=$(echo "${VERSION}" | sed 's/v//')
-          echo ::set-output name=version::${VERSION}
+      - id: prep
+        uses: hocgin/action-env@main
 
       - name: Publish Package Registry
         run: |

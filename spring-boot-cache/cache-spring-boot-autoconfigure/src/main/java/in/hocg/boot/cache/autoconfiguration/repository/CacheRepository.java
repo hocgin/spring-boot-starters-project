@@ -1,5 +1,6 @@
 package in.hocg.boot.cache.autoconfiguration.repository;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,20 +25,20 @@ public interface CacheRepository {
     /**
      * 添加到带有过期时间的缓存
      *
-     * @param key   redis主键
-     * @param value 值
-     * @param time  过期时间(单位秒)
+     * @param key      redis主键
+     * @param value    值
+     * @param duration 过期时间(单位秒)
      */
-    void setExpire(final String key, final Object value, final long time);
+    <T> void setExpire(final String key, final T value, final Duration duration);
 
     /**
      * 批量添加到带有过期时间的缓存
      *
-     * @param keys   redis主键
-     * @param values 值
-     * @param time   过期时间(单位秒)
+     * @param keys     redis主键
+     * @param values   值
+     * @param duration 过期时间(单位秒)
      */
-    void setExpire(final String[] keys, final Object[] values, final long time);
+    <T> void setExpire(final String[] keys, final T[] values, final Duration duration);
 
     /**
      * 一次性添加数组到过期时间的缓存，不用多次连接，节省开销
@@ -46,7 +47,7 @@ public interface CacheRepository {
      * @param values the values
      */
 
-    void set(final String[] keys, final Object[] values);
+    <T> void set(final String[] keys, final T[] values);
 
     /**
      * 添加到缓存
@@ -54,7 +55,7 @@ public interface CacheRepository {
      * @param key   the key
      * @param value the value
      */
-    void set(final String key, final Object value);
+    <T> void set(final String key, final T value);
 
     /**
      * 根据key获取对象
@@ -71,7 +72,7 @@ public interface CacheRepository {
      * @param key the key
      * @return the string
      */
-    Object get(final String key);
+    <T> T get(final String key);
 
     /**
      * (HASH操作)
@@ -81,7 +82,7 @@ public interface CacheRepository {
      * @param hashKey   the hash key
      * @param hashValue the hash value
      */
-    void putHashValue(String key, String hashKey, Object hashValue);
+    <T> void putHashValue(String key, String hashKey, T hashValue);
 
     /**
      * (HASH操作)
@@ -91,7 +92,7 @@ public interface CacheRepository {
      * @param hashKey the hash key
      * @return the hash values
      */
-    Object getHashValues(String key, String hashKey);
+    <T> T getHashValues(String key, String hashKey);
 
     /**
      * (HASH操作)
@@ -145,7 +146,7 @@ public interface CacheRepository {
      * @param value the value
      * @return the long
      */
-    Long leftPush(String key, Object value);
+    <T> Long leftPush(String key, T value);
 
     /**
      * (List操作)
@@ -154,7 +155,7 @@ public interface CacheRepository {
      * @param key the key
      * @return the string
      */
-    Object leftPop(String key);
+    <T> T leftPop(String key);
 
     /**
      * (List操作)
@@ -164,7 +165,7 @@ public interface CacheRepository {
      * @param value the value
      * @return the long
      */
-    Long in(String key, Object value);
+    <T> Long in(String key, T value);
 
     /**
      * (List操作)
@@ -173,7 +174,7 @@ public interface CacheRepository {
      * @param key the key
      * @return the string
      */
-    Object rightPop(String key);
+    <T> T rightPop(String key);
 
     /**
      * (List操作)
@@ -192,7 +193,7 @@ public interface CacheRepository {
      * @param i     the
      * @param value the value
      */
-    void remove(String key, long i, Object value);
+    <T> void remove(String key, long i, T value);
 
     /**
      * (List操作)
@@ -202,7 +203,7 @@ public interface CacheRepository {
      * @param index the index
      * @param value the value
      */
-    void set(String key, long index, Object value);
+    <T> void set(String key, long index, T value);
 
     /**
      * (List操作)
@@ -213,7 +214,7 @@ public interface CacheRepository {
      * @param end   the end
      * @return the list
      */
-    List<Object> getList(String key, int start, int end);
+    <T> List<T> getList(String key, int start, int end);
 
     /**
      * (List操作)
@@ -233,7 +234,7 @@ public interface CacheRepository {
      * @param index the index
      * @param value the value
      */
-    void insert(String key, long index, Object value);
+    <T> void insert(String key, long index, T value);
 
     /**
      * 迭代哈希表中的键值对
@@ -243,7 +244,7 @@ public interface CacheRepository {
      * @param count
      * @return
      */
-    Set<Map.Entry<Object, Object>> hScan(String key, String pattern, int count);
+    <K, V> Set<Map.Entry<K, V>> hScan(String key, String pattern, int count);
 
     /**
      * 迭代set中的键值对
@@ -253,7 +254,7 @@ public interface CacheRepository {
      * @param count
      * @return
      */
-    Set<Object> sScan(String key, String pattern, int count);
+    <T> Set<T> sScan(String key, String pattern, int count);
 
 
     /**
@@ -264,7 +265,7 @@ public interface CacheRepository {
      * @param count
      * @return
      */
-    Set<Object> zScan(String key, String pattern, int count);
+    <T> Set<T> zScan(String key, String pattern, int count);
 
 
     /**

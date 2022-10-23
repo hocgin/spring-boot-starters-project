@@ -10,6 +10,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -47,6 +49,7 @@ public class RedisRepositoryImpl implements CacheRepository {
     protected RedisSerializer<String> getRedisSerializer() {
         return new RedisKeySerializer(keyPrefix);
     }
+
     public HashOperations<String, String, Object> opsForHash() {
         return redisTemplate.opsForHash();
     }
@@ -64,31 +67,31 @@ public class RedisRepositoryImpl implements CacheRepository {
     }
 
     @Override
-    public void setExpire(String key, Object value, long time) {
+    public <T> void setExpire(String key, T value, Duration duration) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
             RedisSerializer<String> serializer = getRedisSerializer();
             byte[] keys = serializer.serialize(key);
             byte[] values = OBJECT_SERIALIZER.serialize(value);
-            connection.setEx(keys, time, values);
+            connection.setEx(keys, duration.get(ChronoUnit.SECONDS), values);
             return 1L;
         });
     }
 
     @Override
-    public void setExpire(String[] keys, Object[] values, long time) {
+    public <T> void setExpire(String[] keys, T[] values, Duration duration) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
             RedisSerializer<String> serializer = getRedisSerializer();
             for (int i = 0; i < keys.length; i++) {
                 byte[] bKeys = serializer.serialize(keys[i]);
                 byte[] bValues = OBJECT_SERIALIZER.serialize(values[i]);
-                connection.setEx(bKeys, time, bValues);
+                connection.setEx(bKeys, duration.get(ChronoUnit.SECONDS), bValues);
             }
             return 1L;
         });
     }
 
     @Override
-    public void set(String[] keys, Object[] values) {
+    public <T> void set(String[] keys, T[] values) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
             RedisSerializer<String> serializer = getRedisSerializer();
             for (int i = 0; i < keys.length; i++) {
@@ -101,7 +104,7 @@ public class RedisRepositoryImpl implements CacheRepository {
     }
 
     @Override
-    public void set(String key, Object value) {
+    public <T> void set(String key, T value) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
             RedisSerializer<String> serializer = getRedisSerializer();
             byte[] keys = serializer.serialize(key);
@@ -117,24 +120,24 @@ public class RedisRepositoryImpl implements CacheRepository {
     }
 
     @Override
-    public Object get(String key) {
-        return redisTemplate.execute((RedisCallback<Object>) connection -> {
+    public <T> T get(String key) {
+        return redisTemplate.execute((RedisCallback<T>) connection -> {
             RedisSerializer<String> serializer = getRedisSerializer();
             byte[] keys = serializer.serialize(key);
             byte[] values = connection.get(keys);
-            return OBJECT_SERIALIZER.deserialize(values);
+            return (T) OBJECT_SERIALIZER.deserialize(values);
         });
     }
 
 
     @Override
-    public void putHashValue(String key, String hashKey, Object hashValue) {
+    public <T> void putHashValue(String key, String hashKey, T hashValue) {
         opsForHash().put(key, hashKey, hashValue);
     }
 
     @Override
-    public Object getHashValues(String key, String hashKey) {
-        return opsForHash().get(key, hashKey);
+    public <T> T getHashValues(String key, String hashKey) {
+        return (T) opsForHash().get(key, hashKey);
     }
 
     @Override
@@ -172,23 +175,23 @@ public class RedisRepositoryImpl implements CacheRepository {
     }
 
     @Override
-    public Long leftPush(String key, Object value) {
+    public <T> Long leftPush(String key, T value) {
         return opsForList().leftPush(key, value);
     }
 
     @Override
-    public Object leftPop(String key) {
-        return opsForList().leftPop(key);
+    public <T> T leftPop(String key) {
+        return (T) opsForList().leftPop(key);
     }
 
     @Override
-    public Long in(String key, Object value) {
+    public <T> Long in(String key, T value) {
         return opsForList().rightPush(key, value);
     }
 
     @Override
-    public Object rightPop(String key) {
-        return opsForList().rightPop(key);
+    public <T> T rightPop(String key) {
+        return (T) opsForList().rightPop(key);
     }
 
     @Override
@@ -197,18 +200,18 @@ public class RedisRepositoryImpl implements CacheRepository {
     }
 
     @Override
-    public void remove(String key, long i, Object value) {
+    public <T> void remove(String key, long i, T value) {
         opsForList().remove(key, i, value);
     }
 
     @Override
-    public void set(String key, long index, Object value) {
+    public <T> void set(String key, long index, T value) {
         opsForList().set(key, index, value);
     }
 
     @Override
-    public List<Object> getList(String key, int start, int end) {
-        return opsForList().range(key, start, end);
+    public <T> List<T> getList(String key, int start, int end) {
+        return (List<T>) opsForList().range(key, start, end);
     }
 
     @Override
@@ -217,13 +220,13 @@ public class RedisRepositoryImpl implements CacheRepository {
     }
 
     @Override
-    public void insert(String key, long index, Object value) {
+    public <T> void insert(String key, long index, T value) {
         opsForList().set(key, index, value);
     }
 
     @Override
-    public Set<Map.Entry<Object, Object>> hScan(String key, String pattern, int count) {
-        Set<Map.Entry<Object, Object>> entrySet = new HashSet<>();
+    public <K, V> Set<Map.Entry<K, V>> hScan(String key, String pattern, int count) {
+        Set<Map.Entry<K, V>> entrySet = new HashSet<>();
         ScanOptions scanOptions;
         if (count > -1) {
             scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
@@ -232,15 +235,15 @@ public class RedisRepositoryImpl implements CacheRepository {
         }
         Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(key, scanOptions);
         while (cursor.hasNext()) {
-            Map.Entry<Object, Object> entry = cursor.next();
+            Map.Entry<K, V> entry = (Map.Entry<K, V>) cursor.next();
             entrySet.add(entry);
         }
         return entrySet;
     }
 
     @Override
-    public Set<Object> sScan(String key, String pattern, int count) {
-        Set<Object> entrySet = new HashSet<>();
+    public <T> Set<T> sScan(String key, String pattern, int count) {
+        Set<T> entrySet = new HashSet<>();
         ScanOptions scanOptions;
         if (count > -1) {
             scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
@@ -249,15 +252,15 @@ public class RedisRepositoryImpl implements CacheRepository {
         }
         Cursor<Object> cursor = redisTemplate.opsForSet().scan(key, scanOptions);
         while (cursor.hasNext()) {
-            Object entry = cursor.next();
+            T entry = (T) cursor.next();
             entrySet.add(entry);
         }
         return entrySet;
     }
 
     @Override
-    public Set<Object> zScan(String key, String pattern, int count) {
-        Set<Object> entrySet = new HashSet<>();
+    public <T> Set<T> zScan(String key, String pattern, int count) {
+        Set<T> entrySet = new HashSet<>();
         ScanOptions scanOptions;
         if (count > -1) {
             scanOptions = ScanOptions.scanOptions().match(pattern).count(count).build();
@@ -266,7 +269,7 @@ public class RedisRepositoryImpl implements CacheRepository {
         }
         Cursor<ZSetOperations.TypedTuple<Object>> cursor = redisTemplate.opsForZSet().scan(key, scanOptions);
         while (cursor.hasNext()) {
-            Object entry = cursor.next().getValue();
+            T entry = (T) cursor.next().getValue();
             entrySet.add(entry);
         }
         return entrySet;

@@ -15,6 +15,10 @@
 
   <dependencies>
     <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>utils-base</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.aliyun.oss</groupId>
       <artifactId>aliyun-sdk-oss</artifactId>
       <optional>true</optional>
@@ -23,14 +27,6 @@
       <groupId>com.qiniu</groupId>
       <artifactId>qiniu-java-sdk</artifactId>
       <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>cn.hutool</groupId>
-      <artifactId>hutool-all</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
     </dependency>
     <!-- Spring Boot dependencies -->
     <dependency>

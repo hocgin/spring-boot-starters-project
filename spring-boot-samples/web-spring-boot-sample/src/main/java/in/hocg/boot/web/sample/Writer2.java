@@ -1,5 +1,6 @@
 package in.hocg.boot.web.sample;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
  *
  * @author hocgin
  */
+@Lazy
 @Component
 public class Writer2 {
 
