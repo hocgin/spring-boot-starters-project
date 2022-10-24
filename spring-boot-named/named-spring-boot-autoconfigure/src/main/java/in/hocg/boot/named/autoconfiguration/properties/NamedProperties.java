@@ -29,7 +29,7 @@ public class NamedProperties {
     @Setter
     @Accessors(chain = true)
     public static class CacheConfig {
-        public static final CacheConfig DEFAULT = new CacheConfig().setPrefix("v").setExpired(Duration.ofDays(1));
+        public static final CacheConfig DEFAULT = new CacheConfig().setPrefix("v1").setExpired(Duration.ofHours(1));
 
         /**
          * 缓存前缀
