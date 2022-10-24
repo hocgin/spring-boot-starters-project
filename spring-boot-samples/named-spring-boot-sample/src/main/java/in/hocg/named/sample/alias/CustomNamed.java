@@ -1,7 +1,7 @@
 package in.hocg.named.sample.alias;
 
 import in.hocg.boot.named.annotation.Named;
-import in.hocg.named.sample.basic.AppNamedService;
+import in.hocg.named.sample.basic.CustomNamedService;
 
 import java.lang.annotation.*;
 
@@ -14,8 +14,8 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Named(useService = AppNamedService.class)
-public @interface AppNamed {
+@Named(useService = CustomNamedService.class)
+public @interface CustomNamed {
 
     /**
      * 字典项标识

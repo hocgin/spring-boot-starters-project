@@ -5,7 +5,7 @@ import in.hocg.boot.named.annotation.Named;
 import in.hocg.boot.named.autoconfiguration.aspect.NamedAspect;
 import in.hocg.boot.test.autoconfiguration.core.AbstractSpringBootTest;
 import in.hocg.named.sample.BootApplication;
-import in.hocg.named.sample.TestBean;
+import in.hocg.named.sample.pojo.TestBeanDto;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class Tests extends AbstractSpringBootTest {
 
     @Test
     public void test() {
-        ArrayList<TestBean> result = Lists.newArrayList(new TestBean());
+        ArrayList<TestBeanDto> result = Lists.newArrayList(new TestBeanDto());
         Stopwatch started = Stopwatch.createStarted();
         Object handleResult = namedAspect.handleResult(result);
         System.out.println(started.stop());

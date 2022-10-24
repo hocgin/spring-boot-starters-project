@@ -12,5 +12,5 @@ import lombok.experimental.UtilityClass;
 public class NamedConstants {
     public final String Test = "Test";
     public final String Test2 = "Test2";
-    public final String Test3 = "Test3";
+    public final String ThrowTest3 = "Test3";
 }

@@ -17,7 +17,7 @@ import java.util.Map;
  * @author hocgin
  */
 @Component
-public class AppNamedService extends AbsNamedServiceExpand
+public class CustomNamedService extends AbsNamedServiceExpand
     implements NamedService {
 
     @NamedHandler(NamedConstants.Test)
@@ -26,7 +26,7 @@ public class AppNamedService extends AbsNamedServiceExpand
         List<String> values = args.getValues();
         for (String value : values) {
             // Thread.sleep(100L);
-            result.put(value, "xx-1#" + value);
+            result.put(value, "custom.xx-1#" + value);
         }
         return result;
     }
@@ -37,18 +37,18 @@ public class AppNamedService extends AbsNamedServiceExpand
         List<String> values = args.getValues();
         for (String value : values) {
             // Thread.sleep(100L);
-            result.put(value, "xx-2#" + value);
+            result.put(value, "custom.xx-2#" + value);
         }
         return result;
     }
 
-    @NamedHandler(NamedConstants.Test3)
+    @NamedHandler(NamedConstants.ThrowTest3)
     public Map<String, Object> loadTest3Data(NamedArgs args) throws InterruptedException {
         Map<String, Object> result = Maps.newHashMap();
         List<String> values = getValues(args.getValues(), String.class);
         for (String value : values) {
             // Thread.sleep(100L);
-            result.put(value, "xx-3#" + value);
+            result.put(value, "custom.xx-3#" + value);
         }
         throw new RuntimeException(" -> 异常");
 //        return result;

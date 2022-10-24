@@ -4,7 +4,7 @@ import cn.hutool.core.util.ReflectUtil;
 import com.google.common.base.Stopwatch;
 import in.hocg.boot.named.annotation.Named;
 import in.hocg.boot.named.autoconfiguration.utils.NamedUtils;
-import in.hocg.named.sample.TestBean;
+import in.hocg.named.sample.pojo.TestBeanDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.reflections.Reflections;
@@ -32,11 +32,11 @@ public class JTests {
     @Test
     public void testHutool() {
         Stopwatch started = Stopwatch.createStarted();
-        NamedUtils.getAllField(TestBean.class);
+        NamedUtils.getAllField(TestBeanDto.class);
         started = started.stop();
         System.out.println(started);
         started.reset().start();
-        NamedUtils.getAllField(TestBean.class);
+        NamedUtils.getAllField(TestBeanDto.class);
         System.out.println(started.stop());
     }
 
@@ -47,18 +47,18 @@ public class JTests {
     @Test
     public void testHutool2() {
         Stopwatch started = Stopwatch.createStarted();
-        ReflectUtil.getFieldMap(TestBean.class);
+        ReflectUtil.getFieldMap(TestBeanDto.class);
         started = started.stop();
         System.out.println(started);
         started.reset().start();
-        Map<String, Field> fieldMap = ReflectUtil.getFieldMap(TestBean.class);
+        Map<String, Field> fieldMap = ReflectUtil.getFieldMap(TestBeanDto.class);
         System.out.println(started.stop());
     }
 
     @Test
     public void testReflections() {
 //        ConfigurationBuilder.build("").set
-        Reflections reflections = new Reflections(TestBean.class, new SubTypesScanner(),
+        Reflections reflections = new Reflections(TestBeanDto.class, new SubTypesScanner(),
             new TypeAnnotationsScanner(), new FieldAnnotationsScanner());
         Set<Field> fieldsAnnotatedWith = reflections.getFieldsAnnotatedWith(Named.class);
         System.out.println(fieldsAnnotatedWith);
