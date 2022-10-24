@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    producer:
+      retries: 3
+      batch-size: 16384
+      buffer-memory: 33554432
+      acks: 1
+    consumer:
+      group-id: defaultGroup
+      enable-auto-commit: false
+      auto-offset-reset: earliest # 当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费
+    listener:
+      missing-topics-fatal: false
+      ack-mode: manual_immediate

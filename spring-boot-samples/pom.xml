@@ -16,6 +16,7 @@
 
   <modules>
     <module>netty-spring-boot-sample</module>
+    <module>kafka-spring-boot-sample</module>
     <module>named-spring-boot-sample</module>
     <module>oss-spring-boot-sample</module>
     <module>sms-spring-boot-sample</module>
