@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Maps;
 import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RequiredArgsConstructor
 public class MemoryNamedCacheServiceImpl implements NamedCacheService, InitializingBean {
+    @Getter
     private final NamedProperties properties;
     private Cache<String, Object> cachePool = CacheBuilder.newBuilder()
         .softValues()
@@ -45,6 +47,11 @@ public class MemoryNamedCacheServiceImpl implements NamedCacheService, Initializ
     @Override
     public void batchPut(Map<String, Object> caches) {
         caches.entrySet().parallelStream().forEach(entry -> cachePool.put(entry.getKey(), entry.getValue()));
+    }
+
+    @Override
+    public void clear(String namedType, String[] args, Object id) {
+        cachePool.invalidate(this.getCacheKey(namedType, args, id));
     }
 
     @Override
