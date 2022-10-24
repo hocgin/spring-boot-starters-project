@@ -43,11 +43,6 @@ public class BootApplication {
         return result;
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "ok";
-    }
-
 //    @GetMapping("/ipage")
 //    public IPage<TestBean> ipage() {
 //        return service.ipage();

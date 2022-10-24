@@ -1,7 +1,6 @@
-package in.hocg.named.sample.alias;
+package in.hocg.named.sample.named;
 
 import in.hocg.boot.named.annotation.Named;
-import in.hocg.named.sample.basic.CustomNamedService;
 
 import java.lang.annotation.*;
 

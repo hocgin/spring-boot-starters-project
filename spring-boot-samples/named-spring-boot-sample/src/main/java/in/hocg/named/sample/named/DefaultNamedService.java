@@ -1,4 +1,4 @@
-package in.hocg.named.sample.basic;
+package in.hocg.named.sample.named;
 
 import com.google.common.collect.Maps;
 import in.hocg.boot.named.annotation.NamedService;

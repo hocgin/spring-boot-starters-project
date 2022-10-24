@@ -2,10 +2,10 @@ package in.hocg.named.sample.pojo;
 
 import in.hocg.boot.named.annotation.InjectNamed;
 import in.hocg.boot.named.annotation.Named;
-import in.hocg.named.sample.alias.CustomNamed;
-import in.hocg.named.sample.basic.DefaultNamedService;
-import in.hocg.named.sample.basic.CustomNamedService;
-import in.hocg.named.sample.basic.NamedConstants;
+import in.hocg.named.sample.named.CustomNamed;
+import in.hocg.named.sample.named.DefaultNamedService;
+import in.hocg.named.sample.named.CustomNamedService;
+import in.hocg.named.sample.named.NamedConstants;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
