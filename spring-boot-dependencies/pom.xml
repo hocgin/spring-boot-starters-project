@@ -72,6 +72,17 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <!-- CPS -->
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cps-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>cps-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- Kafka -->
       <dependency>
         <groupId>${project.groupId}</groupId>
