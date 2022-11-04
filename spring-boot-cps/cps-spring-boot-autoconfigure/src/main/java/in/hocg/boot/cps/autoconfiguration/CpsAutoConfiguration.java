@@ -18,5 +18,4 @@ import org.springframework.context.annotation.Lazy;
 @EnableConfigurationProperties(CpsProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class CpsAutoConfiguration {
-
 }
