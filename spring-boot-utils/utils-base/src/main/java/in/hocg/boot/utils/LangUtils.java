@@ -3,6 +3,7 @@ package in.hocg.boot.utils;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileMode;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -20,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -425,5 +428,32 @@ public class LangUtils {
         file.writeBytes(RandomUtil.randomString(5));
         file.close();
         return path;
+    }
+
+    /**
+     * 提取内容
+     *
+     * @param regex
+     * @param content
+     * @return
+     */
+    public static String extract(String regex, String content) {
+        // 匹配当前正则表达式
+        Matcher matcher = Pattern.compile(regex).matcher(content);
+        // 定义当前文件的文件名称
+        String result = "";
+        // 判断是否可以找到匹配正则表达式的字符
+        if (matcher.find()) {
+            // 将匹配当前正则表达式的字符串即文件名称进行赋值
+            result = matcher.group();
+        }
+        return result;
+    }
+
+    public static <T> T lastElement(T[] elements) {
+        if (ArrayUtil.isEmpty(elements)) {
+            return null;
+        }
+        return elements[elements.length - 1];
     }
 }
