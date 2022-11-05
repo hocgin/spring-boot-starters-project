@@ -33,8 +33,15 @@ public class BootApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        PrivilegeLinkVo privilegeLink;
         CpsBervice bervice = SpringContext.getBean(CpsBervice.class);
-        PrivilegeLinkVo privilegeLink = bervice.getPrivilegeLink(PlatformType.TaoBao, "563867605080");
+        log.info("==================================================");
+        privilegeLink = bervice.getPrivilegeLink("https://detail.tmall.com/item.htm?id=638383979132&scm=1007.40986.275655.0&pvid=4381710b-90f0-4466-87e2-cf57e874b5c9").orElse(null);
+        log.info("TaoBao.{}", JSONUtil.toJsonStr(privilegeLink));
+        privilegeLink = bervice.getPrivilegeLink("https://item.jd.com/10035254492755.html").orElse(null);
+        log.info("Jd.{}", JSONUtil.toJsonStr(privilegeLink));
+        log.info("==================================================");
+        privilegeLink = bervice.getPrivilegeLink(PlatformType.TaoBao, "563867605080");
         log.info("TaoBao.{}", JSONUtil.toJsonStr(privilegeLink));
         privilegeLink = bervice.getPrivilegeLink(PlatformType.Jd, "https://item.jd.com/10035254492755.html");
         log.info("Jd.{}", JSONUtil.toJsonStr(privilegeLink));

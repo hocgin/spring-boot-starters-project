@@ -3,6 +3,7 @@ package in.hocg.boot.utils;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileMode;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -456,4 +457,18 @@ public class LangUtils {
         }
         return elements[elements.length - 1];
     }
+
+    public static Pair<String, Map<String, String>> getParams(String url) {
+        String urlStr = url;
+        Map<String, String> params = new HashMap<>();
+        if (StrUtil.contains(url, "?")) {
+            int index = StrUtil.indexOf(url, '?');
+            urlStr = StrUtil.sub(url, 0, index);
+            Arrays.stream(StrUtil.blankToDefault(StrUtil.sub(url, index + 1, url.length()), StrUtil.EMPTY)
+                    .split("&")).map(s -> s.split("=", 2))
+                .forEach(keyValue -> params.put(keyValue[0], keyValue[1]));
+        }
+        return new Pair<>(urlStr, params);
+    }
+
 }
