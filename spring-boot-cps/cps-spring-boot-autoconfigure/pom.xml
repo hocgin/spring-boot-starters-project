@@ -20,7 +20,7 @@
       <artifactId>taobao-sdk</artifactId>
       <version>1.0.0</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/resources/lib/tb/taobao-sdk-java-auto_1585288601336-20200329.jar
+      <systemPath>${project.basedir}/src/main/resources/lib/tb/taobao-sdk-java-auto_1603790307338-20221010.jar
       </systemPath>
     </dependency>
     <!-- 唯品会 -->
