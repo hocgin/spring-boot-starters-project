@@ -57,6 +57,7 @@
     <module>notify-spring-boot-starter</module>
     <module>netty-server-spring-boot-starter</module>
     <module>netty-client-spring-boot-starter</module>
+    <module>cps-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

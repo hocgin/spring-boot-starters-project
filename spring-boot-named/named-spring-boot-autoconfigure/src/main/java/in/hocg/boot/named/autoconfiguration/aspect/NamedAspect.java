@@ -273,8 +273,7 @@ public class NamedAspect implements InitializingBean {
     }
 
     private String getCacheKey(NamedRow namedRow) {
-        String prefix = StrUtil.nullToEmpty(properties.getCache().getPrefix());
-        return StrUtil.format("{}:{}", prefix, cacheService.getCacheKey(namedRow));
+        return cacheService.getCacheKey(namedRow);
     }
 
     private Map<String, Object> callNamedHandleMethod(Object namedService, String namedType, Object[] ids, String[] args) {

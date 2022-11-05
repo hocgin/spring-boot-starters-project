@@ -1,6 +1,7 @@
 package in.hocg.boot.named.autoconfiguration.core;
 
 import cn.hutool.core.util.StrUtil;
+import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
 import org.springframework.scheduling.annotation.Async;
 
 import java.util.Arrays;
@@ -32,6 +33,16 @@ public interface NamedCacheService {
     void batchPut(Map<String, Object> caches);
 
     /**
+     * 过期操作
+     *
+     * @param namedType
+     * @param args
+     * @param id
+     */
+    @Async
+    void clear(String namedType, String[] args, Object id);
+
+    /**
      * key 生成策略
      *
      * @param namedRow _
@@ -41,7 +52,20 @@ public interface NamedCacheService {
         String namedType = namedRow.getNamedType();
         Object id = namedRow.getIdValue();
         String[] args = namedRow.getArgs();
-        return StrUtil.format("NamedCache:{}:{}:{}", namedType, id, Arrays.toString(args));
+        return this.getCacheKey(namedType, args, id);
     }
 
+    default String getCacheKey(String namedType, String[] args, Object id) {
+        return getCacheKey(this.getPrefix(), namedType, args, id);
+    }
+
+    default String getCacheKey(String prefix, String namedType, String[] args, Object id) {
+        return StrUtil.format("{}:NamedCache:{}:{}:{}", prefix, namedType, id, Arrays.toString(args));
+    }
+
+    default String getPrefix() {
+        return this.getProperties().getCache().getPrefix();
+    }
+
+    NamedProperties getProperties();
 }

@@ -1,6 +1,8 @@
 package in.hocg.named.sample;
 
 import cn.hutool.core.date.StopWatch;
+import in.hocg.named.sample.pojo.TestBeanDto;
+import in.hocg.named.sample.service.TestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -32,18 +34,13 @@ public class BootApplication {
     }
 
     @GetMapping("/worked")
-    public List<TestBean> worked() {
+    public List<TestBeanDto> worked() {
         StopWatch watch = new StopWatch();
         watch.start();
-        List<TestBean> result = service.worked();
+        List<TestBeanDto> result = service.worked();
         watch.stop();
         log.info("{}, 响应时间: {} s", Objects.nonNull(result.get(0).getCode2Name()), watch.getLastTaskInfo().getTimeSeconds());
         return result;
-    }
-
-    @GetMapping("/test")
-    public String test() {
-        return "ok";
     }
 
 //    @GetMapping("/ipage")

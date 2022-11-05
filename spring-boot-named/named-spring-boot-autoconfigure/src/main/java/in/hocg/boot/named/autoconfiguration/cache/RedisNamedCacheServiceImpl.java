@@ -3,6 +3,7 @@ package in.hocg.boot.named.autoconfiguration.cache;
 import com.google.common.collect.Maps;
 import in.hocg.boot.named.autoconfiguration.core.NamedCacheService;
 import in.hocg.boot.named.autoconfiguration.properties.NamedProperties;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.connection.RedisStringCommands;
@@ -14,6 +15,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hocgin on 2021/2/25
@@ -25,6 +27,7 @@ import java.util.Objects;
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class RedisNamedCacheServiceImpl implements NamedCacheService {
     private final RedisTemplate<String, Object> redisTemplate;
+    @Getter
     private final NamedProperties properties;
     private final RedisSerializer<String> keySerializer = RedisSerializer.string();
     private final RedisSerializer<Object> valueSerializer = RedisSerializer.java();
@@ -56,5 +59,10 @@ public class RedisNamedCacheServiceImpl implements NamedCacheService {
                     expiration, RedisStringCommands.SetOption.UPSERT));
             return null;
         });
+    }
+
+    @Override
+    public void clear(String namedType, String[] args, Object id) {
+        redisTemplate.expire(this.getCacheKey(namedType, args, id), 0, TimeUnit.SECONDS);
     }
 }

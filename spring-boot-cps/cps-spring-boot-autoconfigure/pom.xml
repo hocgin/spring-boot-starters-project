@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>spring-boot-cps</artifactId>
+    <groupId>in.hocg.boot</groupId>
+    <version>${revision}</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+
+  <name>CPS :: Spring Boot :: AutoConfigure</name>
+  <artifactId>cps-spring-boot-autoconfigure</artifactId>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.6</version>
+    </dependency>
+    <!-- 淘宝 -->
+    <dependency>
+      <groupId>com.cps.tb</groupId>
+      <artifactId>taobao-sdk</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/resources/lib/tb/taobao-sdk-java-auto_1603790307338-20221010.jar
+      </systemPath>
+    </dependency>
+    <!-- 唯品会 -->
+    <dependency>
+      <groupId>com.cps.wph</groupId>
+      <artifactId>osp-sdk</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/resources/lib/wph/osp-sdk.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.cps.wph</groupId>
+      <artifactId>vop-sdk</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/resources/lib/wph/vop-sdk.jar</systemPath>
+    </dependency>
+    <!-- 蘑菇街 -->
+    <dependency>
+      <groupId>com.cps.mgj</groupId>
+      <artifactId>openapi-sdk</artifactId>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/resources/lib/mgj/sdk/openapi-sdk.jar</systemPath>
+    </dependency>
+    <!-- 拼多多 -->
+    <dependency>
+      <groupId>com.cps.pdd</groupId>
+      <artifactId>pop-sdk-all</artifactId>
+      <classifier>all</classifier>
+      <version>1.0.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/resources/lib/pdd/sdk/pop-sdk-1.10.53-all.jar</systemPath>
+    </dependency>
+    <!-- 其他 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <!-- Basic -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>utils-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure-processor</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+
+</project>

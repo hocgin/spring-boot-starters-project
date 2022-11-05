@@ -1,0 +1,11 @@
+server:
+  port: 8081
+spring:
+  redis:
+    host: 39.100.87.79
+    port: 32079
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/db_test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: hocgin
