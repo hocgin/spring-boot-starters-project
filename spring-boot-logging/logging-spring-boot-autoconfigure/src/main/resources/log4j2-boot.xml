@@ -3,7 +3,7 @@
   <Properties>
     <Property name="PID">????</Property>
     <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
-    <Property name="LOG_LEVEL_PATTERN">${sys:LOG_LEVEL_PATTERN}</Property>
+    <Property name="LOG_LEVEL_PATTERN">%5p [%X{X-B3-TraceId},%X{X-B3-SpanId},%X{X-Span-Export}]</Property>
     <Property name="CONSOLE_LOG_PATTERN">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{${LOG_LEVEL_PATTERN}} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
     <Property name="FILE_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN} ${sys:PID} --- [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
   </Properties>
@@ -27,19 +27,19 @@
       </DefaultRolloverStrategy>
     </RollingFile>
     <Loghub name="Loghub"
-            project="${logging:boot.logging.project-name}"
-            logstore="${logging:boot.logging.log-store}"
-            endpoint="${logging:boot.logging.endpoint}"
-            accessKeyId="${logging:boot.logging.access-key}"
-            accessKeySecret="${logging:boot.logging.secret-key}"
+            project="${aliyun:boot.logging.project-name}"
+            logstore="${aliyun:boot.logging.log-store}"
+            endpoint="${aliyun:boot.logging.endpoint}"
+            accessKeyId="${aliyun:boot.logging.access-key}"
+            accessKeySecret="${aliyun:boot.logging.secret-key}"
             packageTimeoutInMS="3000"
             logsCountPerPackage="4096"
             logsBytesPerPackage="3145728"
             memPoolSizeInByte="104857600"
             retryTimes="3"
             maxIOThreadSizeInPool="8"
-            topic="${logging:boot.logging.topic}"
-            source="${logging:boot.logging.source}"
+            topic="${aliyun:boot.logging.topic}"
+            source="${aliyun:boot.logging.source}"
             timeFormat="yyyy-MM-dd'T'HH:mmZ"
             timeZone="Asia/Shanghai"
             ignoreExceptions="true">

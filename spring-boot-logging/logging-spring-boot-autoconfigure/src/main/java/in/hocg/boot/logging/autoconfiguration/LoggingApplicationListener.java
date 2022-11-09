@@ -14,9 +14,9 @@ import org.springframework.core.env.Environment;
 public class LoggingApplicationListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent>, Ordered {
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
-        Environment environment = LoggingLookup.getEnvironment();
+        Environment environment = AliyunLookup.getEnvironment();
         if (environment == null) {
-            LoggingLookup.setEnvironment(event.getEnvironment());
+            AliyunLookup.setEnvironment(event.getEnvironment());
         }
     }
 

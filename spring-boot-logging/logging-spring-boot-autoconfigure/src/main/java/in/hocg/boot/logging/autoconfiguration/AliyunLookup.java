@@ -18,8 +18,8 @@ import org.springframework.core.env.Environment;
  *
  * @author hocgin
  */
-@Plugin(name = "logging", category = StrLookup.CATEGORY)
-public class LoggingLookup extends AbstractLookup implements StrLookup {
+@Plugin(name = "aliyun", category = StrLookup.CATEGORY)
+public class AliyunLookup extends AbstractLookup implements StrLookup {
     @Getter
     @Setter
     private static Environment environment;
@@ -27,12 +27,17 @@ public class LoggingLookup extends AbstractLookup implements StrLookup {
     private static final Marker LOOKUP = MarkerManager.getMarker("LOOKUP");
 
     @Override
-    public String lookup(LogEvent logEvent, String s) {
+    public String lookup(LogEvent logEvent, String key) {
         try {
-            return environment.getProperty(s);
+            return this.lookup(key);
         } catch (final Exception e) {
-            LOGGER.warn(LOOKUP, "Error while getting system property [{}].", s, e);
+            LOGGER.warn(LOOKUP, "Error while getting system property [{}].", key, e);
             return null;
         }
+    }
+
+    @Override
+    public String lookup(String key) {
+        return environment.getProperty(key);
     }
 }
