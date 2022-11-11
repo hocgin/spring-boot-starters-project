@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hocgin on 2021/5/13
@@ -299,5 +300,11 @@ public class RedisRepositoryImpl implements CacheRepository {
             log.error(e.getMessage());
         }
         return Collections.emptySet();
+    }
+
+    @Override
+    public Boolean setNxAndExpire(String key, String value, long milliseconds) {
+        Boolean result = redisTemplate.opsForValue().setIfAbsent(key, value, milliseconds, TimeUnit.MILLISECONDS);
+        return null != result && result;
     }
 }
