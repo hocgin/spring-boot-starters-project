@@ -234,10 +234,13 @@ public class RedisRepositoryImpl implements CacheRepository {
         } else {
             scanOptions = ScanOptions.scanOptions().match(pattern).build();
         }
-        Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(key, scanOptions);
-        while (cursor.hasNext()) {
-            Map.Entry<K, V> entry = (Map.Entry<K, V>) cursor.next();
-            entrySet.add(entry);
+        try (Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(key, scanOptions)) {
+            while (cursor.hasNext()) {
+                Map.Entry<K, V> entry = (Map.Entry<K, V>) cursor.next();
+                entrySet.add(entry);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return entrySet;
     }
@@ -251,10 +254,13 @@ public class RedisRepositoryImpl implements CacheRepository {
         } else {
             scanOptions = ScanOptions.scanOptions().match(pattern).build();
         }
-        Cursor<Object> cursor = redisTemplate.opsForSet().scan(key, scanOptions);
-        while (cursor.hasNext()) {
-            T entry = (T) cursor.next();
-            entrySet.add(entry);
+        try (Cursor<Object> cursor = redisTemplate.opsForSet().scan(key, scanOptions)) {
+            while (cursor.hasNext()) {
+                T entry = (T) cursor.next();
+                entrySet.add(entry);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return entrySet;
     }
@@ -268,10 +274,13 @@ public class RedisRepositoryImpl implements CacheRepository {
         } else {
             scanOptions = ScanOptions.scanOptions().match(pattern).build();
         }
-        Cursor<ZSetOperations.TypedTuple<Object>> cursor = redisTemplate.opsForZSet().scan(key, scanOptions);
-        while (cursor.hasNext()) {
-            T entry = (T) cursor.next().getValue();
-            entrySet.add(entry);
+        try (Cursor<ZSetOperations.TypedTuple<Object>> cursor = redisTemplate.opsForZSet().scan(key, scanOptions)) {
+            while (cursor.hasNext()) {
+                T entry = (T) cursor.next().getValue();
+                entrySet.add(entry);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return entrySet;
     }
@@ -286,18 +295,15 @@ public class RedisRepositoryImpl implements CacheRepository {
         }
 
         // SCAN命令需要在同一条连接上执行
-        ConvertingCursor<byte[], String> cursor = redisTemplate.executeWithStickyConnection(connection -> new ConvertingCursor<>(connection.scan(scanOptions), new StringRedisSerializer()::deserialize));
-
-        // 因为使用scan命令可能会存在重复，所以使用HashSet去重
-        if (cursor != null) {
-            Set<String> set = Sets.newHashSet();
-            cursor.forEachRemaining(set::add);
-            return set;
-        }
-        try {
-            cursor.close();
+        try (ConvertingCursor<byte[], String> cursor = redisTemplate.executeWithStickyConnection(connection -> new ConvertingCursor<>(connection.scan(scanOptions), new StringRedisSerializer()::deserialize))) {
+            // 因为使用scan命令可能会存在重复，所以使用HashSet去重
+            if (cursor != null) {
+                Set<String> set = Sets.newHashSet();
+                cursor.forEachRemaining(set::add);
+                return set;
+            }
         } catch (IOException e) {
-            log.error(e.getMessage());
+            throw new RuntimeException(e);
         }
         return Collections.emptySet();
     }

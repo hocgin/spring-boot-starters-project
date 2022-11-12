@@ -4,11 +4,6 @@ import in.hocg.boot.cache.autoconfiguration.enums.LockType;
 
 import java.lang.annotation.*;
 
-/**
- * @author Trazen
- * @desc
- * @date 2019/12/13
- */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

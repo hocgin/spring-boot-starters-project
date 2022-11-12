@@ -26,18 +26,18 @@ public class RedisKeySerializer implements RedisSerializer<String> {
         String saveKey = new String(bytes, charset);
         int indexOf = saveKey.indexOf(keyPrefix);
         if (indexOf > 0) {
-            log.info("key缺少前缀");
+            log.warn("Key 缺少前缀");
         } else {
             saveKey = saveKey.substring(indexOf);
         }
-        log.debug("saveKey:{}", saveKey);
+        log.debug("SaveKey=[{}]", saveKey);
         return saveKey;
     }
 
     @Override
     public byte[] serialize(String string) {
         String key = keyPrefix + string;
-        log.debug("key:{},getBytes:{}", key, key.getBytes(charset));
+        log.debug("Key=[{}], getBytes=[{}]", key, key.getBytes(charset));
         return key.getBytes(charset);
     }
 }

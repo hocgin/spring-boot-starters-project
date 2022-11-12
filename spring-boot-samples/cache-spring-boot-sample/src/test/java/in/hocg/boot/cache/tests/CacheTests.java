@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = {BootApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CacheTests extends AbstractSpringBootTest {
     @Autowired
-    private CacheRepository cacheRepository;
+    CacheRepository cacheRepository;
 
     @Test
     public void mock() {

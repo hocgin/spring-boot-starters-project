@@ -6,16 +6,20 @@ import com.google.common.primitives.Longs;
 /**
  * Created by hocgin on 2021/5/13
  * email: hocgin@gmail.com
+ * <p>
+ * 布隆过滤器策略
  *
  * @author hocgin
  */
 public class RedisBloomFilterStrategy {
 
     /**
-     * @param value
-     * @param numHashFunctions
-     * @param bitArray
-     * @return
+     * 存储
+     *
+     * @param value            值
+     * @param numHashFunctions 哈希数
+     * @param bitArray         位图
+     * @return 存储结果
      */
     public boolean put(String value, int numHashFunctions, RedisBitMap bitArray) {
         long bitSize = bitArray.bitSize();
@@ -34,10 +38,12 @@ public class RedisBloomFilterStrategy {
     }
 
     /**
-     * @param value
-     * @param numHashFunctions
-     * @param bitArray
-     * @return
+     * 包含判断
+     *
+     * @param value            值
+     * @param numHashFunctions 哈希数
+     * @param bitArray         位图
+     * @return 查询结果
      */
     public boolean mightContain(String value, int numHashFunctions, RedisBitMap bitArray) {
         long bitSize = bitArray.bitSize();
@@ -47,7 +53,8 @@ public class RedisBloomFilterStrategy {
         long combinedHash = hash1;
 
         for (int i = 0; i < numHashFunctions; i++) {
-            //只要有一次hash后未映射到bit数组上，则认为该元素一定不存在
+
+            // 只要有一次hash后未映射到bit数组上，则认为该元素一定不存在
             if (bitArray.set((combinedHash & Long.MAX_VALUE) % bitSize)) {
                 return false;
             }

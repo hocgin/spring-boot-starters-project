@@ -29,10 +29,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Aspect
-@Order(DistributeLockAspect.ORDERED)
+@Order(-10)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class DistributeLockAspect {
-    public static final Integer ORDERED = -10;
+    public static final String LOCK_PREFIX = "redisson:lock:";
 
     private final RedissonProperties properties;
 
@@ -84,7 +84,7 @@ public class DistributeLockAspect {
     private Long getLockTimeout(DistributeLock lock, RedissonProperties properties) {
         long timeout = lock.lockTimeout();
         if (timeout == 0) {
-            timeout = properties.getLockTimeout();
+            timeout = properties.getLockWatchdogTimeout();
         }
         return timeout;
     }
@@ -116,7 +116,6 @@ public class DistributeLockAspect {
      *
      * @param point 点
      * @param lock  锁
-     * @return
      */
     private String[] getLockKeys(ProceedingJoinPoint point, DistributeLock lock) {
         String[] keys = lock.keys();
@@ -127,35 +126,35 @@ public class DistributeLockAspect {
         Object[] args = point.getArgs();
         List<String> result = new ArrayList<>();
         for (String key : keys) {
-            result.addAll(getValueBySpel(key, parameterNames, args, lock.keyConstant()));
+            result.addAll(getValueBySpEl(key, parameterNames, args, lock.keyConstant()));
         }
         return result.toArray(String[]::new);
     }
 
-    public List<String> getValueBySpel(String key, String[] parameterNames, Object[] values, String keyConstant) {
+    public List<String> getValueBySpEl(String key, String[] parameterNames, Object[] values, String keyConstant) {
         List<String> keys = new ArrayList<>();
         if (!key.contains("#")) {
-            String s = "redisson:lock:" + key + keyConstant;
-            log.debug("没有使用 SPEL 表达式[{}]", s);
+            String s = LOCK_PREFIX + key + keyConstant;
+            log.debug("没有使用 SpEL 表达式[{}]", s);
             keys.add(s);
             return keys;
         }
         Object value = ElUtils.parseSpEl(key, parameterNames, values);
         if (value != null) {
             if (value instanceof List) {
-                for (Object o : (List) value) {
-                    keys.add("redisson:lock:" + o.toString() + keyConstant);
+                for (Object o : (List<?>) value) {
+                    keys.add(LOCK_PREFIX + o.toString() + keyConstant);
                 }
             } else if (value.getClass().isArray()) {
                 Object[] obj = (Object[]) value;
                 for (Object o : obj) {
-                    keys.add("redisson:lock:" + o.toString() + keyConstant);
+                    keys.add(LOCK_PREFIX + o.toString() + keyConstant);
                 }
             } else {
-                keys.add("redisson:lock:" + value + keyConstant);
+                keys.add(LOCK_PREFIX + value + keyConstant);
             }
         }
-        log.debug("SPEL 表达式 key=[{}], value=[{}]", key, keys);
+        log.debug("SpEL 表达式 key=[{}], value=[{}]", key, keys);
         return keys;
     }
 }

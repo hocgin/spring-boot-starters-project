@@ -9,6 +9,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
+import in.hocg.boot.utils.function.ConsumerThrow;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -353,6 +354,13 @@ public class LangUtils {
             return Optional.ofNullable(func.apply(v));
         }
         return Optional.empty();
+    }
+
+    @SneakyThrows
+    public <K> void runIfNotNull(K v, ConsumerThrow<K> func) {
+        if (Objects.nonNull(v)) {
+            func.accept(v);
+        }
     }
 
     /**

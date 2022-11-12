@@ -19,47 +19,6 @@
       <artifactId>httpclient</artifactId>
       <version>4.5.6</version>
     </dependency>
-    <!-- 淘宝 -->
-    <dependency>
-      <groupId>com.cps.tb</groupId>
-      <artifactId>taobao-sdk</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/resources/lib/tb/taobao-sdk-java-auto_1603790307338-20221010.jar
-      </systemPath>
-    </dependency>
-    <!-- 唯品会 -->
-    <dependency>
-      <groupId>com.cps.wph</groupId>
-      <artifactId>osp-sdk</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/resources/lib/wph/osp-sdk.jar</systemPath>
-    </dependency>
-    <dependency>
-      <groupId>com.cps.wph</groupId>
-      <artifactId>vop-sdk</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/resources/lib/wph/vop-sdk.jar</systemPath>
-    </dependency>
-    <!-- 蘑菇街 -->
-    <dependency>
-      <groupId>com.cps.mgj</groupId>
-      <artifactId>openapi-sdk</artifactId>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/resources/lib/mgj/sdk/openapi-sdk.jar</systemPath>
-    </dependency>
-    <!-- 拼多多 -->
-    <dependency>
-      <groupId>com.cps.pdd</groupId>
-      <artifactId>pop-sdk-all</artifactId>
-      <classifier>all</classifier>
-      <version>1.0.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/src/main/resources/lib/pdd/sdk/pop-sdk-1.10.53-all.jar</systemPath>
-    </dependency>
     <!-- 其他 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

@@ -10,42 +10,40 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  */
 public class RedisBloomFilter {
 
-    private final RedisBloomFilterStrategy redisBloomFilterStrategy;
+    private final RedisBloomFilterStrategy bloomFilterStrategy;
     private final RedisBitMap redisBitMap;
-    private final int numOfHashFunctions;
-    private final long bits;
+    private final Integer numOfHashFunctions;
 
-    private long expectedInsertions;
-    private double fpp;
-    private String bloomFilterName;
-    private StringRedisTemplate stringRedisTemplate;
-
-    public RedisBloomFilter(long expectedInsertions, double fpp, String bloomFilterName, StringRedisTemplate stringRedisTemplate) {
-        this.expectedInsertions = expectedInsertions;
-        this.fpp = fpp;
-        this.bloomFilterName = bloomFilterName;
-        this.stringRedisTemplate = stringRedisTemplate;
-        this.redisBloomFilterStrategy = new RedisBloomFilterStrategy();
-        this.bits = optimalNumOfBits(expectedInsertions, fpp);
+    private RedisBloomFilter(String bloomFilterName, long expectedInsertions, double fpp, StringRedisTemplate redisTemplate) {
+        this.bloomFilterStrategy = new RedisBloomFilterStrategy();
+        long bits = optimalNumOfBits(expectedInsertions, fpp);
         this.numOfHashFunctions = optimalNumOfHashFunctions(expectedInsertions, bits);
-        this.redisBitMap = new RedisBitMap(stringRedisTemplate, bloomFilterName, bits);
+        this.redisBitMap = new RedisBitMap(redisTemplate, bloomFilterName, bits);
+    }
+
+    public static RedisBloomFilter create(String bloomFilterName, long expectedInsertions, double fpp, StringRedisTemplate redisTemplate) {
+        return new RedisBloomFilter(bloomFilterName, expectedInsertions, fpp, redisTemplate);
     }
 
 
     /**
-     * @param value
-     * @return
+     * 存入值
+     *
+     * @param value 值
+     * @return 存入状态
      */
     public Boolean put(String value) {
-        return this.redisBloomFilterStrategy.put(value, numOfHashFunctions, redisBitMap);
+        return this.bloomFilterStrategy.put(value, numOfHashFunctions, redisBitMap);
     }
 
     /**
-     * @param value
-     * @return
+     * 是否包含值
+     *
+     * @param value 值
+     * @return 包含状态
      */
     public Boolean mightContain(String value) {
-        return this.redisBloomFilterStrategy.mightContain(value, numOfHashFunctions, redisBitMap);
+        return this.bloomFilterStrategy.mightContain(value, numOfHashFunctions, redisBitMap);
     }
 
     int optimalNumOfHashFunctions(long expectedInsertions, long numBits) {

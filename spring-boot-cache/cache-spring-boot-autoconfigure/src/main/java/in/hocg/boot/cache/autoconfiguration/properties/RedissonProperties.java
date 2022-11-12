@@ -4,9 +4,14 @@ import in.hocg.boot.cache.autoconfiguration.enums.LockType;
 import in.hocg.boot.cache.autoconfiguration.enums.RedisMode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
+import org.redisson.config.ReadMode;
+import org.redisson.config.SslProvider;
+import org.redisson.config.SubscriptionMode;
+import org.redisson.config.TransportMode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+
+import java.net.URL;
 
 /**
  * @author hocgin
@@ -22,87 +27,58 @@ public class RedissonProperties {
      */
     private LockType defaultLockType = LockType.Reentrant;
     /**
-     * 锁超时时间
+     * 申请锁超时时间
      */
-    private Long lockTimeout = 30000L;
+    private Long lockWatchdogTimeout = 30000L;
     /**
-     * 加锁失败后，锁尝试超时时间
+     * 加锁失败后，锁尝试继续申请超时时间
      */
     private Long tryWaitTimeout = 10000L;
 
     /**
-     * 库
-     */
-    private Integer database;
-
-    /**
-     * 超时时间
-     */
-    private Integer timeout;
-
-    /**
-     * 密码
+     * 密码，优先级大于 spring.redis.password
      */
     private String password;
-
+    /**
+     * database，优先级大于 spring.redis.database
+     */
+    private Integer database;
     /**
      * 模式
      */
     private RedisMode mode = RedisMode.Single;
 
     /**
-     * 池配置
+     * 全局配置
      */
-    private RedisPoolProperties pool = RedisPoolProperties.DEFAULT;
+    private GlobalProperties global;
 
     /**
      * 单机配置
      */
-    private RedisSingleProperties single;
+    private SingleProperties single;
 
     /**
      * 集群配置
      */
-    private RedisClusterProperties cluster;
+    private ClusterProperties cluster;
 
     /**
      * 哨兵配置
      */
-    private RedisSentinelProperties sentinel;
+    private SentinelProperties sentinel;
 
-    /**
-     * 连接池配置
-     */
-    @Getter
-    @Setter
-    @Accessors(chain = true)
-    public static class RedisPoolProperties {
-        public final static RedisPoolProperties DEFAULT = new RedisPoolProperties()
-            .setMaxActive(100).setMinIdle(0).setMaxIdle(8).setMaxWait(1000).setSize(100);
-
-        private Integer maxIdle;
-
-        private Integer minIdle;
-
-        private Integer maxActive;
-
-        private Integer maxWait;
-
-        private Integer connTimeout;
-
-        private Integer soTimeout;
-
-        private Integer size;
-
-    }
 
     /**
      * 单机模式
      */
     @Getter
     @Setter
-    public static class RedisSingleProperties {
+    public static class SingleProperties {
         private String address;
+        private Integer subscriptionConnectionMinimumIdleSize;
+        private Integer subscriptionConnectionPoolSize;
+        private Long dnsMonitoringInterval;
     }
 
     /**
@@ -110,7 +86,7 @@ public class RedissonProperties {
      */
     @Getter
     @Setter
-    public static class RedisClusterProperties {
+    public static class ClusterProperties extends MasterSlaveProperties {
         /**
          * 集群状态扫描间隔时间，单位是毫秒
          */
@@ -119,36 +95,7 @@ public class RedissonProperties {
         /**
          * 集群节点
          */
-        private String nodes;
-
-        /**
-         * 默认值： SLAVE（只在从服务节点里读取）设置读取操作选择节点的模式。 可用值为： SLAVE - 只在从服务节点里读取。
-         * MASTER - 只在主服务节点里读取。 MASTER_SLAVE - 在主从服务节点里都可以读取
-         */
-        private String readMode;
-        /**
-         * （从节点连接池大小） 默认值：64
-         */
-        private Integer slaveConnectionPoolSize;
-        /**
-         * 主节点连接池大小）默认值：64
-         */
-        private Integer masterConnectionPoolSize;
-
-        /**
-         * （命令失败重试次数） 默认值：3
-         */
-        private Integer retryAttempts;
-
-        /**
-         * 命令重试发送时间间隔，单位：毫秒 默认值：1500
-         */
-        private Integer retryInterval;
-
-        /**
-         * 执行失败最大次数默认值：3
-         */
-        private Integer failedAttempts;
+        private String address;
     }
 
     /**
@@ -156,7 +103,7 @@ public class RedissonProperties {
      */
     @Getter
     @Setter
-    public static class RedisSentinelProperties {
+    public static class SentinelProperties extends MasterSlaveProperties {
         /**
          * 哨兵master 名称
          */
@@ -165,13 +112,82 @@ public class RedissonProperties {
         /**
          * 哨兵节点
          */
-        private String nodes;
+        private String address;
+    }
 
+    @Getter
+    @Setter
+    public abstract static class MasterSlaveProperties {
         /**
-         * 哨兵配置
+         * 从节点连接池大小
          */
-        private Boolean masterOnlyWrite;
+        private Integer slaveConnectionPoolSize;
+        /**
+         * 主节点连接池大小
+         */
+        private Integer masterConnectionPoolSize;
+        /**
+         * 默认值： SLAVE（只在从服务节点里读取）设置读取操作选择节点的模式。
+         * 可用值为：
+         * SLAVE - 只在从服务节点里读取。
+         * MASTER - 只在主服务节点里读取。
+         * MASTER_SLAVE - 在主从服务节点里都可以读取
+         */
+        private ReadMode readMode;
+        private Integer masterConnectionMinimumIdleSize;
+        private Integer failedSlaveCheckInterval;
+        private Integer slaveConnectionMinimumIdleSize;
+        private Integer failedSlaveReconnectionInterval;
+        private SubscriptionMode subscriptionMode;
+        private Integer subscriptionConnectionMinimumIdleSize;
+        private Integer subscriptionConnectionPoolSize;
+        private Long dnsMonitoringInterval;
+        private String loadBalancer;
+    }
 
-        private Integer failMax;
+    @Getter
+    @Setter
+    public static class GlobalProperties extends BaseProperties {
+        /**
+         * 编码方式
+         */
+        private String codec;
+        /**
+         * 传输模式
+         */
+        private TransportMode transportMode;
+        private Integer threads;
+        private Integer nettyThreads;
+        private Boolean referenceEnabled;
+        private Boolean keepPubSubOrder;
+        private Boolean decodeInExecutor;
+        private Boolean useScriptCache;
+        private Integer minCleanUpDelay;
+        private Integer maxCleanUpDelay;
+    }
+
+    @Getter
+    @Setter
+    public static class BaseProperties {
+        /**
+         * 超时时间
+         */
+        private Integer timeout;
+        private Integer subscriptionsPerConnection;
+        private Integer retryAttempts;
+        private Integer retryInterval;
+        private String clientName;
+        private Integer connectTimeout;
+        private Boolean sslEnableEndpointIdentification;
+        private String sslTruststorePassword;
+        private String sslKeystorePassword;
+        private Integer pingConnectionInterval;
+        private Boolean keepAlive;
+        private Boolean tcpNoDelay;
+        private SslProvider sslProvider;
+        private URL sslTruststore;
+        private URL sslKeystore;
+        private Integer connectionMinimumIdleSize;
+        private Integer idleConnectionTimeout;
     }
 }

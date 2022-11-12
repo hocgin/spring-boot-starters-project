@@ -22,11 +22,11 @@
     <module>sso-client-spring-boot-starter</module>
     <module>sso2-client-spring-boot-starter</module>
     <module>mybatis-plus-spring-boot-starter</module>
-    <module>mybatis-plus-extensions-data-audit-spring-boot-starter</module>
+    <module>mybatis-plus-extensions-dataaudit-spring-boot-starter</module>
     <module>mybatis-plus-extensions-config-spring-boot-starter</module>
     <module>mybatis-plus-extensions-task-spring-boot-starter</module>
-    <module>mybatis-plus-extensions-http-log-spring-boot-starter</module>
-    <module>mybatis-plus-extensions-change-log-spring-boot-starter</module>
+    <module>mybatis-plus-extensions-httplog-spring-boot-starter</module>
+    <module>mybatis-plus-extensions-changelog-spring-boot-starter</module>
     <module>mybatis-plus-extensions-webmagic-spring-boot-starter</module>
     <module>cache-spring-boot-starter</module>
     <module>web-spring-boot-starter</module>
@@ -38,10 +38,10 @@
     <module>openfeign-spring-boot-starter</module>
     <module>mail-spring-boot-starter</module>
     <module>validation-spring-boot-starter</module>
-    <module>xxl-job-spring-boot-starter</module>
-    <module>wx-ma-spring-boot-starter</module>
-    <module>wx-mp-spring-boot-starter</module>
-    <module>wx-cp-spring-boot-starter</module>
+    <module>xxljob-spring-boot-starter</module>
+    <module>wxma-spring-boot-starter</module>
+    <module>wxmp-spring-boot-starter</module>
+    <module>wxcp-spring-boot-starter</module>
     <module>test-spring-boot-starter</module>
     <module>schedulerx-spring-boot-starter</module>
     <module>monitor-spring-boot-starter</module>
@@ -58,6 +58,7 @@
     <module>netty-server-spring-boot-starter</module>
     <module>netty-client-spring-boot-starter</module>
     <module>cps-spring-boot-starter</module>
+    <module>rocketmq-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

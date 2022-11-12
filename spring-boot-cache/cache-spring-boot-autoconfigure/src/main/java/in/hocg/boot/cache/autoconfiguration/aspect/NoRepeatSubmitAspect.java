@@ -36,17 +36,17 @@ public class NoRepeatSubmitAspect {
         // ip
         String ip = WebUtils.getClientIp(request);
 
-        //获取注解
+        // 获取注解
         MethodSignature signature = (MethodSignature) point.getSignature();
         Method method = signature.getMethod();
 
-        //目标类、方法
+        // 目标类、方法
         String className = method.getDeclaringClass().getName();
         String methodName = method.getName();
         String ipKey = String.format("%s#%s", className, methodName);
         int hashCode = Math.abs(ipKey.hashCode());
 
-        //重点是此 Key 生成规则
+        // 重点是此 Key 生成规则
         String key = String.format("%s_%d", ip, hashCode);
 
         NoRepeatSubmit noRepeatSubmit = method.getAnnotation(NoRepeatSubmit.class);

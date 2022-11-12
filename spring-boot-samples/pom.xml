@@ -33,7 +33,7 @@
     <module>sso2-client-gateway-sample</module>
     <module>sso2-server-spring-boot-sample</module>
     <module>mail-spring-boot-sample</module>
-    <module>xxl-job-spring-boot-sample</module>
+    <module>xxljob-spring-boot-sample</module>
     <module>test-spring-boot-sample</module>
     <module>schedulerx-spring-boot-sample</module>
     <module>cache-spring-boot-sample</module>

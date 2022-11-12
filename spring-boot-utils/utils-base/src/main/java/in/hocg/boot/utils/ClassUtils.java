@@ -6,7 +6,11 @@ import lombok.experimental.UtilityClass;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by hocgin on 2021/1/5
@@ -97,7 +101,6 @@ public class ClassUtils {
             || Objects.isNull(field)) {
             return def;
         }
-
         boolean accessible = field.isAccessible();
         try {
             field.setAccessible(true);

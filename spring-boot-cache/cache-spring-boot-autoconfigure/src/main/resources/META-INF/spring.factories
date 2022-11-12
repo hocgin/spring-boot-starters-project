@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-in.hocg.boot.cache.autoconfiguration.CacheAutoConfiguration
+in.hocg.boot.cache.autoconfiguration.CacheAutoConfiguration,\
+in.hocg.boot.cache.autoconfiguration.BloomFilterAutoConfiguration,\
+in.hocg.boot.cache.autoconfiguration.RedissonAutoConfiguration

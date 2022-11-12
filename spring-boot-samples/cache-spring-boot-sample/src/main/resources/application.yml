@@ -3,5 +3,14 @@ server:
 
 spring:
   redis:
-    host: 39.100.87.79
-    port: 32079
+    password: 123456
+    port: 6379
+    host: 172.25.63.38
+boot:
+  bloom:
+    name: 'test'
+#boot:
+#  redisson:
+#    mode: Single
+#    single:
+#      address: "172.25.63.38:6379"

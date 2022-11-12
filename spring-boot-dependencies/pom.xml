@@ -72,6 +72,16 @@
         <artifactId>tpl-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>rocketmq-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>rocketmq-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- CPS -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -148,7 +158,7 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mybatis-plus-extensions-data-audit-autoconfigure</artifactId>
+        <artifactId>mybatis-plus-extensions-dataaudit-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -163,12 +173,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mybatis-plus-extensions-change-log-autoconfigure</artifactId>
+        <artifactId>mybatis-plus-extensions-changelog-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mybatis-plus-extensions-change-log-spring-boot-starter</artifactId>
+        <artifactId>mybatis-plus-extensions-changelog-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -193,12 +203,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mybatis-plus-extensions-http-log-autoconfigure</artifactId>
+        <artifactId>mybatis-plus-extensions-httplog-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>mybatis-plus-extensions-http-log-spring-boot-starter</artifactId>
+        <artifactId>mybatis-plus-extensions-httplog-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- WS -->
@@ -237,12 +247,12 @@
       <!-- WX CP -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>wx-cp-spring-boot-autoconfigure</artifactId>
+        <artifactId>wxcp-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>wx-cp-spring-boot-starter</artifactId>
+        <artifactId>wxcp-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- youtube -->
@@ -347,23 +357,23 @@
       <!-- WX MP -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>wx-mp-spring-boot-autoconfigure</artifactId>
+        <artifactId>wxmp-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>wx-mp-spring-boot-starter</artifactId>
+        <artifactId>wxmp-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- WX MA -->
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>wx-ma-spring-boot-autoconfigure</artifactId>
+        <artifactId>wxma-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>wx-ma-spring-boot-starter</artifactId>
+        <artifactId>wxma-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!--      -->
@@ -399,12 +409,12 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>xxl-job-spring-boot-autoconfigure</artifactId>
+        <artifactId>xxljob-spring-boot-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
-        <artifactId>xxl-job-spring-boot-starter</artifactId>
+        <artifactId>xxljob-spring-boot-starter</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
