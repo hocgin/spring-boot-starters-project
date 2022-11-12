@@ -19,8 +19,10 @@ public class RedisBitMap {
     }
 
     /**
-     * @param bitIndex
-     * @return
+     * 标记指定位置
+     *
+     * @param bitIndex 位置下标
+     * @return 保存结果
      */
     public Boolean set(long bitIndex) {
         if (get(bitIndex)) {
@@ -31,15 +33,17 @@ public class RedisBitMap {
     }
 
     /**
-     * @param bitIndex
-     * @return
+     * 查询指定位置
+     *
+     * @param bitIndex 位置下标
+     * @return 查询结果
      */
     public Boolean get(long bitIndex) {
         return redisTemplate.opsForValue().getBit(bloomFilterName, bitIndex);
     }
 
     /**
-     * 当前array总bits
+     * 当前总位图大小
      */
     public Long bitSize() {
         return redisTemplate.opsForValue().size(bloomFilterName);

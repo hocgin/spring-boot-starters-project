@@ -277,4 +277,6 @@ public interface CacheRepository {
      * @return
      */
     Set<String> scan(String pattern, int count);
+
+    Boolean setNxAndExpire(String key, String value, long milliseconds);
 }

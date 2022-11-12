@@ -16,17 +16,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class BloomFilterProperties {
     public static final String PREFIX = "boot.bloom";
     /**
-     * Bloom name
+     * 布隆过滤器名称
      */
     private String name;
 
     /**
-     * 预计数据量
+     * 预计数据量(默认10w)
      */
-    private Long expectedInsertions;
+    private Long expectedInsertions = 10 * 10000L;
 
     /**
-     * 错误率
+     * 错误率(默认: 0.25)
      */
-    private Double fpp;
+    private Double fpp = 0.25;
 }

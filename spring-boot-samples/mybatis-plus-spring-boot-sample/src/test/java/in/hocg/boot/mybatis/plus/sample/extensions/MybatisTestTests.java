@@ -1,7 +1,6 @@
 package in.hocg.boot.mybatis.plus.sample.extensions;
 
 import in.hocg.boot.mybatis.plus.sample.mapper.ExampleMapper;
-import in.hocg.boot.test.autoconfiguration.MybatisTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author hocgin
  */
-@MybatisTest
 class MybatisTestTests {
     @Autowired(required = false)
     private ExampleMapper service;

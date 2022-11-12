@@ -19,8 +19,8 @@
     <revision>1.0.33</revision>
 
     <java.version>11</java.version>
-    <java.source.version>11</java.source.version>
-    <java.target.version>11</java.target.version>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <!-- Maven plugins -->
     <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
     <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
@@ -52,11 +52,11 @@
     <module>spring-boot-sms</module>
     <module>spring-boot-mail</module>
     <module>spring-boot-validation</module>
-    <module>spring-boot-xxl-job</module>
+    <module>spring-boot-xxljob</module>
     <module>spring-boot-utils</module>
-    <module>spring-boot-wx-mp</module>
-    <module>spring-boot-wx-ma</module>
-    <module>spring-boot-wx-cp</module>
+    <module>spring-boot-wxmp</module>
+    <module>spring-boot-wxma</module>
+    <module>spring-boot-wxcp</module>
     <module>spring-boot-schedulerx</module>
     <module>spring-boot-test</module>
     <module>spring-boot-monitor</module>
@@ -73,6 +73,7 @@
     <module>spring-boot-notify</module>
     <module>spring-boot-kafka</module>
     <module>spring-boot-cps</module>
+    <module>spring-boot-rocketmq</module>
     <module>spring-boot-tpl</module>
   </modules>
 
@@ -248,8 +249,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <fork>true</fork>
-            <source>${java.source.version}</source>
-            <target>${java.target.version}</target>
+            <source>${maven.compiler.source}</source>
+            <target>${maven.compiler.target}</target>
             <encoding>${project.build.sourceEncoding}</encoding>
             <annotationProcessorPaths>
               <path>
