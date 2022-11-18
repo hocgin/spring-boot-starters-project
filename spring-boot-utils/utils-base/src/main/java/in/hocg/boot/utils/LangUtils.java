@@ -479,4 +479,32 @@ public class LangUtils {
         return new Pair<>(urlStr, params);
     }
 
+    /**
+     * Map Key Value 调换
+     *
+     * @param map
+     * @param <K>
+     * @param <V>
+     * @return
+     */
+    public static <K, V> Map<V, K> reverse(Map<K, V> map) {
+        return map.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+    }
+
+    /**
+     * 获取 List 中重复的元素
+     *
+     * @param list
+     * @param <E>
+     * @return
+     */
+    public static <E> List<E> getDuplicateElements(List<E> list) {
+        return list.stream()
+            .collect(Collectors.toMap(e -> e, e -> 1, Integer::sum))
+            .entrySet().stream()
+            .filter(entry -> entry.getValue() > 1)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+    }
+
 }

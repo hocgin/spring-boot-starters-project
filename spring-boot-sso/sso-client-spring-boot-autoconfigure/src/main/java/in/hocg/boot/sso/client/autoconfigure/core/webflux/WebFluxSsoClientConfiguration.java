@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.AuthenticationResult;
 import in.hocg.boot.sso.client.autoconfigure.core.webflux.bearer.ServerBearerTokenAuthenticationConverter;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
+import in.hocg.boot.sso.client.autoconfigure.utils.AuthoritiesUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -25,7 +26,13 @@ import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.userinfo.DefaultReactiveOAuth2UserService;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.ReactiveOAuth2UserService;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.server.DelegatingServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
@@ -37,7 +44,13 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -76,7 +89,7 @@ public class WebFluxSsoClientConfiguration {
             if (CollUtil.isNotEmpty(hasAnyRole)) {
                 hasAnyRole.entrySet().stream()
                     .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
-                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyRole(ArrayUtil.toArray(entry.getValue(), String.class)));
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyRole(AuthoritiesUtils.asRoles(entry.getValue())));
             }
 
             // 如果配置权限
@@ -118,6 +131,7 @@ public class WebFluxSsoClientConfiguration {
                 getOAuthServerAuthenticationEntryPoint(), getAjaxServerAuthenticationEntryPoint()
             ));
 
+        // Authentication Token
         AuthenticationWebFilter authenticationWebFilter = new AuthenticationWebFilter(authenticationManager(context));
         authenticationWebFilter.setAuthenticationFailureHandler((exchange, exception) -> handleAuthentication4Webflux(exchange.getExchange()));
         authenticationWebFilter.setServerAuthenticationConverter(new ServerBearerTokenAuthenticationConverter()
@@ -199,5 +213,23 @@ public class WebFluxSsoClientConfiguration {
             return (T) this.context.getBean(names[0]);
         }
         return null;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> oidcUserService() {
+        final ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultReactiveOAuth2UserService();
+        return (userRequest) -> {
+            // Delegate to the default implementation for loading a user
+            return delegate.loadUser(userRequest)
+                .flatMap((oauth2User) -> {
+                    Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
+                    mappedAuthorities.addAll(oauth2User.getAuthorities());
+                    mappedAuthorities.addAll(AuthoritiesUtils.getAuthorities(oauth2User.getAttributes()));
+
+                    oauth2User = new DefaultOAuth2User(mappedAuthorities, oauth2User.getAttributes(), "name");
+                    return Mono.just(oauth2User);
+                });
+        };
     }
 }

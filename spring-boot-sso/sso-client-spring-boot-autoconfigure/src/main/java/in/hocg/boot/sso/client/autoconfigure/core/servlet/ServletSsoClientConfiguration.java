@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.sso.client.autoconfigure.core.AuthenticationResult;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
+import in.hocg.boot.sso.client.autoconfigure.utils.AuthoritiesUtils;
 import in.hocg.boot.utils.StringPoolUtils;
 import in.hocg.boot.utils.struct.result.ExceptionResult;
 import in.hocg.boot.utils.struct.result.ResultCode;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
@@ -34,9 +38,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Created by hocgin on 2020/9/2
@@ -45,10 +51,9 @@ import java.util.Optional;
  * @author hocgin
  */
 @Slf4j
-@RefreshScope
 @Configuration
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
-@ConditionalOnMissingBean(WebSecurityConfigurerAdapter.class)
+@ConditionalOnMissingBean({WebSecurityConfigurerAdapter.class})
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter {
     private final SsoClientProperties properties;
@@ -74,7 +79,7 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
             if (CollUtil.isNotEmpty(hasAnyRole)) {
                 hasAnyRole.entrySet().stream()
                     .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
-                    .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasAnyRole(ArrayUtil.toArray(entry.getValue(), String.class)));
+                    .forEach(entry -> expressionInterceptUrlRegistry.antMatchers(entry.getKey()).hasAnyRole(AuthoritiesUtils.asRoles(entry.getValue())));
             }
 
             // 如果配置权限
@@ -171,5 +176,23 @@ public class ServletSsoClientConfiguration extends WebSecurityConfigurerAdapter 
         httpServletResponse.setContentType("text/html;charset=utf-8");
         httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
         return httpServletResponse;
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    public GrantedAuthoritiesMapper grantedAuthoritiesMapper() {
+        return collection -> {
+            Set<GrantedAuthority> result = new HashSet<>();
+            for (GrantedAuthority authority : collection) {
+                if (authority instanceof OAuth2UserAuthority) {
+                    result.add(new SimpleGrantedAuthority(authority.getAuthority()));
+                    result.addAll(AuthoritiesUtils.getAuthorities(((OAuth2UserAuthority) authority).getAttributes()));
+                } else {
+                    result.add(new SimpleGrantedAuthority(authority.getAuthority()));
+                }
+            }
+            return result;
+        };
     }
 }

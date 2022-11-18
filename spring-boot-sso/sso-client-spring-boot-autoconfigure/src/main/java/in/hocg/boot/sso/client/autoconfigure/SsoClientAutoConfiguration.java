@@ -3,17 +3,22 @@ package in.hocg.boot.sso.client.autoconfigure;
 import in.hocg.boot.sso.client.autoconfigure.core.servlet.ServletSsoClientConfiguration;
 import in.hocg.boot.sso.client.autoconfigure.core.webflux.WebFluxSsoClientConfiguration;
 import in.hocg.boot.sso.client.autoconfigure.properties.SsoClientProperties;
+import in.hocg.boot.sso.client.autoconfigure.utils.AuthoritiesUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.context.annotation.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by hocgin on 2019/6/12.
@@ -29,21 +34,18 @@ import java.io.IOException;
 public class SsoClientAutoConfiguration {
     private final SsoClientProperties properties;
 
-    @Bean
-    @Primary
-    @LoadBalanced
-    public RestTemplate lbRestTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
-            @Override
-            public void handleError(ClientHttpResponse response) throws IOException {
-                if (response.getRawStatusCode() != HttpStatus.BAD_REQUEST.value()) {
-                    super.handleError(response);
-                }
-            }
-        });
-        return restTemplate;
-    }
-
-
+//    @Bean
+//    @Primary
+//    public RestTemplate lbRestTemplate() {
+//        RestTemplate restTemplate = new RestTemplate();
+//        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+//            @Override
+//            public void handleError(ClientHttpResponse response) throws IOException {
+//                if (response.getRawStatusCode() != HttpStatus.BAD_REQUEST.value()) {
+//                    super.handleError(response);
+//                }
+//            }
+//        });
+//        return restTemplate;
+//    }
 }

@@ -27,6 +27,16 @@ public class BootApplication {
         return principal;
     }
 
+    @RequestMapping("/has_role")
+    public Principal hasRole(Principal principal) {
+        return principal;
+    }
+
+    @RequestMapping("/no_role")
+    public Principal noRole(Principal principal) {
+        return principal;
+    }
+
     @RequestMapping("/ignore")
     public String ignore(Principal principal) {
         return "是登陆: " + Objects.nonNull(principal);

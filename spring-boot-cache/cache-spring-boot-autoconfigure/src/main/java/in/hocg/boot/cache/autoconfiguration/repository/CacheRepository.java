@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by hocgin on 2021/5/13
@@ -41,12 +42,28 @@ public interface CacheRepository {
     <T> void setExpire(final String[] keys, final T[] values, final Duration duration);
 
     /**
+     * 有效时间
+     *
+     * @param key
+     * @return
+     */
+    Long getExpire(String key);
+
+    /**
+     * 有效时间
+     *
+     * @param key
+     * @param timeUnit
+     * @return
+     */
+    Long getExpire(String key, TimeUnit timeUnit);
+
+    /**
      * 一次性添加数组到过期时间的缓存，不用多次连接，节省开销
      *
      * @param keys   the keys
      * @param values the values
      */
-
     <T> void set(final String[] keys, final T[] values);
 
     /**

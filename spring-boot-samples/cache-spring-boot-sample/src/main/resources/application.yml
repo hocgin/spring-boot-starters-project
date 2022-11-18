@@ -2,13 +2,25 @@ server:
   port: 8080
 
 spring:
+  cache:
+    type: redis
+    redis:
+      key-prefix: v2022
+  application:
+    name: example
   redis:
     password: 123456
     port: 6379
     host: 172.25.63.38
 boot:
-  bloom:
-    name: 'test'
+  #  bloom:
+  #    name: 'test'
+  cache:
+    names:
+      - name: USE_CACHE
+        ttl: 1D
+      - name: USE_CACHE2
+        ttl: 1H
 #boot:
 #  redisson:
 #    mode: Single
