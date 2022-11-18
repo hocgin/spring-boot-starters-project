@@ -21,3 +21,10 @@ boot:
     client:
       ignore-urls:
         - '/ignore'
+      has-any-role:
+        '[/has_role]':
+          - 'ROLE_HAS'
+          - 'HAS'
+        '[/no_role]':
+          - 'ROLE_NO'
+          - 'NO'

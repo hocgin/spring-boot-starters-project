@@ -16,8 +16,10 @@ import java.io.Serializable;
 public class FeignExceptionInfo implements Serializable {
     private String timestamp;
     private Integer status;
-    private String error;
-    private String exception;
     private String message;
+    private String exception;
+
+    // ====================
+    private String error;
     private String path;
 }

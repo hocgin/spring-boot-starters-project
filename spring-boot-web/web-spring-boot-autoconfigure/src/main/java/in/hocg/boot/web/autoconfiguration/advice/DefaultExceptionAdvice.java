@@ -47,7 +47,7 @@ public class DefaultExceptionAdvice {
     public ExceptionResult<Void> handleException(Exception e) {
         String message = StrUtil.emptyToDefault(e.getMessage(), "系统繁忙, 请稍后");
         log.error("服务异常ID: [{}]", IdUtil.randomUUID(), e);
-        return create(HttpStatus.INTERNAL_SERVER_ERROR, message);
+        return ExceptionResult.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, e.getClass().getName());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

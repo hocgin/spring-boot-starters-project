@@ -1,5 +1,6 @@
 package in.hocg.boot.excel.autoconfiguration.utils;
 
+import cn.hutool.core.lang.Pair;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
@@ -12,7 +13,9 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -78,13 +81,32 @@ public class ExcelUtils {
         List<ValidReadListener.Result<T>> validRows = validReadListener.getValidRow();
         if (!validRows.isEmpty()) {
             ExcelWriter excelWriter = EasyExcel.write(response.getOutputStream(), returnClazz)
-                .registerWriteHandler(new ValidReadListener.ValidSheetWriteHandler(validRows)).build();
+                .registerWriteHandler(new ValidReadListener.ValidSheetWriteHandler(validRows, 1)).build();
             WriteSheet writeSheet = EasyExcel.writerSheet("sheet").build();
             excelWriter.write(LangUtils.toList(validRows, ValidReadListener.Result::getRow), writeSheet);
             excelWriter.finish();
             return Collections.emptyList();
         }
         return validReadListener.getRows();
+    }
+
+
+    public <T> Pair<Boolean, List<ValidReadListener.Result<T>>> validImport(InputStream inputStream, Integer headRowNumber, Class<T> headClazz) {
+        // 读取 / 校验
+        ValidReadListener<T> validReadListener = new ValidReadListener<>();
+        EasyExcelFactory.read(inputStream, headClazz, validReadListener).headRowNumber(headRowNumber).sheet().doRead();
+        return new Pair<>(validReadListener.hasError(), validReadListener.getValidRow());
+    }
+
+    public <T> void validOutputTo(OutputStream outputStream, File templateFile, Integer headRowNumber, Class<T> headClazz, List<ValidReadListener.Result<T>> validRows) {
+        if (!validRows.isEmpty()) {
+            ExcelWriter excelWriter = EasyExcel.write(outputStream, headClazz).withTemplate(templateFile.getAbsolutePath())
+                .relativeHeadRowIndex(0).needHead(false)
+                .registerWriteHandler(new ValidReadListener.ValidSheetWriteHandler(validRows, headRowNumber)).build();
+            WriteSheet writeSheet = EasyExcel.writerSheet("sheet").build();
+            excelWriter.write(LangUtils.toList(validRows, ValidReadListener.Result::getRow), writeSheet);
+            excelWriter.finish();
+        }
     }
 
 }

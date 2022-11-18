@@ -66,6 +66,14 @@ public interface ICode {
         return Optional.empty();
     }
 
+    /**
+     * 枚举的属性名转换
+     *
+     * @param name
+     * @param enumClass
+     * @param <T>
+     * @return
+     */
     static <T extends Enum<T>> Optional<T> ofName(String name, Class<T> enumClass) {
         return Optional.of(Enum.valueOf(enumClass, name));
     }

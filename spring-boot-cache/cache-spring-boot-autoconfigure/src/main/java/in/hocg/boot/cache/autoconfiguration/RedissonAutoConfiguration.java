@@ -27,6 +27,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +41,7 @@ import java.util.Objects;
  */
 @Configuration
 @ConditionalOnClass({Redisson.class})
-@AutoConfigureBefore({org.redisson.spring.starter.RedissonAutoConfiguration.class, CacheAutoConfiguration.class})
+@AutoConfigureBefore({CacheAutoConfiguration.class})
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 @EnableConfigurationProperties(RedissonProperties.class)
 public class RedissonAutoConfiguration {
@@ -179,15 +180,18 @@ public class RedissonAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnBean({CacheRepository.class})
-    public NoRepeatSubmitAspect noRepeatSubmitAspect(CacheRepository repository) {
-        return new NoRepeatSubmitAspect(repository);
+    @ConditionalOnBean({RedissonClient.class})
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    public RateLimitAspect rateLimitAspect(RedissonClient redissonClient) {
+        return new RateLimitAspect(redissonClient);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public RateLimitAspect rateLimitAspect(RedissonClient redissonClient) {
-        return new RateLimitAspect(redissonClient);
+    @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+    @ConditionalOnBean({CacheRepository.class})
+    public NoRepeatSubmitAspect noRepeatSubmitAspect(CacheRepository repository) {
+        return new NoRepeatSubmitAspect(repository);
     }
 
     @Bean
