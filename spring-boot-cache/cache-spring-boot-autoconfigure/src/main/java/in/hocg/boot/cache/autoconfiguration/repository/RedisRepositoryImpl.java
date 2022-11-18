@@ -92,6 +92,16 @@ public class RedisRepositoryImpl implements CacheRepository {
     }
 
     @Override
+    public Long getExpire(String key) {
+        return redisTemplate.getExpire(key);
+    }
+
+    @Override
+    public Long getExpire(String key, final TimeUnit timeUnit) {
+        return redisTemplate.getExpire(key, timeUnit);
+    }
+
+    @Override
     public <T> void set(String[] keys, T[] values) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
             RedisSerializer<String> serializer = getRedisSerializer();
