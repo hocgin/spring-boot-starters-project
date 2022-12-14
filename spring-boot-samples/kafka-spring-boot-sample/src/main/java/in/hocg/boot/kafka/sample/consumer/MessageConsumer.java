@@ -18,7 +18,17 @@ public class MessageConsumer {
     @KafkaListener(topics = KafkaConstant.TOPIC, groupId = KafkaConstant.GROUP)
     public void handleTopic(ConsumerRecord<?, ?> record, Acknowledgment ack) {
         System.out.println("消费：" + record.topic() + "-" + record.partition() + "-" + record.value());
+
+        // 消费成功确认
         ack.acknowledge();
+    }
+
+    @KafkaListener(topics = KafkaConstant.TOPIC, groupId = KafkaConstant.GROUP)
+    public void handleTopic2(ConsumerRecord<?, ?> record, Acknowledgment ack) {
+        System.out.println("消费：" + record.topic() + "-" + record.partition() + "-" + record.value());
+
+        // 跳过消息
+        ack.nack(1, 100L);
     }
 
 }
