@@ -14,6 +14,9 @@ import java.util.Map;
 /**
  * Created by hocgin on 2019/6/12.
  * email: hocgin@gmail.com
+ * 拦截规则优先级(高到低):
+ *
+ * denyUrls[黑名单] > authenticatedUrls[必须登陆] > ignoreUrls[忽略路径] > hasIpAddress[IP白名单] > hasAnyAuthority[必须权限] > hasAnyRole[必须角色]
  *
  * @author hocgin
  */

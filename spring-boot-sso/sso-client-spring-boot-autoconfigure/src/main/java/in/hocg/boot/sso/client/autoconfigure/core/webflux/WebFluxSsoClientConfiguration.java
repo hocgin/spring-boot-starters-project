@@ -80,23 +80,19 @@ public class WebFluxSsoClientConfiguration {
             ServerHttpSecurity.AuthorizeExchangeSpec authorizeExchangeSpec =
                 http.authorizeExchange();
 
+            // 如果配置禁止访问
+            if (denyUrls.length > 0) {
+                authorizeExchangeSpec.pathMatchers(denyUrls).denyAll();
+            }
+
             // 如果配置需登陆
             if (authenticatedUrls.length > 0) {
                 authorizeExchangeSpec.pathMatchers(authenticatedUrls).authenticated();
             }
 
-            // 如果配置角色
-            if (CollUtil.isNotEmpty(hasAnyRole)) {
-                hasAnyRole.entrySet().stream()
-                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
-                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyRole(AuthoritiesUtils.asRoles(entry.getValue())));
-            }
-
-            // 如果配置权限
-            if (CollUtil.isNotEmpty(hasAnyAuthority)) {
-                hasAnyAuthority.entrySet().stream()
-                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
-                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyAuthority(ArrayUtil.toArray(entry.getValue(), String.class)));
+            // 如果配置忽略
+            if (ignoreUrls.length > 0) {
+                authorizeExchangeSpec.pathMatchers(ignoreUrls).permitAll();
             }
 
             // 如果配置IP白名单
@@ -110,14 +106,18 @@ public class WebFluxSsoClientConfiguration {
                     }));
             }
 
-            // 如果配置忽略
-            if (ignoreUrls.length > 0) {
-                authorizeExchangeSpec.pathMatchers(ignoreUrls).permitAll();
+            // 如果配置权限
+            if (CollUtil.isNotEmpty(hasAnyAuthority)) {
+                hasAnyAuthority.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyAuthority(ArrayUtil.toArray(entry.getValue(), String.class)));
             }
 
-            // 如果配置禁止访问
-            if (denyUrls.length > 0) {
-                authorizeExchangeSpec.pathMatchers(denyUrls).denyAll();
+            // 如果配置角色
+            if (CollUtil.isNotEmpty(hasAnyRole)) {
+                hasAnyRole.entrySet().stream()
+                    .filter(entry -> StrUtil.isNotBlank(entry.getKey()) && CollUtil.isNotEmpty(entry.getValue()))
+                    .forEach(entry -> authorizeExchangeSpec.pathMatchers(entry.getKey()).hasAnyRole(AuthoritiesUtils.asRoles(entry.getValue())));
             }
 
             authorizeExchangeSpec.anyExchange()

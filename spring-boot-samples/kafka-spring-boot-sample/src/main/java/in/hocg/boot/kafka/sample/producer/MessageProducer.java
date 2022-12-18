@@ -22,4 +22,11 @@ public class MessageProducer {
     public void sendMessage(String content) {
         kafkaTemplate.send(KafkaConstant.TOPIC, content);
     }
+
+    public void sendMessage2(String content) {
+        // 同样的 KEY 会被分配到同一个 partition
+        kafkaTemplate.send(KafkaConstant.TOPIC, "key", content);
+        // 分配到指定的 partition
+        kafkaTemplate.send(KafkaConstant.TOPIC, 1, "key", content);
+    }
 }
