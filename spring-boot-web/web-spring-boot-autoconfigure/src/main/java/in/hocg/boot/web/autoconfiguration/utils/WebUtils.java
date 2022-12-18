@@ -1,25 +1,86 @@
-package in.hocg.boot.web.autoconfiguration.utils.web;
+package in.hocg.boot.web.autoconfiguration.utils;
 
+import cn.hutool.core.util.StrUtil;
+import in.hocg.boot.web.autoconfiguration.utils.web.ResponseUtils;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Arrays;
 
 /**
- * Created by hocgin on 2020/11/22
+ * Created by hocgin on 2022/12/18
  * email: hocgin@gmail.com
  *
  * @author hocgin
  */
+@Slf4j
 @UtilityClass
-@Deprecated
-public class ResponseUtils {
+public class WebUtils {
+    /**
+     * 获取客户端真实IP
+     *
+     * @param request
+     * @return
+     */
+    public String getClientIp(HttpServletRequest request) {
+        String ip;
+        String forwardedFor = request.getHeader("X-Forwarded-For");
+        String realIp = request.getHeader("X-Real-IP");
+        if (StrUtil.isNotBlank(forwardedFor)
+            && !"unknown".equalsIgnoreCase(forwardedFor)) {
+            int index = forwardedFor.indexOf(",");
+            if (index != -1) {
+                ip = forwardedFor.substring(0, index);
+            } else {
+                ip = forwardedFor;
+            }
+        } else if (StrUtil.isNotBlank(realIp)
+            && !"unknown".equalsIgnoreCase(realIp)) {
+            ip = realIp;
+        } else {
+            ip = request.getRemoteAddr();
+        }
+
+        // 本地名单
+        if (Arrays.asList(new String[]{"0:0:0:0:0:0:0:1", "127.0.0.1"}).contains(ip)) {
+            return "110.80.68.212";
+        }
+        return ip;
+    }
+
+    /**
+     * 获取 User-Agent
+     * User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36
+     *
+     * @param request
+     * @return
+     */
+    public String getUserAgent(HttpServletRequest request) {
+        return request.getHeader("User-Agent");
+    }
+
+    public String getHost(HttpServletRequest request) {
+        return request.getHeader("Host");
+    }
+
+    public boolean isAJAX(HttpServletRequest request) {
+        return "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
+    }
+
 
     public static ResponseEntity<Void> found(String url) {
         return ResponseEntity.status(HttpStatus.FOUND)
@@ -40,7 +101,7 @@ public class ResponseUtils {
     }
 
     public static <T> ResponseEntity<?> preview(T t, MediaType mediaType) {
-        Resource resource = ResponseUtils.asResource(t);
+        Resource resource = WebUtils.asResource(t);
 
         return ResponseEntity
             .ok()
@@ -55,7 +116,7 @@ public class ResponseUtils {
     }
 
     public static <T> ResponseEntity<?> download(T t, String filename) {
-        Resource resource = ResponseUtils.asResource(t);
+        Resource resource = WebUtils.asResource(t);
 
         return ResponseEntity
             .ok()
