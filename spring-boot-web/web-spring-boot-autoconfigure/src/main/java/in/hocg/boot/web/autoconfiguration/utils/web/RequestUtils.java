@@ -15,6 +15,7 @@ import java.util.Arrays;
  */
 @Slf4j
 @UtilityClass
+@Deprecated
 public class RequestUtils {
     /**
      * 获取客户端真实IP
