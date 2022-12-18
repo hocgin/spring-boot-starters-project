@@ -1,6 +1,7 @@
 package in.hocg.boot.utils;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileMode;
 import cn.hutool.core.lang.Pair;
@@ -77,15 +78,28 @@ public class LangUtils {
         if (s1 == null || s2 == null) {
             return Objects.equals(s1, s2);
         }
-
         return s1.equals(s2);
     }
 
     public boolean equal(Object v1, Object v2) {
-        if (v1 instanceof String) {
-            return LangUtils.equals((String) v1, (String) v2);
+        if (Objects.isNull(v1)) {
+            return Objects.isNull(v2);
+        } else if (v1 instanceof String) {
+            return v1.equals(Convert.toStr(v2));
         } else if (v1 instanceof Integer) {
-            return LangUtils.equals((Integer) v1, (Integer) v2);
+            return v1.equals(Convert.toInt(v2));
+        } else if (v1 instanceof Character) {
+            return v1.equals(Convert.toChar(v2));
+        } else if (v1 instanceof Double) {
+            return v1.equals(Convert.toDouble(v2));
+        } else if (v1 instanceof Short) {
+            return v1.equals(Convert.toShort(v2));
+        } else if (v1 instanceof Long) {
+            return v1.equals(Convert.toLong(v2));
+        } else if (v1 instanceof Boolean) {
+            return v1.equals(Convert.toBool(v2));
+        } else if (v1 instanceof Byte) {
+            return v1.equals(Convert.toByte(v2));
         }
         return ObjectUtil.equal(v1, v2);
     }
