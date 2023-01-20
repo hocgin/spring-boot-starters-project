@@ -1,4 +1,4 @@
-package in.hocg.boot.utils.dto;
+package in.hocg.boot.utils.struct;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

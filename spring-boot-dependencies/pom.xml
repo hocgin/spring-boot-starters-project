@@ -193,6 +193,16 @@
       </dependency>
       <dependency>
         <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-userconfig-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>mybatis-plus-extensions-userconfig-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
         <artifactId>mybatis-plus-extensions-task-autoconfigure</artifactId>
         <version>${project.version}</version>
       </dependency>

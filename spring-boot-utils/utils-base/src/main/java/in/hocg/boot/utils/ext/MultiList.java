@@ -1,6 +1,6 @@
 package in.hocg.boot.utils.ext;
 
-import in.hocg.boot.utils.LambdaUtils;
+import in.hocg.boot.utils.utils.LambdaUtils;
 import in.hocg.boot.utils.lambda.SFunction;
 
 import java.util.ArrayList;

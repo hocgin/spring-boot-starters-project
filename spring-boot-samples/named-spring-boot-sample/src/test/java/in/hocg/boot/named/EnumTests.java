@@ -1,7 +1,7 @@
 package in.hocg.boot.named;
 
 import com.google.common.base.Joiner;
-import in.hocg.boot.utils.DataDictUtils;
+import in.hocg.boot.utils.utils.DataDictUtils;
 import org.assertj.core.util.Lists;
 
 import java.util.List;

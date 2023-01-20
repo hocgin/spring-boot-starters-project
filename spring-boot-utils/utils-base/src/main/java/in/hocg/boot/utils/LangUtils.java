@@ -371,10 +371,10 @@ public class LangUtils {
      */
     public <R, T> List<R> getMixed(Collection<R> l1, Collection<T> l2, BiFunction<R, T, Boolean> biFunction) {
         List<R> result = Lists.newArrayList();
-        for (R r : l1) {
-            for (T t : l2) {
-                if (biFunction.apply(r, t)) {
-                    result.add(r);
+        for (R t1 : l1) {
+            for (T t2 : l2) {
+                if (biFunction.apply(t1, t2)) {
+                    result.add(t1);
                     break;
                 }
             }

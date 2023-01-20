@@ -1,4 +1,4 @@
-package in.hocg.boot.utils;
+package in.hocg.boot.utils.utils;
 
 import lombok.experimental.UtilityClass;
 

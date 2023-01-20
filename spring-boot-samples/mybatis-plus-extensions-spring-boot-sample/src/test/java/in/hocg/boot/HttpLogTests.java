@@ -12,7 +12,7 @@ import in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro.CreateLogRo;
 import in.hocg.boot.mybatis.plus.extensions.httplog.support.HttpLogUtils;
 import in.hocg.boot.mybatis.plus.extensions.sample.BootApplication;
 import in.hocg.boot.test.autoconfiguration.core.AbstractSpringBootTest;
-import in.hocg.boot.utils.LogUtils;
+import in.hocg.boot.utils.utils.LogUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;

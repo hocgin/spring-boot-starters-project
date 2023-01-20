@@ -78,6 +78,8 @@ public interface AbstractService<T> extends IService<T> {
     boolean has(SFunction<T, ?> field, Object fieldVal,
                 SFunction<T, ?> ignoreField, Serializable... ignoreVal);
 
+    List<T> listBy(SFunction<T, ?> field, List<?> values);
+
     /**
      * 实体转换
      *

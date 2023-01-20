@@ -1,4 +1,4 @@
-package in.hocg.boot.utils;
+package in.hocg.boot.utils.utils;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.experimental.UtilityClass;
