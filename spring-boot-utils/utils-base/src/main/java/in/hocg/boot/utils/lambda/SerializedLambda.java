@@ -1,7 +1,7 @@
 package in.hocg.boot.utils.lambda;
 
 import cn.hutool.core.util.StrUtil;
-import in.hocg.boot.utils.ClassUtils;
+import in.hocg.boot.utils.utils.ClassUtils;
 
 import java.io.*;
 import java.util.Objects;

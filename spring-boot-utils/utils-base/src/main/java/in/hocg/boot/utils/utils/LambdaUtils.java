@@ -1,6 +1,7 @@
-package in.hocg.boot.utils;
+package in.hocg.boot.utils.utils;
 
 import cn.hutool.core.util.StrUtil;
+import in.hocg.boot.utils.PropertyNamer;
 import in.hocg.boot.utils.lambda.SFunction;
 import in.hocg.boot.utils.lambda.SerializedLambda;
 import lombok.experimental.UtilityClass;

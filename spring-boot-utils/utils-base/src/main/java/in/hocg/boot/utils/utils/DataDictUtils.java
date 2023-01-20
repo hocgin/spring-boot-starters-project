@@ -1,4 +1,4 @@
-package in.hocg.boot.utils;
+package in.hocg.boot.utils.utils;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
@@ -6,8 +6,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import in.hocg.boot.utils.annotation.UseDataDictKey;
-import in.hocg.boot.utils.dto.DictData;
+import in.hocg.boot.utils.struct.DictData;
 import in.hocg.boot.utils.enums.DataDictEnum;
+import in.hocg.boot.utils.utils.ClassUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.*;

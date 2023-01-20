@@ -10,7 +10,9 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Lists;
+import in.hocg.boot.utils.ext.MultiList;
 import in.hocg.boot.utils.function.ConsumerThrow;
+import in.hocg.boot.utils.lambda.SFunction;
 import lombok.Cleanup;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
@@ -19,7 +21,17 @@ import java.io.RandomAccessFile;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -207,11 +219,11 @@ public class LangUtils {
              * 中间表实体重写父类属性 ` private transient Date createTime; `
              */
             return fieldMap.values().stream()
-                /* 过滤静态属性 */
-                .filter(f -> !Modifier.isStatic(f.getModifiers()))
-                /* 过滤 transient关键字修饰的属性 */
-                .filter(f -> !Modifier.isTransient(f.getModifiers()))
-                .collect(Collectors.toList());
+                    /* 过滤静态属性 */
+                    .filter(f -> !Modifier.isStatic(f.getModifiers()))
+                    /* 过滤 transient关键字修饰的属性 */
+                    .filter(f -> !Modifier.isTransient(f.getModifiers()))
+                    .collect(Collectors.toList());
         });
     }
 
@@ -225,12 +237,12 @@ public class LangUtils {
     public static Map<String, Field> excludeOverrideSuperField(Field[] fields, List<Field> superFieldList) {
         // 子类属性
         Map<String, Field> fieldMap = Stream.of(fields).collect(Collectors.toMap(Field::getName, identity(),
-            (u, v) -> {
-                throw new IllegalStateException(String.format("Duplicate key %s", u));
-            },
-            LinkedHashMap::new));
+                (u, v) -> {
+                    throw new IllegalStateException(String.format("Duplicate key %s", u));
+                },
+                LinkedHashMap::new));
         superFieldList.stream().filter(field -> !fieldMap.containsKey(field.getName()))
-            .forEach(f -> fieldMap.put(f.getName(), f));
+                .forEach(f -> fieldMap.put(f.getName(), f));
         return fieldMap;
     }
 
@@ -242,13 +254,13 @@ public class LangUtils {
      */
     public boolean isBaseType(Class<?> clazz) {
         return clazz.equals(Integer.class) ||
-            clazz.equals(Byte.class) ||
-            clazz.equals(Long.class) ||
-            clazz.equals(Double.class) ||
-            clazz.equals(Float.class) ||
-            clazz.equals(Character.class) ||
-            clazz.equals(Short.class) ||
-            clazz.equals(Boolean.class);
+                clazz.equals(Byte.class) ||
+                clazz.equals(Long.class) ||
+                clazz.equals(Double.class) ||
+                clazz.equals(Float.class) ||
+                clazz.equals(Character.class) ||
+                clazz.equals(Short.class) ||
+                clazz.equals(Boolean.class);
     }
 
     public String toString(Object object) {
@@ -282,9 +294,38 @@ public class LangUtils {
      * @return
      */
     public <V, R> List<R> toList(Iterable<V> values, Function<? super V, R> keyFunction) {
+        return toList(values, false, keyFunction);
+    }
+
+    public <V, R> List<R> toList(Iterable<V> values, boolean filterNull, Function<? super V, R> fn) {
         List<R> result = Lists.newArrayList();
         for (V val : values) {
-            result.add(keyFunction.apply(val));
+            R keyValue = fn.apply(val);
+            if (filterNull && Objects.isNull(keyValue)) {
+                continue;
+            }
+            result.add(keyValue);
+        }
+        return result;
+    }
+
+    public <V> MultiList<V> toMultiList(Iterable<V> values, SFunction<V, ?>... fnList) {
+        return toMultiList(values, false, fnList);
+    }
+
+    public <V> MultiList<V> toMultiList(Iterable<V> values, boolean filterNull, SFunction<V, ?>... fnList) {
+        MultiList<V> result = new MultiList<>();
+        if (ArrayUtil.isEmpty(fnList)) {
+            return result;
+        }
+        for (V val : values) {
+            for (SFunction<V, ?> fn : fnList) {
+                Object keyValue = fn.apply(val);
+                if (filterNull && Objects.isNull(keyValue)) {
+                    continue;
+                }
+                result.add(fn, keyValue);
+            }
         }
         return result;
     }
@@ -311,6 +352,7 @@ public class LangUtils {
             for (T t : sub) {
                 if (biFunction.apply(r, t)) {
                     iterator.remove();
+                    break;
                 }
             }
         }
@@ -329,10 +371,11 @@ public class LangUtils {
      */
     public <R, T> List<R> getMixed(Collection<R> l1, Collection<T> l2, BiFunction<R, T, Boolean> biFunction) {
         List<R> result = Lists.newArrayList();
-        for (R r : l1) {
-            for (T t : l2) {
-                if (biFunction.apply(r, t)) {
-                    result.add(r);
+        for (R t1 : l1) {
+            for (T t2 : l2) {
+                if (biFunction.apply(t1, t2)) {
+                    result.add(t1);
+                    break;
                 }
             }
         }
@@ -487,8 +530,8 @@ public class LangUtils {
             int index = StrUtil.indexOf(url, '?');
             urlStr = StrUtil.sub(url, 0, index);
             Arrays.stream(StrUtil.blankToDefault(StrUtil.sub(url, index + 1, url.length()), StrUtil.EMPTY)
-                    .split("&")).map(s -> s.split("=", 2))
-                .forEach(keyValue -> params.put(keyValue[0], keyValue[1]));
+                            .split("&")).map(s -> s.split("=", 2))
+                    .forEach(keyValue -> params.put(keyValue[0], keyValue[1]));
         }
         return new Pair<>(urlStr, params);
     }
@@ -514,11 +557,11 @@ public class LangUtils {
      */
     public static <E> List<E> getDuplicateElements(List<E> list) {
         return list.stream()
-            .collect(Collectors.toMap(e -> e, e -> 1, Integer::sum))
-            .entrySet().stream()
-            .filter(entry -> entry.getValue() > 1)
-            .map(Map.Entry::getKey)
-            .collect(Collectors.toList());
+                .collect(Collectors.toMap(e -> e, e -> 1, Integer::sum))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() > 1)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
 }

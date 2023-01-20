@@ -14,7 +14,7 @@ import in.hocg.boot.mybatis.plus.extensions.httplog.enums.Status;
 import in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro.CreateLogRo;
 import in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro.DoneLogRo;
 import in.hocg.boot.mybatis.plus.extensions.httplog.service.HttpLogMpeService;
-import in.hocg.boot.utils.LogUtils;
+import in.hocg.boot.utils.utils.LogUtils;
 import in.hocg.boot.utils.context.UserContextHolder;
 import in.hocg.boot.utils.function.SupplierThrow;
 import in.hocg.boot.utils.function.ThreeConsumerThrow;

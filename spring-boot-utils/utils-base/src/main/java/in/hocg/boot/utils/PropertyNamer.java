@@ -1,5 +1,6 @@
 package in.hocg.boot.utils;
 
+import in.hocg.boot.utils.utils.ExceptionUtils;
 import lombok.experimental.UtilityClass;
 
 import java.util.Locale;

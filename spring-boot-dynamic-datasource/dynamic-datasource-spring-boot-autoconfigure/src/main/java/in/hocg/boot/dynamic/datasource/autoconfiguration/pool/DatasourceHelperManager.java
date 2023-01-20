@@ -3,7 +3,7 @@ package in.hocg.boot.dynamic.datasource.autoconfiguration.pool;
 import in.hocg.boot.dynamic.datasource.autoconfiguration.pool.support.DefaultDataSourceHelper;
 import in.hocg.boot.dynamic.datasource.autoconfiguration.pool.support.DruidDataSourceHelper;
 import in.hocg.boot.dynamic.datasource.autoconfiguration.properties.DynamicDataSourceProperties;
-import in.hocg.boot.utils.ClassUtils;
+import in.hocg.boot.utils.utils.ClassUtils;
 import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;

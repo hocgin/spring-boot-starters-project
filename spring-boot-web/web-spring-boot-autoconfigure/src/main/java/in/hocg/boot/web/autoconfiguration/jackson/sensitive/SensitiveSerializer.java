@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
-import in.hocg.boot.utils.SensitiveUtils;
+import in.hocg.boot.utils.utils.SensitiveUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.jackson.JsonComponent;
 

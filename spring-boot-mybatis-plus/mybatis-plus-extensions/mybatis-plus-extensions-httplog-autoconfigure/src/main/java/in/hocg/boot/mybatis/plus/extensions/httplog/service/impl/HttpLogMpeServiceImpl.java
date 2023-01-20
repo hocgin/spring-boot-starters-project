@@ -10,7 +10,7 @@ import in.hocg.boot.mybatis.plus.extensions.httplog.mapper.HttpLogMpeMapper;
 import in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro.CreateLogRo;
 import in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro.DoneLogRo;
 import in.hocg.boot.mybatis.plus.extensions.httplog.service.HttpLogMpeService;
-import in.hocg.boot.utils.LogUtils;
+import in.hocg.boot.utils.utils.LogUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.AsyncResult;

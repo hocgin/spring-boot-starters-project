@@ -1,5 +1,6 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -88,6 +90,14 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
         return !lambdaQuery().eq(field, val)
             .notIn(!ignoreIds.isEmpty(), ignoreField, Arrays.stream(ignoreVal).toArray())
             .page(new Page<>(1, 1, false)).getRecords().isEmpty();
+    }
+
+    @Override
+    public List<T> listBy(SFunction<T, ?> field, List<?> values) {
+        if (CollUtil.isEmpty(values)) {
+            return Collections.emptyList();
+        }
+        return lambdaQuery().in(field, values).list();
     }
 
     //----------------------------------------------------------------------------------------------------------------------

@@ -4,7 +4,7 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractSer
 import in.hocg.boot.mybatis.plus.extensions.httplog.entity.HttpLog;
 import in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro.CreateLogRo;
 import in.hocg.boot.mybatis.plus.extensions.httplog.pojo.ro.DoneLogRo;
-import in.hocg.boot.utils.LogUtils;
+import in.hocg.boot.utils.utils.LogUtils;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.Serializable;

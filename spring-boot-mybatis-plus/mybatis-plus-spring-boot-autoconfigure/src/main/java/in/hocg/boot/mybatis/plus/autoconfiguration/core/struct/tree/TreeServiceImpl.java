@@ -7,7 +7,7 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.struct.basic.AbstractServiceImpl;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.utils.TreeUtils;
 import in.hocg.boot.utils.LangUtils;
-import in.hocg.boot.utils.ValidUtils;
+import in.hocg.boot.utils.utils.ValidUtils;
 import lombok.NonNull;
 import org.springframework.transaction.annotation.Transactional;
 

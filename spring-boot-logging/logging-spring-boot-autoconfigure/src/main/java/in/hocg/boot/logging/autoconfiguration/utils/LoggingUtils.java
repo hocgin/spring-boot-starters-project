@@ -1,7 +1,7 @@
 package in.hocg.boot.logging.autoconfiguration.utils;
 
 import cn.hutool.core.util.StrUtil;
-import in.hocg.boot.utils.ClassUtils;
+import in.hocg.boot.utils.utils.ClassUtils;
 import lombok.experimental.UtilityClass;
 
 import javax.servlet.http.HttpServletRequest;

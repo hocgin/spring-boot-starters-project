@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
     url: jdbc:p6spy:mysql://${MYSQL_HOSTNAME:"127.0.0.1:3306"}/db_test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&allowPublicKeyRetrieval=true
-    username: ${MYSQL_USERNAME:"root"}
-    password: ${MYSQL_PASSWORD:"hocgin"}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:hocgin}
     druid:
       validation-query: SELECT 1
       test-while-idle: true
