@@ -352,6 +352,7 @@ public class LangUtils {
             for (T t : sub) {
                 if (biFunction.apply(r, t)) {
                     iterator.remove();
+                    break;
                 }
             }
         }
@@ -374,6 +375,7 @@ public class LangUtils {
             for (T t : l2) {
                 if (biFunction.apply(r, t)) {
                     result.add(r);
+                    break;
                 }
             }
         }
