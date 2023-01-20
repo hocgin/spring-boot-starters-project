@@ -51,7 +51,7 @@ public class UserConfigController {
     @ApiOperation("增加或修改")
     @PutMapping("/set")
     public Result<List<KeyValue>> set(@Valid @RequestBody SetRo ro, @RequestHeader(StringPoolUtils.HEADER_SOURCE) String source) {
-        ro.setOptUserId(UserContextHolder.getUserId());
+        ro.setOptUserId(UserContextHolder.getUserIdThrow());
         ro.setSource(source);
         return Result.success(service.set(ro));
     }
@@ -62,10 +62,10 @@ public class UserConfigController {
      *
      * @return [{key, value}]
      */
-    @ApiOperation("增加或修改")
+    @ApiOperation("删除")
     @DeleteMapping("/delete")
     public Result<List<KeyValue>> delete(@Valid @RequestBody DeleteRo ro, @RequestHeader(StringPoolUtils.HEADER_SOURCE) String source) {
-        ro.setOptUserId(UserContextHolder.getUserId());
+        ro.setOptUserId(UserContextHolder.getUserIdThrow());
         ro.setSource(source);
         return Result.success(service.delete(ro));
     }
@@ -79,7 +79,7 @@ public class UserConfigController {
     @ApiOperation("清除")
     @DeleteMapping("/clear")
     public Result<List<KeyValue>> clear(@Valid @RequestBody(required = false) ClearRo ro, @RequestHeader(StringPoolUtils.HEADER_SOURCE) String source) {
-        ro.setOptUserId(UserContextHolder.getUserId());
+        ro.setOptUserId(UserContextHolder.getUserIdThrow());
         ro.setSource(source);
         return Result.success(service.clear(ro));
     }
@@ -93,7 +93,7 @@ public class UserConfigController {
     @ApiOperation("查询")
     @PostMapping("/query")
     public Result<List<KeyValue>> query(@Valid @RequestBody QueryRo ro, @RequestHeader(StringPoolUtils.HEADER_SOURCE) String source) {
-        ro.setOptUserId(UserContextHolder.getUserId());
+        ro.setOptUserId(UserContextHolder.getUserIdThrow());
         ro.setSource(source);
         return Result.success(service.query(ro));
     }
