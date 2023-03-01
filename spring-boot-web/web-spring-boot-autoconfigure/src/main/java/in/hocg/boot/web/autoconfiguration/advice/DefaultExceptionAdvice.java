@@ -43,11 +43,11 @@ public class DefaultExceptionAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ExceptionResult<Void> handleException(Exception e) {
         String message = StrUtil.emptyToDefault(e.getMessage(), "系统繁忙, 请稍后");
         log.error("服务异常ID: [{}]", IdUtil.randomUUID(), e);
-        return ExceptionResult.fail(HttpStatus.INTERNAL_SERVER_ERROR.value(), message, e.getClass().getName());
+        return ExceptionResult.fail(HttpStatus.BAD_REQUEST.value(), message, e.getClass().getName());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
