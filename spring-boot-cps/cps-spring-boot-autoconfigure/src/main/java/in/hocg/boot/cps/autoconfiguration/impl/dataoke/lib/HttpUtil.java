@@ -1,9 +1,8 @@
 package in.hocg.boot.cps.autoconfiguration.impl.dataoke.lib;
 
-
+import cn.hutool.core.util.StrUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -16,13 +15,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.apache.logging.log4j.util.Strings;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +33,7 @@ public class HttpUtil {
     private static PoolingHttpClientConnectionManager cm;
     private static String EMPTY_STR = "";
     private static String UTF_8 = "UTF-8";
+
     private static void init() {
         if (cm == null) {
             cm = new PoolingHttpClientConnectionManager();
@@ -50,18 +51,13 @@ public class HttpUtil {
      */
     private static CloseableHttpClient getHttpClient() {
         init();
-        return HttpClients.custom()
-                .setRetryHandler(new HttpRequestRetryHandler(){
-                    @Override
-                    public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
-                        if (executionCount >= 1) {
-                            // Do not retry if over max retry count
-                            return false;
-                        }
-                        return true;
-                    }
-                })
-                .setConnectionManager(cm).setConnectionManagerShared(true).build();
+        return HttpClients.custom().setRetryHandler((exception, executionCount, context) -> {
+            if (executionCount >= 1) {
+                // Do not retry if over max retry count
+                return false;
+            }
+            return true;
+        }).setConnectionManager(cm).setConnectionManagerShared(true).build();
     }
 
     /**
@@ -71,14 +67,14 @@ public class HttpUtil {
     public static String httpGetRequest(String url) {
         HttpGet httpGet = new HttpGet(url);
         RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(5000)   //设置连接超时时间
-                .setConnectionRequestTimeout(5000) // 设置请求超时时间
-                .setSocketTimeout(5000)
-                .setRedirectsEnabled(false)//默认允许自动重定向
-                .build();
+            .setConnectTimeout(5000)   //设置连接超时时间
+            .setConnectionRequestTimeout(5000) // 设置请求超时时间
+            .setSocketTimeout(5000)
+            .setRedirectsEnabled(false)//默认允许自动重定向
+            .build();
         httpGet.setConfig(config);
         httpGet.setHeader("Accept", "application/json");
-        httpGet.addHeader("Accept-Encoding" ,"gzip"); //请求使用数据压缩
+        httpGet.addHeader("Accept-Encoding", "gzip"); //请求使用数据压缩
         return getResult(httpGet);
     }
 
@@ -87,19 +83,19 @@ public class HttpUtil {
         url = url.contains("?") ? url : url + "?";
         HttpGet httpGet = new HttpGet(url + paramsStr);
         RequestConfig config = RequestConfig.custom()
-                .setConnectTimeout(5000)   //设置连接超时时间
-                .setConnectionRequestTimeout(5000) // 设置请求超时时间
-                .setSocketTimeout(5000)
-                .setRedirectsEnabled(false)//默认允许自动重定向
-                .build();
+            .setConnectTimeout(5000)   //设置连接超时时间
+            .setConnectionRequestTimeout(5000) // 设置请求超时时间
+            .setSocketTimeout(5000)
+            .setRedirectsEnabled(false)//默认允许自动重定向
+            .build();
         httpGet.setConfig(config);
         httpGet.setHeader("Accept", "application/json");
-        httpGet.addHeader("Accept-Encoding" ,"gzip"); //请求使用数据压缩
+        httpGet.addHeader("Accept-Encoding", "gzip"); //请求使用数据压缩
         return getResult(httpGet);
     }
 
     public static String httpGetRequest(String url, Map<String, Object> headers, Map<String, Object> params)
-            throws URISyntaxException {
+        throws URISyntaxException {
         URIBuilder ub = new URIBuilder();
         ub.setPath(url);
         ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
@@ -116,9 +112,9 @@ public class HttpUtil {
         return getResult(httpPost);
     }
 
-    public static String httpPostRequest(String url,String json) {
+    public static String httpPostRequest(String url, String json) {
         HttpPost httpPost = new HttpPost(url);
-        StringEntity entity = new StringEntity(json,"utf-8");//解决中文乱码问题
+        StringEntity entity = new StringEntity(json, "utf-8");//解决中文乱码问题
         entity.setContentEncoding("UTF-8");
         entity.setContentType("application/json");
         httpPost.setEntity(entity);
@@ -133,7 +129,7 @@ public class HttpUtil {
     }
 
     public static String httpPostRequest(String url, Map<String, Object> headers, Map<String, Object> params)
-            throws UnsupportedEncodingException {
+        throws UnsupportedEncodingException {
         HttpPost httpPost = new HttpPost(url);
         for (Map.Entry<String, Object> param : headers.entrySet()) {
             httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
@@ -145,7 +141,7 @@ public class HttpUtil {
     }
 
     private static ArrayList<NameValuePair> covertParams2NVPS(Map<String, Object> params) {
-        ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
         for (Map.Entry<String, Object> param : params.entrySet()) {
             pairs.add(new BasicNameValuePair(param.getKey(), String.valueOf(param.getValue())));
         }
@@ -153,31 +149,23 @@ public class HttpUtil {
     }
 
     private static ArrayList<NameValuePair> covertParams2NVPSForStr(Map<String, String> params) {
-        ArrayList<NameValuePair> pairs = new ArrayList<NameValuePair>();
+        ArrayList<NameValuePair> pairs = new ArrayList<>();
         for (Map.Entry<String, String> param : params.entrySet()) {
-            try {
-                pairs.add(new BasicNameValuePair(param.getKey(), URLEncoder.encode(param.getValue(), "utf-8")));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            pairs.add(new BasicNameValuePair(param.getKey(), HttpUtil.encodeStr(param.getValue())));
         }
         return pairs;
     }
 
     private static String covertParamsForStr(Map<String, String> paraMap) {
-        if(paraMap == null){
+        if (paraMap == null) {
             paraMap = new HashMap<>();
         }
-        paraMap= new TreeMap<>(paraMap);
+        paraMap = new TreeMap<>(paraMap);
         StringBuilder sb = new StringBuilder();
-        paraMap.entrySet().stream().forEach(entry ->{
-            sb.append(entry.getKey());
+        paraMap.forEach((key, value) -> {
+            sb.append(key);
             sb.append("=");
-            try {
-                sb.append(URLEncoder.encode(entry.getValue(),"utf-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            sb.append(HttpUtil.encodeStr(value));
             sb.append("&");
         });
         return sb.toString();
@@ -198,15 +186,27 @@ public class HttpUtil {
             response.close();
         } catch (IOException e) {
             //e.printStackTrace();
-        }finally {
-            try{
-                if(httpClient != null){
+        } finally {
+            try {
+                if (httpClient != null) {
                     httpClient.close(); //释放资源
                 }
-            }catch (Exception e){
+            } catch (Exception ignored) {
 
             }
         }
         return result;
+    }
+
+
+    public static String encodeStr(String value) {
+        if (StrUtil.isBlank(value)) {
+            return Strings.EMPTY;
+        }
+        try {
+            return URLEncoder.encode(value, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return Strings.EMPTY;
+        }
     }
 }
