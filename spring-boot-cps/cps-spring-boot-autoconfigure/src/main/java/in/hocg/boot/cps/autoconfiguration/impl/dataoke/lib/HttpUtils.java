@@ -8,8 +8,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -20,6 +18,7 @@ import java.util.TreeMap;
  * @createTime: 2019/04/24 14:55
  * @description:
  */
+@Deprecated
 public class HttpUtils {
 
     public static String doGet(String url) {
@@ -56,14 +55,10 @@ public class HttpUtils {
         }
         paraMap = new TreeMap<>(paraMap);
         StringBuilder sb = new StringBuilder();
-        paraMap.entrySet().stream().forEach(entry -> {
-            sb.append(entry.getKey());
+        paraMap.forEach((key, value) -> {
+            sb.append(key);
             sb.append("=");
-            try {
-                sb.append(URLEncoder.encode(entry.getValue(), "utf-8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            sb.append(HttpUtil.encodeStr(value));
             sb.append("&");
         });
         getUrl = getUrl.contains("?") ? getUrl : getUrl + "?";

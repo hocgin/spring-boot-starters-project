@@ -1,5 +1,6 @@
 package in.hocg.boot.cps.autoconfiguration.impl.dataoke.lib;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.Set;
@@ -14,13 +15,14 @@ public class SignMD5Util {
 
     /**
      * 获取签名的util
-     * @param map 请求参数
+     *
+     * @param map       请求参数
      * @param secretKey 密钥
      * @return
      */
-    public static String getSignStr(TreeMap<String,String> map, String secretKey){
+    public static String getSignStr(TreeMap<String, String> map, String secretKey) {
 
-        if (map.size() == 0 ){
+        if (map.size() == 0) {
             return "";
         }
 
@@ -30,7 +32,7 @@ public class SignMD5Util {
         Iterator<String> iter = keySet.iterator();
         while (iter.hasNext()) {
             String key = iter.next();
-            sb.append("&"+ key + "=" + map.get(key));
+            sb.append("&" + key + "=" + map.get(key));
         }
         sb.deleteCharAt(0);
         return sign(sb.toString(), secretKey);
@@ -38,13 +40,14 @@ public class SignMD5Util {
 
     /**
      * 获取签名的util
-     * @param map 请求参数
+     *
+     * @param map       请求参数
      * @param secretKey 密钥
      * @return
      */
-    public static String getSignStrNew(TreeMap<String,String> map, String secretKey){
+    public static String getSignStrNew(TreeMap<String, String> map, String secretKey) {
 
-        if (map.size() == 0 ){
+        if (map.size() == 0) {
             return "";
         }
         StringBuilder sb = new StringBuilder();
@@ -58,8 +61,7 @@ public class SignMD5Util {
         return sign(sb.toString(), secretKey);
     }
 
-    public static String sign(String content, String key)
-    {
+    public static String sign(String content, String key) {
         String signStr = "";
         signStr = content + "&key=" + key;
         //MD5加密后，字符串所有字符转换为大写
@@ -67,7 +69,6 @@ public class SignMD5Util {
     }
 
     /**
-     *
      * MD5加密算法
      *
      * @param s
@@ -77,15 +78,14 @@ public class SignMD5Util {
     public final static String MD5(String s) {
         char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
         try {
-            byte[] btInput = s.getBytes("utf-8");
+            byte[] btInput = s.getBytes(StandardCharsets.UTF_8);
             MessageDigest mdInst = MessageDigest.getInstance("MD5");
             mdInst.update(btInput);
             byte[] md = mdInst.digest();
             int j = md.length;
             char str[] = new char[j * 2];
             int k = 0;
-            for (int i = 0; i < j; i++)
-            {
+            for (int i = 0; i < j; i++) {
                 byte byte0 = md[i];
                 str[k++] = hexDigits[byte0 >>> 4 & 0xf];
                 str[k++] = hexDigits[byte0 & 0xf];
