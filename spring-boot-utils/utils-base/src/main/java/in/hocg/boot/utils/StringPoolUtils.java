@@ -25,4 +25,7 @@ public final class StringPoolUtils {
     public static final String PARAM_TICKET = "ticket";
 
 
+    public static final String TRACK_ID = "X-Track-Id";
+    public static final String TENANT_ID = "X-Tenant-Id";
+
 }

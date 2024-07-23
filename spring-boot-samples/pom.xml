@@ -46,6 +46,7 @@
     <module>webmagic-spring-boot-sample</module>
     <module>notify-spring-boot-sample</module>
     <module>cps-spring-boot-sample</module>
+    <module>geoip-spring-boot-sample</module>
     <module>tpl-spring-boot-sample</module>
   </modules>
 

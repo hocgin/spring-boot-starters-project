@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.logging.autoconfiguration.core.LoggerEvent;
 import in.hocg.boot.logging.autoconfiguration.core.LoggerListener;
+import in.hocg.boot.utils.StringPoolUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 
@@ -30,9 +31,10 @@ public class DefaultLoggerListener implements LoggerListener {
     private void printlnPrettyLogger(LoggerEvent logger) {
         StringJoiner stringJoiner = new StringJoiner("\n")
             .add("")
-            .add("╔═[{}]═{}══════════════════════════════════════════════════════════════")
+            .add("╔═[{}]═[{}]══════════════════════════════════════════════════════════════")
             .add("║ {}")
             .add("║ > {} ({})")
+            .add("║ > TrackId {}")
             .add("╠═[请求体]════════════════════════════════════════════════════════════════════════════")
             .add("║ {}")
             .add("╠═[响应体]════════════════════════════════════════════════════════════════════════════")
@@ -48,6 +50,7 @@ public class DefaultLoggerListener implements LoggerListener {
             String.format("%s %s", logger.getMethod(), logger.getUri()),
             logger.getEnterRemark(),
             logger.getMapping(),
+            StrUtil.blankToDefault(logger.getTrackId(), StringPoolUtils.UNKNOWN),
             argStr.replaceAll("\n", "\n║ "),
             retStr.replaceAll("\n", "\n║ "),
             logger.getTotalTimeMillis());

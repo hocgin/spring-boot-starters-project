@@ -74,6 +74,7 @@
     <module>spring-boot-kafka</module>
     <module>spring-boot-cps</module>
     <module>spring-boot-rocketmq</module>
+    <module>spring-boot-geoip</module>
     <module>spring-boot-tpl</module>
   </modules>
 

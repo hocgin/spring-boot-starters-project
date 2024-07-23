@@ -61,6 +61,16 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>geoip-spring-boot-autoconfigure</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>geoip-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <!-- TPL -->
       <dependency>
         <groupId>${project.groupId}</groupId>
@@ -896,4 +906,12 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>spring-milestone</id>
+      <name>Spring Milestone Repository</name>
+      <url>https://repo.spring.io/milestone</url>
+    </repository>
+  </repositories>
 </project>

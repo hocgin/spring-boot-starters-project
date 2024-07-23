@@ -15,6 +15,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class BootProperties {
     public static final String PREFIX = "boot.web";
     /**
+     * 工作节点编号
+     */
+    private Long workerId = 1L;
+    /**
+     * 数据中心节点编号
+     */
+    private Long datacenterId = 1L;
+    /**
      * 配置域名
      */
     private String hostname;

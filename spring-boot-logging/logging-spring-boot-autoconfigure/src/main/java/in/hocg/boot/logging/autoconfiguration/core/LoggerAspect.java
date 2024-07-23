@@ -1,6 +1,7 @@
 package in.hocg.boot.logging.autoconfiguration.core;
 
 import cn.hutool.core.collection.CollectionUtil;
+import in.hocg.boot.utils.context.UserContextHolder;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.base.Stopwatch;
 import in.hocg.boot.logging.autoconfiguration.utils.LoggingUtils;
@@ -98,7 +99,8 @@ public class LoggerAspect {
         String userAgent = StringPoolUtils.UNKNOWN;
         String source = StringPoolUtils.UNKNOWN;
         String username = null;
-        String clientIp = "0.0.0.0";
+        String trackId = StringPoolUtils.UNKNOWN;
+        String clientIp = StringPoolUtils.UNKNOWN;
         if (requestOpt.isPresent()) {
             HttpServletRequest request = requestOpt.get();
             uri = request.getRequestURI();
@@ -106,6 +108,7 @@ public class LoggerAspect {
             userAgent = LoggingUtils.getUserAgent(request);
             host = LoggingUtils.getHost(request);
             clientIp = LoggingUtils.getClientIp(request);
+            trackId = UserContextHolder.getTrackId();
             source = request.getHeader(StringPoolUtils.HEADER_SOURCE);
             username = request.getHeader(StringPoolUtils.HEADER_USERNAME);
         }
@@ -119,6 +122,7 @@ public class LoggerAspect {
         LoggerEvent logger = new LoggerEvent().setMapping(mapping)
             .setCurrentUser(this.getCurrentUser().orElse(username))
             .setSource(source).setException(errorMessage)
+            .setTrackId(trackId)
             .setEnterRemark(enterRemark).setHost(host)
             .setCreatedAt(LocalDateTime.now()).setClientIp(clientIp)
             .setUserAgent(userAgent).setMethod(requestMethod)

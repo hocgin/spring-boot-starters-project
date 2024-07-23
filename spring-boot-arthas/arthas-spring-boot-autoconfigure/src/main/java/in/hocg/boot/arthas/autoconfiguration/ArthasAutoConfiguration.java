@@ -54,7 +54,7 @@ public class ArthasAutoConfiguration {
         String agentId = arthasProperties.getAgentId();
         if (StrUtil.isBlank(agentId)) {
             String localhostStr = StrUtil.replace(NetUtil.getLocalhostStr(), ".", "x");
-            agentId = StrUtil.format("{}[{}]", StrUtil.blankToDefault(appName, "unknown"), localhostStr);
+            agentId = StrUtil.format("{}_{}", StrUtil.blankToDefault(appName, "unknown"), localhostStr);
             arthasConfigMap.put("agentId", agentId);
         }
 

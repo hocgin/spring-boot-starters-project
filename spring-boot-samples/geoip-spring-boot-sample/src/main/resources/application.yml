@@ -1,0 +1,7 @@
+server:
+  port: 8080
+
+boot:
+  geo:
+    countryPath: /Users/hocgin/HiProjects/spring-boot-starters-project/spring-boot-samples/geoip-spring-boot-sample/src/main/resources/GeoIP2-Country.mmdb
+    cityPath: /Users/hocgin/HiProjects/spring-boot-starters-project/spring-boot-samples/geoip-spring-boot-sample/src/main/resources/GeoLite2-City.mmdb

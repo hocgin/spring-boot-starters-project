@@ -1,10 +1,12 @@
 package in.hocg.boot.cache.autoconfiguration.repository;
 
+import cn.hutool.core.convert.Convert;
 import com.google.common.collect.Sets;
 import in.hocg.boot.cache.autoconfiguration.serializer.RedisKeySerializer;
 import in.hocg.boot.cache.autoconfiguration.serializer.RedisObjectSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -27,7 +29,7 @@ public class RedisRepositoryImpl implements CacheRepository {
     /**
      * 值序列化器
      */
-    private static final RedisObjectSerializer OBJECT_SERIALIZER = new RedisObjectSerializer();
+    public static final RedisObjectSerializer OBJECT_SERIALIZER = new RedisObjectSerializer();
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -47,7 +49,7 @@ public class RedisRepositoryImpl implements CacheRepository {
         return redisTemplate;
     }
 
-    protected RedisSerializer<String> getRedisSerializer() {
+    public RedisSerializer<String> getRedisKeySerializer() {
         return new RedisKeySerializer(keyPrefix);
     }
 
@@ -70,7 +72,7 @@ public class RedisRepositoryImpl implements CacheRepository {
     @Override
     public <T> void setExpire(String key, T value, Duration duration) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
+            RedisSerializer<String> serializer = getRedisKeySerializer();
             byte[] keys = serializer.serialize(key);
             byte[] values = OBJECT_SERIALIZER.serialize(value);
             connection.setEx(keys, duration.get(ChronoUnit.SECONDS), values);
@@ -81,7 +83,7 @@ public class RedisRepositoryImpl implements CacheRepository {
     @Override
     public <T> void setExpire(String[] keys, T[] values, Duration duration) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
+            RedisSerializer<String> serializer = getRedisKeySerializer();
             for (int i = 0; i < keys.length; i++) {
                 byte[] bKeys = serializer.serialize(keys[i]);
                 byte[] bValues = OBJECT_SERIALIZER.serialize(values[i]);
@@ -104,7 +106,7 @@ public class RedisRepositoryImpl implements CacheRepository {
     @Override
     public <T> void set(String[] keys, T[] values) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
+            RedisSerializer<String> serializer = getRedisKeySerializer();
             for (int i = 0; i < keys.length; i++) {
                 byte[] bKeys = serializer.serialize(keys[i]);
                 byte[] bValues = OBJECT_SERIALIZER.serialize(values[i]);
@@ -117,7 +119,7 @@ public class RedisRepositoryImpl implements CacheRepository {
     @Override
     public <T> void set(String key, T value) {
         redisTemplate.execute((RedisCallback<Long>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
+            RedisSerializer<String> serializer = getRedisKeySerializer();
             byte[] keys = serializer.serialize(key);
             byte[] values = OBJECT_SERIALIZER.serialize(value);
             connection.set(keys, values);
@@ -133,7 +135,7 @@ public class RedisRepositoryImpl implements CacheRepository {
     @Override
     public <T> T get(String key) {
         return redisTemplate.execute((RedisCallback<T>) connection -> {
-            RedisSerializer<String> serializer = getRedisSerializer();
+            RedisSerializer<String> serializer = getRedisKeySerializer();
             byte[] keys = serializer.serialize(key);
             byte[] values = connection.get(keys);
             return (T) OBJECT_SERIALIZER.deserialize(values);
@@ -168,14 +170,14 @@ public class RedisRepositoryImpl implements CacheRepository {
 
     @Override
     public boolean exists(String key) {
-        RedisSerializer<String> serializer = getRedisSerializer();
+        RedisSerializer<String> serializer = getRedisKeySerializer();
         return redisTemplate.execute((RedisCallback<Boolean>) connection ->
             connection.exists(serializer.serialize(key)));
     }
 
     @Override
     public long del(String... keys) {
-        RedisSerializer<String> serializer = getRedisSerializer();
+        RedisSerializer<String> serializer = getRedisKeySerializer();
         return redisTemplate.execute((RedisCallback<Long>) connection -> {
             long result = 0;
             for (String key : keys) {
@@ -322,5 +324,47 @@ public class RedisRepositoryImpl implements CacheRepository {
     public Boolean setNxAndExpire(String key, String value, long milliseconds) {
         Boolean result = redisTemplate.opsForValue().setIfAbsent(key, value, milliseconds, TimeUnit.MILLISECONDS);
         return null != result && result;
+    }
+
+    @Override
+    public boolean setIfNull(String key, String value) {
+        // Lua 脚本
+        String script = "local key = KEYS[1] local value = ARGV[1] if redis.call('get', key) == false then redis.call('set', key, value) return 1 else return 0 end";
+
+        // 执行脚本
+        Long result = redisTemplate.execute((RedisCallback<Long>) (connection) -> {
+            RedisSerializer<String> serializer = this.getRedisKeySerializer();
+            byte[] keys = serializer.serialize(key);
+            byte[] v1 = OBJECT_SERIALIZER.serialize(value);
+            byte[][] args = {keys, v1};
+            return connection.scriptingCommands().eval(script.getBytes(), ReturnType.INTEGER, 1, args);
+        });
+
+        // 返回操作结果，1 表示成功，0 表示失败
+        return Objects.nonNull(result) && Convert.toLong(result) == 1L;
+    }
+
+    @Override
+    public boolean compareAndSet(String key, String oldValue, String newValue) {
+        // Lua 脚本实现 CAS 操作
+        String script = "local key = KEYS[1] if redis.call('get', key) == ARGV[1] then redis.call('set', key, ARGV[2]) return 1 else return 0 end";
+
+        // 执行脚本
+        Long result = redisTemplate.execute((RedisCallback<Long>) (connection) -> {
+            RedisSerializer<String> serializer = this.getRedisKeySerializer();
+            byte[] keys = serializer.serialize(key);
+            byte[] v1 = OBJECT_SERIALIZER.serialize(oldValue);
+            byte[] v2 = OBJECT_SERIALIZER.serialize(newValue);
+            byte[][] args = {keys, v1, v2};
+            return connection.scriptingCommands().eval(script.getBytes(), ReturnType.INTEGER, 1, args);
+        });
+
+        // 返回操作结果，1 表示成功，0 表示失败
+        return Objects.nonNull(result) && Convert.toLong(result) == 1L;
+    }
+
+    @Override
+    public byte[] keyPrefix(String key) {
+        return getRedisKeySerializer().serialize(key);
     }
 }

@@ -1,5 +1,7 @@
 package in.hocg.boot.web.autoconfiguration;
 
+import cn.hutool.core.lang.Snowflake;
+import cn.hutool.core.util.IdUtil;
 import in.hocg.boot.web.autoconfiguration.advice.ErrorPagesConfiguration;
 import in.hocg.boot.web.autoconfiguration.core.WarmUpLazyBeanRunner;
 import in.hocg.boot.web.autoconfiguration.jackson.SerializerConfiguration;
@@ -37,6 +39,7 @@ import javax.validation.ValidatorFactory;
 @EnableConfigurationProperties(BootProperties.class)
 @RequiredArgsConstructor(onConstructor = @__(@Lazy))
 public class WebAutoConfiguration {
+    private final BootProperties properties;
 
     @Bean
     public Validator validator() {
@@ -63,4 +66,9 @@ public class WebAutoConfiguration {
         }
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public Snowflake snowflake() {
+        return IdUtil.getSnowflake(properties.getWorkerId(), properties.getDatacenterId());
+    }
 }

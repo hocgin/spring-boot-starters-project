@@ -296,4 +296,25 @@ public interface CacheRepository {
     Set<String> scan(String pattern, int count);
 
     Boolean setNxAndExpire(String key, String value, long milliseconds);
+
+    /**
+     * 设置值，当值不存在的时候
+     *
+     * @param key   key
+     * @param value value
+     * @return 结果
+     */
+    boolean setIfNull(String key, String value);
+
+    /**
+     * 原子操作更新值
+     *
+     * @param key      key
+     * @param oldValue oldValue
+     * @param newValue newValue
+     * @return 结果
+     */
+    boolean compareAndSet(String key, String oldValue, String newValue);
+
+    byte[] keyPrefix(String key);
 }

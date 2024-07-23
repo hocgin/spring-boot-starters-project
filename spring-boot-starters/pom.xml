@@ -60,6 +60,7 @@
     <module>netty-client-spring-boot-starter</module>
     <module>cps-spring-boot-starter</module>
     <module>rocketmq-spring-boot-starter</module>
+    <module>geoip-spring-boot-starter</module>
     <module>tpl-spring-boot-starter</module>
   </modules>
 

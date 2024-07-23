@@ -33,6 +33,10 @@ public class LoggerEvent {
      */
     private String source;
     /**
+     * 请求追踪ID
+     */
+    private String trackId;
+    /**
      * 请求头:host
      */
     private String host;
