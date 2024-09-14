@@ -110,7 +110,7 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
             return true;
         }
 
-        UpdateWrapper<T> wrapper = new UpdateWrapper<>(newEntity).in(ColumnConstants.ID, id);
+        UpdateWrapper<T> wrapper = new UpdateWrapper<T>().in(ColumnConstants.ID, id);
         return this.update(newEntity, wrapper);
     }
 
