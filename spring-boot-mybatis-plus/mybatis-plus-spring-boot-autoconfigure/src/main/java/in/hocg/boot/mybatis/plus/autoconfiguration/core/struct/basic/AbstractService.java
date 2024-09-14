@@ -75,8 +75,9 @@ public interface AbstractService<T> extends IService<T> {
      * @param ignoreVal
      * @return
      */
-    boolean has(SFunction<T, ?> field, Object fieldVal,
-                SFunction<T, ?> ignoreField, Serializable... ignoreVal);
+    boolean has(SFunction<T, ?> field, Object fieldVal, SFunction<T, ?> ignoreField, Serializable... ignoreVal);
+
+    boolean has(SFunction<T, ?> field, Object val, SFunction<T, ?> ignoreField, List<Serializable> ignoreVals);
 
     List<T> listBy(SFunction<T, ?> field, List<?> values);
 

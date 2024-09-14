@@ -37,56 +37,99 @@ public class CodeGenerator {
         final Path rootPath = Paths.get(System.getProperty("user.dir"));
         String outputDir = rootPath.resolve(module.getRelativePath()).resolve(javaPath).toString();
 
+//
+//        config.setActiveRecord(true)
+//            .setEnableCache(false)
+//            .setBaseColumnList(false)
+//            .setBaseResultMap(false)
+//            .setServiceName("%sService");
 
-        GlobalConfig config = new GlobalConfig();
-        DataSourceConfig dataSourceConfig = new DataSourceConfig();
-        dataSourceConfig.setDbType(dataSource.getDbType())
-            .setUrl(dataSource.getUrl())
-            .setUsername(dataSource.getUsername())
-            .setPassword(dataSource.getPassword())
-            .setDriverName(dataSource.getDriverName().getName());
-        StrategyConfig strategyConfig = new StrategyConfig();
-        strategyConfig.setEntityLombokModel(true)
-            .setSuperEntityColumns("id",
+        GlobalConfig.Builder configBuilder = new GlobalConfig.Builder()
+            .disableOpenDir()
+            .enableSwagger()
+            .outputDir(outputDir)
+            .author(System.getProperty("user.name"));
+        if (fileOverride) {
+            configBuilder = configBuilder.fileOverride();
+        }
+        GlobalConfig config = configBuilder.build();
+
+
+        DataSourceConfig dataSourceConfig = new DataSourceConfig.Builder(
+            dataSource.getUrl(), dataSource.getUsername(), dataSource.getPassword())
+            .build();
+
+        // == Base
+        StrategyConfig strategyConfig = new StrategyConfig.Builder()
+            .enableCapitalMode()
+            .addInclude(tables)
+            .addTablePrefix(module.getIgnoreTablePrefix().toArray(new String[]{}))
+            .build();
+        strategyConfig.entityBuilder()
+            .enableLombok()
+            .enableActiveRecord()
+            .addSuperEntityColumns("id",
                 "created_at", "creator",
-                "last_updated_at", "last_updater"
-            )
-            .setEntityTableFieldAnnotationEnable(true)
-            .setCapitalMode(true)
-            .setEntityColumnConstant(false)
-            .setControllerMappingHyphenStyle(true)
-            .setRestControllerStyle(true)
-            .setTablePrefix(module.getIgnoreTablePrefix().toArray(new String[]{}))
-            .setSuperEntityClass(CommonEntity.class.getName())
-            .setSuperServiceClass(AbstractService.class.getName())
-            .setSuperServiceImplClass(AbstractServiceImpl.class.getName())
-            .setNaming(NamingStrategy.underline_to_camel)
-            .setInclude(tables);
-        config.setOpen(false)
-            .setActiveRecord(true)
-            .setAuthor(System.getProperty("user.name"))
-            .setOutputDir(outputDir)
-            .setFileOverride(fileOverride)
-            .setEnableCache(false)
-            .setBaseColumnList(false)
-            .setBaseResultMap(false)
-            .setServiceName("%sService");
+                "last_updated_at", "last_updater")
+            .enableTableFieldAnnotation()
+//                .enableColumnConstant()
+            .superClass(CommonEntity.class)
+            .naming(NamingStrategy.underline_to_camel)
+            .build();
+        strategyConfig.controllerBuilder()
+            .enableHyphenStyle()
+            .enableRestStyle()
+            .build();
+        strategyConfig.serviceBuilder()
+            .formatServiceFileName("%sService")
+//                .formatServiceImplFileName("%sServiceImpl")
+            .superServiceClass(AbstractService.class)
+            .superServiceImplClass(AbstractServiceImpl.class)
+            .build();
+//        strategyConfig
+//            .setEntityLombokModel(true)
+//            .setSuperEntityColumns("id",
+//                "created_at", "creator",
+//                "last_updated_at", "last_updater"
+//            )
+//            .setEntityTableFieldAnnotationEnable(true)
+//            .setCapitalMode(true)
+//            .setEntityColumnConstant(false)
+//            .setControllerMappingHyphenStyle(true)
+//            .setRestControllerStyle(true)
+//            .setTablePrefix(module.getIgnoreTablePrefix().toArray(new String[]{}))
+//            .setSuperEntityClass(CommonEntity.class.getName())
+//            .setSuperServiceClass(AbstractService.class.getName())
+//            .setSuperServiceImplClass(AbstractServiceImpl.class.getName())
+//            .setNaming(NamingStrategy.underline_to_camel)
+//            .setInclude(tables);
+//        config.setOpen(false)
+//            .setActiveRecord(true)
+//            .setAuthor(System.getProperty("user.name"))
+//            .setOutputDir(outputDir)
+//            .setFileOverride(fileOverride)
+//            .setEnableCache(false)
+//            .setBaseColumnList(false)
+//            .setBaseResultMap(false)
+//            .setServiceName("%sService");
 
-        new AutoGenerator()
-            .setGlobalConfig(config)
-            .setDataSource(dataSourceConfig)
-            .setStrategy(strategyConfig)
-            .setTemplate(new TemplateConfig()
-                .setController("/template/mybatis/controller.java")
-                .setServiceImpl("/template/mybatis/serviceImpl.java")
-                .setMapper("/template/mybatis/mapper.java")
-                .setEntity("/template/mybatis/entity.java")
+        new AutoGenerator(dataSourceConfig)
+            .global(config)
+            .strategy(strategyConfig)
+            .template(new TemplateConfig.Builder()
+                .controller("/template/mybatis/controller.java")
+                .serviceImpl("/template/mybatis/serviceImpl.java")
+                .mapper("/template/mybatis/mapper.java")
+                .entity("/template/mybatis/entity.java")
+                .build()
             )
-            .setPackageInfo(
-                new PackageConfig()
-                    .setParent(module.getPackageName())
-                    .setController("controller")
-                    .setEntity("entity")
+            .packageInfo(
+                new PackageConfig.Builder()
+                    .parent(module.getPackageName())
+                    .controller("controller")
+                    .entity("entity")
+                    .build()
             ).execute();
+
     }
 }

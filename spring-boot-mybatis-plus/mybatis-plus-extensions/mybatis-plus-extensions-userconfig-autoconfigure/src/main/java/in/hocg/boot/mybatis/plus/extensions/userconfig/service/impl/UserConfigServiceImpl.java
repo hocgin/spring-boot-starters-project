@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -55,7 +56,7 @@ public class UserConfigServiceImpl extends AbstractServiceImpl<UserConfigMapper,
         return UserConfigConvert.asKeyValue(entities);
     }
 
-    private List<UserConfig> listByUserIdAndScopeAndKeys(Long userId, String scope, List<String> keys) {
+    private List<UserConfig> listByUserIdAndScopeAndKeys(Long userId, String scope, List<Serializable> keys) {
         return lambdaQuery().eq(UserConfig::getUserId, userId).eq(UserConfig::getScope, scope).in(UserConfig::getCode, keys).list();
     }
 

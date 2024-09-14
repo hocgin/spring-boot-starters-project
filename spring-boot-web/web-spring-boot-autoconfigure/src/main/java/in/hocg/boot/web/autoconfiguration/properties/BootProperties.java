@@ -31,6 +31,11 @@ public class BootProperties {
      */
     private Boolean isDebug = Boolean.FALSE;
 
+    /**
+     * 开启关闭节点
+     */
+    private Boolean shutdown = Boolean.FALSE;
+
     public String getSpringApplicationName() {
         return SpringContext.getApplicationContext().getEnvironment().getProperty("${spring.application.name:'unknown'}");
     }

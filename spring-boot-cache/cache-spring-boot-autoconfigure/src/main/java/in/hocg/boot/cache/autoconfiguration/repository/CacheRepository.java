@@ -317,4 +317,6 @@ public interface CacheRepository {
     boolean compareAndSet(String key, String oldValue, String newValue);
 
     byte[] keyPrefix(String key);
+
+    String getKeyPrefix();
 }

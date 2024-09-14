@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class KeyValue implements Serializable {
-    private Serializable key;
-    private Object value;
+public class LabelValue implements Serializable {
+    private Serializable value;
+    private Object label;
 }

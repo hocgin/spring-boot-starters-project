@@ -1,10 +1,12 @@
 package in.hocg.boot.cache.autoconfiguration;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.cache.autoconfiguration.aspect.DistributeLockAspect;
 import in.hocg.boot.cache.autoconfiguration.aspect.NoRepeatSubmitAspect;
 import in.hocg.boot.cache.autoconfiguration.aspect.RateLimitAspect;
+import in.hocg.boot.cache.autoconfiguration.enums.RedisMode;
 import in.hocg.boot.cache.autoconfiguration.queue.RedisDelayedQueue;
 import in.hocg.boot.cache.autoconfiguration.lock.DistributedLock;
 import in.hocg.boot.cache.autoconfiguration.lock.RedissonDistributedLock;
@@ -34,6 +36,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -53,7 +56,17 @@ public class RedissonAutoConfiguration {
     public RedissonClient redissonClient() {
         Config config = new Config();
         configGlobal(config, properties);
-        switch (properties.getMode()) {
+
+        RedisProperties.Sentinel sentinel = redisProperties.getSentinel();
+        RedisProperties.Cluster cluster = redisProperties.getCluster();
+        RedisMode mode = RedisMode.Single;
+        if (Objects.nonNull(cluster)) {
+            mode = RedisMode.Cluster;
+        } else if (Objects.nonNull(sentinel)) {
+            mode = RedisMode.Sentinel;
+        }
+
+        switch (mode) {
             case Single:
                 configSingle(config);
                 break;
@@ -70,28 +83,41 @@ public class RedissonAutoConfiguration {
     }
 
     private void configCluster(Config config) {
-        RedissonProperties.ClusterProperties props = properties.getCluster();
+        RedissonProperties.ClusterProperties props = ObjectUtil.defaultIfNull(properties.getCluster(), new RedissonProperties.ClusterProperties());
         ClusterServersConfig serverConfig = config.useClusterServers();
         configBaseConfig(serverConfig, properties.getGlobal());
         configMasterSlaveServerConfig(serverConfig, props);
-        LangUtils.runIfNotNull(props.getScanInterval(), serverConfig::setScanInterval);
-        for (String nodeAddress : StrUtil.split(props.getAddress(), ",")) {
+        Integer scanInterval = props.getScanInterval();
+        LangUtils.runIfNotNull(scanInterval, serverConfig::setScanInterval);
+        List<String> address = StrUtil.split(props.getAddress(), ',');
+        List<String> addressList = CollUtil.defaultIfEmpty(address, redisProperties.getCluster().getNodes());
+        for (String nodeAddress : addressList) {
             serverConfig.addNodeAddress(prefixAddress(nodeAddress));
         }
-        serverConfig.setPassword(this.getPassword());
+        String password = this.getPassword();
+        if (StrUtil.isNotBlank(password)) {
+            serverConfig.setPassword(password);
+        }
     }
 
     private void configSentinel(Config config) {
-        RedissonProperties.SentinelProperties props = properties.getSentinel();
+        RedissonProperties.SentinelProperties props = ObjectUtil.defaultIfNull(properties.getSentinel(), new RedissonProperties.SentinelProperties());
         SentinelServersConfig serverConfig = config.useSentinelServers();
         configBaseConfig(serverConfig, properties.getGlobal());
         configMasterSlaveServerConfig(serverConfig, props);
-        for (String nodeAddress : StrUtil.split(props.getAddress(), ",")) {
+
+        List<String> address = StrUtil.split(props.getAddress(), ',');
+        List<String> addressList = CollUtil.defaultIfEmpty(address, redisProperties.getSentinel().getNodes());
+        for (String nodeAddress : addressList) {
             serverConfig.addSentinelAddress(prefixAddress(nodeAddress));
         }
+
         LangUtils.runIfNotNull(props.getMaster(), serverConfig::setMasterName);
         serverConfig.setDatabase(this.getDatabase());
-        serverConfig.setPassword(this.getPassword());
+        String password = this.getPassword();
+        if (StrUtil.isNotBlank(password)) {
+            serverConfig.setPassword(password);
+        }
     }
 
     private void configSingle(Config config) {
@@ -103,7 +129,10 @@ public class RedissonAutoConfiguration {
         configBaseConfig(serverConfig, properties.getGlobal());
         serverConfig.setAddress(prefixAddress(address));
         serverConfig.setDatabase(this.getDatabase());
-        serverConfig.setPassword(this.getPassword());
+        String password = this.getPassword();
+        if (StrUtil.isNotBlank(password)) {
+            serverConfig.setPassword(password);
+        }
         if (Objects.nonNull(single)) {
             LangUtils.runIfNotNull(single.getSubscriptionConnectionMinimumIdleSize(), serverConfig::setSubscriptionConnectionMinimumIdleSize);
             LangUtils.runIfNotNull(single.getSubscriptionConnectionPoolSize(), serverConfig::setSubscriptionConnectionPoolSize);
@@ -207,7 +236,7 @@ public class RedissonAutoConfiguration {
     }
 
     private String prefixAddress(String address) {
-        if (StrUtil.isNotBlank(address) && (!address.startsWith("redis://") || !address.startsWith("rediss://"))) {
+        if (StrUtil.isNotBlank(address) && (!address.startsWith("redis://") && !address.startsWith("rediss://"))) {
             return "redis://" + address;
         }
         return address;

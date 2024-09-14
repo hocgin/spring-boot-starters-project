@@ -23,7 +23,7 @@ public class UserConfigConvert {
 
     private static UserConfig asUserConfig(KeyValue ro, Long optUserId, String source) {
         UserConfig entity = new UserConfig();
-        entity.setCode(ro.getKey());
+        entity.setCode((String) ro.getKey());
         entity.setValue(StrUtil.toString(ro.getValue()));
         entity.setUserId(optUserId);
         entity.setScope(source);

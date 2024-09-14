@@ -2,9 +2,12 @@ package in.hocg.boot.web.autoconfiguration.servlet;
 
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import in.hocg.boot.web.autoconfiguration.filter.ContextFilter;
+import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
+import in.hocg.boot.web.autoconfiguration.shutdown.ShutdownController;
 import org.apache.catalina.startup.Tomcat;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,5 +40,15 @@ public class ServletConfiguration {
     @ConditionalOnMissingBean
     public ContextFilter contextFilter() {
         return new ContextFilter();
+    }
+
+    @Configuration
+    @ConditionalOnProperty(prefix = BootProperties.PREFIX, name = "shutdown")
+    @ConditionalOnClass(ShutdownController.class)
+    public class ShutdownControllerAutoConfiguration {
+        @Bean
+        public ShutdownController tradeMacAuthTokenService() {
+            return new ShutdownController();
+        }
     }
 }

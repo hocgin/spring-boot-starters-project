@@ -218,7 +218,7 @@ public class NamedAspect implements InitializingBean {
         }
 
         values.entrySet().parallelStream().filter(entry -> Objects.nonNull(entry.getValue())).forEach(entry ->
-            namedRowMaps.getOrDefault(entry.getKey(), Collections.emptyList()).forEach(row -> setValue(row, entry.getValue()))
+            namedRowMaps.getOrDefault(StrUtil.toString(entry.getKey()), Collections.emptyList()).forEach(row -> setValue(row, entry.getValue()))
         );
     }
 
@@ -250,7 +250,7 @@ public class NamedAspect implements InitializingBean {
         // 进行翻译工作
         Map<String, Object> caches = Maps.newConcurrentMap();
         values.entrySet().parallelStream().filter(entry -> Objects.nonNull(entry.getValue())).forEach(entry ->
-            idNamedRowGroup.getOrDefault(entry.getKey(), Collections.emptyList()).forEach(row -> caches.put(getCacheKey(row), setValue(row, entry.getValue())))
+            idNamedRowGroup.getOrDefault(StrUtil.toString(entry.getKey()), Collections.emptyList()).forEach(row -> caches.put(getCacheKey(row), setValue(row, entry.getValue())))
         );
 
         if (CollUtil.isNotEmpty(caches)) {

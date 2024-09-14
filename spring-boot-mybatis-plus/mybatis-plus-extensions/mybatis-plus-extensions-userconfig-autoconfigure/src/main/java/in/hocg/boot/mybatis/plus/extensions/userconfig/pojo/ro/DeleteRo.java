@@ -23,7 +23,7 @@ public class DeleteRo implements Serializable {
     @Size(min = 1, max = 100, message = "keys 数量超过限制")
     @NotNull(message = "keys 不能为空")
     @ApiModelProperty("key 列表")
-    private List<String> keys;
+    private List<Serializable> keys;
 
     @ApiModelProperty(value = "操作人", hidden = true)
     private Long optUserId;

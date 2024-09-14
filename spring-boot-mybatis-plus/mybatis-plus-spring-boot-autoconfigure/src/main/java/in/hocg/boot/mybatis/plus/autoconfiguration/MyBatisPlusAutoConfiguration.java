@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.baomidou.mybatisplus.core.incrementer.DefaultIdentifierGenerator;
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
@@ -20,12 +22,17 @@ import in.hocg.boot.mybatis.plus.autoconfiguration.core.interceptor.LogicDeleteI
 import in.hocg.boot.mybatis.plus.autoconfiguration.properties.MyBatisPlusProperties;
 import in.hocg.boot.mybatis.plus.extensions.MyBatisPlusExtensionsAutoConfiguration;
 import in.hocg.boot.utils.LangUtils;
+import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.commons.util.InetUtils;
 import org.springframework.context.annotation.*;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import java.util.Set;
 
@@ -101,6 +108,25 @@ public class MyBatisPlusAutoConfiguration {
         locations.add("classpath*:/**/xml/*.xml");
         properties.setMapperLocations(locations.toArray(new String[]{}));
         return properties;
+    }
+
+
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Configuration(proxyBeanMethods = false)
+    @ConditionalOnClass({BootProperties.class, InetUtils.class})
+    public static class IdentifierGeneratorConfiguration {
+        @Bean
+        @Primary
+        @Order(Ordered.HIGHEST_PRECEDENCE)
+        public IdentifierGenerator identifierGenerator(BootProperties properties, InetUtils inetUtils) {
+            Long workerId = properties.getWorkerId();
+            Long datacenterId = properties.getDatacenterId();
+            if (workerId != null && datacenterId != null) {
+                return new DefaultIdentifierGenerator(workerId, datacenterId);
+            } else {
+                return new DefaultIdentifierGenerator(inetUtils.findFirstNonLoopbackAddress());
+            }
+        }
     }
 
 }

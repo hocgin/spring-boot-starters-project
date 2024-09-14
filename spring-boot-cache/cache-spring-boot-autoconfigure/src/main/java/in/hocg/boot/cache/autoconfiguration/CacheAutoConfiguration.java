@@ -1,6 +1,11 @@
 package in.hocg.boot.cache.autoconfiguration;
 
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import in.hocg.boot.cache.autoconfiguration.properties.CacheProperties;
 import in.hocg.boot.cache.autoconfiguration.repository.CacheRepository;
 import in.hocg.boot.cache.autoconfiguration.repository.RedisRepositoryImpl;
@@ -23,8 +28,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
 
 import static in.hocg.boot.cache.autoconfiguration.properties.CacheProperties.COLON;
 
@@ -62,6 +74,7 @@ public class CacheAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnBean(RedisTemplate.class)
     public CacheRepository cacheRepository(RedisTemplate redisTemplate) {
         return new RedisRepositoryImpl(redisTemplate, getKeyPrefix() + COLON);
     }
@@ -74,7 +87,20 @@ public class CacheAutoConfiguration {
     private RedisCacheConfiguration redisCacheConfiguration() {
         org.springframework.boot.autoconfigure.cache.CacheProperties.Redis redisProperties = properties.getRedis();
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
-        config = config.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.json()));
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        //为jackjson注册序列化提供能力的对象
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        //系列化时间格式化
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        //反序列化时间格式化
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        //注册进入jackson
+        mapper.registerModule(javaTimeModule);
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        mapper.setTimeZone(TimeZone.getDefault());
+        RedisSerializer<Object> redisSerializer = new GenericJackson2JsonRedisSerializer(mapper);
+        config = config.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer));
         if (redisProperties.getTimeToLive() != null) {
             config = config.entryTtl(redisProperties.getTimeToLive());
         }
@@ -87,5 +113,14 @@ public class CacheAutoConfiguration {
             config = config.disableKeyPrefix();
         }
         return config;
+    }
+
+    @Bean
+    public RedisTemplate redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate redisTemplate = new RedisTemplate();
+        redisTemplate.setConnectionFactory(factory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        return redisTemplate;
     }
 }

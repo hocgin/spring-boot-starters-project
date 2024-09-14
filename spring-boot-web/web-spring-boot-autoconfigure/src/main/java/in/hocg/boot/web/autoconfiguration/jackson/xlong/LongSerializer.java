@@ -22,8 +22,10 @@ public class LongSerializer extends JsonSerializer<Long> {
     public void serialize(Long val, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         if (ObjectUtil.isNull(val)) {
             jsonGenerator.writeNull();
-        } else {
+        } else if (val > Integer.MAX_VALUE) {
             jsonGenerator.writeString(val.toString());
+        } else {
+            jsonGenerator.writeNumber(val);
         }
     }
 }

@@ -11,6 +11,7 @@ import in.hocg.boot.utils.enums.DataDictEnum;
 import in.hocg.boot.utils.utils.ClassUtils;
 import lombok.experimental.UtilityClass;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @UtilityClass
 public class DataDictUtils {
-    private static final Map<String, Map<String, Object>> ENUM_CACHE = new HashMap<>();
+    private static final Map<String, Map<Serializable, Object>> ENUM_CACHE = new HashMap<>();
 
     /**
      * 扫描获取数据字典类
@@ -44,15 +45,15 @@ public class DataDictUtils {
      * @param basePackages 扫描的包路径(可以为父级)
      * @return 扫描结果
      */
-    public Map<String, Map<String, Object>> scanMaps(String... basePackages) {
+    public Map<String, Map<Serializable, Object>> scanMaps(String... basePackages) {
         List<DictData> all = scan(basePackages);
         if (ENUM_CACHE.isEmpty()) {
             for (DictData data : all) {
                 String key = data.getCode();
                 List<DictData.Item> items = data.getItems();
-                Map<String, Object> map = new HashMap<>(items.size());
+                Map<Serializable, Object> map = new HashMap<>(items.size());
                 for (DictData.Item item : items) {
-                    map.put(StrUtil.toString(item.getCode()), item.getTitle());
+                    map.put(item.getCode(), item.getTitle());
                 }
                 ENUM_CACHE.put(key, map);
             }

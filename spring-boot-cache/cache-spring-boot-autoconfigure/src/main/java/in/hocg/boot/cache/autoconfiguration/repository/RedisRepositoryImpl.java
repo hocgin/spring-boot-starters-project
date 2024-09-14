@@ -11,7 +11,6 @@ import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -251,7 +250,7 @@ public class RedisRepositoryImpl implements CacheRepository {
                 Map.Entry<K, V> entry = (Map.Entry<K, V>) cursor.next();
                 entrySet.add(entry);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return entrySet;
@@ -271,7 +270,7 @@ public class RedisRepositoryImpl implements CacheRepository {
                 T entry = (T) cursor.next();
                 entrySet.add(entry);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return entrySet;
@@ -291,7 +290,7 @@ public class RedisRepositoryImpl implements CacheRepository {
                 T entry = (T) cursor.next().getValue();
                 entrySet.add(entry);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return entrySet;
@@ -314,7 +313,7 @@ public class RedisRepositoryImpl implements CacheRepository {
                 cursor.forEachRemaining(set::add);
                 return set;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return Collections.emptySet();
@@ -366,5 +365,10 @@ public class RedisRepositoryImpl implements CacheRepository {
     @Override
     public byte[] keyPrefix(String key) {
         return getRedisKeySerializer().serialize(key);
+    }
+
+    @Override
+    public String getKeyPrefix() {
+        return keyPrefix;
     }
 }

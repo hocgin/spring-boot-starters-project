@@ -24,7 +24,7 @@ public class XxlJobAutoConfiguration {
 
     @Bean
     public XxlJobSpringExecutor xxlJobExecutor() {
-        log.info(">>>>>>>>>>> xxl-job config init.");
+        log.info(">>>>>>>>>>> [开始] xxl-job config init.");
         String adminAddresses = properties.getAdminAddresses();
         String address = properties.getAddress();
         String appname = properties.getAppname();
@@ -44,6 +44,7 @@ public class XxlJobAutoConfiguration {
         xxlJobSpringExecutor.setLogPath(logPath);
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
 
+        log.info(">>>>>>>>>>> [完成] xxl-job config init. adminAddresses = {}, hostname = {}, address = {}", adminAddresses, ip + ":" + port, address);
         return xxlJobSpringExecutor;
     }
 }

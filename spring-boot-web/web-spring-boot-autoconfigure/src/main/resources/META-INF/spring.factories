@@ -2,3 +2,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 in.hocg.boot.web.autoconfiguration.WebAutoConfiguration
 org.springframework.boot.env.EnvironmentPostProcessor=\
 in.hocg.boot.web.autoconfiguration.WebEnvironmentPostProcessor
+org.springframework.context.ApplicationListener=\
+in.hocg.boot.web.autoconfiguration.shutdown.ShutdownListener

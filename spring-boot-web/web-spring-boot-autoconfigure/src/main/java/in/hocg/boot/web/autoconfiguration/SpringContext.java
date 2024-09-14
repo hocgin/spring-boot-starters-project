@@ -1,11 +1,16 @@
 package in.hocg.boot.web.autoconfiguration;
 
+import in.hocg.boot.web.autoconfiguration.event.PreExitCodeEvent;
 import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EmbeddedValueResolverAware;
 import org.springframework.util.StringValueResolver;
+
+import java.time.Duration;
+import java.util.Objects;
 
 /**
  * @author hocgin
@@ -70,4 +75,25 @@ public abstract class SpringContext
         return getBean(BootProperties.class);
     }
 
+    /**
+     * 下线服务
+     *
+     * @param duration
+     */
+    public static void shutdown(Duration duration) {
+        log.info("Ready to stop service");
+        try {
+            APPLICATION_CONTEXT.publishEvent(new PreExitCodeEvent(APPLICATION_CONTEXT));
+            if (Objects.nonNull(duration)) {
+                long millis = duration.toMillis();
+                log.info("Waiting {} milliseconds...", millis);
+                Thread.sleep(millis);
+            }
+        } catch (InterruptedException e) {
+            log.info("interrupted!", e);
+        }
+        log.info("Closing application...");
+        SpringApplication.exit(APPLICATION_CONTEXT);
+        System.exit(0);
+    }
 }
