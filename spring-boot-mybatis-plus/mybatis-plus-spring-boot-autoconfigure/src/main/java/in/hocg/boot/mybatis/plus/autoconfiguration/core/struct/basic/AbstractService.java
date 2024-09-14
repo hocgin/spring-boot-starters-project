@@ -77,7 +77,9 @@ public interface AbstractService<T> extends IService<T> {
      */
     boolean has(SFunction<T, ?> field, Object fieldVal, SFunction<T, ?> ignoreField, Serializable... ignoreVal);
 
-    boolean has(SFunction<T, ?> field, Object val, SFunction<T, ?> ignoreField, List<Serializable> ignoreVals);
+    boolean has(SFunction<T, ?> field, Object val, SFunction<T, ?> ignoreField, List<? extends Serializable> ignoreVals);
+
+    boolean batchUpdate(T newEntity, List<? extends Serializable> id);
 
     List<T> listBy(SFunction<T, ?> field, List<?> values);
 

@@ -4,12 +4,14 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.conditions.query.ChainQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import in.hocg.boot.mybatis.plus.autoconfiguration.core.ColumnConstants;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.enhance.convert.UseConvert;
 import in.hocg.boot.mybatis.plus.autoconfiguration.core.pojo.vo.IScroll;
 import in.hocg.boot.utils.LangUtils;
@@ -91,7 +93,7 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
     }
 
     @Override
-    public boolean has(SFunction<T, ?> field, Object val, SFunction<T, ?> ignoreField, List<Serializable> ignoreVals) {
+    public boolean has(SFunction<T, ?> field, Object val, SFunction<T, ?> ignoreField, List<? extends Serializable> ignoreVals) {
         if (CollUtil.isEmpty(ignoreVals)) {
             ignoreVals = Collections.emptyList();
         } else {
@@ -100,6 +102,16 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
         return !lambdaQuery().eq(field, val)
             .notIn(!ignoreVals.isEmpty(), ignoreField, ignoreVals.toArray())
             .page(new Page<>(1, 1, false)).getRecords().isEmpty();
+    }
+
+    @Override
+    public boolean batchUpdate(T newEntity, List<? extends Serializable> id) {
+        if (CollUtil.isEmpty(id)) {
+            return true;
+        }
+
+        UpdateWrapper<T> wrapper = new UpdateWrapper<>(newEntity).in(ColumnConstants.ID, id);
+        return this.update(newEntity, wrapper);
     }
 
     @Override
@@ -170,7 +182,7 @@ public abstract class AbstractServiceImpl<M extends BaseMapper<T>, T extends Abs
         }
         List<Method> methods = ReflectUtil.getPublicMethods(beanClass, method ->
             method.getReturnType().isAssignableFrom(clazz) && method.getParameterCount() == 1);
-        if (methods.size() == 0) {
+        if (methods.isEmpty()) {
             throw new IllegalArgumentException("没有找到合适的方法");
         }
         Method method = methods.get(0);
