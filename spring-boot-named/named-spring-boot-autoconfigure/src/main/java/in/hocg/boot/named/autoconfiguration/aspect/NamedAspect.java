@@ -293,7 +293,7 @@ public class NamedAspect implements InitializingBean {
                 return Collections.emptyMap();
             }
         } catch (Exception e) {
-            log.warn("服务调用失败, 请检查参数 @Named 提供者[{}], 函数[{}], 参数[{}]", namedService, method, JSONUtil.toJsonStr(namedArgs), e);
+            log.warn("服务调用失败, 请检查参数 @Named 提供者=[{}], 函数=[{}], 参数=[{}]", namedService, method, JSONUtil.toJsonStr(namedArgs), e);
             return Collections.emptyMap();
         }
     }

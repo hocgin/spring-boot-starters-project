@@ -285,6 +285,8 @@ public interface CacheRepository {
     <T> Set<T> zScan(String key, String pattern, int count);
 
 
+    void increment(String key, Long val, Long timeout, TimeUnit unit);
+
     /**
      * scan命令
      *

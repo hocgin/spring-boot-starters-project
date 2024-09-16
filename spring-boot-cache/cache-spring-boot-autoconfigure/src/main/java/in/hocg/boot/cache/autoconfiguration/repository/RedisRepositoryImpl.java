@@ -297,6 +297,16 @@ public class RedisRepositoryImpl implements CacheRepository {
     }
 
     @Override
+    public void increment(String key, Long val, Long timeout, TimeUnit unit) {
+        ValueOperations<String, Object> opsForValue = redisTemplate.opsForValue();
+        opsForValue.increment(key, val);
+        if (Objects.isNull(timeout) || timeout.compareTo(-1L) <= 0) {
+            return;
+        }
+        redisTemplate.expire(key, timeout, unit);
+    }
+
+    @Override
     public Set<String> scan(String pattern, int count) {
         ScanOptions scanOptions;
         if (count > -1) {
