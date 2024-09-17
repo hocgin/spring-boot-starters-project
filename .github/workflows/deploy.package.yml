@@ -42,7 +42,7 @@ jobs:
           SNAPSHOT_URL: https://oss.sonatype.org/content/repositories/snapshots
           RELEASE_URL: https://oss.sonatype.org/service/local/staging/deploy/maven2
           MAVEN_SERVER_ID: sonatype
-          MAVEN_USERNAME: hocgin
+          MAVEN_USERNAME: AZebw6LD
           VERSION: ${{ steps.prep.outputs.version_number }}
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
