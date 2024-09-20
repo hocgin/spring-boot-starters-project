@@ -30,7 +30,7 @@ import java.util.function.Function;
  */
 @Slf4j
 public class CachePool {
-    public static Map<Class<?>, Object> NAMED_SERVICE_CLASS_MAPS = new WeakHashMap<>();
+    public static Map<Class<?>, Object> NAMED_SERVICE_CLASS_MAPS = new ConcurrentHashMap<>();
     public static Map<Class<?>, Boolean> IS_SUPPORT_NAMED_CLASS_MAPS = new ConcurrentHashMap<>();
 
     /**
