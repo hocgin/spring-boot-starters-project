@@ -50,11 +50,11 @@ public class WebAutoConfiguration {
         return validatorFactory.getValidator();
     }
 
-    @Bean
-    @ConditionalOnMissingBean
-    public WarmUpLazyBeanRunner warmUpLazyBeanRunner() {
-        return new WarmUpLazyBeanRunner();
-    }
+//    @Bean
+//    @ConditionalOnMissingBean
+//    public WarmUpLazyBeanRunner warmUpLazyBeanRunner() {
+//        return new WarmUpLazyBeanRunner();
+//    }
 
     @Configuration(proxyBeanMethods = false)
     @ConditionalOnClass(HttpTraceRepository.class)
