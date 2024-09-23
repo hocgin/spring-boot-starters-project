@@ -37,7 +37,7 @@
     <xxl-job.version>2.2.0</xxl-job.version>
     <aliyun-schedulerx-spring-boot-starter.version>1.2.4.3</aliyun-schedulerx-spring-boot-starter.version>
     <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-    <webmagic.version>0.7.5</webmagic.version>
+    <webmagic.version>0.8.0</webmagic.version>
     <typetools.version>0.6.3</typetools.version>
     <easyexcel.version>3.0.5</easyexcel.version>
     <jackson-mapper-asl.version>1.9.4</jackson-mapper-asl.version>
