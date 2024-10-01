@@ -28,6 +28,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.CollectionUtils;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -241,7 +242,7 @@ public class NamedAspect implements InitializingBean {
         Object serviceObject = namedRow.getServiceObject();
         String[] args = namedRow.getArgs();
         Object[] ids = idNamedRowGroup.keySet().toArray();
-        Map<String, Object> values = this.callNamedHandleMethod(serviceObject, namedType, ids, args);
+        Map<Serializable, Object> values = this.callNamedHandleMethod(serviceObject, namedType, ids, args);
         log.debug("===> {}-{}-{}::{}", namedType, ids, args, values);
         if (CollUtil.isEmpty(values)) {
             return;
@@ -276,7 +277,7 @@ public class NamedAspect implements InitializingBean {
         return cacheService.getCacheKey(namedRow);
     }
 
-    private Map<String, Object> callNamedHandleMethod(Object namedService, String namedType, Object[] ids, String[] args) {
+    private Map<Serializable, Object> callNamedHandleMethod(Object namedService, String namedType, Object[] ids, String[] args) {
         Method method = NamedUtils.getNamedHandleMethod(namedService.getClass(), namedType);
         if (Objects.isNull(method)) {
             return Collections.emptyMap();
