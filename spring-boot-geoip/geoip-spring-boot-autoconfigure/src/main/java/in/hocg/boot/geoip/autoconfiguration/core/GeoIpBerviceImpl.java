@@ -76,14 +76,8 @@ public class GeoIpBerviceImpl implements GeoIpBervice {
                 geoLocation.setPostalCode(postal.getCode());
                 geoLocation.setLatitude(String.valueOf(response.getLocation().getLatitude()));
                 geoLocation.setLongitude(String.valueOf(response.getLocation().getLongitude()));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-                return null;
-            } catch (AddressNotFoundException ex) {
-                log.error("addressNotFoundException");
-                return null;
             } catch (GeoIp2Exception e) {
-                e.printStackTrace();
+                log.error("{} 解析地址异常", getClass(), e);
                 try {
                     if (!String.valueOf(e.getMessage()).startsWith("The address 10.10.") && !String.valueOf(e.getMessage()).startsWith("The address 192.168.")) {
                         log.error(e.getMessage());
@@ -91,6 +85,9 @@ public class GeoIpBerviceImpl implements GeoIpBervice {
                 } catch (Exception ex) {
                     log.error(e.getMessage());
                 }
+                return null;
+            } catch (Exception e) {
+                log.warn("{} 未找到地址，IP = {}, 实例是否加载 = {}", getClass(), ipAddress, cityReader != null, e);
                 return null;
             }
         }

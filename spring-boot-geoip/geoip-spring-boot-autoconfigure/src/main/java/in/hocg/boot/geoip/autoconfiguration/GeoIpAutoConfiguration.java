@@ -45,7 +45,7 @@ public class GeoIpAutoConfiguration {
             DatabaseReader cityReader = new DatabaseReader.Builder(finCity).build();
             return new GeoIpBerviceImpl(countryReader, cityReader);
         } catch (Exception e) {
-            log.warn("GeoIpBerviceImpl 初始化失败: {}", e.getMessage());
+            log.error("GeoIpBerviceImpl 初始化失败: {}", e.getMessage());
             return new GeoIpBerviceImpl(null, null);
         }
     }
