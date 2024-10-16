@@ -21,7 +21,7 @@ public class UserContextHolder implements ThreadLocalClear {
     private static final ThreadLocal<UserDetail> USER_DETAIL = ThreadLocal.withInitial(() -> null);
     private static final ThreadLocal<Boolean> IGNORE_TENANT = ThreadLocal.withInitial(() -> null);
 
-    public static boolean getIgnoreTenantOrDefault(boolean ignore) {
+    public static Boolean getIgnoreTenantOrDefault(Boolean ignore) {
         return getUserDetail().map(UserDetail::getIgnoreTenant).or(() -> Optional.ofNullable(IGNORE_TENANT.get())).orElse(ignore);
     }
 
@@ -66,7 +66,7 @@ public class UserContextHolder implements ThreadLocalClear {
     }
 
     public static <T extends Serializable> T getIgnoreTenant() {
-        return (T) getUserDetail().map(UserDetail::getIgnoreTenant).orElse(true);
+        return (T) UserContextHolder.getIgnoreTenantOrDefault(false);
     }
 
     public static void clearAll() {
