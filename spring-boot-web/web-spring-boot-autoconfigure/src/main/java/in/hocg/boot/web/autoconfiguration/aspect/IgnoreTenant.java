@@ -1,4 +1,4 @@
-package in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.annotation;
+package in.hocg.boot.web.autoconfiguration.aspect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,6 +1,5 @@
-package in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.aspect;
+package in.hocg.boot.web.autoconfiguration.aspect;
 
-import in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.annotation.IgnoreTenant;
 import in.hocg.boot.utils.context.UserContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -9,20 +8,17 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
-import java.net.ContentHandler;
 import java.util.Objects;
 
 @Aspect
 @Slf4j
-@Component
 public class TenantIgnoreAspect {
     /**
      * 切入点
      */
-    @Pointcut("@within(in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.annotation.IgnoreTenant) || @annotation(in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.annotation.IgnoreTenant)")
+    @Pointcut("@within(in.hocg.boot.web.autoconfiguration.aspect.IgnoreTenant) || @annotation(in.hocg.boot.web.autoconfiguration.aspect.IgnoreTenant)")
     public void pointcut() {
     }
 

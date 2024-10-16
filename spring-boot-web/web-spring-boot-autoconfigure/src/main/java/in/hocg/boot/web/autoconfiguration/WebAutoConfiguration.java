@@ -3,6 +3,7 @@ package in.hocg.boot.web.autoconfiguration;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import in.hocg.boot.web.autoconfiguration.advice.ErrorPagesConfiguration;
+import in.hocg.boot.web.autoconfiguration.aspect.TenantIgnoreAspect;
 import in.hocg.boot.web.autoconfiguration.core.WarmUpLazyBeanRunner;
 import in.hocg.boot.web.autoconfiguration.jackson.SerializerConfiguration;
 import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
@@ -71,4 +72,11 @@ public class WebAutoConfiguration {
     public Snowflake snowflake() {
         return IdUtil.getSnowflake(properties.getWorkerId(), properties.getDatacenterId());
     }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public TenantIgnoreAspect tenantIgnoreAspect() {
+        return new TenantIgnoreAspect();
+    }
+
 }
