@@ -26,7 +26,7 @@ public class UserDetail extends UserPrincipal {
     }
 
     public UserDetail(Serializable id, String username) {
-        this(id, username, null, null, false);
+        this(id, username, null, null, null);
     }
 
     public UserDetail(Serializable id, String name, String traceId, Serializable tenantId, Boolean ignoreTenant) {
