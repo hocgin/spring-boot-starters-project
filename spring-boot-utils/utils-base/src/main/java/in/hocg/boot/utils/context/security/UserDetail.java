@@ -13,15 +13,12 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
+@Data
 @Accessors(chain = true)
 public class UserDetail extends UserPrincipal {
-    @Getter
     private Serializable id;
-    @Getter
     private Serializable tenantId;
-    @Getter
     private Boolean ignoreTenant;
-    @Getter
     private String traceId;
 
     public UserDetail(String name) {

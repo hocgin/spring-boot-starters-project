@@ -35,6 +35,10 @@ public class UserContextHolder implements ThreadLocalClear {
         return (T) getUserDetail().map(UserDetail::getId).orElse(null);
     }
 
+    public static <T extends Serializable> T getUsername() {
+        return (T) getUserDetail().map(UserDetail::getName).orElse(null);
+    }
+
     public static <T extends Serializable> T getTraceId() {
         return (T) getUserDetail().map(UserDetail::getTraceId).orElse(null);
     }
