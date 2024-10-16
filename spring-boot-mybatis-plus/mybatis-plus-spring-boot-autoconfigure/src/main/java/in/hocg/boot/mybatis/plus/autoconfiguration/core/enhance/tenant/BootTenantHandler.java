@@ -43,8 +43,7 @@ public class BootTenantHandler implements TenantLineHandler {
 
     @Override
     public boolean ignoreTable(String tableName) {
-        Long tenantId = contextHolder.getTenantId();
-        if (Objects.isNull(tenantId)) {
+        if (contextHolder.isIgnoreTenant()) {
             return true;
         }
         MyBatisPlusProperties.Tenant tenant = properties.getTenant();

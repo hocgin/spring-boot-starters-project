@@ -29,4 +29,13 @@ public interface MybatisContextHolder {
     default Long getTenantId() {
         return TenantContextHolder.getTenantId();
     }
+
+    /**
+     * 是否忽略租户
+     *
+     * @return
+     */
+    default Boolean isIgnoreTenant() {
+        return false;
+    }
 }
