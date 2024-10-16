@@ -1,5 +1,6 @@
 package in.hocg.boot.mybatis.plus.extensions.sample;
 
+import in.hocg.boot.utils.context.security.UserDetail;
 import in.hocg.boot.web.autoconfiguration.filter.UserContextFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,8 +34,8 @@ public class BootApplication {
     public UserContextFilter userContextFilter() {
         return new UserContextFilter() {
             @Override
-            public Long getUserId(HttpServletRequest request, HttpServletResponse response) {
-                return 1L;
+            public UserDetail getUserDetail(HttpServletRequest request, HttpServletResponse response) {
+                return new UserDetail(1L, "hocgin");
             }
         };
     }

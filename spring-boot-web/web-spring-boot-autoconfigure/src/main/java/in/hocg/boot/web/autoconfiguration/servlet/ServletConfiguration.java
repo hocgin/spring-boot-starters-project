@@ -1,7 +1,7 @@
 package in.hocg.boot.web.autoconfiguration.servlet;
 
 import in.hocg.boot.web.autoconfiguration.SpringContext;
-import in.hocg.boot.web.autoconfiguration.filter.ContextFilter;
+import in.hocg.boot.web.autoconfiguration.filter.ThreadLocalClearFilter;
 import in.hocg.boot.web.autoconfiguration.properties.BootProperties;
 import in.hocg.boot.web.autoconfiguration.shutdown.ShutdownController;
 import org.apache.catalina.startup.Tomcat;
@@ -38,8 +38,8 @@ public class ServletConfiguration {
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @ConditionalOnMissingBean
-    public ContextFilter contextFilter() {
-        return new ContextFilter();
+    public ThreadLocalClearFilter threadLocalClearFilter() {
+        return new ThreadLocalClearFilter();
     }
 
     @Configuration
@@ -47,8 +47,9 @@ public class ServletConfiguration {
     @ConditionalOnClass(ShutdownController.class)
     public class ShutdownControllerAutoConfiguration {
         @Bean
-        public ShutdownController tradeMacAuthTokenService() {
+        public ShutdownController shutdownController() {
             return new ShutdownController();
         }
     }
+
 }

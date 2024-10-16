@@ -7,5 +7,10 @@ package in.hocg.boot.utils.exception;
  * @author hocgin
  */
 public class UnAuthenticationException extends RuntimeException {
+    public UnAuthenticationException(String message) {
+        super(message);
+    }
 
+    public UnAuthenticationException() {
+    }
 }

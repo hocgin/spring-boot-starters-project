@@ -1,5 +1,6 @@
 package in.hocg.boot.mybatis.plus.autoconfiguration.core.context;
 
+import in.hocg.boot.utils.ThreadLocalClear;
 import in.hocg.boot.utils.context.TenantContextHolder;
 import in.hocg.boot.utils.context.UserContextHolder;
 
@@ -9,7 +10,7 @@ import in.hocg.boot.utils.context.UserContextHolder;
  *
  * @author hocgin
  */
-public interface MybatisContextHolder {
+public interface MybatisContextHolder extends ThreadLocalClear {
 
     /**
      * 当前操作人
@@ -27,7 +28,7 @@ public interface MybatisContextHolder {
      * @return id
      */
     default Long getTenantId() {
-        return TenantContextHolder.getTenantId();
+        return UserContextHolder.getTenantId();
     }
 
     /**

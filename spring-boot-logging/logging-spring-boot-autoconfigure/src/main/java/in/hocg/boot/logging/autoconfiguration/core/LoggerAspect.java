@@ -108,7 +108,7 @@ public class LoggerAspect {
             userAgent = LoggingUtils.getUserAgent(request);
             host = LoggingUtils.getHost(request);
             clientIp = LoggingUtils.getClientIp(request);
-            trackId = UserContextHolder.getTrackId();
+            trackId = UserContextHolder.getTraceId();
             source = request.getHeader(StringPoolUtils.HEADER_SOURCE);
             username = request.getHeader(StringPoolUtils.HEADER_USERNAME);
         }

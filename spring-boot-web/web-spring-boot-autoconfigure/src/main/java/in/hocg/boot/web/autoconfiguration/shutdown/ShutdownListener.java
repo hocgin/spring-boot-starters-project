@@ -1,13 +1,16 @@
 package in.hocg.boot.web.autoconfiguration.shutdown;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import in.hocg.boot.web.autoconfiguration.SpringContext;
 import in.hocg.boot.web.autoconfiguration.event.PreExitCodeEvent;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
+import org.springframework.kafka.listener.MessageListenerContainer;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -22,8 +25,9 @@ public class ShutdownListener implements ApplicationListener<PreExitCodeEvent> {
 
     @Override
     public void onApplicationEvent(PreExitCodeEvent preExitCodeEvent) {
-        shutdownNacos();
-        shutdownXXLJob();
+        tryCatch(this::shutdownNacos);
+        tryCatch(this::shutdownXXLJob);
+        tryCatch(this::shutdownKafka);
     }
 
     @SneakyThrows
@@ -53,10 +57,39 @@ public class ShutdownListener implements ApplicationListener<PreExitCodeEvent> {
         destroy.invoke(bean);
     }
 
+    @SneakyThrows
+    public void shutdownKafka() {
+        Class clazz = getKafkaClass();
+        if (Objects.isNull(clazz)) {
+            log.info("未找到 Kafka");
+            return;
+        }
+        log.debug("正在下线 Kafka ..");
+        Object bean = SpringContext.getBean(clazz);
+        Method destroy = ReflectUtil.getMethodByName(clazz, "getListenerContainers");
+        Collection<org.springframework.kafka.listener.MessageListenerContainer> containers = (Collection<MessageListenerContainer>) destroy.invoke(bean);
+        if (CollUtil.isEmpty(containers)) {
+            return;
+        }
+        for (org.springframework.kafka.listener.MessageListenerContainer container : containers) {
+            if (container.isRunning()) {
+                container.stop();
+            }
+        }
+    }
+
+    public Class getKafkaClass() {
+        try {
+            return Class.forName("org.springframework.kafka.config.KafkaListenerEndpointRegistry");
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public Class getNacosClass() {
         try {
             return Class.forName("com.alibaba.cloud.nacos.registry.NacosAutoServiceRegistration");
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -64,8 +97,19 @@ public class ShutdownListener implements ApplicationListener<PreExitCodeEvent> {
     public Class getXXLJobClass() {
         try {
             return Class.forName("com.xxl.job.core.executor.XxlJobExecutor");
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             return null;
+        }
+    }
+
+    public static void tryCatch(Runnable runnable) {
+        if (Objects.isNull(runnable)) {
+            return;
+        }
+        try {
+            runnable.run();
+        } catch (Exception e) {
+            log.warn("发生可忽略异常", e);
         }
     }
 }

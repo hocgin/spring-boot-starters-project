@@ -1,6 +1,7 @@
 package in.hocg.boot.web.autoconfiguration.filter;
 
 import in.hocg.boot.utils.context.UserContextHolder;
+import in.hocg.boot.utils.context.security.UserDetail;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,10 +19,13 @@ import java.io.IOException;
 public abstract class UserContextFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        UserContextHolder.setUserId(getUserId(request, response));
-        filterChain.doFilter(request, response);
-        UserContextHolder.clear();
+        try {
+            UserContextHolder.setUserDetail(getUserDetail(request, response));
+            filterChain.doFilter(request, response);
+        } finally {
+            UserContextHolder.clearAll();
+        }
     }
 
-    public abstract Long getUserId(HttpServletRequest request, HttpServletResponse response);
+    public abstract UserDetail getUserDetail(HttpServletRequest request, HttpServletResponse response);
 }

@@ -3,12 +3,15 @@ package in.hocg.boot.utils.context;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import in.hocg.boot.utils.StringPoolUtils;
+import in.hocg.boot.utils.ThreadLocalClear;
+import in.hocg.boot.utils.context.security.UserDetail;
 import in.hocg.boot.utils.exception.UnAuthenticationException;
-import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 
+import java.io.Serializable;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Created by hocgin on 2021/12/31
@@ -17,55 +20,48 @@ import java.util.Objects;
  * @author hocgin
  */
 @Slf4j
-@UtilityClass
-public class UserContextHolder {
-    private final ThreadLocal<Long> USER_ID = ThreadLocal.withInitial(() -> null);
-    private final ThreadLocal<String> TRACK_ID = ThreadLocal.withInitial(() -> null);
+public class UserContextHolder implements ThreadLocalClear {
+    private static final ThreadLocal<UserDetail> USER_DETAIL = ThreadLocal.withInitial(() -> null);
 
-    public void setUserId(Long tenantId) {
-        USER_ID.set(tenantId);
+    public static Optional<? extends UserDetail> getUserDetail() {
+        return Optional.of(USER_DETAIL.get());
     }
 
-    public Long getUserId() {
-        return USER_ID.get();
+    public static <T extends UserDetail> void setUserDetail(T userDetail) {
+        USER_DETAIL.set(userDetail);
     }
 
-    public Long getUserIdThrow() {
-        Long userId = getUserId();
+    public static <T extends Serializable> T getUserId() {
+        return (T) getUserDetail().map(UserDetail::getId).orElse(null);
+    }
+
+    public static <T extends Serializable> T getTraceId() {
+        return (T) getUserDetail().map(UserDetail::getTraceId).orElse(null);
+    }
+
+    public static <T extends Serializable> T getUserIdThrow() {
+        T userId = getUserId();
         if (Objects.isNull(userId)) {
-            throw new UnAuthenticationException();
+            throw new UnAuthenticationException("未登陆");
         }
         return userId;
     }
 
+    public static <T extends Serializable> T getTenantId() {
+        return (T) getUserDetail().map(UserDetail::getTenantId).orElse(null);
+    }
+
+    public static <T extends Serializable> T getIgnoreTenant() {
+        return (T) getUserDetail().map(UserDetail::getIgnoreTenant).orElse(true);
+    }
+
+    public static void clearAll() {
+        USER_DETAIL.remove();
+    }
+
+    @Override
     public void clear() {
-        USER_ID.remove();
+        UserContextHolder.clearAll();
     }
 
-    public void setTrackId(String trackId) {
-        if (StrUtil.isBlank(trackId)) {
-            trackId = IdUtil.fastUUID();
-        }
-        TRACK_ID.set(trackId);
-
-        try {
-            MDC.put(StringPoolUtils.TRACK_ID, trackId);
-        } catch (Exception e) {
-            log.warn("MDC.put error", e);
-        }
-    }
-
-    public void clearTrackId() {
-        TRACK_ID.remove();
-        try {
-            MDC.remove(StringPoolUtils.TRACK_ID);
-        } catch (Exception e) {
-            log.warn("MDC.put error", e);
-        }
-    }
-
-
-    public String getTrackId() {
-        return TRACK_ID.get();
-    }
 }
