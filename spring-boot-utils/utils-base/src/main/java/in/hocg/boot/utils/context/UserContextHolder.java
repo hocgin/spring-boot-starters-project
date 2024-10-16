@@ -47,6 +47,10 @@ public class UserContextHolder implements ThreadLocalClear {
         return userId;
     }
 
+    public static <T extends Serializable> T getTenantIdThrow() {
+        return (T) getUserDetail().map(UserDetail::getTenantId).orElseThrow(UnAuthenticationException::new);
+    }
+
     public static <T extends Serializable> T getTenantId() {
         return (T) getUserDetail().map(UserDetail::getTenantId).orElse(null);
     }
