@@ -29,9 +29,6 @@ public class BootTenantHandler implements TenantLineHandler {
 
     @Override
     public Expression getTenantId() {
-        if (contextHolder.isIgnoreTenant()) {
-            return new NullValue();
-        }
         Long tenantId = contextHolder.getTenantId();
         if (Objects.isNull(tenantId)) {
             return new NullValue();
