@@ -1,13 +1,10 @@
 package in.hocg.boot.utils.context;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
-import in.hocg.boot.utils.StringPoolUtils;
 import in.hocg.boot.utils.ThreadLocalClear;
 import in.hocg.boot.utils.context.security.UserDetail;
 import in.hocg.boot.utils.exception.UnAuthenticationException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,6 +19,12 @@ import java.util.Optional;
 @Slf4j
 public class UserContextHolder implements ThreadLocalClear {
     private static final ThreadLocal<UserDetail> USER_DETAIL = ThreadLocal.withInitial(() -> null);
+    private static final ThreadLocal<Boolean> IGNORE_TENANT = ThreadLocal.withInitial(() -> null);
+
+
+    public static void setIgnoreTenant(Boolean ignore) {
+        IGNORE_TENANT.set(ignore);
+    }
 
     public static Optional<? extends UserDetail> getUserDetail() {
         return Optional.of(USER_DETAIL.get());
@@ -65,6 +68,7 @@ public class UserContextHolder implements ThreadLocalClear {
 
     public static void clearAll() {
         USER_DETAIL.remove();
+        IGNORE_TENANT.remove();
     }
 
     @Override
