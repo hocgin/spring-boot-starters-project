@@ -30,7 +30,7 @@ public class UserContextHolder implements ThreadLocalClear {
     }
 
     public static Optional<? extends UserDetail> getUserDetail() {
-        return Optional.of(USER_DETAIL.get());
+        return Optional.ofNullable(USER_DETAIL.get());
     }
 
     public static <T extends UserDetail> void setUserDetail(T userDetail) {
