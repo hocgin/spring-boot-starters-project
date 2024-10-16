@@ -22,7 +22,7 @@ public class TenantIgnoreAspect {
     /**
      * 切入点
      */
-    @Pointcut("@within(in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.annotation.IgnoreTenant) ||@annotation(in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.annotation.IgnoreTenant)")
+    @Pointcut("@within(in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.annotation.IgnoreTenant) || @annotation(in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.annotation.IgnoreTenant)")
     public void pointcut() {
     }
 

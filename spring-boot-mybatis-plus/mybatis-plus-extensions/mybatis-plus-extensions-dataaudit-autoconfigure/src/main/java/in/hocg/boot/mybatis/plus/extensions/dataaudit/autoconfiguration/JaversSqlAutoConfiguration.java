@@ -2,6 +2,7 @@ package in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration;
 
 import in.hocg.boot.mybatis.plus.autoconfiguration.MyBatisPlusAutoConfiguration;
 import in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.aspect.MybatisPlusJaversAuditableRepositoryAspect;
+import in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.aspect.TenantIgnoreAspect;
 import in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.core.MyBatisPlusTransactionalJaversBuilder;
 import in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.core.MyBatisPlusConnectionProvider;
 import in.hocg.boot.mybatis.plus.extensions.dataaudit.autoconfiguration.core.MyBatisPlusAuthorProvider;
@@ -111,5 +112,11 @@ public class JaversSqlAutoConfiguration {
     public MybatisPlusJaversAuditableRepositoryAspect javersMybatisPlusAuditableRepositoryAspect(Javers javers, AuthorProvider authorProvider,
                                                                                                  CommitPropertiesProvider commitPropertiesProvider) {
         return new MybatisPlusJaversAuditableRepositoryAspect(javers, authorProvider, commitPropertiesProvider);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public TenantIgnoreAspect tenantIgnoreAspect() {
+        return new TenantIgnoreAspect();
     }
 }
