@@ -18,6 +18,6 @@ import java.util.List;
 @Setter
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public class DeleteRo extends BasicRo {
+public class BatchIdRo extends BasicRo {
     private List<Long> id = Collections.emptyList();
 }

@@ -33,10 +33,8 @@ public interface MybatisContextHolder extends ThreadLocalClear {
 
     /**
      * 是否忽略租户
-     *
-     * @return
      */
     default Boolean isIgnoreTenant() {
-        return false;
+        return UserContextHolder.getIgnoreTenant();
     }
 }
