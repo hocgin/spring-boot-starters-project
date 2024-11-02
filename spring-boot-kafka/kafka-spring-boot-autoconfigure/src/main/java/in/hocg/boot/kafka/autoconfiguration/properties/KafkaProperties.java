@@ -13,5 +13,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(KafkaProperties.PREFIX)
 public class KafkaProperties {
     public static final String PREFIX = "boot.kafka";
+    private Boolean autoStartup = Boolean.TRUE;
 
 }

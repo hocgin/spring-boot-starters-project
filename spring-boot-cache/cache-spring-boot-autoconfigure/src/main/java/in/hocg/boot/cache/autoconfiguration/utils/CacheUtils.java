@@ -1,5 +1,6 @@
 package in.hocg.boot.cache.autoconfiguration.utils;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -12,10 +13,11 @@ public class CacheUtils {
      * 统一KEY
      *
      * @param prefix
-     * @param value
+     * @param values
      * @return
      */
-    public static String useKey(Enum<?> prefix, String value) {
-        return String.format("%s:%s", prefix.name(), value);
+    public static String useKey(Enum<?> prefix, String... values) {
+        String joinKeys = StrUtil.join(":", values);
+        return String.format("%s:%s", prefix.name(), joinKeys);
     }
 }

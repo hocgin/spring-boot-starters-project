@@ -38,11 +38,13 @@ import java.util.Map;
 @AutoConfigureAfter(name = "org.springframework.boot.autoconfigure.kafka.KafkaAnnotationDrivenConfiguration")
 public class KafkaAutoConfiguration implements InitializingBean {
     public static final String BATCH_KAFKA_LISTENER_FACTORY = "customBatchFactory";
+    public static final String KAFKA_DEFAULT_LISTENER_FACTORY = "kafkaListenerContainerFactory";
     private final ConcurrentKafkaListenerContainerFactoryConfigurer kafkaListenerContainerFactoryConfigurer;
     private final org.springframework.boot.autoconfigure.kafka.KafkaProperties originProperties;
     private final RecordMessageConverter messageConverter;
     private final BatchMessageConverter batchMessageConverter;
     private final BatchErrorHandler batchErrorHandler;
+    private final KafkaProperties properties;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -52,6 +54,7 @@ public class KafkaAutoConfiguration implements InitializingBean {
     public KafkaAutoConfiguration(ConcurrentKafkaListenerContainerFactoryConfigurer kafkaListenerContainerFactoryConfigurer,
                                   org.springframework.boot.autoconfigure.kafka.KafkaProperties properties,
                                   ObjectProvider<RecordMessageConverter> messageConverter,
+                                  KafkaProperties kafkaProperties,
                                   ObjectProvider<BatchMessageConverter> batchMessageConverter,
                                   ObjectProvider<BatchErrorHandler> batchErrorHandler) {
         this.kafkaListenerContainerFactoryConfigurer = kafkaListenerContainerFactoryConfigurer;
@@ -59,6 +62,7 @@ public class KafkaAutoConfiguration implements InitializingBean {
         this.messageConverter = messageConverter.getIfUnique();
         this.batchMessageConverter = batchMessageConverter.getIfUnique(() -> new BatchMessagingMessageConverter(this.messageConverter));
         this.batchErrorHandler = batchErrorHandler.getIfUnique();
+        this.properties = kafkaProperties;
     }
 
     public ConsumerFactory<Object, Object> kafkaConsumerFactory(org.springframework.boot.autoconfigure.kafka.KafkaProperties kafkaProperties) {
@@ -78,7 +82,7 @@ public class KafkaAutoConfiguration implements InitializingBean {
      *
      * @return 批量工厂类
      */
-    @Bean("batchFactory")
+    @Bean(KAFKA_DEFAULT_LISTENER_FACTORY)
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Object, Object>> batchFactory() {
         return newBatchFactory(0, 0, false);
     }
@@ -120,6 +124,8 @@ public class KafkaAutoConfiguration implements InitializingBean {
             factory.setBatchErrorHandler(this.batchErrorHandler);
             factory.setMessageConverter(batchMessageConverter);
         }
+        Boolean autoStartup = this.properties.getAutoStartup();
+        factory.setAutoStartup(autoStartup);
         return factory;
     }
 
