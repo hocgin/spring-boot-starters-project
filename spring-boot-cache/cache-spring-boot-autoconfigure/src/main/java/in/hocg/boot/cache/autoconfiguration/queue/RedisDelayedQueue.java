@@ -1,5 +1,6 @@
 package in.hocg.boot.cache.autoconfiguration.queue;
 
+import in.hocg.boot.cache.autoconfiguration.dynamic.DynamicRoutingConnectionFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingQueue;
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class RedisDelayedQueue {
 
-    private final RedissonClient redissonClient;
+    private final DynamicRoutingConnectionFactory connectionFactory;
 
     /**
      * 添加到队列
@@ -29,6 +30,7 @@ public class RedisDelayedQueue {
      * @param <T>      泛型
      */
     public <T> void addQueue(T data, long delay, TimeUnit timeUnit) {
+        RedissonClient redissonClient = getRedissonClient();
         RBlockingQueue<T> blockingFairQueue = redissonClient.getBlockingQueue(data.getClass().getName());
         RDelayedQueue<T> delayedQueue = redissonClient.getDelayedQueue(blockingFairQueue);
         delayedQueue.offer(data, delay, timeUnit);
@@ -43,7 +45,7 @@ public class RedisDelayedQueue {
      * @param <T>               泛型
      */
     public <T> void getQueue(Class<?> zClass, Consumer<T> taskEventListener) {
-        RBlockingQueue<T> blockingFairQueue = redissonClient.getBlockingQueue(zClass.getName());
+        RBlockingQueue<T> blockingFairQueue = getRedissonClient().getBlockingQueue(zClass.getName());
         // 由于此线程需要常驻，可以新建线程，不用交给线程池管理
         ((Runnable) () -> {
             while (true) {
@@ -56,5 +58,9 @@ public class RedisDelayedQueue {
         }).run();
     }
 
+
+    public RedissonClient getRedissonClient() {
+        return connectionFactory.getResolvedDefaultDataSource();
+    }
 
 }

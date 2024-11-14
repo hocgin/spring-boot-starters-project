@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" packages="in.hocg.boot.logging.autoconfiguration">
+  <!-- @formatter:off -->
   <Properties>
     <Property name="PID">????</Property>
+    <Property name="APP_NAME">$${boot:spring.application.name:-}</Property>
+    <Property name="ACTIVE_NAME">$${boot:spring.profiles.active:-}</Property>
     <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
-    <Property name="LOG_LEVEL_PATTERN">%5p [%X{X-B3-TraceId},%X{X-B3-SpanId},%X{X-Span-Export}]</Property>
+    <Property name="LOG_LEVEL_PATTERN">%5p [${APP_NAME},%traceId,%X{X-Trace-Id}]</Property>
     <Property name="CONSOLE_LOG_PATTERN">%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{${LOG_LEVEL_PATTERN}} %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
     <Property name="FILE_LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN} ${sys:PID} --- [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
   </Properties>
+  <!-- @formatter:on -->
   <Appenders>
+    <Kafka name="Kafka" topic="${boot:boot.logging.kafka.topic}" key="${sys:APP_NAME}_${sys:ACTIVE_NAME}"
+           syncSend="false" ignoreExceptions="true">
+      <Property name="bootstrap.servers">${boot:boot.logging.kafka.servers:-127.0.0.1:9092}</Property>
+      <GelfLayout messagePattern="${sys:CONSOLE_LOG_PATTERN}" compressionType="off">
+        <KeyValuePair key="logLevel" value="$${event:Level}"/>
+        <KeyValuePair key="activeName" value="$${sys:ACTIVE_NAME}"/>
+        <KeyValuePair key="appName" value="$${sys:APP_NAME}"/>
+      </GelfLayout>
+      <Property name="max.block.ms">1000</Property>
+      <Property name="request.timeout.ms">1000</Property>
+      <Property name="max.request.size">10485760</Property>
+      <Property name="compression.type">zstd</Property>
+    </Kafka>
+    <Loki name="Loki" bufferSizeMegabytes="64">
+      <host>${boot:boot.logging.loki.host}</host>
+      <port>${boot:boot.logging.loki.port:-80}</port>
+
+      <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}"/>
+
+      <Label name="env" value="${boot:spring.profiles.active:-}"/>
+      <Label name="project" value="${boot:spring.application.name:-}"/>
+      <Label name="server" value="${sys:hostname:-}"/>
+      <Label name="level" pattern="%level"/>
+    </Loki>
     <Console name="Console" target="SYSTEM_OUT" follow="true">
       <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}"/>
     </Console>
-    <RollingFile name="File" fileName="${sys:LOG_FILE}" filePattern="${sys:LOG_PATH}/archived/%d{yyyyMMdd}-%i.log.gz">
-      <PatternLayout>
-        <Pattern>${sys:FILE_LOG_PATTERN}</Pattern>
-      </PatternLayout>
-      <Policies>
-        <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
-        <SizeBasedTriggeringPolicy size="256 MB"/>
-      </Policies>
-      <DefaultRolloverStrategy max="10">
-        <Delete basePath="${sys:LOG_PATH}/archived" maxDepth="2">
-          <IfFileName glob="*.log.gz"/>
-          <IfLastModified age="30d"/>
-        </Delete>
-      </DefaultRolloverStrategy>
-    </RollingFile>
+    <GRPCLogClientAppender name="GrpcLog">
+      <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}"/>
+    </GRPCLogClientAppender>
     <Loghub name="Loghub"
             project="${aliyun:boot.logging.project-name}"
             logstore="${aliyun:boot.logging.log-store}"
@@ -45,6 +61,26 @@
             ignoreExceptions="true">
       <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"/>
     </Loghub>
+    <RollingFile name="File" fileName="${sys:LOG_FILE}"
+                 filePattern="${sys:LOG_PATH}/archived/%d{yyyyMMdd}-%i.log.gz">
+      <PatternLayout>
+        <Pattern>${sys:FILE_LOG_PATTERN}</Pattern>
+      </PatternLayout>
+      <Policies>
+        <CronTriggeringPolicy schedule="0 0 0 * * ?"/>
+        <SizeBasedTriggeringPolicy size="256 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="10">
+        <Delete basePath="${sys:LOG_PATH}/archived" maxDepth="2">
+          <IfFileName glob="*.log.gz"/>
+          <IfLastModified age="7d"/>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+    <Async name="Async" blocking="false">
+      <AppenderRef ref="Kafka"/>
+      <AppenderRef ref="File"/>
+    </Async>
   </Appenders>
   <Loggers>
     <Logger name="org.apache.catalina.startup.DigesterFactory" level="error"/>
@@ -61,8 +97,7 @@
     <Logger name="org.thymeleaf" level="warn"/>
     <Root level="info">
       <AppenderRef ref="Console"/>
-      <AppenderRef ref="File"/>
-      <AppenderRef ref="Loghub"/>
+      <AppenderRef ref="Async"/>
     </Root>
   </Loggers>
 </Configuration>

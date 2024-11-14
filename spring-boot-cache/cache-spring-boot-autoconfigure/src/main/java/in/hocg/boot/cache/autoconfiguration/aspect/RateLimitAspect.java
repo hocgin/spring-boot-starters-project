@@ -3,6 +3,7 @@ package in.hocg.boot.cache.autoconfiguration.aspect;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import in.hocg.boot.cache.autoconfiguration.annotation.RateLimit;
+import in.hocg.boot.cache.autoconfiguration.dynamic.DynamicRoutingConnectionFactory;
 import in.hocg.boot.cache.autoconfiguration.utils.ElUtils;
 import in.hocg.boot.utils.servlet.WebUtils;
 import in.hocg.boot.utils.struct.result.Result;
@@ -34,7 +35,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class RateLimitAspect {
 
-    private final RedissonClient redissonClient;
+    private final DynamicRoutingConnectionFactory connectionFactory;
 
     @Pointcut("@annotation(in.hocg.boot.cache.autoconfiguration.annotation.RateLimit)")
     public void rateLimit() {
@@ -73,7 +74,7 @@ public class RateLimitAspect {
         String[] parameterNames = new LocalVariableTableParameterNameDiscoverer().getParameterNames(method);
         String key = ElUtils.parseSpEl(rateLimit.key(), parameterNames, arguments);
 
-        RRateLimiter rRateLimiter = redissonClient.getRateLimiter(StrUtil.isBlank(key) ? limitKey : key);
+        RRateLimiter rRateLimiter = this.getRedissonClient().getRateLimiter(StrUtil.isBlank(key) ? limitKey : key);
         if (rRateLimiter.isExists()) {
             // 读取已经存在配置
             RateLimiterConfig rateLimiterConfig = rRateLimiter.getConfig();
@@ -123,4 +124,7 @@ public class RateLimitAspect {
         }
     }
 
+    public RedissonClient getRedissonClient() {
+        return connectionFactory.getResolvedDefaultDataSource();
+    }
 }

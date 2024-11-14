@@ -1,5 +1,6 @@
 package in.hocg.boot.cache.autoconfiguration.lock;
 
+import in.hocg.boot.cache.autoconfiguration.dynamic.DynamicRoutingConnectionFactory;
 import in.hocg.boot.cache.autoconfiguration.enums.LockType;
 import in.hocg.boot.cache.autoconfiguration.exception.DistributedLockException;
 import in.hocg.boot.utils.function.SupplierThrow;
@@ -18,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RedissonDistributedLock implements DistributedLock {
 
-    private final RedissonClient redissonClient;
+    private final DynamicRoutingConnectionFactory connectionFactory;
 
     @Override
     public boolean tryLock(String[] lockName, LockType lockType, long waitTime, long leaseTime, TimeUnit timeUnit) throws InterruptedException {
@@ -48,6 +49,7 @@ public class RedissonDistributedLock implements DistributedLock {
 
     @Override
     public RLock getLock(String[] lockName, LockType lockType) {
+        RedissonClient redissonClient = getRedissonClient();
         RLock lock;
         switch (lockType) {
             case Fair:
@@ -82,5 +84,9 @@ public class RedissonDistributedLock implements DistributedLock {
                 throw new DistributedLockException("找不到对应的类型: {}", lockType);
         }
         return lock;
+    }
+
+    public RedissonClient getRedissonClient() {
+        return connectionFactory.getResolvedDefaultDataSource();
     }
 }
