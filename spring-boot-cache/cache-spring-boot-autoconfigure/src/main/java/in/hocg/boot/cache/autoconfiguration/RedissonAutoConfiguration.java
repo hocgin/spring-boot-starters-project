@@ -47,7 +47,7 @@ public class RedissonAutoConfiguration {
     public RedisConnectionFactory dynamicRoutingConnectionFactory(RedissonProperties properties, RedisProperties redisProperties) {
         Map<String, RedissonDatasourceConfig> datasource = ObjectUtil.defaultIfNull(properties.getDatasource(), new HashMap<>(1));
         String defaultDataSource = properties.getDefaultDataSource();
-        if (CollUtil.isEmpty(datasource)) {
+        if (!datasource.containsKey(defaultDataSource)) {
             datasource.put(defaultDataSource, properties);
         }
         Map<String, RedissonClient> connectionFactoryMap = new HashMap<>(datasource.size());
