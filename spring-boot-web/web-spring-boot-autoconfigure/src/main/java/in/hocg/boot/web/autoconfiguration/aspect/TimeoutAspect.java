@@ -35,9 +35,6 @@ public class TimeoutAspect {
         try {
             runWithThread(threadPool, futureTask);
             return futureTask.get(timeout, timeoutCheck.unit());
-        } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            log.warn("{}", ExceptionUtil.stacktraceToString(e));
-            throw e;
         } finally {
             futureTask.cancel(timeoutCheck.destroy());
         }
