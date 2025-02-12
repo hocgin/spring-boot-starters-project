@@ -21,7 +21,7 @@ import java.util.Objects;
 public class RedissonUtils {
 
     private static String prefixAddress(String address) {
-        if (StrUtil.isNotBlank(address) && (!address.startsWith("redis://") && !address.startsWith("rediss://"))) {
+        if (StrUtil.isNotBlank(address) && (!address.startsWith("redis://") || !address.startsWith("rediss://"))) {
             return "redis://" + address;
         }
         return address;
