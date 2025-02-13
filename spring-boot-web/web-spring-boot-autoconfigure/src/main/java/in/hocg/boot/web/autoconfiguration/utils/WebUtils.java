@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 /**
  * Created by hocgin on 2022/12/18
@@ -154,5 +155,22 @@ public class WebUtils {
             throw new UnsupportedOperationException();
         }
         return resource;
+    }
+
+    public static String getCurl(HttpServletRequest httpServletRequest, String reqBody) {
+        StringBuilder curlCommand = new StringBuilder("curl -v -X ").append(httpServletRequest.getMethod());
+        Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = httpServletRequest.getHeader(headerName);
+            curlCommand.append(" -H '").append(headerName).append(": ").append(headerValue).append("'");
+        }
+        if (reqBody != null && !reqBody.isEmpty()) {
+            curlCommand.append(" -d '").append(reqBody).append("'");
+        }
+
+        curlCommand.append(" ").append("'").append(httpServletRequest.getRequestURL())
+            .append(httpServletRequest.getQueryString() != null ? "?" + httpServletRequest.getQueryString() : "").append("'");
+        return curlCommand.toString();
     }
 }
